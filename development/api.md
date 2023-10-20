@@ -12,7 +12,7 @@ KaiwuDB RESTFUL API旨在满足大多数开发人员的最低依赖性要求。�
 
 请求示例：
 
-```http
+```
 {
   "stmt": "SELECT * FROM sales LIMIT 100000",
   "params": {
@@ -47,7 +47,7 @@ Content-Type: application/json
 
 请求示例：
 
-```http
+```
 {
     "stmt": "CREATE TABLE Pi (id BIGINT not null default 0, method STRING not null default 'a', \`estimated_pi\` DOUBLE not null default 0.00)"
 }
@@ -55,7 +55,7 @@ Content-Type: application/json
 
 响应示例：
 
-```http
+```
 {
     "retcode": 0,
     "meta": {
@@ -78,7 +78,7 @@ Content-Type: application/json
 
 请求报文示例：
 
-```http
+```
 {
     "stmt": "SHOW TABLES"
 }
@@ -86,7 +86,7 @@ Content-Type: application/json
 
 响应报文示例：
 
-```http
+```
 {
     "retcode": 0,
     "meta": {
@@ -120,7 +120,7 @@ Content-Type: application/json
 
 请求报文示例：
 
-```http
+```
 {
     "stmt": "SELECT \* FROM Pi"
 }
@@ -128,7 +128,7 @@ Content-Type: application/json
 
 响应报文示例：
 
-```http
+```
 {
     "retcode": 0,
     "meta": {
@@ -146,7 +146,7 @@ Content-Type: application/json
 
 示例请求正文（使用句柄）：
 
-```http
+```
 {
     "stmt": "SELECT * FROM Pi",
     "params": {
@@ -157,7 +157,7 @@ Content-Type: application/json
 
 响应报文示例：
 
-```http
+```
 {
     "retcode": 0,
     "meta": {},
@@ -197,7 +197,7 @@ START和END位置包括在内。
 
 请求报文示例：
 
-```http
+```
 {
     "stmt": "SCAN 12cf0a5dee76 5001 10000"
 }
@@ -205,7 +205,7 @@ START和END位置包括在内。
 
 响应报文示例：
 
-```http
+```
 {
     "retcode": 0,
     "meta": {
@@ -231,7 +231,7 @@ HDESC HDESC用于检索resource_id处理程序的架构。
 
 请求报文示例：
 
-```http
+```
 {
     "stmt": "DESC Pi"
 }
@@ -239,7 +239,7 @@ HDESC HDESC用于检索resource_id处理程序的架构。
 
 响应报文示例：
 
-```http
+```
 {
     "retcode": 0,
     "meta": {},
@@ -272,7 +272,7 @@ HDESC HDESC用于检索resource_id处理程序的架构。
 
 请求报文示例：
 
-```http
+```
 {
     "stmt": "GC LIST"
 }
@@ -280,7 +280,7 @@ HDESC HDESC用于检索resource_id处理程序的架构。
 
 响应报文示例：
 
-```http
+```
 {
     "retcode": 0,
     "meta": {
