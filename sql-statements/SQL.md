@@ -1,4 +1,4 @@
-sh# 数据类型
+# 数据类型
 
 ## 数值类型
 
@@ -965,15 +965,14 @@ DELETE FROM <table_name> WHERE <filter_condition>;
 示例：删除数据
 
 ```sql
-# 创建表
+
 > create default table t1(id int not null default 0);
 Query OK, 0 rows affected (0.01 sec)
 
-# 插入数据
+
 > insert into t1 values(1),(2),(3);
 Query OK, 3 row affected (0.00 sec)
 
-# 查询数据
 > select * from t1;
 +----+
 | id |
@@ -984,11 +983,11 @@ Query OK, 3 row affected (0.00 sec)
 +----+
 3 rows in set (0.00 sec)
 
-# 删除数据
+
 > delete from t1 where id=1;
 Query OK, 1 row affected (0.01 sec)
 
-# 再次查询数据
+
 > select * from t1;
 +------+
 | id   |
