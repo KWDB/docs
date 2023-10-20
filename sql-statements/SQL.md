@@ -27,7 +27,7 @@ sh# 数据类型
 ```sql
 > create table t_int(a int16 not null default 0,b INT4 not null default 0,c BIGINT not null default 0);
 
-# 插入整数类型的值
+// 插入整数类型的值
 > insert into t_int values (32767,2147483647,9223372036854775807);
 
 # 查询插入整数类型的值
