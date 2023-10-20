@@ -27,10 +27,8 @@ sh# 数据类型
 ```sql
 > create table t_int(a int16 not null default 0,b INT4 not null default 0,c BIGINT not null default 0);
 
-// 插入整数类型的值
 > insert into t_int values (32767,2147483647,9223372036854775807);
 
-# 查询插入整数类型的值
 > select * from t_int;
 +-------+------------+---------------------+
 | a      | b         | c                   |
@@ -39,7 +37,6 @@ sh# 数据类型
 +-------+------------+---------------------+
 1 row in set (0.01 sec)
 
-# 本次插入的数值超过了对应数值类型的取值范围，系统就会报错。
 > insert into t_int values(32768,2147483648,9223372036854775808);
 ERROR 46 (HY000): Out of range data: 32768
 ```
@@ -170,15 +167,15 @@ Query OK, 0 rows affected (0.00 sec)
 示例2：插入数据
 
 ```sql
-# 插入长度标准的数据
+
 > insert into t_str1 values("abc","123");
 Query OK, 1 row affected (0.00 sec)
 
-# 插入长度超过char(6)的数据
+
 > insert into t_str1 values("abcdefgh","1234567");
 ERROR 35 (HY000): Invalid value: abcdefgh
 
-# 查询数据
+
 > select * from t_str1;
 +------+------+
 | a    | b    |
@@ -807,7 +804,6 @@ INSERT INTO <table_name> VALUES (value1, value2, ...);
 示例：插入一个单行和多行
 
 ```sql
-# 创建表product,customer和sales
 
 > CREATE TABLE Product ('id' INT4 not null default 0, 'name' STRING(63) not null default 'a', 'brand' STRING(63) not null default 'a', 'brandOwner' STRING(63) not null default 'a', 'weightGrams' FLOAT4 not null default 0.00, 'weightOunce' FLOAT4 not null default 0.00, 'category' STRING(63) not null default 'a', 'price' FLOAT4 not null default 0.00, 'cost' FLOAT4 not null default 0.00, 'profit' FLOAT4 not null default 0.00);
 Query OK, 0 rows affected (0.02 sec)
@@ -818,7 +814,7 @@ Query OK, 0 rows affected (0.00 sec)
 > CREATE TABLE sales ('order_id' INT4 not null default 0, 'Customer.id' INT4 not null default 0, 'Product.id' INT4 not null default 0, 'channel_name' STRING not null default 'a', 'Date' DATETIME32 not null default '2023-01-01 00:00:00', 'qty' BIGINT not null default 0, 'total_price' DOUBLE not null default 0.00);
 Query OK, 0 rows affected (0.00 sec)
 
-# 插入数据
+
 
 > INSERT INTO Product VALUES ('2','Throwback Cola', 'Pepsi', 'Pepsico','0', '0', 'soda', '12.01', '3.11', '8.9');
 Query OK, 1 row affected (0.01 sec)
@@ -829,7 +825,7 @@ Query OK, 1 row affected (0.00 sec)
 > INSERT INTO sales VALUES('8713','366','0','CVS','2013-01-01 00:06:30','6','77.94'),('8713','3263','7','7-11','2013-01-01 00:09:52','2','19.94');
 Query OK, 2 rows affected (0.00 sec)
 
-# 查询数据
+
 
 > select * from Product;
 +----+---------------+---------+------------+------------+-------------+---------+-------+------+----------+
