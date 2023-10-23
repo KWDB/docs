@@ -16,6 +16,7 @@ Docker部署软件建议列表
 | Raspberry Pi 4 Model B 单板计算机 (ARM-based) | Ubuntu 20.04.4 LTS (GNU/Linux 5.4.0-1065-raspi aarch64) | - Docker-Compose 1.17.1 <br>- Docker 20.10.17  |
 
 如果您使用代码编译的方式部署KaiwuDB数据库，只需在相应的Linux系统中安装相应的编译依赖即可。
+
 编译部署软件建议列表
 
 | 机器类型     | 操作系统      |  编译依赖                       |
