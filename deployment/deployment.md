@@ -173,12 +173,12 @@ KaiwuDB支持通过``docker run``命令或Docker Compose启动KaiwuDB服务，�
 
 1. 下载Docker Compose。
    ```shell
-   [root@node2  ~] # curl -L [https://get.daocloud.io/docker/compose/releases/download/1.25.4/](https://get.daocloud.io/docker/compose/releases/download/1.25.4/) docker-compose-`uname -s`- `uname -m `> /usr/local/bin/docker-compose
+   [root@node2  ~] curl -L [https://get.daocloud.io/docker/compose/releases/download/1.25.4/](https://get.daocloud.io/docker/compose/releases/download/1.25.4/) docker-compose-`uname -s`- `uname -m `> /usr/local/bin/docker-compose
    ```
 
    示例：
    ```shell
-   [root@node2  ~] # curl -L [https://get.daocloud.io/docker/compose/releases/download/1.25.4/](https://get.daocloud.io/docker/compose/releases/download/1.25.4/) docker-compose-`uname -s `-`uname -m`> /usr/local/bin/docker-compose
+   [root@node2  ~] curl -L [https://get.daocloud.io/docker/compose/releases/download/1.25.4/](https://get.daocloud.io/docker/compose/releases/download/1.25.4/) docker-compose-`uname -s `-`uname -m`> /usr/local/bin/docker-compose
    % Total % Received % Xferd Average Speed Time Time Time Current
    Dload Upload Total Spent Left Speed
    100 423 100 423 0 0 434 0 --:--:-- --:--:-- --:--:-- 434
@@ -186,20 +186,20 @@ KaiwuDB支持通过``docker run``命令或Docker Compose启动KaiwuDB服务，�
    ```
 2. 为Docker Compose文件添加可执行权限。
    ```shell
-   [root@node2 ~]# chmod +x /usr/local/bin/docker-compose
+   [root@node2 ~] chmod +x /usr/local/bin/docker-compose
    ```
 3. 查看Docker Compose版本， 验证是否安装成功。
    ```shell  
-   [root@node2 ~]# docker-compose -v
+   [root@node2 ~] docker-compose -v
    docker-compose version 1.25.4, build 8d51620a
    ```   
 4. 创建KaiwuDB服务的YML文件。
    ```shell 
-   [root@node2 ~]# vim <file_name>.yml
+   [root@node2 ~] vim <file_name>.yml
    ```
    示例：
    ```shell 
-   [root@node2 ~]# vim docker-compose-kaiwudb.yml
+   [root@node2 ~] vim docker-compose-kaiwudb.yml
    ```  
 5. 编辑KaiwuDB服务的YML文件。
 
@@ -252,12 +252,12 @@ KaiwuDB支持通过``docker run``命令或Docker Compose启动KaiwuDB服务，�
 
 6. 启动KaiwuDB服务：
    ```shell 
-   [root@node2 ~]# docker-compose -f <file_name>.yml up -d
+   [root@node2 ~] docker-compose -f <file_name>.yml up -d
    ```   
 
    示例：
    ```shell
-   [root@node2 ~]# docker-compose -f docker-compose-kaiwudb.yml up -d
+   [root@node2 ~] docker-compose -f docker-compose-kaiwudb.yml up -d
    Creating network "root_default" with the default driver
    Pulling kaiwudb (kaiwudb:1.0)...
    1.9.0-iot: Pulling from kaiwudb
@@ -272,11 +272,11 @@ KaiwuDB支持通过``docker run``命令或Docker Compose启动KaiwuDB服务，�
    ```   
 7. 连接数据库。
    ```shell
-   [root@node2~]# mysql -P <port> -h 127.0.0.1 -u root -p
+   [root@node2~] mysql -P <port> -h 127.0.0.1 -u root -p
    ```   
    示例：
    ```shell
-   [root@node2 ~]# mysql -P 53306 -h 127.0.0.1 -p
+   [root@node2 ~] mysql -P 53306 -h 127.0.0.1 -p
    Enter password:
    Welcome to the MariaDB monitor. Commands end with ; or \g.
    Your MySQL connection id is 22
