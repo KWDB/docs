@@ -1,7 +1,7 @@
 # KaiwuDB文档 
 
 欢迎来到KaiwuDB官方文档仓库！
-此仓库存放的是KaiwuDB的支撑文档，包括发版说明、KaiwuDB简介、安装部署手册、管理指南、运维指南、SQL手册等内容。
+此仓库存放的是KaiwuDB的支撑文档，包括发版说明、KaiwuDB简介、安装部署手册、管理指南、运维指南、SQL参考手册等内容。
 
 ## 贡献文档
 
@@ -19,8 +19,8 @@
 | deployment        | 安装部署               |
 | development       | API接口                |
 | db-administration | 数据库管理；导入导出 |
-| db-operation      | 数据库运维；错误代码 |
-| sql-statements    | SQL手册                |
+| db-operation      | 数据库运维；错误码 |
+| sql-statements    | SQL参考手册                |
 | release-notes     | 发版说明               |
 
 
