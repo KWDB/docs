@@ -4,7 +4,7 @@
 
 ## 系统说明
 
-### 1.1 软件规格
+### 软件规格
 
 如果您使用Docker容器部署KaiwuDB数据库，则操作系统需要支持安装Docker Engine。KaiwuDB支持Ubuntu、Debian、Red Hat等Linux操作系统以及安装WSL的Windows系统。
 
@@ -24,7 +24,7 @@ Docker部署软件建议列表
 | Raspberry Pi 4 Model B 单板计算机 (ARM-based) | Ubuntu 20.04.4 LTS (GNU/Linux 5.4.0-1065-raspi aarch64) | - cmake <br> - gcc <br> - g++ <br>- libssl-dev |
 
 
-### 1.2 硬件规格
+### 硬件规格
 
 硬件规格建议不低于4核8G，磁盘SSD，以确保不影响KaiwuDB的性能。
 
