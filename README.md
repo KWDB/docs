@@ -17,7 +17,6 @@
 | ----------------- | ---------------------- |
 | about-kaiwudb     | KaiwuDB简介            |
 | deployment        | 安装部署               |
-| development       | API接口                |
 | db-administration | 数据库管理；导入导出 |
 | db-operation      | 数据库运维；错误码 |
 | sql-statements    | SQL参考手册                |
