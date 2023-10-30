@@ -6,7 +6,7 @@
 ## 贡献文档
 
 我们非常欢迎您与我们一起建设更加易用、用户友好的KaiwuDB文档！
-请阅读我们的[社区贡献](https://gitee.com/kaiwudb/contribution/)，遵守[文档写作规范](./style-guide.md)，并按照流程规则提交。您提交的第一个 Pull Request (PR) 合并以后，即可成为KaiwuDB文档的贡献者。
+请阅读我们的[社区贡献](https://gitee.com/kaiwudb-opensource/community/blob/master/Contribute_process.md)，遵守[文档写作规范](./style-guide.md)，并按照流程规则提交。您提交的第一个 Pull Request (PR) 合并以后，即可成为KaiwuDB文档的贡献者。
 
 
 ## KaiwuDB文档夹与文档对应关系
