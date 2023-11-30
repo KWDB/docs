@@ -1,5 +1,7 @@
 # KaiwuDB文档 
 
+简体中文 | [English](./README.en.md)
+
 欢迎来到KaiwuDB官方文档仓库！
 此仓库存放的是KaiwuDB的支撑文档，包括发版说明、KaiwuDB简介、安装部署手册、管理指南、运维指南、SQL参考手册等内容。
 
