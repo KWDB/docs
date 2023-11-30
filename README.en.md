@@ -1,5 +1,8 @@
 # KaiwuDB Docs
 
+English | [简体中文](./README.md)
+
+
 Welcome to the official KaiwuDB documentation repository! 
 
 Within this repository, you'll find a wealth of supporting documents for KaiwuDB, covering release notes, the KaiwuDB overview, administration guide, operation and maintenance guide, and the SQL reference manual.
