@@ -1,0 +1,72 @@
+---
+title: SQL 参考概述
+id: overview
+---
+
+# SQL 参考概述
+
+本节介绍 KWDB 时序和关系数据处理支持的数据类型、函数、操作符和 SQL 语句等，主要包括以下内容：
+
+- 数据类型
+  - [时序数据类型](./data-type/data-type-ts-db.md)
+  - [关系数据类型](./data-type/data-type-relational-db.md)
+- 函数
+  - [时序数据函数](./functions/functions-ts-db.md)
+  - [关系数据函数](./functions/functions-relational-db.md)
+- 操作符
+  - [时序数据操作符](./operation-symbols/operation-symbols-ts-db.md)
+  - [关系数据操作符](./operation-symbols/operation-symbols-relational-db.md)
+- [标识符](./sql-identifiers.md)
+- [关键字](./sql-keywords.md)
+- DDL 语句
+  - 时序数据
+    - [时序数据库](./ddl/ts-db/ts-database.md)
+    - [时序表](./ddl/ts-db/ts-table.md)
+    - [列](./ddl/ts-db/ts-column.md)
+    - [标签](./ddl/ts-db/ts-label.md)
+  - 关系数据
+    - [关系数据库](./ddl/relational-db/relational-database.md)
+    - [模式](./ddl/relational-db/relational-schema.md)
+    - [关系表](./ddl/relational-db/relational-table.md)
+    - [列](./ddl/relational-db/relational-column.md)
+    - [视图](./ddl/relational-db/relational-view.md)
+    - [索引](./ddl/relational-db/relational-index.md)
+    - [约束](./ddl/relational-db/relational-constraint.md)
+    - [区域配置](./ddl/relational-db/relational-zone.md)
+    - [序列](./ddl/relational-db/relational-sequence.md)
+    - [Range](./ddl/relational-db/relational-range.md)
+    - [注释](./ddl/relational-db/relational-comment.md)
+- DML 语句
+  - 时序数据
+    - [SELECT](./dml/ts-db/ts-select.md)
+    - [INSERT](./dml/ts-db/ts-insert.md)
+    - [DELETE](./dml/ts-db/ts-delete.md)
+    - [UPDATE](./dml/ts-db/ts-update.md)
+    - [PREPARE](./dml/ts-db/ts-prepare.md)
+    - [SELECT 优化](./dml/ts-db/ts-select-optimization.md)
+  - 时序数据
+    - [SELECT](./dml/relational-db/relational-select.md)
+    - [INSERT](./dml/relational-db/relational-insert.md)
+    - [UPDATE](./dml/relational-db/relational-update.md)
+    - [UPSERT](./dml/relational-db/relational-upsert.md)
+    - [DELETE](./dml/relational-db/relational-delete.md)
+    - [TRUNCATE](./dml/relational-db/relational-truncate.md)
+    - [SELECT 优化](./dml/relational-db/relational-select-optimization.md)
+  - [跨模查询](./dml/data-query.md)
+- 数据库管理语句
+  - [用户管理](./db-mgmt/user-mgmt-sql.md)
+  - [角色管理](./db-mgmt/role-mgmt-sql.md)
+  - [权限管理](./db-mgmt/privilege-mgmt-sql.md)
+  - [审计策略管理](./db-mgmt/audit-mgmt-sql.md)
+- 其他语句
+  - [自定义函数](./other-sql-statements/self-defined-functions-sql.md)
+  - [查询](./other-sql-statements/query-sql.md)
+  - [事务](./other-sql-statements/transactions-sql.md)
+  - [统计信息](./other-sql-statements/statistics-sql.md)
+  - [任务](./other-sql-statements/jobs-sql.md)
+  - [定时任务](./other-sql-statements/schedules-sql.md)
+  - [会话](./other-sql-statements/sessions-sql.md)
+  - [集群设置](./other-sql-statements/cluster-settings-sql.md)
+  - [分区](./other-sql-statements/partitions-sql.md)
+- [系统视图](./system-view-sql.md)
+- [NULL 值管理](./null-value-mgmt.md)
