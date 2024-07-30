@@ -7,6 +7,10 @@ id: relational-insert
 
 `INSERT` 语句用于向表中写入一行或多行数据。如果写入的数据与唯一性约束冲突，可以使用 `INSERT ON CONFLICT` 子句更新数据。
 
+::: warning 说明
+当用户环境的数据量大于 20 万、并发数大于 100 时，避免执行 `INSERT INTO SELECT` 语句。
+:::
+
 ## 所需权限
 
 用户拥有目标表的 INSERT 权限。如需使用 `INSERT ON CONFLICT`、`ON CONFLICT DO UPDATE` 子句，用户还需要拥有目标表的 SELECT 和 UPDATE 权限。
