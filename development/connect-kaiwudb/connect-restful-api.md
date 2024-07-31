@@ -15,7 +15,7 @@ https://<hostname>:<port>/<endpoint>?[db=<db_name>]
 
 - `hostname`：KWDB 服务器的 IP 地址或者 FQDN（Fully Qualified Domain Name，完全限定域名）。
 - `port`：KWDB 服务器的 HTTP 访问端口，默认是 `8080`。
-- `db_name`：可选参数, 用于指定目标数据库。如未指定，则使用系统默认创建的 `defaultdb` 数据库。
+- `db_name`：可选参数, 用于指定目标数据库。如未指定，则使用系统默认创建的 `defaultdb` 数据库。[Login 接口](#login-接口)不支持设置该参数。
 
 ## 支持的 RESTful API 接口
 
