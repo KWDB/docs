@@ -10,6 +10,10 @@ id: log-mgmt
 - [集群规划](./cluster-planning.md)
 - [存储管理](./storage-mgmt.md)
 - [集群参数配置](./cluster-settings-config.md)
+- 集群监控
+  - [集群监控概述](./cluster-monitoring/monitor-cluster-overview.md)
+  - [部署监控](./cluster-monitoring/deploy-monitoring.md)
+  - [查看指标数据](./cluster-monitoring/view-metrics.md)
 - [日志管理](./log-mgmt.md)
 - [时区设置](./timezone-mgmt.md)
 - [集群高可用](./cluster-ha.md)
