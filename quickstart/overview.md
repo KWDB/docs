@@ -13,7 +13,7 @@ id: overview
 
   - [单节点裸机部署](./install-kaiwudb/quickstart-bare-metal.md)
   - [单节点容器部署](./install-kaiwudb/quickstart-docker.md)
-  - [源码编译]()<!--待添加文档链接-->
+  - [源码编译](https://gitee.com/kwdb/kwdb/blob/master/README.md)
 
 - 使用 KWDB
 
