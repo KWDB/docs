@@ -1,6 +1,6 @@
 ---
 title: 功能概览
-id: supported-functions
+id: supported-features
 ---
 
 # 功能概览
@@ -244,7 +244,7 @@ id: supported-functions
 
 | 功能 | 企业版 | 社区版 |
 | --- | --- | --- |
-| [查看集群节点指标数据](../db-operation/cluster-monitoring/view-metrics.md) | Y | Y |
+| 查看集群节点指标数据| Y | Y |
 | 查看数据库、表、权限配置 | Y | N |
 | 查看已完成的热点查询、高延迟的 SQL 语句、SQL 语句的具体信息 | Y | N |
 | 查看数据库操作的事件类型、详情、发生时间 | Y | N |

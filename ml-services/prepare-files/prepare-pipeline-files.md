@@ -12,11 +12,11 @@ id: prepare-pipeline-files
 ```python
 pipeline/
 ├── pipeline/
-    ├── train.py          # 用户定义的模型训练脚本 （必选）
-    ├── evaluate.py       # 用户定义的模型评估脚本 (可选)
-    ├── batch_predict.py  # 用户定义的批量预测脚本 (可选)
+    ├── train.py          # 用户定义的模型训练脚本（必选）
+    ├── evaluate.py       # 用户定义的模型评估脚本（可选）
+    ├── batch_predict.py  # 用户定义的批量预测脚本（可选）
 ├── requirements.txt  # Python 包依赖文件（可选）
-└─ modules.zip                   # 用户自定义依赖文件 （可选）
+└─ modules.zip                   # 用户自定义依赖文件（可选）
     ├─ custom_dependency.py     # 用户自定义依赖的 .py 文件
 ```
 
