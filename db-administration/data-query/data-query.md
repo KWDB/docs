@@ -45,7 +45,7 @@ KWDB 跨模查询支持以下联合查询：
 
 ## 语法示例
 
-以下示例假设已创建 `tsdb` 时序数据库、`rdb` 关系数据库、 关系表 `DeviceModel` 和 `Device`、时序表 `MonitoringCenter` 并写入相关数据。
+以下示例假设已创建 `tsdb` 时序数据库、`rdb` 关系数据库、关系表 `DeviceModel` 和 `Device`、时序表 `MonitoringCenter` 并写入相关数据。
 
 - 关联查询
 

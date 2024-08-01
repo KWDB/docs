@@ -126,7 +126,7 @@ KWDB 使用 [Prometheus](https://prometheus.io/) 采集和存储 KWDB 集群的�
 2. 在 Grafana 左侧边栏，单击 **Connections** > **Data sources**。
 3. 在 **Data sources** 窗口，单击 **Add data source**，然后选择 **Prometheus**。
 
-    ![](../../static/db-operation/add-prometheus-data-source.png)
+    ![](../../static/db-monitor/add-prometheus-data-source.png)
 
 4. 配置 Prometheus 的相关信息。
 
@@ -156,7 +156,7 @@ KWDB 使用 [Prometheus](https://prometheus.io/) 采集和存储 KWDB 集群的�
 2. 在 **Dashboard** 窗口，单击 **New**，然后从下列菜单中选择 **Import**。
 3. 上传目标面板文件，然后单击 **Load**。
 
-    ![](../../static/db-operation/load-dashboards.png)
+    ![](../../static/db-monitor/load-dashboards.png)
 
     ::: warning 说明
 

@@ -5,15 +5,11 @@ id: log-mgmt
 
 # 数据库运维概述
 
-本节面向所有使用 KWDB 数据库的用户，主要是数据库管理员和应用程序开发人员。本节包括以下内容：
+本节面向所有使用 KaiwuDB 数据库的用户，主要是数据库管理员和应用程序开发人员。本节包括以下内容：
 
 - [集群规划](./cluster-planning.md)
 - [存储管理](./storage-mgmt.md)
 - [集群参数配置](./cluster-settings-config.md)
-- 集群监控
-  - [集群监控概述](./cluster-monitoring/monitor-cluster-overview.md)
-  - [部署监控](./cluster-monitoring/deploy-monitoring.md)
-  - [查看指标数据](./cluster-monitoring/view-metrics.md)
 - [日志管理](./log-mgmt.md)
 - [时区设置](./timezone-mgmt.md)
 - [集群高可用](./cluster-ha.md)
@@ -28,6 +24,6 @@ id: log-mgmt
 - [故障排查](./db-operation-troubleshooting.md)
 - 错误码
   - [错误码概述](./error-code/error-code-overview.md)
-  - [KWDB 专有错误码](./error-code/error-code-kaiwudb.md)
+  - [KaiwuDB 专有错误码](./error-code/error-code-kaiwudb.md)
   - [PostgreSQL 错误码](./error-code/error-code-postgresql.md)
   - [KaiwuDB JDBC Driver 错误码](./error-code/error-code-jdbc-driver.md)

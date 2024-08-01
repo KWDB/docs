@@ -24,8 +24,8 @@ KWDB 支持使用 Lua 脚本语言在时序和关系数据库中创建、使用�
 | --- | --- |
 | `IF NOT EXISTS` | 可选关键字。当使用 `IF NOT EXISTS` 关键字时，如果目标自定义函数不存在，系统创建自定义函数。如果目标自定义函数存在，系统创建自定义函数失败，但不会报错。当未使用 `IF NOT EXISTS` 关键字时，如果目标自定义函数不存在，系统创建自定义函数。如果目标自定义函数存在，系统报错，提示目标自定义函数已存在。|
 | `function_name` | 自定义函数的名称。自定义函数的名称不能与已有自定义函数或数据库内置函数同名。|
-| `arguments` | 函数参数，需指定参数名称和参数类型，支持的类型包括 TIMESTAMP、INT2、INT4、INT8、FLOAT4、FLOAT8、CHAR、 VARCHAR、NCHAR 和 NVARCHAR。支持指定多个参数，参数之间使用逗号（`,`）隔开。|
-| `return_type` | 返回类型。支持的类型包括 TIMESTAMP、INT2、INT4、INT8、FLOAT4、FLOAT8、CHAR、 VARCHAR、NCHAR 和 NVARCHAR。|
+| `arguments` | 函数参数，需指定参数名称和参数类型，支持的类型包括 TIMESTAMP、INT2、INT4、INT8、FLOAT4、FLOAT8、CHAR、VARCHAR、NCHAR 和 NVARCHAR。支持指定多个参数，参数之间使用逗号（`,`）隔开。|
+| `return_type` | 返回类型。支持的类型包括 TIMESTAMP、INT2、INT4、INT8、FLOAT4、FLOAT8、CHAR、VARCHAR、NCHAR 和 NVARCHAR。|
 | `function_content` | 函数内容，需要使用单引号（`''`）将函数内容括起来。如果函数内容中包含特殊字符，系统会自动进行转义，例如单引号（`''`） 会被转义为`'`。|
 
 ### 语法示例
