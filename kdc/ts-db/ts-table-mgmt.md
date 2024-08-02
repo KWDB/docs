@@ -232,7 +232,7 @@ KaiwuDB 开发者中心支持为时序表生成以下 SQL 语句：
 
 - 转换后的数据类型宽度必须大于原数据类型的宽度，如 `INT4` 可以转换为 `INT8`，但不能转换为 `INT2`，`CHAR(200)` 可以转为 `VARCHAR(254)`，但不能转为 `VARCHAR(100)`。
 - CHAR、VARCHAR、NCHAR 和 NVARCHAR 字符类型支持与数据类型的宽度转换，但只能增加宽度不能降低宽度，例如 `CHAR(100)` 可以转换成 `CHAR(200)`, 不能转换为 `CHAR(50)`。
-- 数值类型转字符类型和字符类型间转换需满足特殊要求。更多信息，参见 [SQL 参考](../../sql-reference/overview.md)。
+- 数值类型转字符类型和字符类型间转换需满足特殊要求。更多信息，参见[时序数据类型](../../sql-reference/data-type/data-type-ts-db.md)。
 
 :::
 
@@ -337,7 +337,7 @@ KaiwuDB 开发者中心支持修改标签的数据类型和宽度。
 
 - 转换后的数据类型宽度必须大于原数据类型的宽度，如 `INT4` 可以转换为 `INT8`，但不能转换为 `INT2`，`CHAR(200)` 可以转为 `VARCHAR(254)`，但不能转为 `VARCHAR(100)`。
 - CHAR、VARCHAR、NCHAR 和 NVARCHAR 字符类型支持与数据类型的宽度转换，但只能增加宽度不能降低宽度，例如 `CHAR(100)` 可以转换成 `CHAR(200)`, 不能转换为 `CHAR(50)`。
-- 数值类型转字符类型和字符类型间转换需满足特殊要求。更多信息，参见[修改列](../../sql-reference/ddl/ts-db/ts-column.md#修改列)。
+- 数值类型转字符类型和字符类型间转换需满足特殊要求。更多信息，参见[时序数据类型](../../sql-reference/data-type/data-type-ts-db.md)。
 
 :::
 

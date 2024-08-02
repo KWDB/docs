@@ -5,7 +5,7 @@ id: access-kaiwudb-jdbc
 
 # 使用 KaiwuDB JDBC 连接 KWDB
 
-安装部署完 KWDB 以后，用户可以使用 [KaiwuDB JDBC](../../development/connect-kaiwudb/connect-jdbc.md) 连接和使用 KWDB。本文介绍如何使用 KaiwuDB JDBC 访问 KWDB 数据库。
+安装部署完 KWDB 以后，用户可以使用 [KaiwuDB JDBC](../../development/connect-kaiwudb/connect-jdbc.md) 连接和管理 KWDB。本文介绍如何使用 KaiwuDB JDBC 访问 KWDB 数据库。
 
 ## 安装 KaiwuDB JDBC
 

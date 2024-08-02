@@ -21,8 +21,8 @@ KaiwuDB 预测分析引擎支持用户通过 SQL 语句进行管理和预测分�
 - [模型导入和预测流程](./ml-service-workflow.md)
 - [安装预测分析引擎](./ml-service-install.md)
 - 文件准备
-  - [预测流程简介](./prepare-files/predict-workflow.md)
-  - [训练数据预处理](./prepare-files/prepare-data.md)
+  - [预测流程](./prepare-files/predict-workflow.md)
+  - [训练数据](./prepare-files/prepare-data.md)
   - [模型文件](./prepare-files/prepare-model-files.md)
   - [流水线文件](./prepare-files/prepare-pipeline-files.md)
 - 基于 SQL 函数的预测分析

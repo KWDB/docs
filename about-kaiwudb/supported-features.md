@@ -23,7 +23,7 @@ id: supported-features
 | [数值类型](../sql-reference/data-type/data-type-relational-db.md#数值类型) | Y | Y |
 | [布尔类型](../sql-reference/data-type/data-type-relational-db.md#布尔类型) | Y | Y |
 | [字符类型](../sql-reference/data-type/data-type-relational-db.md#字符类型) | Y | Y |
-| [日期和时间类型](../sql-reference/data-type/data-type-relational-db.md#) | Y | Y |
+| [日期和时间类型](../sql-reference/data-type/data-type-relational-db.md#日期和时间类型) | Y | Y |
 | [JSONB 类型](../sql-reference/data-type/data-type-relational-db.md#jsonb-类型) | Y | Y |
 | [数组类型](../sql-reference/data-type/data-type-relational-db.md#数组类型) | Y | Y |
 | [INET 类型](../sql-reference/data-type/data-type-relational-db.md#inet-类型) | Y | Y |

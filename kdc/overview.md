@@ -14,12 +14,12 @@ KaiwuDB 开发者中心涵盖了数据库连接、数据库管理、模式管理
 - [安装 KaiwuDB 开发者中心](./kdc-install.md)
 - [连接 KWDB 数据库](./kdc-db-connect.md)
 - [用户界面](./kdc-user-interface.md)
-- 时序数据库
+- 时序数据
   - [时序数据库管理](./ts-db/ts-db-mgmt.md)
   - [模式管理](./ts-db/ts-schema-mgmt.md)
   - [时序表管理](./ts-db/ts-table-mgmt.md)
   - [会话信息](./ts-db/ts-session-mgmt.md)
-- 关系数据库
+- 关系数据
   - [关系数据库管理](./relational-db/relational-db-mgmt.md)
   - [模式管理](./relational-db/relational-schema-mgmt.md)
   - [关系表管理](./relational-db/relational-table-mgmt.md)
