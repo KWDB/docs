@@ -127,7 +127,7 @@ KaiwuDBReader 通过 DataX 将 KWDB 数据库的数据写出到其他数据库�
    | KaiwuDBWriter-04:DataX 类型无法正确映射到 KWDB 类型 | 检查使用的 DataX 是否支持映射到 KWDB 数据类型。更多信息，参见[数据类型映射](#数据类型映射)。 |
    | KaiwuDBWriter-05:尚未支持实现                          | 功能不支持。                                                                                          |
 
-### 配置举例
+### 配置示例
 
 #### 从 MySQL 同步到 KWDB
 
@@ -145,7 +145,7 @@ CREATE TS DATABASE benchmark;
 CREATE TABLE benchmark.cpu (k_timestamp TIMESTAMPTZ NOT NULL, usage_user INT8 NOT NULL, usage_system INT8 NOT NULL, usage_idle INT8 NOT NULL) TAGS (id INT8 NOT NULL, hostname VARCHAR NOT NULL, region VARCHAR NOT NULL, datacenter VARCHAR NOT NULL) PRIMARY TAGS (id);
 ```
 
-**全量数据同步配置举例**
+**全量数据同步配置示例**
 
 - 有关 MysqlWriter 配置参数的详细信息，参见 [Writer 参数说明](#writer-参数说明)。
 - 有关 KaiwuDBReader 配置参数的详细信息，参见 [Reader 参数说明](#reader-参数说明)。
@@ -226,7 +226,7 @@ CREATE TABLE benchmark.cpu (k_timestamp TIMESTAMPTZ NOT NULL, usage_user INT8 NO
  }
 ```
 
-**增量数据同步配置举例**
+**增量数据同步配置示例**
 
 DataX 支持通过 reader 中的 `querySql` 或 `table` 和 `where` 参数限定数据读取范围，从而实现增量数据同步。
 
@@ -676,7 +676,7 @@ DataX 作业配置示例如下：
    python ../bin/datax.py kaiwudb2mysql.json
    ```
 
-### 配置举例
+### 配置示例
 
 #### 从 KWDB 同步到 MySQL
 
