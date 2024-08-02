@@ -11,7 +11,7 @@ id: log-mgmt
 - [存储管理](./storage-mgmt.md)
 - [集群参数配置](./cluster-settings-config.md)
 - [日志管理](./log-mgmt.md)
-- [时区设置](./timezone-mgmt.md)
+- [时区管理](./timezone-mgmt.md)
 - [集群高可用](./cluster-ha.md)
 - 集群安全
   - [安全概述](./security/security-overview.md)

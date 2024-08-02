@@ -5,7 +5,7 @@ id: access-kaiwudb-kdc
 
 # 使用 KaiwuDB 开发者中心连接 KWDB
 
-安装部署完 KWDB 以后，用户可以使用 [KaiwuDB Developer Center（KaiwuDB 开发者中心）](../../kdc/overview.md)连接和使用 KWDB。本文介绍如何使用 KaiwuDB 开发者中心可视化工具连接 KWDB 数据库。
+安装部署完 KWDB 以后，用户可以使用 [KaiwuDB Developer Center（KaiwuDB 开发者中心）](../../kdc/overview.md)连接和管理 KWDB。本文介绍如何使用 KaiwuDB 开发者中心可视化工具连接 KWDB 数据库。
 
 ## 安装 KaiwuDB 开发者中心
 

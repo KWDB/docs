@@ -15,7 +15,7 @@ id: overview
   - [单节点容器部署](./install-kaiwudb/quickstart-docker.md)
   - [源码编译](https://gitee.com/kwdb/kwdb/blob/master/README.md)
 
-- 使用 KWDB
+- 管理 KWDB
 
     用户可以采取以下任一方式连接 KWDB 服务端并进行 SQL 操作：
 

@@ -3,7 +3,7 @@ title: 模型文件
 id: prepare-model-files
 ---
 
-# 准备模型文件
+# 模型文件
 
 ## 训练模型
 

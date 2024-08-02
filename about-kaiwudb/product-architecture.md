@@ -7,7 +7,7 @@ id: product-architecture
 
 相比传统的数据库，KWDB 提供多模数据管理能力，支持不同数据模型的统一存储，助力企业跨部门、跨业务统一管理数据，实现多业务数据融合，支撑多样化的应用服务。KWDB 的产品架构如下图所示：
 
-![](../static/about-kaiwudb/Bg7Xbj42woznZkxdvEbcAC9Tnfi.png)
+![](../static/about-kaiwudb/kwdb-architecture.png)
 
 - **数据存储**：采用行列混存架构，支持固态硬盘、机械硬盘、云存储等各类存储设备。
 - **数据副本**：采用 Shared Nothing 架构，基于 Raft 协议的高可用、多副本架构，支持数据均衡及容错，保障数据服务不中断。

@@ -30,4 +30,4 @@ WAL 日志文件由多个文件组成，称为 WAL 日志文件组。默认情�
 
 ## 备份
 
-目前，KWDB 支持通过数据导入、导出的方式进行数据库库级别和表级别的数据备份。具体信息，参见[数据导入](../db-administration/import-export-data/import-data.md)和[数据导出](../db-administration/import-export-data/import-data.md)。
+目前，KWDB 支持通过数据导入、导出的方式进行数据库库级别和表级别的数据备份。具体信息，参见[数据导入](../db-administration/import-export-data/import-data.md)和[数据导出](../db-administration/import-export-data/export-data.md)。
