@@ -69,7 +69,7 @@ public Connection getConnection() throws Exception{
 
 有关 KaiwuDB JDBC 连接方式和连接参数的详细信息，参见[连接方式](#连接方式)和[连接参数](#连接参数)。
 
-## 配置举例
+## 配置示例
 
 本节通过一些简单的示例展示如何使用 Java 应用程序进行数据库的 SQL 操作。如需了解更多 SQL 语句的使用，参见 [SQL 参考](../../sql-reference/overview.md)。
 

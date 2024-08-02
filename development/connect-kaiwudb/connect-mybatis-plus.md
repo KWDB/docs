@@ -13,15 +13,16 @@ id: connect-mybatis-plus
 
 - [安装 Java](https://docs.oracle.com/en/java/javase/22/install/overview-jdk-installation.html)（1.8 及以上版本）。
 - [安装 Maven](https://maven.apache.org/install.html)（3.6 及以上版本）。
-- 安装 KWDB 数据库、配置数据库认证方式、创建数据库。
+- 安装 KaiwuDB 数据库、配置数据库认证方式、创建数据库、创建具有表级别及以上操作权限的用户。
 - 获取 KaiwuDB JDBC 驱动包。
+- 获取 MyBatis-Plus 驱动包。
 
 ## 配置连接
 
 1. 运行以下命令，将 KaiwuDB JDBC 安装到本地 Maven 仓库中。
 
     ```shell
-    mvn install:install-file"-Dfile=../kaiwudb-jdbc.2.0.2.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=2.0.2" "-Dpackaging=jar"
+    mvn install:install-file"-Dfile=../kaiwudb-jdbc.2.0.4.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=2.0.4" "-Dpackaging=jar"
     ```
 
 2. 在 `pom.xml` 中添加依赖，将 KaiwuDB JDBC、MyBatis-Plus、Lombok 等依赖引入到应用程序中。
@@ -43,21 +44,21 @@ id: connect-mybatis-plus
         <dependency>
           <groupId>com.kaiwudb</groupId>
           <artifactId>kaiwudb-jdbc</artifactId>
-          <version>2.0.2</version>
+          <version>2.0.4</version>
         </dependency>
 
         <!-- mybatis plus -->
         <dependency>
           <groupId>com.baomidou</groupId>
           <artifactId>mybatis-plus-boot-starter</artifactId>
-          <version>3.5.3.1</version>
+          <version>3.5.5</version>
         </dependency>
 
         <!-- swagger -->
         <dependency>
           <groupId>com.github.xiaoymin</groupId>
           <artifactId>knife4j-spring-boot-starter</artifactId>
-          <version>2.0.3</version>
+          <version>2.0.4</version>
         </dependency>
 
         <!-- lombok -->
@@ -75,7 +76,7 @@ id: connect-mybatis-plus
     在 `application.yml` 文件配置数据源信息。
 
     ::: warning 说明
-    以下示例展示如何连接单个数据库。如需要连接多个数据库，参见 [MyBatis 配置示例](./connect-mybatis.md)。
+    以下示例展示如何连接单个数据库。如需要连接多个数据库，参见 [MyBatis 配置示例](./connect-mybatis.md#配置示例)。
     :::
 
     ```yaml
@@ -101,7 +102,21 @@ id: connect-mybatis-plus
       port: 8989 
     ```
 
-## 配置举例
+4. (可选) 如需实现分页查询，创建配置类，例如 `MybatisPlusConfig`，并添加分页配置。
+
+    ```java
+    @Configuration
+    public class MybatisPlusConfig {
+      @Bean
+      public MybatisPlusInterceptor mybatisPlusInterceptor() {
+        MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
+        interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.POSTGRE_SQL));
+        return interceptor;
+      }
+    }
+    ```
+
+## 配置示例
 
 以下示例假设已经在数据库中创建了名为**危化品车辆**的表，批量插入了部分数据，并提供外部接口来接受外部请求。
 
@@ -147,37 +162,37 @@ id: connect-mybatis-plus
 
       <mapper namespace="com.inspur.kwdb.mapper.WhpMapper">
 
-    <insert id="insertList"
-    parameterType="java.util.List">
-    insert into dcjg_whp_wxhwdlysdzqd  (gtime,transporttaskno,hipper_id,hipper_name,hipper_phone,transport_id,transport_name,transport_phone,transport_zi,transport_no,jjlxdh,cmvecid,branum,vectype,bracolor,supercargoid,supercargoname,supercargonum,supercargophone,driverid,drivernum,drivername,driverphone)
-    values
-    <foreach
-    collection="list" item="item" separator=",">
-    ('${item.gtime}',
-    '${item.transporttaskno}',
-    '${item.hipperId}',
-    '${item.hipperName}',
-    '${item.hipperPhone}',
-    '${item.transportId}',
-    '${item.transportName}',
-    '${item.transportPhone}',
-    '${item.transportZi}',
-    '${item.transportNo}',
-    '${item.jjlxdh}',
-    '${item.cmvecid}',
-    '${item.branum}',
-    '${item.vectype}',
-    '${item.bracolor}',
-    '${item.supercargoid}',
-    '${item.supercargoname}',
-    '${item.supercargonum}',
-    '${item.supercargophone}',
-    '${item.driverid}',
-    '${item.drivernum}',
-    '${item.drivername}',
-    '${item.driverphone}')
-    </foreach>
-    </insert>
+      <insert id="insertList"
+      parameterType="java.util.List">
+        insert into dcjg_whp_wxhwdlysdzqd  (gtime,transporttaskno,hipper_id,hipper_name,hipper_phone,transport_id,transport_name,transport_phone,transport_zi,transport_no,jjlxdh,cmvecid,branum,vectype,bracolor,supercargoid,supercargoname,supercargonum,supercargophone,driverid,drivernum,drivername,driverphone)
+        values
+        <foreach
+      collection="list" item="item" separator=",">
+          ('${item.gtime}',
+          '${item.transporttaskno}',
+          '${item.hipperId}',
+          '${item.hipperName}',
+          '${item.hipperPhone}',
+          '${item.transportId}',
+          '${item.transportName}',
+          '${item.transportPhone}',
+          '${item.transportZi}',
+          '${item.transportNo}',
+          '${item.jjlxdh}',
+          '${item.cmvecid}',
+          '${item.branum}',
+          '${item.vectype}',
+          '${item.bracolor}',
+          '${item.supercargoid}',
+          '${item.supercargoname}',
+          '${item.supercargonum}',
+          '${item.supercargophone}',
+          '${item.driverid}',
+          '${item.drivernum}',
+          '${item.drivername}',
+          '${item.driverphone}')
+        </foreach>
+      </insert>
     </mapper>
     ```
 
@@ -196,29 +211,29 @@ id: connect-mybatis-plus
     ```java
     @Service
     class WhpServiceImpl implements WhpService {
-    @Autowired
-    private WhpMapper mapper;
+      @Autowired
+      private WhpMapper mapper;
 
-    @Override
-    public void createTable() {
-    mapper.createTable();
-    }
+      @Override
+      public void createTable() {
+        mapper.createTable();
+      }
 
-    @Override
-    public int insertList() {
-    List<Whp> list = new ArrayList<>();
-    list.add(new Whp());
-    list.add(new Whp());
-    list.add(new Whp());
-    return mapper.insertList(list);
-    }
+      @Override
+      public int insertList() {
+        List<Whp> list = new ArrayList<>();
+        list.add(new Whp());
+        list.add(new Whp());
+        list.add(new Whp());
+        return mapper.insertList(list);
+      }
 
-    @Override
-    public List<Whp> findList() {
-    Timestamp startTime = Timestamp.valueOf("2023-11-01 00:00:00");
-    Timestamp endTime = Timestamp.valueOf("2023-11-30 23:59:59");
-    return mapper.findList(startTime,endTime);
-    }
+      @Override
+      public List<Whp> findList() {
+        Timestamp startTime = Timestamp.valueOf("2023-11-01 00:00:00");
+        Timestamp endTime = Timestamp.valueOf("2023-11-30 23:59:59");
+        return mapper.findList(startTime,endTime);
+      }
     }
     ```
 
@@ -226,51 +241,64 @@ id: connect-mybatis-plus
 
     ```java
     @RestController
-    @RequestMapping("whp")
-    @Api(tags = "1 危化品车辆接口")
-    @ApiSort(value = 1)
-    public class WhpController {
-      private final static Logger LOGGER = LoggerFactory.getLogger(WhpController.class);
+      @RequestMapping("whp")
+      @Api(tags = "1 危化品车辆接口")
+      @ApiSort(value = 1)
+      public class WhpController {
+        private final static Logger LOGGER = LoggerFactory.getLogger(WhpController.class);
 
-      @Autowired
-      private WhpService service;
+        @Autowired
+        private WhpService service;
 
-      @ApiOperation(value = "1.1 创建危化品车辆表")
-      @ApiOperationSupport(order = 10)
-      @GetMapping("create")
-      public String create() {
-        try {
-          service.createTable();
-          return "创建危化品车辆表成功";
-        } catch (Exception e) {
-          LOGGER.info(e.getMessage());
-          return "创建危化品车辆表失败: " + e.getMessage();
+        @ApiOperation(value = "1.1 创建危化品车辆表")
+        @ApiOperationSupport(order = 10)
+        @GetMapping("create")
+        public String create() {
+          try {
+            service.createTable();
+            return "创建危化品车辆表成功";
+          } catch (Exception e) {
+            LOGGER.info(e.getMessage());
+            return "创建危化品车辆表失败: " + e.getMessage();
+          }
         }
-      }
 
-      @ApiOperation(value = "1.2 批量插入危化品车辆数据")
-      @ApiOperationSupport(order = 20)
-      @GetMapping("add")
-      public int add() {
-        try {
-          return service.insertList();
-        } catch (Exception e) {
-          LOGGER.info(e.getMessage());
+        @ApiOperation(value = "1.2 批量插入危化品车辆数据")
+        @ApiOperationSupport(order = 20)
+        @GetMapping("add")
+        public int add() {
+          try {
+            return service.insertList();
+          } catch (Exception e) {
+            LOGGER.info(e.getMessage());
+          }
+          return 0;
         }
-        return 0;
-      }
 
-      @ApiOperation(value = "1.3 查询危化品车辆数据列表")
-      @ApiOperationSupport(order = 30)
-      @GetMapping("list")
-      public List<Whp> findList() {
-        try {
-          return service.findList();
-        } catch (Exception e) {
-          LOGGER.info(e.getMessage());
-        }
-        return null;
-      }
+        @ApiOperation(value = "1.3 查询危化品车辆数据列表")
+        @ApiOperationSupport(order = 30)
+        @GetMapping("list")
+        public List<Whp> findList() {
+          try {
+            return service.findList();
+          } catch (Exception e) {
+            LOGGER.info(e.getMessage());
+          }
+          return null;
+        }  
+    }
+    ```
 
+6. 创建配置类 `WhpConfig`。
+
+    ```java
+    @Configuration
+    public class MybatisPlusConfig {
+      @Bean
+      public MybatisPlusInterceptor mybatisPlusInterceptor() {
+        MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
+        interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.POSTGRE_SQL));
+        return interceptor;
+      }
     }
     ```

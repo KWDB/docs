@@ -21,7 +21,7 @@ id: connect-mybatis
 1. 运行以下命令，将 KaiwuDB JDBC 安装到本地 Maven 仓库中。
 
     ```shell
-    mvn install:install-file"-Dfile=../kaiwudb-jdbc.2.0.2.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=2.0.2" "-Dpackaging=jar"
+    mvn install:install-file"-Dfile=../kaiwudb-jdbc.2.0.4.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=2.0.4" "-Dpackaging=jar"
     ```
 
 2. 在 `pom.xml` 中添加依赖，将 KaiwuDB JDBC 驱动和 MyBatis 引入到应用程序中。
@@ -31,7 +31,7 @@ id: connect-mybatis
     <dependency>
     <groupId>com.kaiwudb</groupId>
     <artifactId>kaiwudb-jdbc</artifactId>
-    <version>2.0.2</version>
+    <version>2.0.4</version>
     </dependency>
 
     <!--mybatis-->
@@ -164,13 +164,13 @@ id: connect-mybatis
         }
         ```
 
-## 配置举例
+## 配置示例
 
 在 SpringBoot+MyBatis 应用程序中，用户调用接口访问及操作数据时，内部数据传递流程如下图所示：
 
 ![](../../static/development/HA0TbvWieoRopKxMB66cM4rSngg.png)
 
-当 SpringBoot 集成 KaiwuDB JDBC 和 MyBatis 后，用户可以使用 MyBatis 编写 Controller 层、Service 层、Mapper 层及 XML 应用程序，从而实现与 KWDB 的数据信息交互及操作使用等。为了便于用户基于 MyBatis 快速开发适用于 KWDB 数据库的应用程序，本节介绍 MyBatis 应用开发的基本流程并针对流程中的 Controller 层、Service 层、Mapper 层及 XML 提供相应的配置举例。
+当 SpringBoot 集成 KaiwuDB JDBC 和 MyBatis 后，用户可以使用 MyBatis 编写 Controller 层、Service 层、Mapper 层及 XML 应用程序，从而实现与 KWDB 的数据信息交互及操作使用等。为了便于用户基于 MyBatis 快速开发适用于 KWDB 数据库的应用程序，本节介绍 MyBatis 应用开发的基本流程并针对流程中的 Controller 层、Service 层、Mapper 层及 XML 提供相应的配置示例。
 
 ### 时序数据库应用
 
@@ -183,49 +183,49 @@ id: connect-mybatis
     ```java
     // 定义表结构实体类
     @ApiModel(value = "TsdbTable", description = "时序表结构实体类")
-    @Data
-    public class TsdbTable implements Serializable {
-      @ApiModelProperty(value = "表名", required = true)
-      private String tableName;
-      @ApiModelProperty(value = "表字段", required = true)
-      private String columns;
-      @ApiModelProperty(value = "表标签", required = true)
-      private String tags;
+      @Data
+      public class TsdbTable implements Serializable {
+        @ApiModelProperty(value = "表名", required = true)
+        private String tableName;
+        @ApiModelProperty(value = "表字段", required = true)
+        private String columns;
+        @ApiModelProperty(value = "表标签", required = true)
+        private String tags;
 
-      public TsdbTable() {}
+        public TsdbTable() {}
 
-      public TsdbTable(String tableName, String columns, String tags) {
-        this.tableName = tableName;
-        this.columns = columns;
-        this.tags = tags;
+        public TsdbTable(String tableName, String columns, String tags) {
+          this.tableName = tableName;
+          this.columns = columns;
+          this.tags = tags;
+        }
       }
-    }
     // 定义表的列信息实体类
     @ApiModel(value = "TsdbData", description = "时序数据类")
-    @Data
-    public class TsdbData implements Serializable {
-      @ApiModelProperty(value = "时间")
-      private String timestamp;
-      @ApiModelProperty(value = "温度")
-      private double temperature;
-      @ApiModelProperty(value = "湿度")
-      private double humidity;
-      @ApiModelProperty(value = "气压")
-      private double pressure;
-    }
+      @Data
+      public class TsdbData implements Serializable {
+        @ApiModelProperty(value = "时间")
+        private String timestamp;
+        @ApiModelProperty(value = "温度")
+        private double temperature;
+        @ApiModelProperty(value = "湿度")
+        private double humidity;
+        @ApiModelProperty(value = "气压")
+        private double pressure;
+      }
     ```
 
 - 时序表的标签结构
 
     ```java
     @ApiModel(value = "TsdbTags", description = "表标签结构类")
-    @Data
-    public class TsdbTag {
-    @ApiModelProperty(value = "标签名")
-    private String tag;
-    @ApiModelProperty(value = "标签类型")
-    private String type;
-    }
+      @Data
+      public class TsdbTag {
+        @ApiModelProperty(value = "标签名")
+        private String tag;
+        @ApiModelProperty(value = "标签类型")
+        private String type;
+      }
     ```
 
 #### Mapper
