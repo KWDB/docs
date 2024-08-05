@@ -1,13 +1,13 @@
 ---
-title: 集群安全概述
-id: security-overview
+title: 数据库安全概述
+id: db-security-overview
 ---
 
-# 集群安全概述
+# 数据库安全概述
 
 KWDB 提供了一系列的安全功能，确保用户数据的保密性、完整性和可用性。
 
-![](../../static/db-operation/BTZLbo7Q0os3VlxOd8zcPcrwntg.png)
+![](../static/db-security/BTZLbo7Q0os3VlxOd8zcPcrwntg.png)
 
 - **加密传输**：KWDB 支持使用 SSL/TLS 协议对客户端和服务器之间的数据传输进行加密，确保数据在传输过程中不被窃取或篡改，提高了数据传输的安全性。
 

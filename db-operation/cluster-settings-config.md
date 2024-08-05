@@ -76,7 +76,7 @@ id: cluster-settings-config
 | `--log-file-max-size`  | 单个日志文件大小达到阈值以后，KWDB 创建新的日志文件并输出日志到新文件。<br >默认值：`10MiB`                                                                                                 |
 | `--log-file-verbosity` | 讲指定日志级别及以上的日志输出到日志文件，例如：`--log-file-verbosity=WARNING`。 <br > 默认值：`INFO`                                                                                                  |
 | `--logtostderr`        | 将指定日志级别及以上的日志输出到 stderr，例如 `--logtostderr=ERROR`。  <br > - 当未指定参数取值时，KWDB 将所有级别的日志输出到 stderr。<br > - 当配置为 `--logtostderr=NONE` 时，表示禁止输出日志到 stderr。 |
-| `--sql-audit-dir`     | 安全审计日志的位置。默认情况下，SQL 审核日志与 KWDB 生成的其他日志写入同一目录。有关更多信息，参见[审计日志](./security/audit-mgmt.md#审计日志)。                                                                     |
+| `--sql-audit-dir`     | 安全审计日志的位置。默认情况下，SQL 审核日志与 KWDB 生成的其他日志写入同一目录。有关更多信息，参见[审计日志](../db-security/audit-mgmt.md#审计日志)。                                                                     |
 
 ### 参数配置
 

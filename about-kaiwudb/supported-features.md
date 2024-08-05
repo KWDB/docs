@@ -233,12 +233,12 @@ id: supported-features
 
 | 功能 | 企业版 | 社区版 |
 | --- | --- | --- |
-| [加密传输](../db-operation/security/transport-encryption.md) | Y | Y |
-| [基于用户名和密码的身份鉴别](../db-operation/security/identity-authn.md#基于用户名和密码的身份鉴别) | Y | Y |
-| [基于主机的认证](../db-operation/security/identity-authn.md#基于主机的认证) | Y | Y |
-| [创建、修改、查看、删除、管理用户和角色](../db-operation/security/user-role-mgmt.md) | Y | Y |
-| [授予、撤销、查看权限](../db-operation/security/privilege-mgmt.md) | Y | Y |
-| [开启、禁用审计功能、创建、修改、查看、删除审计策略](../db-operation/security/audit-mgmt.md) | Y | Y |
+| [加密传输](../db-security/transport-encryption.md) | Y | Y |
+| [基于用户名和密码的身份鉴别](../db-security/identity-authn.md#基于用户名和密码的身份鉴别) | Y | Y |
+| [基于主机的认证](../db-security/identity-authn.md#基于主机的认证) | Y | Y |
+| [创建、修改、查看、删除、管理用户和角色](../db-security/user-role-mgmt.md) | Y | Y |
+| [授予、撤销、查看权限](../db-security/privilege-mgmt.md) | Y | Y |
+| [开启、禁用审计功能、创建、修改、查看、删除审计策略](../db-security/audit-mgmt.md) | Y | Y |
 
 ## 数据库监控
 

@@ -105,7 +105,7 @@ id: faqs
 ## 监控 FAQ
 
 ::: warning 说明
-目前，KaiwuDB 监控平台是企业版特性。如需了解 KaiwuDB 监控平台的更多详细信息，[联系](https://cs.kaiwudb.com/support/) KaiwuDB 技术支持人员。
+目前，KaiwuDB 监控平台是企业版特性。如需了解 KaiwuDB 监控平台的更多详细信息，[联系](https://cs.kaiwudb.com/support/) KWDB 技术支持人员。
 :::
 
 - **问题描述**

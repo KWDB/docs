@@ -13,7 +13,7 @@ id: connect-mybatis-plus
 
 - [安装 Java](https://docs.oracle.com/en/java/javase/22/install/overview-jdk-installation.html)（1.8 及以上版本）。
 - [安装 Maven](https://maven.apache.org/install.html)（3.6 及以上版本）。
-- 安装 KaiwuDB 数据库、配置数据库认证方式、创建数据库、创建具有表级别及以上操作权限的用户。
+- 安装 KWDB 数据库、配置数据库认证方式、创建数据库、创建具有表级别及以上操作权限的用户。
 - 获取 KaiwuDB JDBC 驱动包。
 - 获取 MyBatis-Plus 驱动包。
 
