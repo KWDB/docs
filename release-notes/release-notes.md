@@ -60,7 +60,7 @@ KWDB 是一款面向 AIoT（Artificial Intelligence of Things，智能物联网�
 - 支持开启、关闭数据库审计操作，支持审计 DDL 操作、DML 操作、DCL 操作、DQL 操作。
 - 支持客户端与服务器端通过 HTTPS 等方式进行加密通信。
 
-有关数据库安全的更多详细信息，参见[集群安全概述](../db-operation/security/security-overview.md)。
+有关数据库安全的更多详细信息，参见[数据库安全概述](../db-security/db-security-overview.md)。
 
 ### 数据库兼容
 

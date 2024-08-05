@@ -1,5 +1,5 @@
 ---
-title: 时序数据库
+title: 数据库
 id: ts-database
 ---
 
