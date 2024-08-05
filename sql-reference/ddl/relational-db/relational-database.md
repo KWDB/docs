@@ -1,9 +1,9 @@
 ---
-title: 关系数据库
+title: 数据库
 id: relational-database
 ---
 
-# 数据库对象
+# 数据库
 
 ## 创建数据库
 
