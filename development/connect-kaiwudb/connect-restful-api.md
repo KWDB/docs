@@ -42,6 +42,7 @@ Login 接口用于用户身份授权。系统根据用户名和密码进行 64 �
 
 - 用户每次登录或使用令牌进行操作后，系统会自动更新令牌起始时间，重新计算令牌的到期时间。
 - 默认情况下，系统生成的令牌有效期为 60 分钟。用户可以通过 `SET CLUSTER SETTING server.rest.timeout=<value>` SQL 语句设置令牌的有效期。可配置范围为 `[1, 2^63-1]`，单位为分钟。
+- 使用 RESTful API 进行并发编程时，建议为每个线程分配一个独立的 token，以确保业务操作的顺利进行。并发数限制为 100。
 
 :::
 
@@ -877,7 +878,7 @@ Password: kwdbpassword
       "code":0,
       "session":[{"SessionId":"c98f69fc-c491-11ee-a7c9-   000c29066670","Token":"M/+BAwEBC1Jlc3RmdWxVc2VyAf+CAAECAQhVc2VyTmFtZQEMAAEIUGFzc3dvcmQBDAAAABL/ggEFd3k5OTkBBjEyMzQ1NgA=","MaxLifeTime":3600,"LastLoginTime":"2024-02-06 09:48:12","LoginValid":true,"ExpirationTime":"2024-02-06 10:48:12"},{"SessionId":"0339f5b5-c492-11ee-a7c9-000c29066670","Token":"M/+BAwEBC1Jlc3RmdWxVc2VyAf+CAAECAQhVc2VyTmFtZQEMAAEIUGFzc3dvcmQBDAAAABH/ggEEd3k5OQEGMTIzNDU2AA==","MaxLifeTime":3600,"LastLoginTime":"2024-02-06 09:49:49","LoginValid":true,"ExpirationTime":"2024-02-06 10:49:49"}]
     }
-    ```
+  ```
 
 示例 2：以下示例发送 HTTP 请求，删除会话。
 
@@ -930,6 +931,7 @@ KWDB 提供 Login RESTful API 接口。Login 接口支持根据用户名和密�
 
 - 用户每次登录或使用令牌进行操作后，系统会自动更新令牌起始时间，重新计算令牌的到期时间。
 - 默认情况下，系统生成的令牌有效期为 60 分钟。用户可以通过 `SET CLUSTER SETTING server.rest.timeout=<value>` SQL 语句设置令牌的有效期。可配置范围为 `[1, 2^63-1]`，单位为分钟。
+- 使用 RESTful API 进行并发编程时，建议为每个线程分配一个独立的 token，以确保业务操作的顺利进行。并发数限制为 100。
 
 :::
 
@@ -969,7 +971,7 @@ HTTPS 使用 SSL 加密数据。如需配置与 KWDB 数据库通信使用的加
    ```shell
    # 登录示例
    curl -L --cacert ../certs/ca.crt  -H "Username:rest_user" -H "Password:user123456" -X GET 192.168.122.57:8080/restapi/login
-
+   
    # 查询示例
    curl -L -H "Content-Type:text/plain" -H "Username:rest_user" -H "Password:user123456"    --cacert ../certs/ca.crt -d "select*from t1;" -X POST 192.168.122.57:8080/restapi/query?db=db1
    ```
