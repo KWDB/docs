@@ -475,7 +475,7 @@ CREATE TABLE [IF NOT EXISTS] <table_name>
 ### 语法格式
 
 ```sql
-SHOW TABLES FROM [<database_name>][.<schema_name>] [WITH COMMENT];
+SHOW TABLES [FROM <database_name>][.<schema_name>] [WITH COMMENT];
 ```
 
 ### 参数说明
@@ -491,7 +491,7 @@ SHOW TABLES FROM [<database_name>][.<schema_name>] [WITH COMMENT];
 - 查看当前数据库中的表。
 
     ```sql
-    show tables;
+    SHOW TABLES;
     ```
 
     执行成功后，控制台输出以下信息：
@@ -557,9 +557,9 @@ SHOW TABLES FROM [<database_name>][.<schema_name>] [WITH COMMENT];
     (52 rows)
     ```
 
-- 显示带有注释信息的表。
+- 查看带有注释信息的表。
 
-    以下示例创建一个名为 `users` 的表，并为表添加注释信息。
+    以下示例查看带有注释信息的表。
 
     ```sql
     -- 1. 为 users 表添加注释。

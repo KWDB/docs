@@ -89,6 +89,11 @@ tar -zxvf <package_name>
 
 在部署过程中，系统会自动生成相关日志。如果部署时出现错误，用户可以通过查看终端输出或 KWDB 安装目录中 `log` 目录里的日志文件，获取详细的错误信息。
 
+部署完成后，系统会将 KWDB 封装成系统服务（名称为 `kaiwudb`），并生成以下文件：
+
+- `kaiwudb.service`：配置 KWDB 的 CPU 资源占用率。
+- `kaiwudb_env`：配置 KWDB 启动参数。
+
 ### 前提条件
 
 - 待部署节点的硬件、操作系统、软件依赖和端口满足安装部署要求。
@@ -113,6 +118,7 @@ tar -zxvf <package_name>
     rest_port=8080
     kaiwudb_port=26257
     data_root=/var/lib/kaiwudb
+    cpu=1
     [local]
     node_addr=192.168.64.128
 
