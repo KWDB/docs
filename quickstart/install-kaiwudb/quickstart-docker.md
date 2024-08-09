@@ -96,8 +96,10 @@ tar -zxvf <install_package_name>
 
 在部署过程中，系统会自动生成相关日志。如果部署时出现错误，用户可以通过查看终端输出或 KWDB 安装目录中 `log` 目录里的日志文件，获取详细的错误信息。
 
-::: warning 提示
-容器部署支持使用 YAML（`.yml`）文件和安装脚本两种方式，使用 YAML（`.yml`）文件进行快速部署时，仅支持非安全模式，登录 KWDB 数据库时需使用非安全连接模式。安装脚本部署支持安全模式和非安全模式。具体部署步骤，参见[容器部署](../../deployment/docker/docker-deployment.md)。
+部署完成后，系统生成 `/etc/kaiwudb/` 目录。Docker Compose 配置文件 `docker-compose.yml` 位于 `/etc/kaiwudb/script` 目录下。部署完成后，用户可以修改 Docker Compose 配置文件 `docker-compose.yml`，配置 KWDB 的启动参数和 CPU 资源占用率。有关定制化部署配置的详细信息，参见[配置集群](../../deployment/docker/cluster-config-docker.md)。
+
+::: warning 说明
+支持使用 YAML（`.yml`）文件和安装脚本两种方式部署 KWDB。使用 YAML（`.yml`）文件进行部署时，仅支持非安全模式，登录 KWDB 数据库时需使用非安全连接模式。安装脚本部署支持安全模式和非安全模式。
 :::
 
 ### 前提条件
@@ -109,9 +111,9 @@ tar -zxvf <install_package_name>
   - 未配置 `sudo` 免密的普通用户在执行部署脚本时，需要输入密码进行提权。
 - 安装用户为非 root 用户时，需要通过 `sudo usermod -aG docker $USER` 命令将用户添加到 `docker` 组。
 
-### 部署步骤
+### 使用 YAML 文件部署 KWDB
 
-如需部署 KWDB，遵循以下步骤。
+如需使用 YAML 文件部署 KWDB，遵循以下步骤。
 
 1. 在 `kaiwudb_install/packages` 目录下导入 `KaiwuDB.tar` 文件，获取镜像名称。
 
@@ -165,6 +167,97 @@ tar -zxvf <install_package_name>
     ```
 
 4. （可选）配置 KWDB 开机自启动。
+
+    配置 KWDB 开机自启动后，如果系统重启，则自动启动 KWDB。
+
+    ```shell
+    systemctl enable kaiwudb
+    ```
+
+### 使用安装脚本部署 KWDB
+
+如需使用安装脚本部署 KWDB，遵循以下步骤。
+
+1. 登录待部署节点，编辑安装包目录下的 `deploy.cfg` 配置文件，设置安全模式、管理用户、服务端口等信息。
+
+    ::: warning 说明
+    默认情况下，`deploy.cfg` 配置文件中包含集群配置参数。请删除或注释 `[cluster]` 集群配置项。
+    :::
+
+    配置文件示例：
+
+    ```yaml
+    [global]
+    secure_mode=y
+    management_user=kaiwudb
+    rest_port=8080
+    kaiwudb_port=26257
+    data_root=/var/lib/kaiwudb
+    cpu=1
+    [local]
+    node_addr=192.168.64.128
+
+    # [cluster]
+    # node_addr=192.168.64.129, 192.168.64.130
+    # ssh_port=22
+    # ssh_user=admin
+    ```
+
+    参数说明：
+
+    - `global`：全局配置
+      - `secure_mode`：是否开启安全模式，默认开启安全模式。开启安全模式后，KWDB 生成 TLS 安全证书，作为客户端或应用程序连接数据库的凭证。生成的客户端相关证书存放在 `/etc/kaiwudb/certs` 目录。
+      - `management_user`：KWDB 的管理用户，默认为 `kaiwudb`。安装部署后，KWDB 创建相应的管理用户以及和管理用户同名的用户组。
+      - `rest_port`：KWDB Web 服务端口，默认为 `8080`。
+      - `kaiwudb_port`：KWDB 服务端口，默认为 `26257`。
+      - `data_root`：数据目录，默认为 `/var/lib/kaiwudb`。
+      - `cpu`: 可选参数，用于指定 KWDB 服务占用当前节点服务器 CPU 资源的比例，默认无限制。取值范围为 `[0,1]`，最大精度为小数点后两位。
+    - `local`：本地节点配置
+      - `node_addr`：本地节点对外提供服务的 IP 地址，监听地址为 `0.0.0.0`，端口为 KWDB 服务端口。
+
+2. 为 `deploy.sh` 脚本添加运行权限。
+
+    ```shell
+    chmod +x ./deploy.sh
+    ```
+
+3. 执行单机部署安装命令。
+
+    ```shell
+    ./deploy.sh install --single
+    ```
+
+    执行成功后，控制台输出以下信息：
+
+    ```shell
+    INSTALL COMPLETED: KaiwuDB has been installed successfuly! ...
+    ```
+
+4. 启动 KWDB 节点。
+
+    ```shell
+    ./deploy.sh start
+    ```
+
+    执行成功后，控制台输出以下信息：
+
+    ```shell
+    START COMPLETED: KaiwuDB has started successfuly! ...
+    ```
+
+5. 查看 KWDB 节点状态。
+
+    ```shell
+    ./deploy.sh status
+    ```
+
+    或者
+
+    ```sql
+    systemctl status kaiwudb
+    ```
+
+6. （可选）配置 KWDB 开机自启动。
 
     配置 KWDB 开机自启动后，如果系统重启，则自动启动 KWDB。
 

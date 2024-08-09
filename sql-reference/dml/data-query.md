@@ -66,7 +66,7 @@ KWDB 跨模查询支持以下联合查询：
 
 - 嵌套查询
 
-    以下示例使用相关投影子查询，对设备 ID 与 `tsdb.MonitoringCenter` 的表进行关联，返回相应设备 ID 下的最大状态值。
+    以下示例使用相关投影子查询，对设备 ID 与 `tsdb.MonitoringCenter` 的表进行关联，返回相应设备 ID 下的最新状态。
 
     ```sql
     SELECT d.deviceID,
