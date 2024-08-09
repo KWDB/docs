@@ -5,6 +5,10 @@ id: relational-table
 
 # 关系表
 
+::: warning 说明
+避免频繁地创建、删除关系表。
+:::
+
 ## 创建表
 
 `CREATE TABLE` 语句用于在数据库中创建新表。

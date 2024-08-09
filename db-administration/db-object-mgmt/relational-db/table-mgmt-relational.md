@@ -5,6 +5,10 @@ id: table-mgmt-relational
 
 # 关系表管理
 
+::: warning 说明
+避免频繁地创建、删除关系表。
+:::
+
 ## 创建表
 
 ### 前提条件

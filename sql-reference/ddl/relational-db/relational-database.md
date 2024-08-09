@@ -9,6 +9,10 @@ id: relational-database
 
 `CREATE DATABASE` 语句用于创建关系数据库对象（Relational Database）。每条语句支持创建一个关系数据库。
 
+::: warning 说明
+避免频繁地创建、删除数据库。
+:::
+
 ### 所需权限
 
 用户具有 Admin 角色。默认情况下，root 用户具有 Admin 角色。创建成功后，用户拥有该数据库的全部权限。

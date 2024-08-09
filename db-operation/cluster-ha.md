@@ -11,6 +11,7 @@ id: cluster-ha
 
 - 避免使用 HDD 磁盘部署分布式集群。
 - 初始化和启动集群大约需要 10 秒左右的时间。在此期间，如果有节点死亡，可能会导致集群无法触发高可用机制。
+- 启动集群后，在 `kaiwudb_env` 或 `docker-compose.yml` 文件中配置 `KWBASE_RAFT_ELECTION_TIMEOUT_TICKS=100` 环境变量，然后重启 KaiwuDB 服务，可以避免偶发的性能下降问题。
 - 待迁移表的数量会影响实际节点状态的更新时间。需要迁移的表越多，迁移时间就越长，实际节点状态更新所需的时间也就越长。
 - 在使用 `IMPORT` 语句或 `INSERT INTO SELECT` 语句向时序表写入大量数据前，建议根据实际数据写入量，使用 `SET CLUSTER SETTING ts.wal.file_size` 语句将 WAL 日志大小调整为 `256 MiB` 或更大，否则可能会导致集群节点宕机。
 - 通过重试建表避免高并发建表场景下偶发的建表失败问题。

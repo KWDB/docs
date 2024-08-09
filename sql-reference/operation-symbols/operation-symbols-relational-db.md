@@ -7,6 +7,10 @@ id: operation-symbols-relational-db
 
 数据库操作符用于执行特定操作的符号或关键字。
 
+::: warning 说明
+高并发场景下，减少 `::` 操作符的使用频率。
+:::
+
 ## 优先级
 
 下表按照从最高优先级到最低优先级的顺序列出了 KWDB 支持的所有运算符。具有相同优先级的运算符是左关联的，这意味着这些运算符从左侧开始向右移动。
@@ -575,7 +579,230 @@ id: operation-symbols-relational-db
 | >>     | varbit >> INT8                   | varbit      |
 | ?      | jsonb ? STRING                   | BOOL        |
 | ?&     | jsonb ?& STRING[]                | BOOL        |
-| ?&#124;      |  jsonb ?&#124; STRING[]                                | jsonb ?     |
+| ?&#124;      |  jsonb ?&#124; STRING[]                                | BOOL     |
 | @>     | anyelement @> anyelement         | BOOL        |
 | @>     | jsonb @> jsonb                   | BOOL        |
-
+| ILIKE                | STRING ILIKE STRING                                | BOOL        |
+| IN                   | BOOL IN tuple                                      | BOOL        |
+| IN                   | bytes IN tuple                                     | BOOL        |
+| IN                   | collatedSTRING IN tuple                            | BOOL        |
+| IN                   | date IN tuple                                      | BOOL        |
+| IN                   | decimal IN tuple                                   | BOOL        |
+| IN                   | FLOAT4 IN tuple                                    | BOOL        |
+| IN                   | FLOAT8 IN tuple                                    | BOOL        |
+| IN                   | INET IN tuple                                      | BOOL        |
+| IN                   | INT2 IN tuple                                      | BOOL        |
+| IN                   | INT4 IN tuple                                      | BOOL        |
+| IN                   | INT8 IN tuple                                      | BOOL        |
+| IN                   | interval IN tuple                                  | BOOL        |
+| IN                   | jsonb IN tuple                                     | BOOL        |
+| IN                   | oid IN tuple                                       | BOOL        |
+| IN                   | STRING IN tuple                                    | BOOL        |
+| IN                   | time IN tuple                                      | BOOL        |
+| IN                   | timestamp IN tuple                                 | BOOL        |
+| IN                   | timestamptz IN tuple                               | BOOL        |
+| IN                   | tuple IN tuple                                     | BOOL        |
+| IN                   | UUID IN tuple                                      | BOOL        |
+| IN                   | varbit IN tuple                                    | BOOL        |
+| IS NOT DISTINCT FROM | BOOL IS NOT DISTINCT FROM BOOL                     | BOOL        |
+| IS NOT DISTINCT FROM | BOOL[] IS NOT DISTINCT FROM BOOL[]                 | BOOL        |
+| IS NOT DISTINCT FROM | bytes IS NOT DISTINCT FROM bytes                   | BOOL        |
+| IS NOT DISTINCT FROM | bytes[] IS NOT DISTINCT FROM bytes[]               | BOOL        |
+| IS NOT DISTINCT FROM | collatedSTRING IS NOT DISTINCT FROM collatedSTRING | BOOL        |
+| IS NOT DISTINCT FROM | date IS NOT DISTINCT FROM date                     | BOOL        |
+| IS NOT DISTINCT FROM | date IS NOT DISTINCT FROM timestamp                | BOOL        |
+| IS NOT DISTINCT FROM | date IS NOT DISTINCT FROM timestamptz              | BOOL        |
+| IS NOT DISTINCT FROM | date[] IS NOT DISTINCT FROM date[]                 | BOOL        |
+| IS NOT DISTINCT FROM | decimal IS NOT DISTINCT FROM decimal               | BOOL        |
+| IS NOT DISTINCT FROM | decimal IS NOT DISTINCT FROM FLOAT4                | BOOL        |
+| IS NOT DISTINCT FROM | decimal IS NOT DISTINCT FROM FLOAT8                | BOOL        |
+| IS NOT DISTINCT FROM | decimal IS NOT DISTINCT FROM INT2                  | BOOL        |
+| IS NOT DISTINCT FROM | decimal IS NOT DISTINCT FROM INT4                  | BOOL        |
+| IS NOT DISTINCT FROM | decimal IS NOT DISTINCT FROM INT8                  | BOOL        |
+| IS NOT DISTINCT FROM | decimal[] IS NOT DISTINCT FROM decimal[]           | BOOL        |
+| IS NOT DISTINCT FROM | FLOAT4 IS NOT DISTINCT FROM decimal                | BOOL        |
+| IS NOT DISTINCT FROM | FLOAT8 IS NOT DISTINCT FROM decimal                | BOOL        |
+| IS NOT DISTINCT FROM | FLOAT4 IS NOT DISTINCT FROM FLOAT4                 | BOOL        |
+| IS NOT DISTINCT FROM | FLOAT4 IS NOT DISTINCT FROM FLOAT8                 | BOOL        |
+| IS NOT DISTINCT FROM | FLOAT8 IS NOT DISTINCT FROM FLOAT4                 | BOOL        |
+| IS NOT DISTINCT FROM | FLOAT8 IS NOT DISTINCT FROM FLOAT8                 | BOOL        |
+| IS NOT DISTINCT FROM | FLOAT4 IS NOT DISTINCT FROM INT2                   | BOOL        |
+| IS NOT DISTINCT FROM | FLOAT4 IS NOT DISTINCT FROM INT4                   | BOOL        |
+| IS NOT DISTINCT FROM | FLOAT4 IS NOT DISTINCT FROM INT8                   | BOOL        |
+| IS NOT DISTINCT FROM | FLOAT8 IS NOT DISTINCT FROM INT2                   | BOOL        |
+| IS NOT DISTINCT FROM | FLOAT8 IS NOT DISTINCT FROM INT4                   | BOOL        |
+| IS NOT DISTINCT FROM | FLOAT8 IS NOT DISTINCT FROM INT8                   | BOOL        |
+| IS NOT DISTINCT FROM | FLOAT4[] IS NOT DISTINCT FROM FLOAT4[]             | BOOL        |
+| IS NOT DISTINCT FROM | FLOAT4[] IS NOT DISTINCT FROM FLOAT8[]             | BOOL        |
+| IS NOT DISTINCT FROM | FLOAT8[] IS NOT DISTINCT FROM FLOAT4[]             | BOOL        |
+| IS NOT DISTINCT FROM | FLOAT8[] IS NOT DISTINCT FROM FLOAT8[]             | BOOL        |
+| IS NOT DISTINCT FROM | INET IS NOT DISTINCT FROM INET                     | BOOL        |
+| IS NOT DISTINCT FROM | INET[] IS NOT DISTINCT FROM INET[]                 | BOOL        |
+| IS NOT DISTINCT FROM | INT2 IS NOT DISTINCT FROM decimal                  | BOOL        |
+| IS NOT DISTINCT FROM | INT4 IS NOT DISTINCT FROM decimal                  | BOOL        |
+| IS NOT DISTINCT FROM | INT8 IS NOT DISTINCT FROM decimal                  | BOOL        |
+| IS NOT DISTINCT FROM | INT2 IS NOT DISTINCT FROM FLOAT4                   | BOOL        |
+| IS NOT DISTINCT FROM | INT2 IS NOT DISTINCT FROM FLOAT8                   | BOOL        |
+| IS NOT DISTINCT FROM | INT4 IS NOT DISTINCT FROM FLOAT4                   | BOOL        |
+| IS NOT DISTINCT FROM | INT4 IS NOT DISTINCT FROM FLOAT8                   | BOOL        |
+| IS NOT DISTINCT FROM | INT8 IS NOT DISTINCT FROM FLOAT4                   | BOOL        |
+| IS NOT DISTINCT FROM | INT8 IS NOT DISTINCT FROM FLOAT8                   | BOOL        |
+| IS NOT DISTINCT FROM | INT2 IS NOT DISTINCT FROM INT2                     | BOOL        |
+| IS NOT DISTINCT FROM | INT2 IS NOT DISTINCT FROM INT4                     | BOOL        |
+| IS NOT DISTINCT FROM | INT2 IS NOT DISTINCT FROM INT8                     | BOOL        |
+| IS NOT DISTINCT FROM | INT4 IS NOT DISTINCT FROM INT2                     | BOOL        |
+| IS NOT DISTINCT FROM | INT4 IS NOT DISTINCT FROM INT4                     | BOOL        |
+| IS NOT DISTINCT FROM | INT4 IS NOT DISTINCT FROM INT8                     | BOOL        |
+| IS NOT DISTINCT FROM | INT8 IS NOT DISTINCT FROM INT2                     | BOOL        |
+| IS NOT DISTINCT FROM | INT8 IS NOT DISTINCT FROM INT4                     | BOOL        |
+| IS NOT DISTINCT FROM | INT8 IS NOT DISTINCT FROM INT8                     | BOOL        |
+| IS NOT DISTINCT FROM | INT2[] IS NOT DISTINCT FROM INT2[]                 | BOOL        |
+| IS NOT DISTINCT FROM | INT2[] IS NOT DISTINCT FROM INT4[]                 | BOOL        |
+| IS NOT DISTINCT FROM | INT2[] IS NOT DISTINCT FROM INT8[]                 | BOOL        |
+| IS NOT DISTINCT FROM | INT4[] IS NOT DISTINCT FROM INT2[]                 | BOOL        |
+| IS NOT DISTINCT FROM | INT4[] IS NOT DISTINCT FROM INT4[]                 | BOOL        |
+| IS NOT DISTINCT FROM | INT4[] IS NOT DISTINCT FROM INT8[]                 | BOOL        |
+| IS NOT DISTINCT FROM | INT8[] IS NOT DISTINCT FROM INT2[]                 | BOOL        |
+| IS NOT DISTINCT FROM | INT8[] IS NOT DISTINCT FROM INT4[]                 | BOOL        |
+| IS NOT DISTINCT FROM | INT8[] IS NOT DISTINCT FROM INT8[]                 | BOOL        |
+| IS NOT DISTINCT FROM | interval IS NOT DISTINCT FROM interval             | BOOL        |
+| IS NOT DISTINCT FROM | interval[] IS NOT DISTINCT FROM interval[]         | BOOL        |
+| IS NOT DISTINCT FROM | jsonb IS NOT DISTINCT FROM jsonb                   | BOOL        |
+| IS NOT DISTINCT FROM | oid IS NOT DISTINCT FROM oid                       | BOOL        |
+| IS NOT DISTINCT FROM | STRING IS NOT DISTINCT FROM STRING                 | BOOL        |
+| IS NOT DISTINCT FROM | STRING[] IS NOT DISTINCT FROM STRING[]             | BOOL        |
+| IS NOT DISTINCT FROM | time IS NOT DISTINCT FROM time                     | BOOL        |
+| IS NOT DISTINCT FROM | time IS NOT DISTINCT FROM timetz                   | BOOL        |
+| IS NOT DISTINCT FROM | time[] IS NOT DISTINCT FROM time[]                 | BOOL        |
+| IS NOT DISTINCT FROM | timestamp IS NOT DISTINCT FROM date                | BOOL        |
+| IS NOT DISTINCT FROM | timestamp IS NOT DISTINCT FROM timestamp           | BOOL        |
+| IS NOT DISTINCT FROM | timestamp IS NOT DISTINCT FROM timestamptz         | BOOL        |
+| IS NOT DISTINCT FROM | timestamp[] IS NOT DISTINCT FROM timestamp[]       | BOOL        |
+| IS NOT DISTINCT FROM | timestamptz IS NOT DISTINCT FROM date              | BOOL        |
+| IS NOT DISTINCT FROM | timestamptz IS NOT DISTINCT FROM timestamp         | BOOL        |
+| IS NOT DISTINCT FROM | timestamptz IS NOT DISTINCT FROM timestamptz       | BOOL        |
+| IS NOT DISTINCT FROM | timetz IS NOT DISTINCT FROM time                   | BOOL        |
+| IS NOT DISTINCT FROM | timetz IS NOT DISTINCT FROM timetz                 | BOOL        |
+| IS NOT DISTINCT FROM | tuple IS NOT DISTINCT FROM tuple                   | BOOL        |
+| IS NOT DISTINCT FROM | unknown IS NOT DISTINCT FROM unknown               | BOOL        |
+| IS NOT DISTINCT FROM | UUID IS NOT DISTINCT FROM UUID                     | BOOL        |
+| IS NOT DISTINCT FROM | UUID[] IS NOT DISTINCT FROM UUID[]                 | BOOL        |
+| IS NOT DISTINCT FROM | varbit IS NOT DISTINCT FROM varbit                 | BOOL        |
+| LIKE                 | STRING LIKE STRING                                 | BOOL        |
+| SIMILAR TO           | STRING SIMILAR TO STRING                           | BOOL        |
+| ^                    | decimal ^ decimal                                  | decimal     |
+| ^                    | decimal ^ INT2                                     | decimal     |
+| ^                    | decimal ^ INT4                                     | decimal     |
+| ^                    | decimal ^ INT8                                     | decimal     |
+| ^                    | FLOAT4 ^ FLOAT4                                    | FLOAT8      |
+| ^                    | FLOAT4 ^ FLOAT8                                    | FLOAT8      |
+| ^                    | FLOAT8 ^ FLOAT4                                    | FLOAT8      |
+| ^                    | FLOAT8 ^ FLOAT8                                    | FLOAT8      |
+| ^                    | INT2 ^ decimal                                     | decimal     |
+| ^                    | INT4 ^ decimal                                     | decimal     |
+| ^                    | INT8 ^ decimal                                     | decimal     |
+| ^                    | INT2 ^ INT2                                        | INT8        |
+| ^                    | INT2 ^ INT4                                        | INT8        |
+| ^                    | INT2 ^ INT8                                        | INT8        |
+| ^                    | INT4 ^ INT2                                        | INT8        |
+| ^                    | INT4 ^ INT4                                        | INT8        |
+| ^                    | INT4 ^ INT8                                        | INT8        |
+| ^                    | INT8 ^ INT2                                        | INT8        |
+| ^                    | INT8 ^ INT4                                        | INT8        |
+| ^                    | INT8 ^ INT8                                        | INT8        |
+| &#124;                    | INET &#124; INET                                        | INET        |
+| &#124;                    | INT2 &#124; INT2                                        | INT8        |
+| &#124;                    | INT2 &#124; INT4                                        | INT8        |
+| &#124;                    | INT2 &#124; INT8                                        | INT8        |
+| &#124;                    | INT4 &#124; INT2                                        | INT8        |
+| &#124;                    | INT4 &#124; INT4                                        | INT8        |
+| &#124;                    | INT4 &#124; INT8                                        | INT8        |
+| &#124;                    | INT8 &#124; INT2                                        | INT8        |
+| &#124;                    | INT8 &#124; INT4                                        | INT8        |
+| &#124;                    | INT8 &#124; INT8                                        | INT8        |
+| &#124;                    | varbit &#124; varbit                                    | varbit      |
+| &#124;&#124;                   | BOOL &#124;&#124; BOOL[]                                     | BOOL[]      |
+| &#124;&#124;                   | BOOL[] &#124;&#124; BOOL                                     | BOOL[]      |
+| &#124;&#124;                   | BOOL[] &#124;&#124; BOOL[]                                   | BOOL[]      |
+| &#124;&#124;                   | bytes &#124;&#124; bytes                                     | bytes       |
+| &#124;&#124;                   | bytes &#124;&#124; bytes[]                                   | bytes[]     |
+| &#124;&#124;                   | bytes[] &#124;&#124; bytes                                   | bytes[]     |
+| &#124;&#124;                   | bytes[] &#124;&#124; bytes[]                                 | bytes[]     |
+| &#124;&#124;                   | date &#124;&#124; date[]                                     | date[]      |
+| &#124;&#124;                   | date[] &#124;&#124; date                                     | date[]      |
+| &#124;&#124;                   | date[] &#124;&#124; date[]                                   | date[]      |
+| &#124;&#124;                   | decimal &#124;&#124; decimal[]                               | decimal[]   |
+| &#124;&#124;                   | decimal[] &#124;&#124; decimal                               | decimal[]   |
+| &#124;&#124;                   | decimal[] &#124;&#124; decimal[]                             | decimal[]   |
+| &#124;&#124;                   | FLOAT4 &#124;&#124; FLOAT4[]                                 | FLOAT8[]    |
+| &#124;&#124;                   | FLOAT4 &#124;&#124; FLOAT8[]                                 | FLOAT8[]    |
+| &#124;&#124;                   | FLOAT8 &#124;&#124; FLOAT4[]                                 | FLOAT8[]    |
+| &#124;&#124;                   | FLOAT8 &#124;&#124; FLOAT8[]                                 | FLOAT8[]    |
+| &#124;&#124;                   | FLOAT4[] &#124;&#124; FLOAT4                                 | FLOAT8[]    |
+| &#124;&#124;                   | FLOAT4[] &#124;&#124; FLOAT8                                 | FLOAT8[]    |
+| &#124;&#124;                   | FLOAT8[] &#124;&#124; FLOAT4                                 | FLOAT8[]    |
+| &#124;&#124;                   | FLOAT8[] &#124;&#124; FLOAT8                                 | FLOAT8[]    |
+| &#124;&#124;                   | FLOAT4[] &#124;&#124; FLOAT4[]                               | FLOAT8[]    |
+| &#124;&#124;                   | FLOAT4[] &#124;&#124; FLOAT8[]                               | FLOAT8[]    |
+| &#124;&#124;                   | FLOAT8[] &#124;&#124; FLOAT4[]                               | FLOAT8[]    |
+| &#124;&#124;                   | FLOAT8[] &#124;&#124; FLOAT8[]                               | FLOAT8[]    |
+| &#124;&#124;                   | INET &#124;&#124; INET[]                                     | INET[]      |
+| &#124;&#124;                   | INET[] &#124;&#124; INET                                     | INET[]      |
+| &#124;&#124;                   | INET[] &#124;&#124; INET[]                                   | INET[]      |
+| &#124;&#124;                   | INT2 &#124;&#124; INT2[]                                     | INT8[]      |
+| &#124;&#124;                   | INT2 &#124;&#124; INT4[]                                     | INT8[]      |
+| &#124;&#124;                   | INT2 &#124;&#124; INT8[]                                     | INT8[]      |
+| &#124;&#124;                   | INT4 &#124;&#124; INT2[]                                     | INT8[]      |
+| &#124;&#124;                   | INT4 &#124;&#124; INT4[]                                     | INT8[]      |
+| &#124;&#124;                   | INT4 &#124;&#124; INT8[]                                     | INT8[]      |
+| &#124;&#124;                   | INT8 &#124;&#124; INT2[]                                     | INT8[]      |
+| &#124;&#124;                   | INT8 &#124;&#124; INT4[]                                     | INT8[]      |
+| &#124;&#124;                   | INT8 &#124;&#124; INT8[]                                     | INT8[]      |
+| &#124;&#124;                   | INT2[] &#124;&#124; INT2                                     | INT8[]      |
+| &#124;&#124;                   | INT2[] &#124;&#124; INT4                                     | INT8[]      |
+| &#124;&#124;                   | INT2[] &#124;&#124; INT8                                     | INT8[]      |
+| &#124;&#124;                   | INT4[] &#124;&#124; INT2                                     | INT8[]      |
+| &#124;&#124;                   | INT4[] &#124;&#124; INT4                                     | INT8[]      |
+| &#124;&#124;                   | INT4[] &#124;&#124; INT8                                     | INT8[]      |
+| &#124;&#124;                   | INT8[] &#124;&#124; INT2                                     | INT8[]      |
+| &#124;&#124;                   | INT8[] &#124;&#124; INT4                                     | INT8[]      |
+| &#124;&#124;                   | INT8[] &#124;&#124; INT8                                     | INT8[]      |
+| &#124;&#124;                   | INT2[] &#124;&#124; INT2[]                                   | INT8[]      |
+| &#124;&#124;                   | INT2[] &#124;&#124; INT4[]                                   | INT8[]      |
+| &#124;&#124;                   | INT2[] &#124;&#124; INT8[]                                   | INT8[]      |
+| &#124;&#124;                   | INT4[] &#124;&#124; INT2[]                                   | INT8[]      |
+| &#124;&#124;                   | INT4[] &#124;&#124; INT4[]                                   | INT8[]      |
+| &#124;&#124;                   | INT4[] &#124;&#124; INT8[]                                   | INT8[]      |
+| &#124;&#124;                   | INT8[] &#124;&#124; INT2[]                                   | INT8[]      |
+| &#124;&#124;                   | INT8[] &#124;&#124; INT4[]                                   | INT8[]      |
+| &#124;&#124;                   | INT8[] &#124;&#124; INT8[]                                   | INT8[]      |
+| &#124;&#124;                   | interval &#124;&#124; interval[]                             | interval[]  |
+| &#124;&#124;                   | interval[] &#124;&#124; interval                             | interval[]  |
+| &#124;&#124;                   | interval[] &#124;&#124; interval[]                           | interval[]  |
+| &#124;&#124;                   | jsonb &#124;&#124; jsonb                                     | jsonb       |
+| &#124;&#124;                   | oid &#124;&#124; oid                                         | oid         |
+| &#124;&#124;                   | STRING &#124;&#124; STRING                                   | STRING      |
+| &#124;&#124;                   | STRING &#124;&#124; STRING[]                                 | STRING[]    |
+| &#124;&#124;                   | STRING[] &#124;&#124; STRING                                 | STRING[]    |
+| &#124;&#124;                   | STRING[] &#124;&#124; STRING[]                               | STRING[]    |
+| &#124;&#124;                   | time &#124;&#124; time[]                                     | time[]      |
+| &#124;&#124;                   | time[] &#124;&#124; time                                     | time[]      |
+| &#124;&#124;                   | time[] &#124;&#124; time[]                                   | time[]      |
+| &#124;&#124;                   | timestamp &#124;&#124; timestamp[]                           | timestamp[] |
+| &#124;&#124;                   | timestamp[] &#124;&#124; timestamp                           | timestamp[] |
+| &#124;&#124;                   | timestamp[] &#124;&#124; timestamp[]                         | timestamp[] |
+| &#124;&#124;                   | timestamptz &#124;&#124; timestamptz[]                       | timestamptz |
+| &#124;&#124;                   | timestamptz[] &#124;&#124; timestamptz                       | timestamptz |
+| &#124;&#124;                   | timestamptz[] &#124;&#124; timestamptz[]                     | timestamptz |
+| &#124;&#124;                   | timetz &#124;&#124; timetz                                   | timetz      |
+| &#124;&#124;                   | UUID &#124;&#124; UUID[]                                     | UUID[]      |
+| &#124;&#124;                   | UUID[] &#124;&#124; UUID                                     | UUID[]      |
+| &#124;&#124;                   | UUID[] &#124;&#124; UUID[]                                   | UUID[]      |
+| &#124;&#124;                   | varbit &#124;&#124; varbit                                   | varbit      |
+| ~                    | ~INET                                              | INET        |
+| ~                    | ~INT2                                              | INT8        |
+| ~                    | ~INT4                                              | INT8        |
+| ~                    | ~INT8                                              | INT8        |
+| ~                    | ~varbit                                            | varbit      |
+| ~                    | STRING ~ STRING                                    | BOOL        |
+| ~*                   | STRING ~* STRING                                   | BOOL        |
