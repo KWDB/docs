@@ -277,20 +277,6 @@ KaiwuDB Source Connector 将 KWDB 数据库中的数据实时推送到 Apache Ka
 curl -X DELETE http://localhost:8083/connectors/KwdbSourceConnector
 ```
 
-## 故障诊断与排查
-
-当 Kafka Connect 出现故障，无法正常工作时，用户可以从以下方面进行故障排查：
-
-- 查看 Kafka Connect 日志文件：默认情况下，Kafka Connect 的日志文件位于 Kafka 安装目录的 `logs` 文件夹下。在该文件夹中，用户找到名为 `connect.log` 的日志文件，查找相关的故障记录。
-- 确认连接器配置：通常情况下，连接器的配置文件位于 Kafka Connect 安装目录下的 `config` 文件夹下。主要的连接器配置文件是 `connect-distributed.properties`（分布式模式）或 `connect-standalone.properties`（独立模式）。用户可以打开相应的配置文件，检查各个连接器的配置属性。
-- 检查 Kafka 集群状态：用户可以通过访问 Kafka 的 Zookeeper 节点来检查 Kafka 集群状态。连接到 Zookeeper 服务器并使用 Zookeeper 命令行工具，在 Zookeeper 的 shell 提示符下，输入 `ls /brokers/ids` 命令，可以列出所有 Kafka 代理 ID。用户还可以使用 Kafka 的管理工具，如 `kafka-topics.sh` 和 `kafka-consumer-groups.sh` 来验证主题和 Consumer Group 的状态。
-- 检查源系统和目标系统：如果问题涉及到特定的源系统或目标系统（如数据库或文件系统），确保这些系统正常运行并且与 Kafka Connect 所在的主机可以正常通信。确认是否正确配置与源系统或目标系统进行连接的参数，如 URL、用户名和密码等。
-- 验证数据格式和转换：检查连接器配置文件中的 `key.converter` 和 `value.converter` 属性，确定使用的数据转换器。转换器配置文件位于 Kafka Connect 安装目录下的 `config` 文件夹下。打开相应的转换器配置文件，检查数据转换器配置是否正确，并确保转换器能够处理源数据和目标数据的格式。
-- 重启 Kafka Connect 进程：在排除其他问题后，尝试重新启动 Kafka Connect 进程可以解决一些常见问题。停止 Kafka Connect 进程，并使用启动脚本或命令来重新启动。
-- 使用 Kafka Connect 工具：
-  - `connect-distributed.sh`：运行 `connect-distributed.sh config` 或 `connect-distributed.properties`命令，启动分布式模式的 Kafka Connect，并在日志中查看详细信息。
-  - `connector-plugins.sh`：运行 `connector-plugins.sh list` 命令，获取当前已加载的连接器和转换器的信息。
-
 ## 参考信息
 
 ### 支持的数据格式
@@ -502,3 +488,7 @@ ts_line_influxdb_tb,tag_name=tag_value c1=14i16,c2=24i32,c3=34i64,c4=14.8f32,c5=
 | `read.method`                      | string | 获取数据的方式，目前只支持 query。                                                                               | -                                    |
 | `key.converter`                    | string | 在 Kafka Connect 格式和从 Kafka 读取的序列化格式之间进行转换的转换类。                                           | -                                    |
 | `value.converter`                  | string | 在 Kafka Connect 格式和从 Kafka 读取的序列化格式之间进行转换的转换类。                                           | -                                    |
+
+### 故障诊断与排查
+
+有关详细信息，参见[Kafka Connect 故障排查](../../troubleshooting-guide/troubleshooting.md#kafka-connect)。
