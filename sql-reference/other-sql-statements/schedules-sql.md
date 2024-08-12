@@ -96,7 +96,7 @@ KWDB 支持授权用户根据需要执行以下定时任务相关操作：
 | 参数 | 说明 |
 | --- | --- |
 | `schedule_name` | 待修改的定时任务的名称。|
-| `crontab_expr` | 字符串表达式，指定定时任务执行的时间点和周期，支持以下字段表达方式：<br >- 7 字段表达式，即全字段表达式，字段之间使用空格分隔（`<seconds> <minutes> <hours> <day-of-month> <month> <day-of-week> <year>`）。<br >- 6 字段表达式，字段之间使用空格分隔（`<minutes> <hours> <day-of-month> <month> <day-of-week> <year>`）。其中 `seconds` 预设为 `0`，表示 `0` 秒执行。<br >- 5 字段表达式，字段之间使用空格分隔（`<minutes> <hours> <day-of-month> <month> <day-of-week>`），其中，`year` 字段预设为 `*`，表示所有年份都适用。<br > - 预定义表达式，具体包括 `@annually`（每年 1 月 1 日 0 点 0 分 0 秒运行一次）、`@yearly`（每年 1 月 1 日 0 点 0 分 0 秒运行一次，同`@annually`）、`@monthly`（每月 1 日 0 点 0 分 0 秒运行一次）、`@weekly`（每周日 0 点 0 分 0 秒运行一次）、`@daily`（每天 0 点 0 分 0 秒运行一次）、`@hourly`（每小时`0` 分 `0` 秒开始时运行）<br > 有关字段表达式的详细说明，参见[字段表达式说明](#字段表达式说明)。|
+| `RECURRING crontab_expr` | 指定定时任务执行的时间点和周期，支持以下字段表达方式：<br >- 7 字段表达式，即全字段表达式，字段之间使用空格分隔（`<seconds> <minutes> <hours> <day-of-month> <month> <day-of-week> <year>`）。<br >- 6 字段表达式，字段之间使用空格分隔（`<minutes> <hours> <day-of-month> <month> <day-of-week> <year>`）。其中 `seconds` 预设为 `0`，表示 `0` 秒执行。<br >- 5 字段表达式，字段之间使用空格分隔（`<minutes> <hours> <day-of-month> <month> <day-of-week>`），其中，`year` 字段预设为 `*`，表示所有年份都适用。<br > - 预定义表达式，具体包括 `@annually`（每年 1 月 1 日 0 点 0 分 0 秒运行一次）、`@yearly`（每年 1 月 1 日 0 点 0 分 0 秒运行一次，同`@annually`）、`@monthly`（每月 1 日 0 点 0 分 0 秒运行一次）、`@weekly`（每周日 0 点 0 分 0 秒运行一次）、`@daily`（每天 0 点 0 分 0 秒运行一次）、`@hourly`（每小时 0 分 0 秒开始时运行）<br > 有关字段表达式的详细说明，参见[字段表达式说明](#字段表达式说明)。|
 | `schedule_option` |定时任务相关的执行选项，支持以下可选设置：<br >- `first_run`：指定未来时间的执行计划。如未指定，默认根据下一个 `RECURRING` 时间执行计划，支持 TIMESTAMPTZ 类型和 `NOW`。<br >- `on_execution_failure`：指定在执行过程中发生错误时应执行的操作。默认值是 `reschedule`，表示根据 `RECURRING` 表达式重新安排下一次时间来重试执行。也支持设置为 `pause`，表示暂停定时任务。暂停后，用户需要手动恢复任务。<br >- `on_previous_running`：如果按计划启动的上一次任务仍在运行应执行的操作。默认值为 `skip`，表示跳过新的执行，然后根据 `RECURRING` 表达式安排下一次运行。|
 
 ### 字段表达式说明
@@ -252,6 +252,10 @@ PAUSE SCHEDULE scheduled_table_statistics;
 ## 恢复定时任务
 
 `RESUME SCHEDULE` 语句用于恢复已暂停的定时任务。
+
+### 所需权限
+
+用户具有 Admin 角色。默认情况下，root 用户具有 Admin 角色。
 
 ### 语法格式
 
