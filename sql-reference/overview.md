@@ -44,7 +44,7 @@ id: overview
     - [UPDATE](./dml/ts-db/ts-update.md)
     - [PREPARE](./dml/ts-db/ts-prepare.md)
     - [SELECT 优化](./dml/ts-db/ts-select-optimization.md)
-  - 时序数据
+  - 关系数据
     - [SELECT](./dml/relational-db/relational-select.md)
     - [INSERT](./dml/relational-db/relational-insert.md)
     - [UPDATE](./dml/relational-db/relational-update.md)
