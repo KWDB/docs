@@ -255,7 +255,7 @@ PAUSE SCHEDULE scheduled_table_statistics;
 
 ### 所需权限
 
-用户具有 Admin 角色。默认情况下，root 用户具有 Admin 角色。
+用户为 Admin 用户或者 Admin 角色成员。
 
 ### 语法格式
 

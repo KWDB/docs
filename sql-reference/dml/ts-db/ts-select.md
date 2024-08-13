@@ -5,6 +5,15 @@ id: ts-select
 
 # SELECT
 
+时序数据库支持使用 SQL 语句执行简单查询、嵌套查询、关联查询、联合查询和插值查询。
+
+::: warning 说明
+
+- 使用 `WHERE` 子句或者 `HAVING` 子句过滤数据查询结果时，如果使用 `tuple` 形式比较字段，必须确保待比较字段的类型保持一致，否则可能导致系统宕机。
+- 查询时序数据时，如果主查询使用 `ORDER BY` 子句，子查询使用 `GROUP BY` 子句，查询结果可能有误。
+
+:::
+
 ## 简单查询
 
 `SELECT` 语句是读取和处理现有数据的主要 SQL 语法。当用作独立语句时，`SELECT` 子句也称为 `SELECT` 语句。但是，它也是一个选择子句，可以与其他结构组合以形成更复杂的选择查询。KWDB 支持通过 `SET CLUSTER SETTING ts.parallel_degree = <value>` 语句设置并行查询数目。更多参数设置，参见[集群实时参数](../../../db-operation/cluster-settings-config.md#实时参数)。

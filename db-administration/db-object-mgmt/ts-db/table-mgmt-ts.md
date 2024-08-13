@@ -7,6 +7,10 @@ id: table-mgmt-ts
 
 时序表（TIME SERIES TABLE）是用于存储时间序列数据的数据表。
 
+::: warning 说明
+避免频繁地创建、删除时序表。
+:::
+
 ## 创建表
 
 ### 前提条件
