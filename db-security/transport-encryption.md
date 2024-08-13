@@ -35,11 +35,11 @@ data_root=/var/lib/kaiwudb
 node_addr=192.168.64.128
 ```
 
-更多安装部署要求和配置参数信息，参见[裸机部署](../../deployment/bare-metal/bare-metal-deployment.md)和[容器部署](../../deployment/docker/docker-deployment.md)。
+更多安装部署要求和配置参数信息，参见[裸机部署](../deployment/bare-metal/bare-metal-deployment.md)和[容器部署](../deployment/docker/docker-deployment.md)。
 
 ## 管理和存放证书
 
-默认情况下，部署完 KWDB 后，生成的相关证书存放在 `/etc/kaiwudb/certs` 目录。如需修改证书的存放目录，用户可以修改 `kaiwudb_env` 文件或者 `docker-compose.yml` 文件中的 `--certs-dir` 参数，指定证书的存放目录。其中，`kaiwudb_env` 文件为裸机部署后生成的文件，`docker-compose.yml` 文件为容器部署后生成的文件，文件路径均为 `/etc/kaiwudb/script`。具体配置信息，参见[集群参数配置](../cluster-settings-config.md)。
+默认情况下，部署完 KWDB 后，生成的相关证书存放在 `/etc/kaiwudb/certs` 目录。如需修改证书的存放目录，用户可以修改 `kaiwudb_env` 文件或者 `docker-compose.yml` 文件中的 `--certs-dir` 参数，指定证书的存放目录。其中，`kaiwudb_env` 文件为裸机部署后生成的文件，`docker-compose.yml` 文件为容器部署后生成的文件，文件路径均为 `/etc/kaiwudb/script`。具体配置信息，参见[集群参数配置](../db-operation/cluster-settings-config.md)。
 
 - 裸机部署 `kaiwudb_env` 文件配置示例：
 

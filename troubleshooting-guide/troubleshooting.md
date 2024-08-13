@@ -33,7 +33,7 @@ KWDB 提供日志、监控方案、核心转储功能，用于收集问题诊断
 
 查询数据时，如果系统返回错误结果或者某个功能无法正常工作，用户可以通过错误码、日志和监控信息来定位和分析问题。
 
-1. 查阅[错误码](./error-code/error-code-overview.md)参考手册，根据建议措施尝试解决问题。
+1. 查阅[错误码](../db-operation/error-code/error-code-overview.md)参考手册，根据建议措施尝试解决问题。
 
 2. 进入用户数据目录下的 `log` 子目录，查看已有日志信息，汇总问题发生的时间、背景信息及错误信息。
 
@@ -65,7 +65,7 @@ KWDB 提供日志、监控方案、核心转储功能，用于收集问题诊断
 
 3. 如果仍无法定位或解决问题，[联系](https://cs.kaiwudb.com/support/) KWDB 技术支持人员并提供详细的系统状态数据和日志文件来定位和解决问题。
 
-## 数据读取
+## 应用开发
 
 ### KaiwuDB JDBC
 
@@ -74,9 +74,9 @@ KWDB 支持使用日志记录功能来帮助解决 KaiwuDB JDBC 驱动程序在�
 用户可以采用以下任一方式开启日志：
 
 - 使用连接属性启动日志
-- 使用 logging 属性配置文件开启日志
+- 使用 `logging.properties` 文件开启日志
 
-### 使用连接属性启动日志
+#### 使用连接属性启动日志
 
 KaiwuDB JDBC 驱动程序支持使用连接属性启用日志记录。连接属性使用 `loggerLevel` 和 `loggerFile` 参数定义日志的级别和输出文件名。
 
@@ -99,7 +99,7 @@ jdbc:kaiwudb://127.0.0.1:26257/defaultdb?loggerLevel=Trace&loggerFile=kaiwudb-jd
   - 如果指定输出文件名，Logger 使用 `java.util.logging.Filehandler` 将日志写入指定的文件。
   - 如未指定输出文件名，或者 `java.util.logging.Filehandler` 参数无法创建文件，则使用 `java.util.logging.Consolehandler` 输出日志。`java.util.logging.Consolehandler`参数需要与 `loggerLevel` 一起使用。
 
-### 使用 logging.properties 文件开启日志
+#### 使用 logging.properties 文件开启日志
 
 默认情况下，Java 日志框架将其日志配置存储到一个名为 `logging.properties` 的文件中。用户可以在 Java 安装目录的 `lib` 文件夹中安装全局配置文件。
 
@@ -129,6 +129,8 @@ com.kaiwudb.level=FINEST
 ```java
 java -jar -Djava.util.logging.config.file=logging.properties run.jar
 ```
+
+## 数据读取
 
 ### Kafka Connect
 
