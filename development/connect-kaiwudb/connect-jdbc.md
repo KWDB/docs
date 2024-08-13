@@ -329,4 +329,4 @@ KaiwuDB JDBC 支持通过 `DriverManager.getConnection()` 方法与 KWDB 数据�
 
 ### 故障诊断与排查
 
-有关详细信息，参见[KaiwuDB JDBC 故障排查](../../troubleshooting-guide/troubleshooting.md#kaiwudb-jdbc)。
+有关详细信息，参见 [KaiwuDB JDBC 故障排查](../../troubleshooting-guide/troubleshooting.md#kaiwudb-jdbc)。

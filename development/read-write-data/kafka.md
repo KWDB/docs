@@ -491,4 +491,4 @@ ts_line_influxdb_tb,tag_name=tag_value c1=14i16,c2=24i32,c3=34i64,c4=14.8f32,c5=
 
 ### 故障诊断与排查
 
-有关详细信息，参见[Kafka Connect 故障排查](../../troubleshooting-guide/troubleshooting.md#kafka-connect)。
+有关详细信息，参见 [Kafka Connect 故障排查](../../troubleshooting-guide/troubleshooting.md#kafka-connect)。
