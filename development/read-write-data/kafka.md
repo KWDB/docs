@@ -133,30 +133,12 @@ KaiwuDB Sink Connector 将指定的 Kafka 主题数据写入到 KWDB 数据库�
 
    以下示例创建一个名为 `kw-json-kaiwudb-data.txt` 的文件。
 
+   ::: warning 说明
+   由于Kafka按行接收数据，因此不支持发送格式化的JSON数据，必须将每个完整的JSON对象压缩成单行字符串，以确保数据能够被正确解析。
+   :::
+
    ```json
-   {
-     "table":"ts_json_kaiwudb_tb",
-     "columns":[
-       {"name":"ts","type":"TIMESTAMPTZ","length":64},
-       {"name":"c1","type":"INT2","length":16},
-       {"name":"c2","type":"INT4","length":32},
-       {"name":"c3","type":"INT8","length":64},
-       {"name":"c4","type":"FLOAT4","length":32},
-       {"name":"c5","type":"FLOAT8","length":64},
-       {"name":"c6","type":"BOOL","length":1},
-     ],
-     "tags":[
-       {"name":"location","type":"VARCHAR","length":64,"primary":true,"nullable":false},
-       {"name":"temperature","type":"FLOAT4","length":64,"primary":false,"nullable":true}
-     ],
-     "data":[
-       {"ts":1690855924005,"c1":11,"c2":21,"c3":2535208944865431245,"c4":6.14545,"c5":5.15656,"c6":true,"location":"tianjin","temperature":35.5},
-       {"ts":1691853703011,"c1":12,"c2":22,"c3":6422208944865124578,"c4":1.01635,"c5":0.53533,"c6":false, "location":"tianjin","temperature":35.5},
-       {"ts":1692065524004,"c1":13,"c2":23,"c3":1542408944865124535,"c4":3.25456,"c5":2.56356,"c6":true,"location":"tianjin","temperature":35.5},
-       {"ts":1692199303011,"c1":14,"c2":24,"c3":1245658944865439256,"c4":2.72652,"c5":5.83533,"c6":false,"location":"tianjin","temperature":35.5},
-       {"ts":1692285703011,"c1":15,"c2":25,"c3":5625658944865439256,"c4":5.71635,"c5":1.26562,"c6":false,"location":"tianjin","temperature":35.5}
-     ]
-   }
+   {"table":"ts_json_kaiwudb_tb","columns":[{"name":"ts","type":"TIMESTAMPTZ","length":64},{"name":"c1","type":"INT2","length":16},{"name":"c2","type":"INT4","length":32},{"name":"c3","type":"INT8","length":64},{"name":"c4","type":"FLOAT4","length":32},{"name":"c5","type":"FLOAT8","length":64},{"name":"c6","type":"BOOL","length":1}],"tags":[{"name":"location","type":"VARCHAR","length":64,"primary":true,"nullable":false},{"name":"temperature","type":"FLOAT4","length":64,"primary":false,"nullable":true}],"data":[{"ts":1690855924005,"c1":11,"c2":21,"c3":2535208944865431245,"c4":6.14545,"c5":5.15656,"c6":true,"location":"tianjin","temperature":35.5},{"ts":1691853703011,"c1":12,"c2":22,"c3":6422208944865124578,"c4":1.01635,"c5":0.53533,"c6":false,"location":"tianjin","temperature":35.5},{"ts":1692065524004,"c1":13,"c2":23,"c3":1542408944865124535,"c4":3.25456,"c5":2.56356,"c6":true,"location":"tianjin","temperature":35.5},{"ts":1692199303011,"c1":14,"c2":24,"c3":1245658944865439256,"c4":2.72652,"c5":5.83533,"c6":false,"location":"tianjin","temperature":35.5},{"ts":1692285703011,"c1":15,"c2":25,"c3":5625658944865439256,"c4":5.71635,"c5":1.26562,"c6":false,"location":"tianjin","temperature":35.5}]}
    ```
 
 2. 使用 kafka-console-producer 向主题 `kw-tsdb-ts_json_kaiwudb_tb` 写入测试数据。
@@ -169,15 +151,15 @@ KaiwuDB Sink Connector 将指定的 Kafka 主题数据写入到 KWDB 数据库�
 
    ```sql
    -- 1. 切换到 tsdb 数据库。
-
+   
    USE tsdb;
-
+   
    -- 2. 查看 tsdb 数据库中的表。
-
+   
    SHOW TABLES;
-
+   
    -- 3. 查看 tsdb 数据库中 ts_json_kaiwudb_tb 表的数据。
-
+   
    SELECT * FROM tsdb.ts_json_kaiwudb_tb;
    ```
 
@@ -286,30 +268,19 @@ curl -X DELETE http://localhost:8083/connectors/KwdbSourceConnector
 #### KWDB JSON 格式数据
 
 ::: warning 说明
-JSON 数据已包含列名、列类型和列长度等信息。如果写入数据的目标时序表不存在，KWDB 支持自动创建时序表。
+
+- JSON 数据已包含列名、列类型和列长度等信息。如果写入数据的目标时序表不存在，KaiwuDB 支持自动创建时序表。
+- 由于Kafka按行接收数据，因此不支持发送格式化的JSON数据，必须将每个完整的JSON对象压缩成单行字符串，以确保数据能够被正确解析。
+
 :::
 
-​KWDB JSON 格式协议采用 JSON 字符串表示一行或多行数据。
+KWDB JSON 格式协议采用 JSON 字符串表示一行或多行数据。
 
 示例：
 
 ```json
-{
-  "table":"table_name",
-  "columns":[
-    {"name":"ts","type":"TIMESTAMP","length":64},
-    {"name":"c1","type":"INT4","length":32},
-    {"name":"c2","type":"FLOAT4","length":32},
-    {"name":"c3","type":"VARCHAR","length":254}
-  ],
-  "tags":[
-    {"name":"tag_name","type":"VARCHAR","length":64,"primary":true,"nullable":false}
-  ],
-  "data":[
-    {"ts":1690855924005,"c1":11,"c2":6.14545,"c3":"测试字符串0.76123","tag_name":"tag_value"},
-    {"ts":1691853703011,"c1":12,"c2":0.53533,"c3":"测试字符串0.65685","tag_name":"tag_value"}
-  ]
-}
+{"table":"ts_json_kaiwudb_tb","columns":[{"name":"ts","type":"TIMESTAMPTZ","length":64},{"name":"c1","type":"INT2","length":16},{"name":"c2","type":"INT4","length":32},{"name":"c3","type":"INT8","length":64},{"name":"c4","type":"FLOAT4","length":32},{"name":"c5","type":"FLOAT8","length":64},{"name":"c6","type":"BOOL","length":1}],"tags":[{"name":"location","type":"VARCHAR","length":64,"primary":true,"nullable":false},{"name":"temperature","type":"FLOAT4","length":64,"primary":false,"nullable":true}],"data":[{"ts":1690855924005,"c1":11,"c2":21,"c3":2535208944865431245,"c4":6.14545,"c5":5.15656,"c6":true,"location":"tianjin","temperature":35.5},{"ts":1691853703011,"c1":12,"c2":22,"c3":6422208944865124578,"c4":1.01635,"c5":0.53533,"c6":false,"location":"tianjin","temperature":35.5},{"ts":1692065524004,"c1":13,"c2":23,"c3":1542408944865124535,"c4":3.25456,"c5":2.56356,"c6":true,"location":"tianjin","temperature":35.5},{"ts":1692199303011,"c1":14,"c2":24,"c3":1245658944865439256,"c4":2.72652,"c5":5.83533,"c6":false,"location":"tianjin","temperature":35.5},{"ts":1692285703011,"c1":15,"c2":25,"c3":5625658944865439256,"c4":5.71635,"c5":1.26562,"c6":false,"location":"tianjin","temperature":35.5}]}
+{"table":"ts_json_kaiwudb_tb","columns":[{"name":"ts","type":"TIMESTAMPTZ","length":64},{"name":"c1","type":"INT2","length":16},{"name":"c2","type":"INT4","length":32},{"name":"c3","type":"INT8","length":64},{"name":"c4","type":"FLOAT4","length":32},{"name":"c5","type":"FLOAT8","length":64},{"name":"c6","type":"BOOL","length":1}],"tags":[{"name":"location","type":"VARCHAR","length":64,"primary":true,"nullable":false},{"name":"temperature","type":"FLOAT4","length":64,"primary":false,"nullable":true}],"data":[{"ts":1690855924005,"c1":11,"c2":21,"c3":2535208944865431245,"c4":6.14545,"c5":5.15656,"c6":true,"location":"tianjin","temperature":35.5},{"ts":1691853703011,"c1":12,"c2":22,"c3":6422208944865124578,"c4":1.01635,"c5":0.53533,"c6":false,"location":"tianjin","temperature":35.5},{"ts":1692065524004,"c1":13,"c2":23,"c3":1542408944865124535,"c4":3.25456,"c5":2.56356,"c6":true,"location":"tianjin","temperature":35.5},{"ts":1692199303011,"c1":14,"c2":24,"c3":1245658944865439256,"c4":2.72652,"c5":5.83533,"c6":false,"location":"tianjin","temperature":35.5},{"ts":1692285703011,"c1":15,"c2":25,"c3":5625658944865439256,"c4":5.71635,"c5":1.26562,"c6":false,"location":"tianjin","temperature":35.5}]}
 ```
 
 参数说明：
@@ -323,41 +294,20 @@ JSON 数据已包含列名、列类型和列长度等信息。如果写入数据
 
 #### OpenTSDB JSON 格式数据
 
-​OpenTSDB JSON 格式协议采用 JSON 字符串表示一行或多行数据。
+OpenTSDB JSON 格式协议采用 JSON 字符串表示一行或多行数据。
 
 ::: warning 说明
 
 - 由于数据格式的特性，写入的时序表名是 `table_name.column_name` 形式组成。如果写入的数据表不存在，系统将自动创建时序表。每个表的数据列只有 `timestamp` 和 `value` 两列。
 - 目前，在自动创建表时，由于无法保证表对应的标签列名均一致，暂不支持对标签的处理。
+- 由于Kafka按行接收数据，因此不支持发送格式化的JSON数据，必须将每个完整的JSON对象压缩成单行字符串，以确保数据能够被正确解析。
 
 :::
 
 数据示例：
 
 ```json
-[
-  {
-  "metric": "ts_json_opentsdb_tb.c1",
-  "timestamp": 1648432611249,
-  "value": 10.3,
-  "tags": {"tag_name": "tag_value"}
-  }, {
-  "metric": "ts_json_opentsdb_tb.c2 ",
-  "timestamp ": 1648432611339,
-  "value ": 219,
-  "tags": {"tag_name": "tag_value"}
-  }, {
-  "metric ": "ts_json_opentsdb_tb.c1 ",
-  "timestamp ": 1648432611340,
-  "value ": 12.6,
-  "tags": {"tag_name": "tag_value"}
-  }, {
-  "metric ": "ts_json_opentsdb_tb.c2 ",
-  "timestamp ": 1648432611250,
-  "value ": 218,
-  "tags": {"tag_name": "tag_value"}
-  }
-]
+[{"metric":"ts_json_opentsdb_tb.c1","timestamp":1648432611249,"value":10.3,"tags":{"tag_name":"tag_value"}},{"metric":"ts_json_opentsdb_tb.c2","timestamp":1648432611339,"value":219,"tags":{"tag_name":"tag_value"}},{"metric":"ts_json_opentsdb_tb.c1","timestamp":1648432611340,"value":12.6,"tags":{"tag_name":"tag_value"}},{"metric":"ts_json_opentsdb_tb.c2","timestamp":1648432611250,"value":218,"tags":{"tag_name":"tag_value"}}]
 ```
 
 参数说明：
@@ -371,9 +321,9 @@ JSON 数据已包含列名、列类型和列长度等信息。如果写入数据
 
 #### OpenTSDB Line 格式数据
 
-​OpenTSDB Line 格式协议采用一行字符串来表示一行数据。
+OpenTSDB Line 格式协议采用一行字符串来表示一行数据。
 
-​OpenTSDB 采用单列模型，因此一行只能包含一个普通数据列，标签列可以有多个。
+OpenTSDB 采用单列模型，因此一行只能包含一个普通数据列，标签列可以有多个。
 
 ::: warning 说明
 
@@ -411,7 +361,7 @@ ts_line_opentsdb_tb.c2 1648432611250 217 tag1=1
 
 #### InfluxDB Line 格式数据
 
-​InfluxDB Line 格式协议采用一行字符串来表示一行数据。
+InfluxDB Line 格式协议采用一行字符串来表示一行数据。
 
 ::: warning 说明
 对于 InfluxDB Line 格式数据，系统无法获取表中列和属性的类型和长度信息。因此，如果写入的数据表不存在，不支持自动创建表。
@@ -432,7 +382,7 @@ ts_line_opentsdb_tb.c2 1648432611250 217 tag1=1
 | `field_set`   | 普通列数据，格式为 `<field_key>=<field_value>,<field_key>=<field_value>`，多列之间之间使用逗号（`,`）隔开。`field_set` 中的每个数据项都需要对自身的数据类型进行描述，例如 `1.2f32` 代表 `FLOAT` 类型的数值 `1.2`、`3.63f64` 代表 `DOUBLE` 类型的数值 `3.63` 处理。 |
 | `timestamp`   | 本行数据对应的时间戳。timestamp 支持多种时间精度，写入数据的时候需要用参数指定时间精度，支持毫秒（ms）、微妙级（us）、纳秒（ns）3 种时间精度。                                                                                                       |
 
-​ 数据示例：
+ 数据示例：
 
 ```json
 ts_line_influxdb_tb,tag_name=tag_value c1=11i16,c2=21i32,c3=31i64,c4=11.8f32,c5=0.16f64,c6=true,c7=\"112132\",c8=\"213645\",c9='a',c10=L\"1\",c11=\"qaz\",c12=L\"tgb\",c13=1648432611249 1648432611249000000
