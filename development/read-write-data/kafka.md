@@ -33,35 +33,35 @@ id: kafka
 
 1. 解压缩 KaiwuDB Kafka Connector 安装包，将解压后的 KaiwuDB Kafka Connector 插件放置在 `$KAFKA_HOME/components/` 目录。
 
-   ```shell
-   unzip -d $KAFKA_HOME/components/target/components/packages/kaiwudb-kafka-connect-*.zip
-   ```
+    ```shell
+    unzip -d $KAFKA_HOME/components/target/components/packages/kaiwudb-kafka-connect-*.zip
+    ```
 
 2. 修改 Kafka 的 `$KAFKA_HOME/config/connect-distributed.properties` 配置文件。在文件的 `plugin.path` 字段添加 KaiwuDB Kafka Connector 的路径。
 
-   ```shell
-   plugin.path=/usr/share/java,/opt/kafka/components
-   ```
+    ```shell
+    plugin.path=/usr/share/java,/opt/kafka/components
+    ```
 
 3. 进入 `kafka/bin` 目录，启动 Kafka 服务。
 
-   ```shell
-   ./zookeeper-server-start.sh -daemon $KAFKA_HOME/config/zookeeper.properties
-   ./kafka-server-start.sh -daemon $KAFKA_HOME/config/server.properties
-   ./connect-distributed.sh -daemon $KAFKA_HOME/config/connect-distributed.properties
-   ```
+    ```shell
+    ./zookeeper-server-start.sh -daemon $KAFKA_HOME/config/zookeeper.properties
+    ./kafka-server-start.sh -daemon $KAFKA_HOME/config/server.properties
+    ./connect-distributed.sh -daemon $KAFKA_HOME/config/connect-distributed.properties
+    ```
 
 4. 验证 Kafka 是否启动成功。
 
-   ```shell
-   curl http://localhost:8083/connectors
-   ```
+    ```shell
+    curl http://localhost:8083/connectors
+    ```
 
-   如果各组件都启动成功，控制台输出以下信息：
+    如果各组件都启动成功，控制台输出以下信息：
 
-   ```shell
-   []
-   ```
+    ```shell
+    []
+    ```
 
     ::: warning 说明
 
@@ -91,77 +91,77 @@ KaiwuDB Sink Connector 将指定的 Kafka 主题数据写入到 KWDB 数据库�
 
 1. 创建 KaiwuDB Sink Connector 配置文件，定义 Kafka 主题、KWDB 连接信息及数据格式等信息。
 
-   以下示例创建一个名为 `kw-json-kaiwudb-sink.json` 的 KaiwuDB Sink Connector 文件。
+    以下示例创建一个名为 `kw-json-kaiwudb-sink.json` 的 KaiwuDB Sink Connector 文件。
 
-   ```json
-   {
-     "name": "KwdbSinkConnector",
-     "config": {
-       "connector.class": "com.kaiwudb.kafka.connect.sink.KwdbSinkConnector",
-       "tasks.max": "1",
-       "topics": "kw-tsdb-ts_json_kaiwudb_tb",
-       "connection.url": "jdbc:kaiwudb://localhost:26257",
-       "connection.user": "test",
-       "connection.password": "Password@2024",
-       "connection.database": "tsdb",
-       "connection.attempts": 3,
-       "connection.backoff.ms": 5000,
-       "max.retries": 3,
-       "retry.backoff.ms": 3000,
-       "batch.size": 1000,
-       "protocol.type": "json_kaiwudb",
-       "timestamp.precision": "ms",
-       "key.converter": "org.apache.kafka.connect.storage.StringConverter",
-       "value.converter": "org.apache.kafka.connect.storage.StringConverter"
-     }
-   }
-   ```
+    ```json
+    {
+      "name": "KwdbSinkConnector",
+      "config": {
+        "connector.class": "com.kaiwudb.kafka.connect.sink.KwdbSinkConnector",
+        "tasks.max": "1",
+        "topics": "kw-tsdb-ts_json_kaiwudb_tb",
+        "connection.url": "jdbc:kaiwudb://localhost:26257",
+        "connection.user": "test",
+        "connection.password": "Password@2024",
+        "connection.database": "tsdb",
+        "connection.attempts": 3,
+        "connection.backoff.ms": 5000,
+        "max.retries": 3,
+        "retry.backoff.ms": 3000,
+        "batch.size": 1000,
+        "protocol.type": "json_kaiwudb",
+        "timestamp.precision": "ms",
+        "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+        "value.converter": "org.apache.kafka.connect.storage.StringConverter"
+      }
+    }
+    ```
 
-   有关 KaiwuDB Sink Connector 参数配置信息，参见 [KaiwuDB Sink Connector 参数配置](#kaiwudb-sink-connector-参数说明)。
+    有关 KaiwuDB Sink Connector 参数配置信息，参见 [KaiwuDB Sink Connector 参数配置](#kaiwudb-sink-connector-参数说明)。
 
 2. 启动 KaiwuDB Sink Connector。
 
-   ```shell
-   curl -X POST -d @kw-json-kaiwudb-sink.json http://localhost:8083/connectors -H "Content-Type: application/json"
-   ```
+    ```shell
+    curl -X POST -d @kw-json-kaiwudb-sink.json http://localhost:8083/connectors -H "Content-Type: application/json"
+    ```
 
-   配置成功后，当 Kafka 指定的主题收到新消息时，KaiwuDB Sink Connector 将根据定义的配置将信息写入到 KWDB 数据库。
+    配置成功后，当 Kafka 指定的主题收到新消息时，KaiwuDB Sink Connector 将根据定义的配置将信息写入到 KWDB 数据库。
 
 ### 验证 KaiwuDB Sink Connector
 
 1. 准备测试数据。
 
-   以下示例创建一个名为 `kw-json-kaiwudb-data.txt` 的文件。
+    以下示例创建一个名为 `kw-json-kaiwudb-data.txt` 的文件。
 
-   ::: warning 说明
-   由于Kafka按行接收数据，因此不支持发送格式化的JSON数据，必须将每个完整的JSON对象压缩成单行字符串，以确保数据能够被正确解析。
-   :::
+    ::: warning 说明
+    Kafka 按行接收数据，不支持发送格式化的 JSON 数据。用户必须将每个完整的 JSON 对象压缩成单行字符串，确保系统能够正确解析数据。
+    :::
 
-   ```json
-   {"table":"ts_json_kaiwudb_tb","columns":[{"name":"ts","type":"TIMESTAMPTZ","length":64},{"name":"c1","type":"INT2","length":16},{"name":"c2","type":"INT4","length":32},{"name":"c3","type":"INT8","length":64},{"name":"c4","type":"FLOAT4","length":32},{"name":"c5","type":"FLOAT8","length":64},{"name":"c6","type":"BOOL","length":1}],"tags":[{"name":"location","type":"VARCHAR","length":64,"primary":true,"nullable":false},{"name":"temperature","type":"FLOAT4","length":64,"primary":false,"nullable":true}],"data":[{"ts":1690855924005,"c1":11,"c2":21,"c3":2535208944865431245,"c4":6.14545,"c5":5.15656,"c6":true,"location":"tianjin","temperature":35.5},{"ts":1691853703011,"c1":12,"c2":22,"c3":6422208944865124578,"c4":1.01635,"c5":0.53533,"c6":false,"location":"tianjin","temperature":35.5},{"ts":1692065524004,"c1":13,"c2":23,"c3":1542408944865124535,"c4":3.25456,"c5":2.56356,"c6":true,"location":"tianjin","temperature":35.5},{"ts":1692199303011,"c1":14,"c2":24,"c3":1245658944865439256,"c4":2.72652,"c5":5.83533,"c6":false,"location":"tianjin","temperature":35.5},{"ts":1692285703011,"c1":15,"c2":25,"c3":5625658944865439256,"c4":5.71635,"c5":1.26562,"c6":false,"location":"tianjin","temperature":35.5}]}
-   ```
+    ```json
+    {"table":"ts_json_kaiwudb_tb","columns":[{"name":"ts","type":"TIMESTAMPTZ","length":64},{"name":"c1","type":"INT2","length":16},{"name":"c2","type":"INT4","length":32},{"name":"c3","type":"INT8","length":64},{"name":"c4","type":"FLOAT4","length":32},{"name":"c5","type":"FLOAT8","length":64},{"name":"c6","type":"BOOL","length":1}],"tags":[{"name":"location","type":"VARCHAR","length":64,"primary":true,"nullable":false},{"name":"temperature","type":"FLOAT4","length":64,"primary":false,"nullable":true}],"data":[{"ts":1690855924005,"c1":11,"c2":21,"c3":2535208944865431245,"c4":6.14545,"c5":5.15656,"c6":true,"location":"tianjin","temperature":35.5},{"ts":1691853703011,"c1":12,"c2":22,"c3":6422208944865124578,"c4":1.01635,"c5":0.53533,"c6":false,"location":"tianjin","temperature":35.5},{"ts":1692065524004,"c1":13,"c2":23,"c3":1542408944865124535,"c4":3.25456,"c5":2.56356,"c6":true,"location":"tianjin","temperature":35.5},{"ts":1692199303011,"c1":14,"c2":24,"c3":1245658944865439256,"c4":2.72652,"c5":5.83533,"c6":false,"location":"tianjin","temperature":35.5},{"ts":1692285703011,"c1":15,"c2":25,"c3":5625658944865439256,"c4":5.71635,"c5":1.26562,"c6":false,"location":"tianjin","temperature":35.5}]}
+    ```
 
 2. 使用 kafka-console-producer 向主题 `kw-tsdb-ts_json_kaiwudb_tb` 写入测试数据。
 
-   ```shell
-   cat kw-json-kaiwudb-data.txt | ./../bin/kafka-console-producer.sh --broker-list localhost:9092 --topic kw-tsdb-ts_json_kaiwudb_tb
-   ```
+    ```shell
+    cat kw-json-kaiwudb-data.txt | ./../bin/kafka-console-producer.sh --broker-list localhost:9092 --topic kw-tsdb-ts_json_kaiwudb_tb
+    ```
 
 3. 打开 KWDB 客户端，验证是否收到数据。
 
-   ```sql
-   -- 1. 切换到 tsdb 数据库。
-   
-   USE tsdb;
-   
-   -- 2. 查看 tsdb 数据库中的表。
-   
-   SHOW TABLES;
-   
-   -- 3. 查看 tsdb 数据库中 ts_json_kaiwudb_tb 表的数据。
-   
-   SELECT * FROM tsdb.ts_json_kaiwudb_tb;
-   ```
+    ```sql
+    -- 1. 切换到 tsdb 数据库。
+    
+    USE tsdb;
+    
+    -- 2. 查看 tsdb 数据库中的表。
+    
+    SHOW TABLES;
+    
+    -- 3. 查看 tsdb 数据库中 ts_json_kaiwudb_tb 表的数据。
+    
+    SELECT * FROM tsdb.ts_json_kaiwudb_tb;
+    ```
 
 ### 卸载 KaiwuDB Sink Connector
 
@@ -185,71 +185,71 @@ KaiwuDB Source Connector 将 KWDB 数据库中的数据实时推送到 Apache Ka
 
 1. 创建 KaiwuDB Source Connector 文件，定义 Kafka 主题、KWDB 连接信息及数据格式等信息。
 
-   以下示例创建一个名为 `kw-json-kaiwudb-source.json` 的 KaiwuDB Source Connector 文件。
+    以下示例创建一个名为 `kw-json-kaiwudb-source.json` 的 KaiwuDB Source Connector 文件。
 
-   ```json
-   {
-     "name": "KwdbSourceConnector",
-     "config": {
-       "connector.class": "com.kaiwudb.kafka.connect.source.KwdbSourceConnector",
-       "tasks.max": 1,
-       "connection.url": "jdbc:kaiwudb://localhost:26257",
-       "connection.user": "test",
-       "connection.password": "Password@2024",
-       "connection.database": "benchmark",
-       "connection.attempts": 3,
-       "connection.backoff.ms": 5000,
-       "poll.interval.ms": 5000,
-       "topic.prefix": "kw",
-       "topic.delimiter": "-",
-       "fetch.max.rows": 100,
-       "query.interval.ms": 1000,
-       "topic.per.stable": true,
-       "topic.ignore.db": false,
-       "out.format": "json_kaiwudb",
-       "read.method": "query",
-       "key.converter": "org.apache.kafka.connect.storage.StringConverter",
-       "value.converter": "org.apache.kafka.connect.storage.StringConverter"
-     }
-   }
-   ```
+    ```json
+    {
+      "name": "KwdbSourceConnector",
+      "config": {
+        "connector.class": "com.kaiwudb.kafka.connect.source.KwdbSourceConnector",
+        "tasks.max": 1,
+        "connection.url": "jdbc:kaiwudb://localhost:26257",
+        "connection.user": "test",
+        "connection.password": "Password@2024",
+        "connection.database": "benchmark",
+        "connection.attempts": 3,
+        "connection.backoff.ms": 5000,
+        "poll.interval.ms": 5000,
+        "topic.prefix": "kw",
+        "topic.delimiter": "-",
+        "fetch.max.rows": 100,
+        "query.interval.ms": 1000,
+        "topic.per.stable": true,
+        "topic.ignore.db": false,
+        "out.format": "json_kaiwudb",
+        "read.method": "query",
+        "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+        "value.converter": "org.apache.kafka.connect.storage.StringConverter"
+      }
+    }
+    ```
 
    有关 KaiwuDB Source Connector 参数配置信息，参见 [KaiwuDB Source Connector 参数配置](#kaiwudb-source-connector-参数说明)。
 
 2. 启动 KaiwuDB Source Connector。
 
-   ```shell
-   curl -X POST -d @kw-json-kaiwudb-source.json http://localhost:8083/connectors -H "Content-Type: application/json"
-   ```
+    ```shell
+    curl -X POST -d @kw-json-kaiwudb-source.json http://localhost:8083/connectors -H "Content-Type: application/json"
+    ```
 
-   配置成功后，KaiwuDB Source Connector 根据定义的配置和规则轮询指定数据库中的表数据，将其写入到 Kafka 主题中。
+    配置成功后，KaiwuDB Source Connector 根据定义的配置和规则轮询指定数据库中的表数据，将其写入到 Kafka 主题中。
 
 ### 验证 KaiwuDB Source Connector
 
 1. 查看 Kafka 主题记录。
 
-   ```shell
-   kafka-topics.sh --bootstrap-server localhost:9092  --list
-   kafka-console-consumer.sh --bootstrap-server localhost:9092 --from-beginning --topic kw-benchmark-cpu_kaiwudb_tb
-   ```
+    ```shell
+    kafka-topics.sh --bootstrap-server localhost:9092  --list
+    kafka-console-consumer.sh --bootstrap-server localhost:9092 --from-beginning --topic kw-benchmark-cpu_kaiwudb_tb
+    ```
 
 2. 登录 KWDB 客户端，写入测试数据。
 
-   ```sql
-   INSERT INTO benchmark.cpu_kaiwudb_tb (k_timestamp, usage_user, usage_system, usage_idle, usage_nice, usage_iowait, usage_irq, usage_softirq, usage_steal, usage_guest, usage_guest_nice, id, hostname, region, datacenter) VALUES ('2024-01-22 22:22:22.224',1,2,3,4,5,6,7,8,9,10,647470401348904608,'locahost','beijing','center');
-   ```
+    ```sql
+    INSERT INTO benchmark.cpu_kaiwudb_tb (k_timestamp, usage_user, usage_system, usage_idle, usage_nice, usage_iowait, usage_irq, usage_softirq, usage_steal, usage_guest, usage_guest_nice, id, hostname, region, datacenter) VALUES ('2024-01-22 22:22:22.224',1,2,3,4,5,6,7,8,9,10,647470401348904608,'locahost','beijing','center');
+    ```
 
 3. 验证 Kafka 主题记录。
 
-   ```shell
-   kafka-console-consumer.sh --bootstrap-server localhost:9092 --from-beginning --topic kaiwudb-benchmark-ts_line_influxdb_tb
-   ```
+    ```shell
+    kafka-console-consumer.sh --bootstrap-server localhost:9092 --from-beginning --topic kaiwudb-benchmark-ts_line_influxdb_tb
+    ```
 
-   执行脚本后，控制台将输出以下信息：
+    执行脚本后，控制台将输出以下信息：
 
-   ```JSON
-   {"table":"cpu_kaiwudb_tb","columns":[{"name":"k_timestamp","type":"TIMESTAMP","length":64},{"name":"usage_user","type":"INT8","length":64},{"name":"usage_system","type":"INT8","length":64},{"name":"usage_idle","type":"INT8","length":64},{"name":"usage_nice","type":"INT8","length":64},{"name":"usage_iowait","type":"INT8","length":64},{"name":"usage_irq","type":"INT8","length":64},{"name":"usage_softirq","type":"INT8","length":64},{"name":"usage_steal","type":"INT8","length":64},{"name":"usage_guest","type":"INT8","length":64},{"name":"usage_guest_nice","type":"INT8","length":64}],"data":[{"k_timestamp":1705962142224,"usage_user":1,"usage_system":2,"usage_idle":3,"usage_nice":4,"usage_iowait":5,"usage_irq":6,"usage_softirq":7,"usage_steal":8,"usage_guest":9,"usage_guest_nice":10,"id":647470401348904608,"hostname":"locahost","region":"beijing","datacenter":"center","rack":null,"os":null,"arch":null,"team":null,"service":null,"service_version":null,"service_environment":null}],"tags":[{"name":"id","type":"INT8","length":64,"isPrimary":true,"nullable":false},{"name":"hostname","type":"VARCHAR","length":254,"isPrimary":false,"nullable":false},{"name":"region","type":"VARCHAR","length":254,"isPrimary":false,"nullable":false},{"name":"datacenter","type":"VARCHAR","length":254,"isPrimary":false,"nullable":false},{"name":"rack","type":"VARCHAR","length":254,"isPrimary":false,"nullable":true},{"name":"os","type":"VARCHAR","length":254,"isPrimary":false,"nullable":true},{"name":"arch","type":"VARCHAR","length":254,"isPrimary":false,"nullable":true},{"name":"team","type":"VARCHAR","length":254,"isPrimary":false,"nullable":true},{"name":"service","type":"VARCHAR","length":254,"isPrimary":false,"nullable":true},{"name":"service_version","type":"VARCHAR","length":254,"isPrimary":false,"nullable":true},{"name":"service_environment","type":"VARCHAR","length":254,"isPrimary":false,"nullable":true}]}
-   ```
+    ```JSON
+    {"table":"cpu_kaiwudb_tb","columns":[{"name":"k_timestamp","type":"TIMESTAMP","length":64},{"name":"usage_user","type":"INT8","length":64},{"name":"usage_system","type":"INT8","length":64},{"name":"usage_idle","type":"INT8","length":64},{"name":"usage_nice","type":"INT8","length":64},{"name":"usage_iowait","type":"INT8","length":64},{"name":"usage_irq","type":"INT8","length":64},{"name":"usage_softirq","type":"INT8","length":64},{"name":"usage_steal","type":"INT8","length":64},{"name":"usage_guest","type":"INT8","length":64},{"name":"usage_guest_nice","type":"INT8","length":64}],"data":[{"k_timestamp":1705962142224,"usage_user":1,"usage_system":2,"usage_idle":3,"usage_nice":4,"usage_iowait":5,"usage_irq":6,"usage_softirq":7,"usage_steal":8,"usage_guest":9,"usage_guest_nice":10,"id":647470401348904608,"hostname":"locahost","region":"beijing","datacenter":"center","rack":null,"os":null,"arch":null,"team":null,"service":null,"service_version":null,"service_environment":null}],"tags":[{"name":"id","type":"INT8","length":64,"isPrimary":true,"nullable":false},{"name":"hostname","type":"VARCHAR","length":254,"isPrimary":false,"nullable":false},{"name":"region","type":"VARCHAR","length":254,"isPrimary":false,"nullable":false},{"name":"datacenter","type":"VARCHAR","length":254,"isPrimary":false,"nullable":false},{"name":"rack","type":"VARCHAR","length":254,"isPrimary":false,"nullable":true},{"name":"os","type":"VARCHAR","length":254,"isPrimary":false,"nullable":true},{"name":"arch","type":"VARCHAR","length":254,"isPrimary":false,"nullable":true},{"name":"team","type":"VARCHAR","length":254,"isPrimary":false,"nullable":true},{"name":"service","type":"VARCHAR","length":254,"isPrimary":false,"nullable":true},{"name":"service_version","type":"VARCHAR","length":254,"isPrimary":false,"nullable":true},{"name":"service_environment","type":"VARCHAR","length":254,"isPrimary":false,"nullable":true}]}
+    ```
 
 ### 卸载 KaiwuDB Source Connector
 
@@ -270,13 +270,13 @@ curl -X DELETE http://localhost:8083/connectors/KwdbSourceConnector
 ::: warning 说明
 
 - JSON 数据已包含列名、列类型和列长度等信息。如果写入数据的目标时序表不存在，KaiwuDB 支持自动创建时序表。
-- 由于Kafka按行接收数据，因此不支持发送格式化的JSON数据，必须将每个完整的JSON对象压缩成单行字符串，以确保数据能够被正确解析。
+- Kafka 按行接收数据，不支持发送格式化的 JSON 数据。用户必须将每个完整的 JSON 对象压缩成单行字符串，确保系统能够正确解析数据。
 
 :::
 
 KWDB JSON 格式协议采用 JSON 字符串表示一行或多行数据。
 
-示例：
+数据示例：
 
 ```json
 {"table":"ts_json_kaiwudb_tb","columns":[{"name":"ts","type":"TIMESTAMPTZ","length":64},{"name":"c1","type":"INT2","length":16},{"name":"c2","type":"INT4","length":32},{"name":"c3","type":"INT8","length":64},{"name":"c4","type":"FLOAT4","length":32},{"name":"c5","type":"FLOAT8","length":64},{"name":"c6","type":"BOOL","length":1}],"tags":[{"name":"location","type":"VARCHAR","length":64,"primary":true,"nullable":false},{"name":"temperature","type":"FLOAT4","length":64,"primary":false,"nullable":true}],"data":[{"ts":1690855924005,"c1":11,"c2":21,"c3":2535208944865431245,"c4":6.14545,"c5":5.15656,"c6":true,"location":"tianjin","temperature":35.5},{"ts":1691853703011,"c1":12,"c2":22,"c3":6422208944865124578,"c4":1.01635,"c5":0.53533,"c6":false,"location":"tianjin","temperature":35.5},{"ts":1692065524004,"c1":13,"c2":23,"c3":1542408944865124535,"c4":3.25456,"c5":2.56356,"c6":true,"location":"tianjin","temperature":35.5},{"ts":1692199303011,"c1":14,"c2":24,"c3":1245658944865439256,"c4":2.72652,"c5":5.83533,"c6":false,"location":"tianjin","temperature":35.5},{"ts":1692285703011,"c1":15,"c2":25,"c3":5625658944865439256,"c4":5.71635,"c5":1.26562,"c6":false,"location":"tianjin","temperature":35.5}]}
@@ -300,7 +300,7 @@ OpenTSDB JSON 格式协议采用 JSON 字符串表示一行或多行数据。
 
 - 由于数据格式的特性，写入的时序表名是 `table_name.column_name` 形式组成。如果写入的数据表不存在，系统将自动创建时序表。每个表的数据列只有 `timestamp` 和 `value` 两列。
 - 目前，在自动创建表时，由于无法保证表对应的标签列名均一致，暂不支持对标签的处理。
-- 由于Kafka按行接收数据，因此不支持发送格式化的JSON数据，必须将每个完整的JSON对象压缩成单行字符串，以确保数据能够被正确解析。
+- Kafka 按行接收数据，不支持发送格式化的 JSON 数据。用户必须将每个完整的 JSON 对象压缩成单行字符串，确保系统能够正确解析数据。
 
 :::
 
@@ -329,7 +329,8 @@ OpenTSDB 采用单列模型，因此一行只能包含一个普通数据列，�
 
 - 由于数据格式的特性，写入的时序表名是 `table_name.column_name` 形式组成。如果写入的数据表不存在，系统将自动创建时序表。每个表的数据列只有 `timestamp` 和 `value` 两列。
 - 在自动创建表时，由于不能保证表对应的标签列名均一致，故暂不支持对标签的处理。
-  :::
+
+:::
 
 数据格式如下：
 
@@ -382,7 +383,7 @@ InfluxDB Line 格式协议采用一行字符串来表示一行数据。
 | `field_set`   | 普通列数据，格式为 `<field_key>=<field_value>,<field_key>=<field_value>`，多列之间之间使用逗号（`,`）隔开。`field_set` 中的每个数据项都需要对自身的数据类型进行描述，例如 `1.2f32` 代表 `FLOAT` 类型的数值 `1.2`、`3.63f64` 代表 `DOUBLE` 类型的数值 `3.63` 处理。 |
 | `timestamp`   | 本行数据对应的时间戳。timestamp 支持多种时间精度，写入数据的时候需要用参数指定时间精度，支持毫秒（ms）、微妙级（us）、纳秒（ns）3 种时间精度。                                                                                                       |
 
- 数据示例：
+数据示例：
 
 ```json
 ts_line_influxdb_tb,tag_name=tag_value c1=11i16,c2=21i32,c3=31i64,c4=11.8f32,c5=0.16f64,c6=true,c7=\"112132\",c8=\"213645\",c9='a',c10=L\"1\",c11=\"qaz\",c12=L\"tgb\",c13=1648432611249 1648432611249000000
