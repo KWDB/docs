@@ -23,4 +23,4 @@ Currently, we are maintaining the following versions of KWDB documentation in di
 
 ## Contact Us
 
-Feel free to reach out to us via [docs@kaiwudb.org.cn](mailto:docs@kaiwudb.org.cn) for any inquiries or continued communication. We value your engagement and look forward to building a stronger KWDB community together!
+Feel free to reach out to us via [docs@kwdb.org.cn](mailto:docs@kwdb.org.cn) for any inquiries or continued communication. We value your engagement and look forward to building a stronger KWDB community together!
