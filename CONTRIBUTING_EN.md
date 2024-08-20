@@ -94,7 +94,7 @@ To submit a PR for KWDB docs, follow these steps.
     git push origin new-branch-name # You can also use the "git push -u origin new-branch-name".
     ```
 
-8. Create a PR。
+8. Create a PR.
 
     > Note:
     >
