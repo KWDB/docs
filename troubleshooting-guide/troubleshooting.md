@@ -10,7 +10,7 @@ id: troubleshooting
 KWDB 提供日志、监控方案、核心转储功能，用于收集问题诊断数据，定位和分析问题。
 
 - 日志：KWDB 支持通过日志记录各模块程序的运行状态，并将日志输出到日志文件。
-- 监控：KWDB 支持使用 Prometheus](https://prometheus.io/) 和 [Grafana](https://grafana.com/grafana) 查看集群节点状态、监控集群指标。更多详细信息，参见[数据库监控概述](../db-monitor/db-monitor-overview.md)。
+- 监控：KWDB 支持使用 Prometheus](https://prometheus.io/) 和 [Grafana](https://grafana.com/grafana) 查看集群节点状态、监控集群指标。更多详细信息，参见[使用 Grafana 查看指标数据](../db-monitor/view-metrics-grafana.md)。
 - 核心转储功能：在某些情况下，KWDB 可能会因为严重的错误而崩溃或终止运行。如果开启核心转储功能，当进程发生严重错误时，系统生成 core 文件，用于诊断问题，找到解决方法。KWDB 支持在启动脚本、执行会话或者在系统层面配置 `ulimit`，开启核心转储功能。
 
     配置示例：
