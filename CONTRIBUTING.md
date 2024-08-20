@@ -42,18 +42,18 @@ id: CONTRIBUTING
 
 如需为 KWDB 文档提交 PR，遵循以下步骤。
 
-1. 首次在本仓库提 PR 时，请务必签署 [Contributor License Agreement (CLA)](https://gitee.com/organizations/kwdb/cla/kwdb-contributor-protocol)，否则我们将无法合并你的 PR。成功签署 CLA 后，可继续进行后续操作。
-2. Fork `kwdb/docs` 文档仓库。
+1. Fork `kwdb/docs` 文档仓库。
     1. 打开 [`kwdb/docs` 文档仓库](https://gitee.com/kwdb/docs)。
     2. 单击右上角的 [Fork](https://gitee.com/kwdb/docs#) 按钮，等待 Fork 完成即可。
-3. 将 Fork 的仓库克隆至本地。
+
+2. 将 Fork 的仓库克隆至本地。
 
     ```shell
     cd $working_dir # 将 $working_dir 替换为你想要放置 KWDB 文档仓库的目录。
     git clone https://gitee.com/$user/kwdb/docs.git # 将 `$user` 替换为你的 Gitee ID
     ```
 
-4. 新建一个分支。
+3. 新建一个分支。
 
     1. 确保本地 master 分支与远程分支保持最新。
 
@@ -70,11 +70,11 @@ id: CONTRIBUTING
         git checkout -b new-branch-name
         ```
 
-5. 编辑文档。
+4. 编辑文档。
 
     在建好的 `new-branch-name` 分支上编辑文档，可使用 Markdown 编辑器（如 Visual Studio Code）打开 `docs` 仓库，对相应文档进行增、删，或修改，并保存你的修改。
 
-6. 提交文档修改。
+5. 提交文档修改。
 
     ```shell
     git status # 查看更新的文档
@@ -82,7 +82,7 @@ id: CONTRIBUTING
     git commit -m "commit-message: update the xx"
     ```
 
-7. 保持新建分支与远程 master 分支保持一致。
+6. 保持新建分支与远程 master 分支保持一致。
 
     ```shell
     # 在新建分支上（new-branch-name）
@@ -90,13 +90,17 @@ id: CONTRIBUTING
     git rebase origin/master
     ```
 
-8. 将文档修改推至远程分支。
+7. 将文档修改推至远程分支。
 
     ```shell
     git push origin new-branch-name # 也可以使用 `git push -u origin new-branch-name`
     ```
 
-9. 创建一个 PR。
+8. 创建一个 PR。
+
+    > **说明：**
+    >
+    > 首次在本仓库提 PR 时，请务必签署 [Contributor License Agreement (CLA)](https://gitee.com/organizations/kwdb/cla/kwdb-contributor-protocol)，否则我们将无法合并你的 PR。成功签署 CLA 后，可继续进行后续操作。
 
     在提交 PR 前，确保已经完成 [PR 检查清单](#pr-检查清单)。
 
