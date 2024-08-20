@@ -14,10 +14,6 @@ KaiwuDB DataX Utils 支持以[单表](./migration-senarios/migrate-mysql-to-kaiw
 
 用户通过配置文件设置源数据库和目标数据库的连接、访问、数据迁移等信息。KaiwuDB DataX Utils 自动校验、统计迁移数据并输出迁移报告。在迁移过程中，用户可以查看整体的数据迁移进度。
 
-::: warning 说明
-对于 KaiwuDB 企业版，默认情况下，KaiwuDB 1.2.x 允许重复写入数据且不进行去重。KaiwuDB 2.0.x 对带有相同时间戳的数据整行去重，后写入的数据覆盖已存在的带有相同时间戳的数据。当将数据从 KaiwuDB 1.2.x 迁移到 KaiwuDB 2.0.x 时，如需保留源数据库中带有相同时间戳的数据，用户可以在目标数据库上运行 `SET CLUSTER SETTING ts.dedup.rule = keep;` 命令，允许写入带有相同时间戳的数据。该参数设置只适用于 KaiwuDB 2.0.x 单机部署模式。
-:::
-
 ## 数据类型映射
 
 KaiwuDB DataX Utils 支持 DataX 的数据类型。DataX 数据类型与 KWDB 数据类型的映射关系如下表所示：
