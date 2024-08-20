@@ -19,7 +19,7 @@ You can start from any one of the following items to help improve KWDB documenta
 - Fix or update inappropriate or outdated descriptions.
 - Add missing content (sentence, paragraph, or a new document).
 - Submit, reply to, and resolve docs issues.
-- (Committer or other advanced roles) Review Pull Requests (PRs) created by others.
+- Review Pull Requests (PRs) created by others.
 
 ## How to Contribute
 
