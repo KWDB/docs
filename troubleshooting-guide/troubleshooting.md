@@ -35,7 +35,7 @@ KWDB 提供日志、监控方案、核心转储功能，用于收集问题诊断
 
 3. 通过[Grafana](../db-monitor/os-monitor-component/view-metrics-grafana.md) 查看 KWDB 集群及各个节点的监控指标。
 
-4. 如果仍无法定位或解决问题，[联系](https://cs.kaiwudb.com/support/) KWDB 技术支持人员并提供详细的错误日志和问题报告来定位和解决问题。
+4. 如果仍无法定位或解决问题，[联系](https://kaiwudb.com/support/) KWDB 技术支持人员并提供详细的错误日志和问题报告来定位和解决问题。
 
 ### 性能问题
 
@@ -45,7 +45,7 @@ KWDB 提供日志、监控方案、核心转储功能，用于收集问题诊断
 
 2. 通过 [Grafana 硬件指标模板](../db-monitor/os-monitor-component/view-metrics-grafana.md#硬件)查看 CPU 使用率、内存使用率以及已用空间和可用空间有无告警。
 
-3. 如果仍无法定位或解决问题，[联系](https://cs.kaiwudb.com/support/) KWDB 技术支持人员并提供详细的性能报告来定位和解决问题。
+3. 如果仍无法定位或解决问题，[联系](https://kaiwudb.com/support/) KWDB 技术支持人员并提供详细的性能报告来定位和解决问题。
 
 ### 稳定性问题
 
@@ -59,7 +59,7 @@ KWDB 提供日志、监控方案、核心转储功能，用于收集问题诊断
     默认情况下，禁用核心转储功能。用户可以在启动脚本、执行会话或者在系统层面配置 `ulimit` 或者编辑 `ulimit` 配置文件，开启核心转储功能。
     :::
 
-3. 如果仍无法定位或解决问题，[联系](https://cs.kaiwudb.com/support/) KWDB 技术支持人员并提供详细的系统状态数据和日志文件来定位和解决问题。
+3. 如果仍无法定位或解决问题，[联系](https://kaiwudb.com/support/) KWDB 技术支持人员并提供详细的系统状态数据和日志文件来定位和解决问题。
 
 ## 应用开发
 
