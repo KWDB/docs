@@ -23,4 +23,4 @@
 
 ## 联系方式
 
-邮件列表：docs@kaiwudb.org.cn
+邮件列表：docs@kwdb.org.cn
