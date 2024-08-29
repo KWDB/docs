@@ -13,7 +13,7 @@ All KWDB user guides are located in the [`kwdb/docs`](https://gitee.com/kwdb/doc
 
 ## What You Can Contribute
 
-You can start from any one of the following items to help improve KWDB documentation at the [KWDB documentation website](https://kaiwudb.com/kaiwudb_docs/#/):
+You can start from any one of the following items to help improve KWDB documentation at the [KWDB documentation website](https://www.kaiwudb.com/kaiwudb_docs/#/):
 
 - Fix typos or format (punctuation, space, indentation, code block, etc.).
 - Fix or update inappropriate or outdated descriptions.
