@@ -8,7 +8,7 @@ id: overview
 KWDB 支持使用 KWDB 容器镜像或二进制安装包部署 KWDB 集群。在同一机房内的多个节点上运行 KWDB，并将数据分散存储在这些节点上。这种方式有助于提高系统的可用性和容错性，能够实现故障转移和数据强一致性。更多详细信息，参见[集群高可用](../db-operation/cluster-ha.md)。
 
 ::: warning 说明
-目前，KWDB 未提供可供下载的 KWDB 容器镜像。如需使用容器镜像部署 KWDB，[联系](https://kaiwudb.com/support/) KWDB 技术支持人员获取 KWDB 容器镜像。
+目前，KWDB 未提供可供下载的 KWDB 容器镜像。如需使用容器镜像部署 KWDB，[联系](https://www.kaiwudb.com/support/) KWDB 技术支持人员获取 KWDB 容器镜像。
 :::
 
 本节包含以下文档：
