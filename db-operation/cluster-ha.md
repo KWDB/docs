@@ -6,6 +6,7 @@ id: cluster-ha
 # 集群高可用
 
 默认情况下，KWDB 集群支持高可用，能够实现故障转移和数据强一致性。
+KWDB 单机版支持基于 DRBD 块设备复制的开源软件方案，实现主备节点间的数据复制，更多相关信息，参见[单机高可用性方案](../best-practices/single-ha.md)。
 
 ::: warning 说明
 

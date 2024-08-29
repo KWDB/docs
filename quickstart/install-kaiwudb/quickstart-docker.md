@@ -8,7 +8,8 @@ id: quickstart-docker
 本文介绍如何使用 KWDB 容器镜像在单个节点上部署 KWDB。
 
 ::: warning 说明
-目前，KWDB 未提供可供下载的 KWDB 容器镜像。如需使用容器镜像部署 KWDB，[联系](https://www.kaiwudb.com/support/) KWDB 技术支持人员获取 KWDB 容器镜像。
+- 目前，KWDB 未提供可供下载的 KWDB 容器镜像。如需使用容器镜像部署 KWDB，[联系](https://www.cs.kaiwudb.com/support/) KWDB 技术支持人员获取 KWDB 容器镜像。
+- KWDB 支持基于 DRBD 块设备复制的开源软件方案，实现主备节点间的数据复制，如需实现单机高可用性，请先参阅[单机高可用性方案](../../best-practices/single-ha.md)。
 :::
 
 ## 部署准备
