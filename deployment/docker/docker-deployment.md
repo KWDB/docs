@@ -13,7 +13,7 @@ id: docker-deployment
 
 ## 前提条件
 
-- [联系](https://kaiwudb.com/support/) KWDB 技术支持人员，获取 KWDB 容器镜像。
+- [联系](https://www.kaiwudb.com/support/) KWDB 技术支持人员，获取 KWDB 容器镜像。
 - 待部署节点的硬件、操作系统、软件依赖和端口满足安装部署要求。
 - 各节点间网络联通，且已配置当前节点与集群内其他节点的 SSH 免密。
 - 当前节点与集群内所有节点的时钟相差不大于 500 ms。

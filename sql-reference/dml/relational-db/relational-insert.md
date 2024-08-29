@@ -69,7 +69,7 @@ CREATE TABLE
     INSERT 2
     ```
 
-- 使用 `SELECT` 子句中写入数据。
+- 使用 `SELECT` 子句写入数据。
 
     ```sql
     CREATE TABLE accounts_type(id INT8 DEFAULT unique_rowid(),balance DECIMAL, data_type INT);
