@@ -5,7 +5,7 @@ id: release-notes
 
 # 发版说明
 
-KWDB 是一款面向 AIoT（Artificial Intelligence of Things，智能物联网）场景的分布式、多模融合、支持原生 AI 的数据库产品。KWDB 支持在同一实例同时创建时序库和关系库并融合处理多模数据，具备时序数据高效处理能力，具有稳定安全、高可用、易运维等特点。面向工业物联网、数字能源、车联网、智慧产业等领域，KWDB 提供一站式数据存储、管理与分析的基座。
+KWDB 是一款面向 AIoT场景的分布式、多模融合的数据库产品。KWDB 支持在同一实例同时创建时序库和关系库并融合处理多模数据，具备时序数据高效处理能力，具有稳定安全、高可用、易运维等特点。面向工业物联网、数字能源、车联网、智慧产业等领域，KWDB 提供一站式数据存储、管理与分析的基座。
 
 本文列出 KWDB 2.0 版本的主要功能。
 
@@ -66,13 +66,3 @@ KWDB 是一款面向 AIoT（Artificial Intelligence of Things，智能物联网�
 
 - 兼容 [Prometheus](https://prometheus.io/)、[Grafana](https://grafana.com/grafana)、[OpenTelemetry](https://opentelemetry.io/)、[Kafka](https://kafka.apache.org/)、[EMQX](https://www.emqx.io/)、[DataX](https://github.com/alibaba/DataX) 等生态工具。
 - 支持通过 [MyBatis](../development/connect-kaiwudb/connect-mybatis.md)、[MyBatis-Plus](../development/connect-kaiwudb/connect-mybatis-plus.md) 等主流框架协议连接数据库并读写数据。
-
-### 预测分析引擎（企业版特性）
-
-- 提供可插拔的 AI 预测分析引擎，提供自动化安装配置能力。
-- 支持 Python 语言以及 [TensorFlow](https://tensorflow.google.cn/?hl=zh-cn)、[XGBoost](https://xgboost.readthedocs.io/en/stable/#)、[scikit-learn](https://scikit-learn.org/stable/index.html)、[LightGBM](https://lightgbm.readthedocs.io/en/latest/index.html#) 等主流机器学习框架。
-- 支持通过 SQL 语句管理模型和训练流水线，包括导入模型和训练流水线、训练模型、评估模型、在线预测、批量预测及模型和作业流水线的生命周期管理。
-- 支持通过 WEB 图形化的工具管理模型和训练流水线，包括导入模型和训练流水线、训练模型、评估模型、在线预测、批量预测及模型和作业流水线的生命周期管理。
-- 支持模型训练作业、模型评估作业和批量预测作业的生命周期管理，支持多个作业的并行运行。
-
-有关预测分析引擎的更多详细信息，参见[预测分析引擎概述](../ml-services/ml-service-overview.md)。

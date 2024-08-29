@@ -13,13 +13,13 @@ All KWDB user guides are located in the [`kwdb/docs`](https://gitee.com/kwdb/doc
 
 ## What You Can Contribute
 
-You can start from any one of the following items to help improve KWDB documentation at the [KWDB documentation website](https://kaiwudb.com/kaiwudb_docs/#/):
+You can start from any one of the following items to help improve KWDB documentation at the [KWDB documentation website](https://www.kaiwudb.com/kaiwudb_docs/#/):
 
 - Fix typos or format (punctuation, space, indentation, code block, etc.).
 - Fix or update inappropriate or outdated descriptions.
 - Add missing content (sentence, paragraph, or a new document).
 - Submit, reply to, and resolve docs issues.
-- (Committer or other advanced roles) Review Pull Requests (PRs) created by others.
+- Review Pull Requests (PRs) created by others.
 
 ## How to Contribute
 
@@ -41,18 +41,18 @@ If you like, welcome to submit PRs to resolve issues. For details about how to s
 
 To submit a PR for KWDB docs, follow these steps.
 
-1. Your PRs can only be merged after you sign the [Contributor License Agreement (CLA)](https://gitee.com/organizations/kwdb/cla/kwdb-contributor-protocol). Please make sure you sign the CLA before continuing.
-2. Fork the `kwdb/docs` repository.
+1. Fork the `kwdb/docs` repository.
     1. Visit the [`kwdb/docs`](https://gitee.com/kwdb/docs) repository.
     2. Click the **Fork** button on the top right and wait for it to finish.
-3. Clone the forked repository to local storage.
+
+2. Clone the forked repository to local storage.
 
     ```shell
     cd $working_dir # Switch to the directory that you want put the fork in, for example, "cd ~/Documents/Gitee".
     git clone https://gitee.com/$user/kwdb/docs.git # Replace "$user" with your Gitee ID.
     ```
 
-4. Create a new branch.
+3. Create a new branch.
     1. Ensure your local master is up-to-date with the remote master branch.
 
         ```shell
@@ -68,11 +68,11 @@ To submit a PR for KWDB docs, follow these steps.
         git checkout -b new-branch-name
         ```
 
-5. Edit your docs.
+4. Edit your docs.
 
     Edit some file(s) on the `new-branch-name` branch and save your changes. You can use editors like Visual Studio Code to open and edit `.md` files.
 
-6. Commit your changes.
+5. Commit your changes.
 
     ```shell
     git status # Check your updated docs. 
@@ -80,7 +80,7 @@ To submit a PR for KWDB docs, follow these steps.
     git commit -m "commit-message: update the xx"
     ```
 
-7. Keep your branch in sync with the remote master branch.
+6. Keep your branch in sync with the remote master branch.
 
     ```shell
     # on "new-branch-name" branch
@@ -88,13 +88,17 @@ To submit a PR for KWDB docs, follow these steps.
     git rebase origin/master
     ```
 
-8. Push your changes to the remote.
+7. Push your changes to the remote.
 
     ```shell
     git push origin new-branch-name # You can also use the "git push -u origin new-branch-name".
     ```
 
-9. Create a PR。
+8. Create a PR.
+
+    > Note:
+    >
+    > Your PRs can only be merged after you sign the [Contributor License Agreement (CLA)](https://gitee.com/organizations/kwdb/cla/kwdb-contributor-protocol). Please make sure you sign the CLA before continuing.
 
     Before submitting your PR, ensure you have gone through the [PR checklist](#pr-checklist).
 
