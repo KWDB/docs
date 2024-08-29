@@ -6,6 +6,9 @@ id: quickstart-bare-metal
 # 单节点裸机部署
 
 本文介绍如何使用 KWDB 二进制安装包在单个节点上安装部署 KWDB。
+::: warining 提示
+KWDB 支持基于 DRBD 块设备复制的开源软件方案，实现主备节点间的数据复制，如需实现单机高可用性，请先参阅[单机高可用性方案](../../best-practices/single-ha.md)。
+:::
 
 ## 部署准备
 
