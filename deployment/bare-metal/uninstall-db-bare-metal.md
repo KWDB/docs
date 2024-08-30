@@ -36,7 +36,7 @@ id: uninstall-db-bare-metal
 5. 卸载 KWDB 服务及相关的库。
 
     ```shell
-    sudo apt-get -y remove kaiwudb-server kaiwudb-libcommon libopentelemetry-kaiwudb
+    sudo apt-get -y remove kaiwudb-server kaiwudb-libcommon
     ```
 
 6. 删除 KWDB 管理用户及其关联文件。默认情况下，管理用户为 `kaiwudb`。

@@ -54,6 +54,7 @@ KWDB 支持在以下服务器操作系统进行安装部署。
 | libgcc | v7.3.0+ | N/A |
 | mount | any | N/A |
 | squashfuse | any | 可选依赖 |
+| boost-atomic | any | 仅适用于RPM格式的安装包 |
 
 ### 端口要求
 
@@ -165,6 +166,10 @@ tar -zxvf <package_name>
     ```
 
     执行成功后，控制台输出以下信息：
+
+    ::: warning 说明
+    在 KylinOS 操作系统中，系统可能会提示输入用户密码。此时，无需输入密码，直接按回车键确认即可。
+    :::
 
     ```shell
     START COMPLETED: KaiwuDB has started successfuly! ...

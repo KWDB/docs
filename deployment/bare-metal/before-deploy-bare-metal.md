@@ -52,6 +52,7 @@ KWDB 支持多种操作系统并提供多种形式的安装包。不同操作系
 | libgcc | v7.3.0+ | N/A |
 | mount | any | N/A |
 | squashfuse | any | 可选依赖 |
+| boost-atomic | any | 仅适用于RPM格式的安装包 |
 
 ## 端口
 
