@@ -9,6 +9,7 @@ id: overview
 
 - **连接 KWDB**：介绍 KWDB 支持的应用程序连接器、如何配置连接器，并提供不同连接器的应用开发示例。
   - [JDBC](./connect-kaiwudb/connect-jdbc.md)
+  - [ODBC](./connect-kaiwudb/connect-odbc.md)
   - [MyBatis](./connect-kaiwudb/connect-mybatis.md)
   - [MyBatis-Plus](./connect-kaiwudb/connect-mybatis-plus.md)
   - [RESTful API](./connect-kaiwudb/connect-restful-api.md)
