@@ -31,7 +31,7 @@ CREATE TABLE [IF NOT EXISTS] <table_name>
 | `table_name` | 待创建的表的名称。该名称在数据库中必须唯一，并且遵循[数据库标识符规则](../../../sql-reference/sql-identifiers.md)。支持通过 `<database_name>.<table_name>` 指定其他数据库中的表。如未指定，则默认使用当前数据库。 |
 | `column_def` | 列定义列表，支持定义一列或多列，各列之间使用逗号（`,`）隔开。列名在表中必须唯一，但可以与索引或约束同名。每列必须定义列名、数据类型，可以选择定义列级约束或其他列限定（例如计算列），格式为格式为 `<column_name> <typename> [col_qual_list]`。在列级别定义的主键、唯一性约束、检查约束将作为表创建的一部分移动到表级别。支持使用 `SHOW CREATE TABLE` 语句在表级别查看在列级别定义的主键、唯一性约束、和检查约束。 |
 | `index_def` | 可选项，定义索引列表，支持定义一个或多个索引，各索引之间使用逗号（`,`）隔开。每个索引必须指定要索引的列，可选择指定名称。 索引名称在表中必须唯一，并且[遵循数据库标识符规则](../../../sql-reference/sql-identifiers.md)。有关如何创建索引的详细信息，参见[创建索引](./index-mgmt-relational.md#创建索引)。|
-| `family_def` | 可选项，列族定义列表，支持定义一个或多个列族，各列族之间使用逗号（`,`）隔开，格式为 `FAMILY [family_name] (name_list)` 。列族名称在表中必须唯一，但可以与列、约束或索引同名。列族是一组以单个键值对的形式存储在底层键值存储中的列，KWDB 自动将列分组到列族中，以确保有效的存储和性能，也支持用户手动将列分配给列族。|
+| `family_def` | 可选项，列族定义列表，支持定义一个或多个列族，各列族之间使用逗号（`,`）隔开，格式为 `FAMILY [family_name] (name_list)`。列族名称在表中必须唯一，但可以与列、约束或索引同名。列族是一组以单个键值对的形式存储在底层键值存储中的列，KWDB 自动将列分组到列族中，以确保有效的存储和性能，也支持用户手动将列分配给列族。|
 | `table_constraint` |可选项，表级约束隔列表，支持定义一个或多个约束，各约束之间使用逗号（`,`）隔开，格式为 `CONSTRAINT <constraint_name> <constraint_elem>`。约束名称在表中必须唯一，但可以与列，列族或索引具有相同的名称。|
 | `interleave_clause` |可选项，支持使用交错索引（Interleaving Indexes）优化查询性能， 格式为 `INTERLEAVE IN PARENT <table_name> (<name_list>)`。这会改变 KWDB 存储数据的方式。 |
 

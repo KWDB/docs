@@ -158,7 +158,7 @@ INSERT 4
 
 - 使用多个条件过滤表。
 
-    以下示例 `WHERE IN(<逗号分隔的值列表>)` 执行 `OR` 查询 `accounts` 表中指定列的值。
+    以下示例使用 `WHERE IN(<逗号分隔的值列表>)` 子句查询 `accounts` 表中指定列的值。
 
     ```sql
     SELECT name FROM accounts WHERE balance in (10000.5, 20000.75);
