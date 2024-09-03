@@ -8,7 +8,7 @@ id: ts-insert
 `INSERT` 语句用于向目标表中插入数据，包括：
 
 - 向指定时序表插入一行或多行时序数据。
-- 使用 `SELECT` 子句将其他时序表的查询结果插入到指定时序表中。
+- 使用 `SELECT` 子句将其他时序表的查询结果插入到指定时序表或关系表中。
 
 ::: warning 说明
 
@@ -72,4 +72,10 @@ id: ts-insert
 
     ```sql
     INSERT INTO ts_table SELECT * FROM temperature;
+    ```
+
+- 向关系表写入其他时序表的查询结果。
+
+    ```sql
+    INSERT INTO test.test1 SELECT * FROM test_ts.ts_table;
     ```
