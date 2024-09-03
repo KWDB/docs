@@ -14,18 +14,18 @@ id: faqs
     安装 KWDB 时，系统提示安装失败。
 
     ```shell
-    root@node:/home/admin/kaiwudb_install# ./deploy.sh install --single
+    root@node:/home/admin/kwdb_install# ./deploy.sh install --single
     [ERROR] 2024-05-27 06:02:25 Error occurred during libopentelemetry-kw_1.8.1_amd64.deb installation. Please check log.
     ```
 
 - **问题解答**
 
-    用户可能未安装所需依赖。建议查看 `kaiwudb_install/log` 目录下的相关日志，然后根据日志信息，使用 `apt install` 命令安装缺失的依赖。
+    用户可能未安装所需依赖。建议查看 `kwdb_install/log` 目录下的相关日志，然后根据日志信息，使用 `apt install` 命令安装缺失的依赖。
 
     日志示例：
 
     ```sql
-    root@node:/home/admin/kaiwudb_install/log# cat 2024-05-27
+    root@node:/home/admin/kwdb_install/log# cat 2024-05-27
     [INFO] 2024-05-27 06:02:25 start init directory /etc/kwdb /var/lib/kwdb
     [INFO] 2024-05-27 06:02:25 init directory success
     [INFO] 2024-05-27 06:02:25 start install binaries and libraries to /usr/local/kwdb
