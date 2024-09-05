@@ -5,7 +5,7 @@ id: overview
 
 # 数据库迁移概述
 
-[DataX](https://github.com/alibaba/DataX) 是一款广泛使用的离线数据同步工具。KWDB 基于 DataX 开发了数据库迁移工具 KaiwuDB DataX Utils，实现 KWDB（2.0.3 及以上版本）与 MySQL、TDengine、MongoDB、InfluxDB、OpenTSDB、Oracle、PostgreSQL、ClickHouse、KWDB（1.2.x）、KWDB（2.0.x）等数据库的离线数据同步。
+[DataX](https://github.com/alibaba/DataX) 是一款广泛使用的离线数据同步工具。KWDB 基于 DataX 开发了数据库迁移工具 KaiwuDB DataX Utils，实现 KWDB（2.0 及以上版本）与 MySQL、TDengine、MongoDB、InfluxDB、OpenTSDB、Oracle、PostgreSQL、ClickHouse、KWDB（1.2.x）、KWDB（2.0.x）等数据库的离线数据同步。
 
 KaiwuDB DataX Utils 支持以[单表](./migration-senarios/migrate-mysql-to-kaiwudb.md#单表迁移)、[多表](./migration-senarios/migrate-tdengine-to-kaiwudb.md)、[单库](./migration-senarios/migrate-mysql-to-kaiwudb.md#单库迁移)和[多库](./migration-senarios/migrate-mysql-to-kaiwudb.md#多库迁移)的形式对数据进行迁移，其中：
 

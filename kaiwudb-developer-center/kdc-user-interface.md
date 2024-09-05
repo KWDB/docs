@@ -45,7 +45,7 @@ KaiwuDB 开发者中心窗口包含菜单栏、工具栏、导航区、对象窗
 
 左侧导航区显示已连接的数据库，从上到下分别为导航工具栏、索引栏和导航菜单。
 
-![](../static/kdc/left-nav-bar.png)
+<img src="../static/kdc/left-nav-bar.png" style="zoom:80%;" />
 
 - 导航工具栏：从左到右依次是新建连接、新建文件、连接编辑器。
 
@@ -53,11 +53,11 @@ KaiwuDB 开发者中心窗口包含菜单栏、工具栏、导航区、对象窗
 
 - 索引栏：支持根据关键字检索导航菜单。例如，在导航栏中输入 `public` 后，菜单栏只显示与关键字有关的内容。
 
-    ![](../static/kdc/index-bar-02.png)
+    <img src="../static/kdc/index-bar-02.png" style="zoom:80%;" />
 
 - 导航菜单：支持用户通过右键菜单对数据库及数据库对象进行操作，不同层级支持的操作不同。
 
-    ![](../static/kdc/index-bar-03.png)
+    <img src="../static/kdc/index-bar-03.png" style="zoom:80%;" />
 
     | 对象             | 操作                                                                                      |
     | ---------------- | ----------------------------------------------------------------------------------------- |
@@ -86,21 +86,21 @@ KaiwuDB 开发者中心窗口包含菜单栏、工具栏、导航区、对象窗
 
 - KaiwuDB 数据库窗口
 
-  ![](../static/kdc/object-window-01.png)
+  <img src="../static/kdc/object-window-01.png" style="zoom:80%;" />
 
 - 自定义数据库和模式窗口
 
-  ![](../static/kdc/object-window-02.png)
+  <img src="../static/kdc/object-window-02.png" style="zoom:80%;" />
 
 - 自定义模式和 `public` 模式窗口
 
-  ![](../static/kdc/object-window-03.png)
+  <img src="../static/kdc/object-window-03.png" style="zoom:80%;" />
 
 ## 结果面板
 
 结果面板用于展示 SQL 语句的执行结果。
 
-![](../static/kdc/result-panel.png)
+<img src="../static/kdc/result-panel.png" style="zoom:67%;" />
 
 1. 以网格或文本形式显示结果
 2. 输入进一步筛选的条件
