@@ -7,13 +7,10 @@ id: column-mgmt-ts
 
 ## 添加列
 
-用户可以在创建表的时候直接创建表的数据列，也可以使用 `ALTER TABLE` 语句向表中添加列。每张表最多支持 4096 列。
+KWDB 支持使用 `ALTER TABLE ... ADD COLUMN` 语句执行以下操作。`ADD COLUMN` 为在线操作，不会阻塞表中的数据读写。每张表最多支持 4096 列。
 
 ::: warning 说明
-
-- 添加列时需要应用停机，以确保结构变更的原子性、一致性，避免潜在的一致性问题。
-- 目前，KWDB 不支持一次添加多列。
-
+目前，KWDB 不支持一次添加多列。
 :::
 
 ### 前提条件
@@ -91,7 +88,7 @@ SHOW COLUMNS FROM sensor_data;
 
 ### 修改数据类型和宽度
 
-KWDB 支持通过 `ALTER TABLE` 语句修改列的数据类型和宽度。
+KWDB 支持使用 `ALTER TABLE ... ALTER COLUMN` 语句修改列的数据类型和宽度。`ALTER COLUMN` 为在线操作，不会阻塞表中的数据读写。
 
 #### 前提条件
 
@@ -123,7 +120,7 @@ ALTER TABLE ts_table ALTER COLUMN c3 TYPE INT8;
 
 ### 重命名列
 
-KWDB 支持通过 `ALTER TABLE` 语句修改列的名称。
+KWDB 支持使用 `ALTER TABLE ... RENAME COLUMN` 语句修改列名。
 
 #### 前提条件
 
@@ -153,9 +150,10 @@ ALTER TABLE ts_table RENAME COLUMN c2 TO c4;
 
 ## 删除列
 
+KWDB 支持使用 `ALTER TABLE ... DROP COLUMN` 语句修改列名。`DROP COLUMN` 为在线操作，不会阻塞表中的数据读写。
+
 ::: warning 说明
 
-- 删除列时需要应用停机，待修改的表不在修改过程中，以确保结构变更的原子性、一致性，避免潜在的一致性问题。
 - 删除列时，原表至少保留两列数据列，且不支持删除第一列（时间戳列）。
 - 目前，KWDB 不支持一次删除多个列。
 
