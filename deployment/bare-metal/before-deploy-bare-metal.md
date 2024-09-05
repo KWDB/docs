@@ -85,7 +85,6 @@ tar -zxvf <package_name>
 | `deploy.sh`       | 安装部署脚本，用于安装、卸载、启动、状态获取、关停和重启等操作。  |
 | `packages` 目录   | 存放 DEB、RPM 和镜像包。                                      |
 | `utils` 目录      | 存放工具类脚本。                                             |
-| `monitoring` 目录 | 存放 Prometheus 配置文件、Grafana Dashboard 模板等文件。|
 
 ## 节点配置
 
