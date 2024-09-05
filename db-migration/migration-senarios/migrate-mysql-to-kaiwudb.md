@@ -63,10 +63,10 @@ KWDB 支持以单表、多表、单库、多库的形式将数据从 MySQL 迁�
             record: 1000
     ```
 
-3. 在 `kaiwudb-datax-utils-2.0.4.jar` 所在目录，执行以下命令，开始迁移数据。
+3. 在 `kaiwudb-datax-utils-1.2.2.jar` 所在目录，执行以下命令，开始迁移数据。
 
     ```shell
-    java -jar -DyamlPath=<yml_path> -DdataxPath=<datax_path> -Dpython=<python> -Darguments=<arguments> kaiwudb-datax-utils-2.0.4.jar
+    java -jar -DyamlPath=<yml_path> -DdataxPath=<datax_path> -Dpython=<python> -Darguments=<arguments> kaiwudb-datax-utils-1.2.2.jar
     ```
 
     参数说明：
@@ -115,10 +115,10 @@ KWDB 支持以单表、多表、单库、多库的形式将数据从 MySQL 迁�
         percentage: 0.02
     ```
 
-3. 在 `kaiwudb-datax-utils-2.0.4.jar` 所在目录，执行以下命令，开始迁移数据。
+3. 在 `kaiwudb-datax-utils-1.2.2.jar` 所在目录，执行以下命令，开始迁移数据。
 
     ```shell
-    java -jar -DyamlPath=<yml_path> -DdataxPath=<datax_path> -Dpython=<python> -Darguments=<arguments> kaiwudb-datax-utils-2.0.4.jar
+    java -jar -DyamlPath=<yml_path> -DdataxPath=<datax_path> -Dpython=<python> -Darguments=<arguments> kaiwudb-datax-utils-1.2.2.jar
     ```
 
 ## 多库迁移
@@ -165,8 +165,8 @@ KWDB 支持以单表、多表、单库、多库的形式将数据从 MySQL 迁�
         percentage: 0.02
     ```
 
-3. 在 `kaiwudb-datax-utils-2.0.4.jar` 所在目录，执行以下命令，开始迁移数据。
+3. 在 `kaiwudb-datax-utils-1.2.2.jar` 所在目录，执行以下命令，开始迁移数据。
 
     ```shell
-    java -jar -DyamlPath=<yml_path> -DdataxPath=<datax_path> -Dpython=<python> -Darguments=<arguments> kaiwudb-datax-utils-2.0.4.jar
+    java -jar -DyamlPath=<yml_path> -DdataxPath=<datax_path> -Dpython=<python> -Darguments=<arguments> kaiwudb-datax-utils-1.2.2.jar
     ```
