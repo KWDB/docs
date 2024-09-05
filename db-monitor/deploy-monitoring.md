@@ -18,9 +18,9 @@ KWDB 使用 [Prometheus](https://prometheus.io/) 采集和存储 KWDB 集群的�
     ```
 
 2. 在 `prometheus-2.53.0.linux-amd64` 目录下创建 `rules` 子目录。
-3. 下载 Prometheus 告警规则和聚合规则配置文件并将其放置在 `rules` 子目录。
+3. [下载](https://gitee.com/kwdb/kwdb/tree/master/kwbase/monitoring/rules) Prometheus 告警规则和聚合规则配置文件并将其放置在 `rules` 子目录。
 
-    KWDB 在其安装包的 `monitoring/rules` 目录下提供 `alerts.rules.yml` 和 `aggregation.rules.yml` 文件。有关告警规则配置项和聚合规则配置项的详细信息，参见 [Prometheus 告警规则](https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/)和 [Prometheus 聚合规则](https://prometheus.io/docs/practices/rules/#aggregation)。
+    KWDB 在 `monitoring/rules` 目录下提供 `alerts.rules.yml` 和 `aggregation.rules.yml` 文件。有关告警规则配置项和聚合规则配置项的详细信息，参见 [Prometheus 告警规则](https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/)和 [Prometheus 聚合规则](https://prometheus.io/docs/practices/rules/#aggregation)。
 
     - `alerts.rules.yml`：告警规则配置文件。
     - `aggregation.rules.yml`：聚合规则配置文件。
@@ -138,7 +138,7 @@ KWDB 使用 [Prometheus](https://prometheus.io/) 采集和存储 KWDB 集群的�
 
 ### 导入 Grafana 面板
 
-默认情况下，KWDB 在其安装包的 `monitoring/grafana-dashboards` 目录下提供以下指标面板模板。用户将指标面板模板（`.json` 格式）导入 Grafana 后，即可监控 KWDB 集群。
+默认情况下，KWDB 在 [`monitoring/grafana-dashboards`](https://gitee.com/kwdb/kwdb/tree/master/kwbase/monitoring/grafana-dashboards) 目录下提供以下指标面板模板。用户将指标面板模板（`.json` 格式）导入 Grafana 后，即可监控 KWDB 集群。
 
 - 概览：展示集群和节点的关键指标。
 - 硬件：展示硬件相关的监控指标。
@@ -160,7 +160,7 @@ KWDB 使用 [Prometheus](https://prometheus.io/) 采集和存储 KWDB 集群的�
 
     ::: warning 说明
 
-    默认情况下，KWDB 在其安装包的 `monitoring/grafana-dashboards` 目录下提供以下指标模板。KWDB 各指标面板对应的文件名如下所示：
+    默认情况下，KWDB 在 [`monitoring/grafana-dashboards`](https://gitee.com/kwdb/kwdb/tree/master/kwbase/monitoring/grafana-dashboards) 目录下提供以下指标模板。KWDB 各指标面板对应的文件名如下所示：
 
     - 概览：`1.KaiwuDB_Console_Overview.json`
     - 硬件：`2.KaiwuDB_Console_Hardware.json`
