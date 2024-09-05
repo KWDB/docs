@@ -116,7 +116,7 @@ tar -zxvf <install_package_name>
 
 如需使用 YAML 文件部署 KWDB，遵循以下步骤。
 
-1. 在 `kaiwudb_install/packages` 目录下导入 `KaiwuDB.tar` 文件，获取镜像名称。
+1. 在 `kwdb_install/packages` 目录下导入 `KaiwuDB.tar` 文件，获取镜像名称。
 
     ```yaml
     # docker load < KaiwuDB.tar
