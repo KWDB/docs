@@ -1,82 +1,172 @@
 ---
-title: 从 TDengine 迁移到 KWDB
-id: migrate-tdengine-to-kaiwudb
-
+title: 从 MySQL 迁移到 KWDB
+id: migrate-mysql-to-kaiwudb
 ---
+# 从 MySQL 迁移到 KWDB
 
-# 从 TDengine 迁移到 KWDB
+KWDB 支持以单表、多表、单库、多库的形式将数据从 MySQL 迁移到 KWDB。本文档提供单表迁移、单库迁移和多库迁移的配置示例。有关多表迁移的配置示例，参见[从 TDengine 迁移到 KWDB](./migrate-tdengine-to-kaiwudb.md)。
 
-KWDB 支持以单表、多表的形式将数据从 TDengine 迁移到 KWDB。本文档提供多表迁移的配置示例。有关单表迁移的配置示例，参见[从 MySQL 迁移到 KWDB](./migrate-mysql-to-kaiwudb.md#单表迁移)。
+## 单表迁移
 
-## 前提条件
+### 前提条件
 
 - 完成[迁移准备](../before-migration.md)。
+- 在 MySQL 数据库中创建 `sensor_data_db` 数据库和 `sensor_data` 表。
+- 在 KWDB 数据库中创建 `tsdb` 时序数据库。
 
-- 在 TDengine 数据库中创建 `tdengine_kaiwudb`、`temperature_humidity` 时序数据库和 `custom_metrics` 表。
-- 在 KWDB 数据库中创建 `tdengine_kaiwudb` 时序数据库。
+::: warning 说明
+从关系表向时序表迁移时，需要配置合适的列或者常量作为时序表的标签和主标签。
+:::
 
-## 步骤
+### 步骤
 
 1. 解压缩 KaiwuDB DataX 插件包，将解压后的 Reader 和 Writer 插件复制到 DataX 对应的插件目录下。例如，复制 `kaiwudbwriter` 到 `datax/plugin/writer` 目录。
+2. 创建配置文件（`.yml`），配置源数据库和目标数据库的连接信息、数据表信息、迁移设置、核心信息参数。有关源数据库、目标数据库、迁移设置、核心信息的配置参数，参见[配置参数](../config-params.md)。
 
-2. 创建配置文件（`.yml`），配置源数据库和目标数据库的连接信息、数据表信息、以及迁移设置参数。有关源数据库、目标数据库、迁移设置、核心信息的配置参数，参见[配置参数](../config-params.md)。
+    以下配置文件使用 `where` 参数读取 `2024-01-01 00:00:00` 到 `2024-02-01 00:00:00` 期间的数据，并使用 `preSql` 参数在目标数据库中创建待写入数据的 `sensor_data` 时序表。
 
-   以下配置文件使用 `column` 和 `querySql` 参数，限定源数据库中表的读取范围，使用 `preSql` 参数在目标数据库中创建待写入数据的 `temperature_humidity` 和 `custom_metrics` 时序表。
-
-   ```yaml ts{10,12-13,24-31}
-   source:
-     pluginName: tdengine30reader
-     databases:
-       - name: tdengine_kaiwudb
-         url: jdbc:TAOS-RS://127.0.0.1:6041/tdengine_kaiwudb?timestampFormat=STRING&timezone=Asia%2FShanghai
-         username: root
-         password: taosdata
-         tables:
-           - name: temperature_humidity
-             column: timestamp, sensor_id, temperature, humidity, tag1
-           - name: custom_metrics
-             querySql:
-               - "select timestamp, sensor_id, pressure, voltage, tag1 from custom_metrics"
-   target:
-     pluginName: kaiwudbwriter
-     databases:
-       - name: tdengine_kaiwudb
-         url: jdbc:kaiwudb://127.0.0.1:26257/tdengine_kaiwudb
-         username: kaiwu_user
-         password: Password@2024
-         tables:
-           - name: temperature_humidity
-             column: timestamp, sensor_id, temperature, humidity, tag1
-             preSql:
-               - "drop table if exists temperature_humidity"
-               - "create table temperature_humidity (timestamp timestamptz not null, sensor_id int, temperature float, humidity float) tags (tag1 int not null) primary tags (tag1)"
-           - name: custom_metrics
-             column: timestamp, sensor_id, pressure, voltage, tag1
-             preSql:
-               - "drop table if exists custom_metrics"
-               - "create table custom_metrics (timestamp timestamptz not null, sensor_id int, pressure float, voltage float) tags (tag1 int not null) primary tags (tag1)"
-     batchSize: 1000
-   setting:
-     speed:
-       channel: 1
-     errorLimit:
-       percentage: 0.02
-   yaml ts{10,12-13,24-31}
-   ```
+    ```yaml ts{11,22-23}
+    source:
+      pluginName: mysqlreader
+      databases:
+        - name: sensor_data_db
+          url: jdbc:mysql://127.0.0.1:3306/sensor_data_db?useSSL=false&useUnicode=true&characterEncoding=utf8
+          username: root
+          password: 12345678
+          tables:
+            - name: sensor_data
+              column: timestamp, sensor_id, temperature, humidity, 1 as tag1
+              where: timestamp >= '2024-01-01 00:00:00' and timestamp <= '2024-02-01 00:00:00'
+    target:
+      pluginName: kaiwudbwriter
+      databases:
+        - name: tsdb
+          url: jdbc:kaiwudb://127.0.0.1:26257/tsdb
+          username: admin
+          password: Password@2024
+          tables:
+            - name: sensor_data
+              column: time, sensor_id, temperature, humidity, tag1
+              preSql:
+                - "create table sensor_data (time TIMESTAMPTZ NOT NULL, sensor_id INT, temperature FLOAT, humidity FLOAT) tags (tag1 int not null) primary tags (tag1))"
+      batchSize: 1000
+    setting:
+      speed:
+        channel: 1
+      errorLimit:
+        percentage: 0.02
+    core:
+      transport:
+        channel:
+          speed:
+            byte: 1048576
+            record: 1000
+    ```
 
 3. 在 `kaiwudb-datax-utils-1.2.2.jar` 所在目录，执行以下命令，开始迁移数据。
 
-   ```shell
-   java -jar -DyamlPath=<yml_path> -DdataxPath=<datax_path> -Dpython=<python> -Darguments=<arguments> kaiwudb-datax-utils-1.2.2.jar
-   ```
+    ```shell
+    java -jar -DyamlPath=<yml_path> -DdataxPath=<datax_path> -Dpython=<python> -Darguments=<arguments> kaiwudb-datax-utils-1.2.2.jar
+    ```
 
-   参数说明：
+    参数说明：
+    - `yamlPath`：配置文件的路径。
+    - `dataxPath`：`DataX` 文件夹的路径。
+    - `python`: 已安装的 Python 版本。
+      - Python 2.X：`python`
+      - Python 3.X：`python3`
+    - `arguments`：DataX 环境参数。支持配置以下参数：
+      - `-j <jvm paramenters>` 或 `--jvm=<jvm paramenters>`：配置必要的 JVM 参数。
+      - `-m <job runtime mode>` 或 `--mode=<job runtime mode>`：配置 DataX 作业运行模式，支持 `standalone`（独立模式）、`local`（本地模式）、`distribute`（分布式模式）。默认为 `standalone`（独立模式）。
 
-   ```{0}`yamlPath`：配置文件的路径。
-   ```{0}`dataxPath`：`DataX` 文件夹的路径。
-   ```{0}`python`: 已安装的 Python 版本。
-         - Python 2.X：`python`
-         - Python 3.X：`python3`
-   ```{0}`arguments`：DataX 环境参数。支持配置以下参数：
-         - `-j <jvm paramenters>` 或 `--jvm=<jvm paramenters>`：配置必要的 JVM 参数。
-         - `-m <job runtime mode>` 或 `--mode=<job runtime mode>`：配置 DataX 作业运行模式，支持 `standalone`（独立模式）、`local`（本地模式）、`distribute`（分布式模式）。默认为 `standalone`（独立模式）。
+## 单库迁移
+
+### 前提条件
+
+- 完成[迁移准备](../before-migration.md)。
+- 在 MySQL 数据库中创建 `metrics_db` 数据库和 `sensor_metrics`、`system_metrics` 表。
+- 在 KWDB 数据库中创建 `metrics` 关系数据库和 `sensor_metrics`、`system_metrics` 关系表。
+
+### 步骤
+
+1. 解压缩 KaiwuDB DataX 插件包，将解压后的 Reader 和 Writer 插件复制到 DataX 对应的插件目录下。例如，复制 `kaiwudbwriter` 到 `datax/plugin/writer` 目录。
+2. 创建配置文件（`.yml`），配置源数据库和目标数据库的连接信息以及迁移设置参数。有关源数据库、目标数据库、迁移设置的配置参数，参见[配置参数](../config-params.md)。
+
+    ```yaml
+    source:
+      pluginName: mysqlreader
+      databases:
+        - name: metrics_db
+          url: jdbc:mysql://127.0.0.1:3306/metrics_db?useSSL=false&useUnicode=true&characterEncoding=utf8
+          username: root
+          password: 123456
+    target:
+      pluginName: kaiwudbwriter
+      databases:
+        - name: metrics
+          url: jdbc:kaiwudb://127.0.0.1:26257/metrics
+          username: test
+          password: Password@2024
+      batchSize: 1000
+    setting:
+      speed:
+        channel: 1
+      errorLimit:
+        percentage: 0.02
+    ```
+
+3. 在 `kaiwudb-datax-utils-1.2.2.jar` 所在目录，执行以下命令，开始迁移数据。
+
+    ```shell
+    java -jar -DyamlPath=<yml_path> -DdataxPath=<datax_path> -Dpython=<python> -Darguments=<arguments> kaiwudb-datax-utils-1.2.2.jar
+    ```
+
+## 多库迁移
+
+### 前提条件
+
+- 完成[迁移准备](../before-migration.md)。
+- 在 MySQL 数据库中创建 `production_db` 和 `analytics_db` 数据库，以及对应的关系表。
+- 在 KWDB 数据库中创建 `production_data` 和 `analytics_data` 关系数据库，以及对应的关系表。
+
+### 步骤
+
+1. 解压缩 KaiwuDB DataX 插件包，将解压后的 Reader 和 Writer 插件复制到 DataX 对应的插件目录下。例如，复制 `kaiwudbwriter` 到 `datax/plugin/writer` 目录。
+2. 创建配置文件（`.yml`），配置源数据库和目标数据库的连接信息以及迁移设置参数。有关源数据库、目标数据库、迁移设置的配置参数，参见[配置参数](../config-params.md)。
+
+    ```yaml
+    source:
+      pluginName: mysqlreader
+      databases:
+        - name: production_db
+          url: jdbc:mysql://127.0.0.1:3306/production_db?useSSL=false&useUnicode=true&characterEncoding=utf8
+          username: root
+          password: 123456
+        - name: analytics_db
+          url: jdbc:mysql://127.0.0.1:3306/analytics_db?useSSL=false&useUnicode=true&characterEncoding=utf8
+          username: root
+          password: 123456
+    target:
+      pluginName: kaiwudbwriter
+      databases:
+        - name: production_data
+          url: jdbc:kaiwudb://127.0.0.1:26257/production_data
+          username: test
+          password: Password@2024
+        - name: analytics_data
+          url: jdbc:kaiwudb://127.0.0.1:26257/analytics_data
+          username: test
+          password: Password@2024
+      batchSize: 1000
+    setting:
+      speed:
+        channel: 1
+      errorLimit:
+        percentage: 0.02
+    ```
+
+3. 在 `kaiwudb-datax-utils-1.2.2.jar` 所在目录，执行以下命令，开始迁移数据。
+
+    ```shell
+    java -jar -DyamlPath=<yml_path> -DdataxPath=<datax_path> -Dpython=<python> -Darguments=<arguments> kaiwudb-datax-utils-1.2.2.jar
+    ```
