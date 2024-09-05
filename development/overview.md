@@ -13,7 +13,8 @@ id: overview
   - [MyBatis](./connect-kaiwudb/connect-mybatis.md)
   - [MyBatis-Plus](./connect-kaiwudb/connect-mybatis-plus.md)
   - [RESTful API](./connect-kaiwudb/connect-restful-api.md)
-- **读写数据**：介绍如何使用 [Kafka](https://kafka.apache.org/)、[DataX](https://github.com/alibaba/DataX)、[EMQX](https://www.emqx.io/)、[Telegraf](https://www.influxdata.com/time-series-platform/telegraf/) 将数据写入到 KWDB 数据库，或者从 KWDB 数据库读取数据。
+  - [Hibernate](./connect-kaiwudb/connect-hibernate.md)
+- **读写数据**：介绍如何使用 [Kafka](https://kafka.apache.org/)、[DataX](https://github.com/alibaba/DataX)、[EMQX](https://www.emqx.io/)、[Telegraf](https://www.influxdata.com/time-series-platform/telegraf/) 将数据写入到 KaiwuDB 数据库，或者从 KWDB 数据库读取数据。
   - [Kafka](./read-write-data/kafka.md)
   - [DataX](./read-write-data/datax.md)
   - [EMQX](./read-write-data/emqx.md)
