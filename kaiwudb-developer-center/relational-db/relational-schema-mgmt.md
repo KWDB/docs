@@ -19,15 +19,15 @@ KaiwuDB 开发者中心支持创建、编辑、查看、删除模式。
 
 1. 在数据库导航区，右键单击**模式**，然后选择**新建模式**。
 
-    ![](../../static/kdc/create-schema-01.png)
+    <img src="../../static/kdc/create-schema-01.png" style="zoom:67%;" />
 
 2. 在**创建模式**窗口，填写模式名称，然后单击**确定**。
 
-    ![](../../static/kdc/create-schema-02.png)
+    <img src="../../static/kdc/create-schema-02.png" style="zoom:67%;" />
 
     创建成功后，新创建的模式将自动显示在导航菜单中。
 
-    ![](../../static/kdc/create-schema-03.png)
+    <img src="../../static/kdc/create-schema-03.png" style="zoom:67%;" />
 
 ## 编辑模式
 
@@ -48,11 +48,11 @@ KaiwuDB 开发者中心支持创建、编辑、查看、删除模式。
 
 - 属性信息
 
-    ![](../../static/kdc/view-schema-01.png)
+    <img src="../../static/kdc/view-schema-01.png" style="zoom:67%;" />
 
 - ER 图信息
 
-    ![](../../static/kdc/view-schema-02.png)
+    <img src="../../static/kdc/view-schema-02.png" style="zoom:67%;" />
 
 ## 删除模式
 
@@ -66,8 +66,8 @@ KaiwuDB 开发者中心支持创建、编辑、查看、删除模式。
 
 1. 在数据库导航区，右键单击需要删除的模式，然后选择**删除**。
 
-    ![](../../static/kdc/delete-schema-01.png)
+    <img src="../../static/kdc/delete-schema-01.png" style="zoom:67%;" />
 
 2. 在**删除对象**窗口，单击**是**。
 
-    ![](../../static/kdc/delete-schema-02.png)
+    <img src="../../static/kdc/delete-schema-02.png" style="zoom:67%;" />
