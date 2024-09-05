@@ -13,17 +13,17 @@ KaiwuDB 开发者中心支持创建、删除角色或用户，为角色或用户
 
 1. 在数据库导航区，右键单击**角色与用户**，然后选择**新建角色或用户**。
 
-    ![](../static/kdc/BxUPbsMVuoB6D0x2JHNcCtP5nMb.png)
+    <img src="../static/kdc/BxUPbsMVuoB6D0x2JHNcCtP5nMb.png" style="zoom:67%;" />
 
 2. 在**创建角色或用户**窗口，设置名称和密码，然后选择是否勾选用户。若勾选，创建用户。否则，创建角色。
 
     - 创建角色
 
-        ![](../static/kdc/J179bCXEfou0E2xmoA8cYHqNnsb.png)
+        <img src="../static/kdc/J179bCXEfou0E2xmoA8cYHqNnsb.png" style="zoom:67%;" />
 
     - 创建用户
 
-        ![](../static/kdc/CmPjb63IVo4IyXxItCacceXknve.png)
+        <img src="../static/kdc/CmPjb63IVo4IyXxItCacceXknve.png" style="zoom:67%;" />
 
 3. 单击页面右下方的保存按钮。
 4. 在**执行修改**窗口，确认 SQL 语句无误，然后单击**执行**。
@@ -47,7 +47,7 @@ KaiwuDB 开发者中心支持创建、删除角色或用户，为角色或用户
 1. 在数据库导航区，右键单击需要删除的角色或用户，然后单击**删除**。
 2. 在**删除对象**窗口，单击**是**。
 
-    ![](../static/kdc/FlMLbijhcoB0PHxSndqceZUPnnf.png)
+    <img src="../static/kdc/FlMLbijhcoB0PHxSndqceZUPnnf.png" style="zoom:67%;" />
 
 ## 为角色或用户添加成员
 

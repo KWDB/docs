@@ -23,15 +23,15 @@ KaiwuDB 开发者中心支持创建、编辑、查看、重命名和删除时序
 
 1. 在数据库导航区，右键单击**时序数据库**，然后选择**新建时序数据库**。
 
-    ![](../../static/kdc/VmR7be1F9o041HxegtzcDVMsnCj.png)
+    <img src="../../static/kdc/VmR7be1F9o041HxegtzcDVMsnCj.png" style="zoom:80%;" />
 
 2. 在**创建时序数据库**窗口，填写数据库名称，设置数据库生命周期，然后单击**确定**。默认情况下，数据库的生命周期为 `0` 天，即永不过期。
 
-    ![](../../static/kdc/JkUGbMGs1oxENrxxnwccYsR8nOf.png)
+    <img src="../../static/kdc/JkUGbMGs1oxENrxxnwccYsR8nOf.png" style="zoom:80%;" />
 
     创建成功后，新建数据库将自动显示在数据库导航区内，继承 KWDB 数据库系统的角色和用户设置。
 
-    ![](../../static/kdc/IeJhbo7h5oMVenx5wfWcPB9Unad.png)
+    <img src="../../static/kdc/IeJhbo7h5oMVenx5wfWcPB9Unad.png" style="zoom:80%;" />
 
 ## 编辑数据库
 
@@ -41,21 +41,23 @@ KaiwuDB 开发者中心支持创建、编辑、查看、重命名和删除时序
 
 ### 步骤
 
-如需修改时序数据库的生命周期，遵循以下步骤。
+如需修改时序数据库的生命周期或描述信息，遵循以下步骤。
 
 1. 在数据库导航区，双击需要修改的数据库，或者右键单击需要修改的数据库，然后选择**编辑时序数据库**。
-2. 在数据库对象窗口，修改数据库的生命周期。
 
-    ![](../../static/kdc/EfyfbWX7Qox7IZxEYADc5TMln2g.png)
+2. 在数据库对象窗口，根据需要修改数据库的生命周期和描述信息。
+
+    ![](../../static/kdc/ts-db-comment.png)
 
 3. 单击页面右下方的保存按钮。
+
 4. 在**执行修改**窗口，确认 SQL 语句无误，然后单击**执行**。
 
 ## 查看数据库
 
-在数据库导航区，双击需要查看的数据库，查看数据库的属性以及属性下的模式、角色、用户、会话信息和权限信息。
+在数据库导航区，双击需要查看的数据库，查看数据库的属性以及数据库的模式、角色、用户、会话信息和权限信息。
 
-![](../../static/kdc/CjKubs1U4oZIoSxDFO0c8kmHnlE.png)
+![](../../static/kdc/ts-show-db.png)
 
 ## 删除数据库
 
@@ -70,11 +72,11 @@ KaiwuDB 开发者中心支持创建、编辑、查看、重命名和删除时序
 
 1. 在数据库导航区，右键单击需要删除的数据库，然后选择**删除**。
 
-    ![](../../static/kdc/PYJhbQxkSo4vKlxrRkYcH86WnUb.png)
+    <img src="../../static/kdc/PYJhbQxkSo4vKlxrRkYcH86WnUb.png" style="zoom:67%;" />
 
 2. 在**删除对象**窗口，单击**是**。删除成功后，系统将自动更新导航栏菜单。
 
-    ![](../../static/kdc/FVwRborHAoCV5dxsOM4cJtF9n9c.png)
+    <img src="../../static/kdc/FVwRborHAoCV5dxsOM4cJtF9n9c.png" style="zoom: 67%;" />
 
 ## 重命名数据库
 
@@ -93,10 +95,10 @@ KaiwuDB 开发者中心支持创建、编辑、查看、重命名和删除时序
 
 1. 在数据库导航区，右键单击需要重命名的数据库，然后选择**重命名**。
 
-    ![](../../static/kdc/G31fbK7q6oljU7xa3P7c0yuVnxb.png)
+    <img src="../../static/kdc/G31fbK7q6oljU7xa3P7c0yuVnxb.png" style="zoom:67%;" />
 
 2. 在**重命名**窗口，设置新的数据库名称，然后单击**确定**。
 
-    ![](../../static/kdc/MpDcbE31xoRPyVxjYZ4cCRYrnLb.png)
+    <img src="../../static/kdc/MpDcbE31xoRPyVxjYZ4cCRYrnLb.png" style="zoom:67%;" />
 
 3. 在**重命名脚本**窗口，确认新数据库名称，然后单击**执行**。
