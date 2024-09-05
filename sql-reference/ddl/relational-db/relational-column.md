@@ -7,7 +7,7 @@ id: relational-column
 
 ## 添加列
 
-`ADD COLUMN` 语句是 `ALTER TABLE` 语句的一部分，用于向表中添加列。
+KWDB 支持在创建表时创建列，也支持使用 `ALTER TABLE ... ADD COLUMN` 语句为表创建列。`ADD COLUMN` 为在线操作，不会阻塞表中的数据读写。
 
 ### 所需权限
 
@@ -183,7 +183,7 @@ SHOW COLUMNS FROM re_users;
 
 ## 修改列
 
-`ALTER COLUMN` 语句是 ALTER TABLE 语句的一部分，用于执行以下操作：
+KWDB 支持使用 `ALTER TABLE ... ALTER COLUMN` 语句执行以下操作。`ALTER COLUMN` 为在线操作，不会阻塞表中的数据读写。
 
 - 配置、更改、删除列的默认值。
 - 配置、删除列的 `NOT NULL` 约束。
@@ -315,7 +315,7 @@ SHOW COLUMNS FROM re_users;
 
 ## 重命名列
 
-KWDB 支持使用 `ALTER TABLE` 语句修改列名。
+KWDB 支持使用 `ALTER TABLE ... RENAME COLUMN` 语句修改列名。
 
 ### 所需权限
 
@@ -367,7 +367,7 @@ SHOW COLUMNS FROM orders;
 
 ## 删除列
 
-`DROP COLUMN` 语句是 `ALTER TABLE` 语句中的一部分，用于从表中删除列。
+KWDB 支持使用 `ALTER TABLE ... DROP COLUMN` 语句修改列名。`DROP COLUMN` 为在线操作，不会阻塞表中的数据读写。
 
 ### 所需权限
 
