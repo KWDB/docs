@@ -53,7 +53,7 @@ ALTER TABLE ts_table ADD COLUMN c3 INT NULL;
 ### 语法格式
 
 ```sql
-SHOW COLUMNS FROM <table_name>;
+SHOW COLUMNS FROM <table_name> [WITH COMMENT];
 ```
 
 ### 参数说明
@@ -61,28 +61,60 @@ SHOW COLUMNS FROM <table_name>;
 | 参数 | 说明 |
 | --- | --- |
 | `table_name` | 表名，支持通过 `<database_name>.<table_name>` 指定其他数据库中的表。如未指定，则默认使用当前数据库。 |
+| `WITH COMMENT` | 可选关键字，查看列的注释信息。默认情况下，列的注释信息为 `NULL`。 |
 
 ### 语法示例
 
-以下示例查看 `sensor_data` 表中各列的详细信息。
+- 查看列的信息。
 
-```sql
-SHOW COLUMNS FROM sensor_data;
-```
+    以下示例查看 `sensor_data` 表中各列的详细信息。
 
-执行成功后，控制台输出以下信息：
+    ```sql
+    SHOW COLUMNS FROM sensor_data;
+    ```
 
-```sql
-  column_name |  data_type  | is_nullable | column_default | generation_expression |  indices  | is_hidden | is_tag
---------------+-------------+-------------+----------------+-----------------------+-----------+-----------+---------
-  k_timestamp | TIMESTAMPTZ |    false    | NULL           |                       | {primary} |   false   | false
-  temperature | FLOAT8      |    false    | NULL           |                       | {}        |   false   | false
-  humidity    | FLOAT8      |    true     | NULL           |                       | {}        |   false   | false
-  pressure    | FLOAT8      |    true     | NULL           |                       | {}        |   false   | false
-  sensor_id   | INT4        |    false    | NULL           |                       | {}        |   false   |  true
-  sensor_type | VARCHAR(30) |    false    | NULL           |                       | {}        |   false   |  true
-(6 rows)
-```
+    执行成功后，控制台输出以下信息：
+
+    ```sql
+      column_name |  data_type  | is_nullable | column_default | generation_expression |  indices  | is_hidden | is_tag
+    --------------+-------------+-------------+----------------+-----------------------+-----------+-----------+---------
+      k_timestamp | TIMESTAMPTZ |    false    | NULL           |                       | {primary} |   false   | false
+      temperature | FLOAT8      |    false    | NULL           |                       | {}        |   false   | false
+      humidity    | FLOAT8      |    true     | NULL           |                       | {}        |   false   | false
+      pressure    | FLOAT8      |    true     | NULL           |                       | {}        |   false   | false
+      sensor_id   | INT4        |    false    | NULL           |                       | {}        |   false   |  true
+      sensor_type | VARCHAR(30) |    false    | NULL           |                       | {}        |   false   |  true
+    (6 rows)
+    ```
+
+- 查看列的注释信息。
+
+    以下示例查看 `sensor_data` 表中各列的注释信息。
+
+    ```sql
+    -- 1. 为 sensor_data 表的 sensor_id 列添加注释信息。
+
+    COMMENT ON COLUMN sensor_data.sensor_id IS 'device ID statistics';
+    COMMENT ON COLUMN
+
+    -- 2. 查看 sensor_data 表中各列的注释信息。
+
+    SHOW COLUMNS FROM sensor_data WITH COMMENT;
+    ```
+
+    执行成功后，控制台输出以下信息：
+
+    ```sql
+     column_name |  data_type  | is_nullable | column_default | generation_expression |  indices  | is_hidden | is_tag |       comment
+    --------------+-------------+-------------+----------------+-----------------------+-----------+-----------+--------+-----------------------
+      k_timestamp | TIMESTAMPTZ |    false    | NULL           |                       | {primary} |   false   | false  | NULL
+      temperature | FLOAT8      |    false    | NULL           |                       | {}        |   false   | false  | NULL
+      humidity    | FLOAT8      |    true     | NULL           |                       | {}        |   false   | false  | NULL
+      pressure    | FLOAT8      |    true     | NULL           |                       | {}        |   false   | false  | NULL
+      sensor_id   | INT4        |    false    | NULL           |                       | {}        |   false   |  true  | device ID statistics
+      sensor_type | VARCHAR(30) |    false    | NULL           |                       | {}        |   false   |  true  | NULL
+    (6 rows) 
+    ```
 
 ## 修改列
 

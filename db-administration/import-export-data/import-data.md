@@ -37,7 +37,7 @@ KWDB 支持使用 SQL 语句将从其它 KWDB 数据库导出的时序表或关�
   - 全量导入用户数据和元数据，并根据指定的文件目录或表结构创建表
 
     ```sql
-    IMPORT TABLE CREATE USING "<sql_path>" CSV DATA ("<file_path>") WITH [delimiter = '<char>' | enclosed = '<char>' | escaped = '<char>' | nullif = '<char>' | thread_concurrency = '<int>'| batch_rows = '<int>'| auto_shrink];
+    IMPORT TABLE CREATE USING "<sql_path>" CSV DATA ("<file_path>") WITH [delimiter = '<char>' | enclosed = '<char>' | escaped = '<char>' | nullif = '<char>' | thread_concurrency = '<int>'| batch_rows = '<int>'| auto_shrink | comment];
     ```
 
   - 只导入用户数据或者增量导入用户数据
@@ -87,6 +87,7 @@ KWDB 支持使用 SQL 语句将从其它 KWDB 数据库导出的时序表或关�
 | `batch_rows`         | 并发导入时序数据时，每次读取的行数。默认情况下，`batch_rows` 的取值是 `500`。`batch_rows` 的取值应该大于 `0`，并且 batch_rows x 单行数据的大小 ≤ 4 GB。如果 batch_rows x 单行数据的大小 > 4 GB, 系统按照 4 GB 支持的最大行数读取数据。`batch_rows` 参数支持与 `thread_concurrency`、`auto_shrink` 共同使用，中间使用逗号（`,`）隔开。                                                                                                                                                                                                                                                                                                                                                      |
 | `auto_shrink`        | 可选参数，用于指定是否进行集群自适应衰减。默认情况下，系统不进行自适应衰减。设置了 `auto_shrink` 参数后，集群将自动每 10 秒进行一次衰减。`auto_shrink` 参数支持与 `batch_rows`、`thread_concurrency` 参数共同使用，中间使用逗号（`,`）隔开。                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | `table_name`         | 目标表名，数据导入的目标表。待导入文件的数据列数和数据类型与数据库中目标表的列数及数据类型保持一致。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `comment` | 可选参数，导入时序数据时，用于指定是否导入时序数据的注释信息。默认不导入注释信息。<br > - 如果要导入的 SQL 文件带有注释信息，指定 `WITH comment` 参数后，系统导入注释信息。否则，系统不导入注释信息。<br > - 如果要导入的 SQL 文件没有注释信息，指定 `WITH comment` 参数后，系统报错，提示 `NO COMMENT statement in the SQL file`。|
 
 ### 语法示例
 
@@ -115,6 +116,21 @@ KWDB 支持使用 SQL 语句将从其它 KWDB 数据库导出的时序表或关�
     | `rows`               | 导入的行数。                                                          |
     | `abandon_row`        | 因数据去重未写入的行数。                                               |
     | `reject_rows`        | 导入数据时，写入出错的行数。系统将写入出错的数据保存到 `reject` 文件。   |
+
+- 导入本地节点的用户数据和元数据时，指定携带注释信息。
+
+    ```sql
+    IMPORT TABLE CREATE USING "nodelocal://1/tb/meta.sql" CSV DATA ("nodelocal://1/tb") WITH COMMENT;
+    ```
+
+    执行成功后，控制台输出以下信息：
+
+    ```sql
+            job_id       |  status   | fraction_completed | rows | abandon_rows | reject_rows
+    ---------------------+-----------+--------------------+------+--------------+--------------
+                /        | succeeded |                  1 |    1 | /            | /
+    (1 row)
+    ```
 
 - 导入指定服务器的用户数据和元数据。
 
@@ -254,7 +270,7 @@ KWDB 支持一次性导入数据库中所有表的元数据和用户数据。KWD
 - 导入时序数据库
 
     ```sql
-    IMPORT DATABASE CSV DATA ("<db_path>") WITH [ delimiter = '<char>' | enclosed = '<char>' | escaped = '<char>' | nullif = '<char>' | thread_concurrency = '<int>'| batch_rows = '<int>'| auto_shrink];
+    IMPORT DATABASE CSV DATA ("<db_path>") WITH [ delimiter = '<char>' | enclosed = '<char>' | escaped = '<char>' | nullif = '<char>' | thread_concurrency = '<int>'| batch_rows = '<int>'| auto_shrink | comment];
     ```
 
 - 导入关系数据库
@@ -275,6 +291,7 @@ KWDB 支持一次性导入数据库中所有表的元数据和用户数据。KWD
 | `thread_concurrency` | 导入时序数据时，用于指定并发读取、写入数据的数量。系统按照配置平均分割、并发读取和写入导入的文件。默认情况下，`thread_concurrency` 的取值是 `1`。`thread_concurrency` 的取值应该大于 `0`，小于等于系统核数的 2 倍。如果取值大于核数的 2 倍，系统按照核数的 2 倍并发读取、写入数据。`thread_concurrency` 参数支持与 `batch_rows`、`auto_shrink` 参数共同使用，中间使用逗号（`,`）隔开。                                                                                                                                                 |
 | `batch_rows`         | 并发导入时序数据时，每次读取的行数。默认情况下，`batch_rows` 的取值是 `500`。`batch_rows` 的取值应该大于 `0`，并且 batch_rows x 单行数据的大小 ≤ 4 GB。如果 batch_rows x 单行数据的大小 > 4 GB, 系统按照 4 GB 支持的最大行数读取数据。`batch_rows` 参数支持与 `thread_concurrency`、`auto_shrink` 共同使用，中间使用逗号（`,`）隔开。                                                                                                                                                                           |
 | `auto_shrink`        | 可选参数，用于指定是否进行集群自适应衰减。默认情况下，系统不进行自适应衰减。设置了 `auto_shrink` 参数后，集群将自动每 10 秒进行一次衰减。`auto_shrink` 参数支持与 `batch_rows`、`thread_concurrency` 参数共同使用，中间使用逗号（`,`）隔开。                                                                                                                                                                                                                                                                                     |
+| `comment` | 可选参数，导入时序数据时，用于指定是否导入时序数据的注释信息。默认不导入注释信息。<br > - 如果要导入的 SQL 文件带有注释信息，指定 `WITH comment` 参数后，系统导入注释信息。否则，系统不导入注释信息。<br > - 如果要导入的 SQL 文件没有注释信息，指定 `WITH comment` 参数后，系统报错，提示 `NO COMMENT statement in the SQL file`。|
 
 ### 语法示例
 
@@ -282,6 +299,21 @@ KWDB 支持一次性导入数据库中所有表的元数据和用户数据。KWD
 
     ```sql
     IMPORT DATABASE CSV DATA ("nodelocal://1/db");
+    ```
+
+    执行成功后，控制台输出以下信息：
+
+    ```sql
+            job_id       |  status   | fraction_completed | rows | abandon_rows | reject_rows
+    ---------------------+-----------+--------------------+------+--------------+--------------
+                /        | succeeded |                  1 |    1 | /            | /
+    (1 row)
+    ```
+
+- 导入本地节点的数据库数据，指定携带注释信息。
+
+    ```sql
+    IMPORT DATABASE CSV DATA ("nodelocal://1/db") WITH COMMENT;
     ```
 
     执行成功后，控制台输出以下信息：

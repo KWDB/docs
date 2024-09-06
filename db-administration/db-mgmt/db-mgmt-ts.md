@@ -86,12 +86,14 @@ CREATE TS DATABASE <db_name> [RETENTIONS <keep_duration>] [PARTITION INTERVAL <i
 ### 语法格式
 
 ```sql
-SHOW DATABASES;
+SHOW DATABASES [WITH COMMENT];
 ```
 
 ### 参数说明
 
-无
+| 参数 | 说明 |
+| --- | --- |
+| `WITH COMMENT` | 可选关键字，查看数据库的注释信息。默认情况下，数据库的注释信息为 `NULL`。|
 
 ### 语法示例
 
@@ -99,23 +101,45 @@ SHOW DATABASES;
 时序数据库和关系数据库的 `engine_type` 分别为 `TIME SERIES` 和 `RELATIONAL`。
 :::
 
-以下示例查看已创建的数据库。
+- 查看已创建的数据库。
 
-```sql
-SHOW DATABASES;
-```
+    以下示例查看已创建的数据库。
 
-执行成功后，控制台输出以下信息：
+    ```sql
+    SHOW DATABASES;
+    ```
 
-```sql
-database_name  |   engine_type 
----------------+-------------------        
-defaultdb      | RELATIONAL
-postgres       | RELATIONAL
-system         | RELATIONAL
-ts_db          | TIME SERIES
-(4 rows)
-```
+    执行成功后，控制台输出以下信息：
+
+    ```sql
+      database_name  |   engine_type 
+    -----------------+-------------------        
+      defaultdb      | RELATIONAL
+      postgres       | RELATIONAL
+      system         | RELATIONAL
+      ts_db          | TIME SERIES
+    (4 rows)
+    ```
+
+- 查看已创建数据库的注释信息。
+
+    以下示例查看数据库的注释信息。
+
+    ```sql
+    SHOW DATABASES WITH COMMENT;
+    ```
+
+    执行成功后，控制台输出以下信息：
+
+    ```sql
+      database_name       | engine_type |            comment
+    ----------------------+-------------+--------------------------------
+      defaultdb           | RELATIONAL  | NULL
+      postgres            | RELATIONAL  | NULL
+      ts_db               | TIME SERIES | database for power statistics
+      system              | RELATIONAL  | NULL
+    (4 rows)
+    ```
 
 ## 切换数据库
 

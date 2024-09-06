@@ -122,7 +122,7 @@ id: ts-table
 
 - 查看当前或指定数据库下的所有表。如未指定，则默认使用当前数据库。
 
-    ![](../../../static/sql-reference/Vp0ZbmeN3o1PgxxW9hKclf9cn8c.png)
+    ![](../../../static/sql-reference/show_tables_ts.png)
 
 - 查看当前或指定数据库下指定表的建表语句。如未指定，则默认使用当前数据库。
 
@@ -133,7 +133,9 @@ id: ts-table
 | 参数 | 说明 |
 | --- | --- |
 | `db_name` | 待查看表所在的数据库的名称。如未指定，则默认使用当前数据库。|
+| `schema_name` | 可选参数，待查看表所使用的模式名称。时序表只支持使用目标数据库的 public 模式。 |
 | `table_name` | 待查看表的名称。|
+| `WITH COMMENT` | 可选关键字，查看表的注释信息。默认情况下，时序表的注释信息为空。|
 
 ### 语法示例
 
@@ -211,6 +213,25 @@ id: ts-table
                     |     c1 INT4 NULL
                     | ) TAGS (
                     |     site INT4 NOT NULL ) PRIMARY TAGS(site)
+    (1 row)
+    ```
+
+- 查看带有注释信息的表。
+
+    以下示例查看带有注释信息的表。
+
+    ```sql
+    -- 1. 为 power 表添加注释。
+
+    COMMENT ON TABLE power IS 'power for all devices';
+    COMMENT ON TABLE
+
+    -- 2. 查看带有注释信息的表。
+
+    SHOW TABLES WITH COMMENT;
+      table_name  |    table_type     |      comment
+    --------------+-------------------+--------------------
+      power       | TIME SERIES TABLE | power for all devices
     (1 row)
     ```
 
