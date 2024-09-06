@@ -89,7 +89,21 @@ KaiwuDB Sink Connector 将指定的 Kafka 主题数据写入到 KWDB 数据库�
 
 ### 配置步骤
 
-1. 创建 KaiwuDB Sink Connector 配置文件，定义 Kafka 主题、KWDB 连接信息及数据格式等信息。
+1. （可选）如需以多任务方式写入数据，创建自定义 Kafka 主题。无多任务需求可跳过此步骤。
+
+    以下示例创建了名为 `kw-tsdb-ts_json_kaiwudb_tb` 的主题，并为该主题分配 5 个分区。
+
+    ::: warning 注意
+
+    分区数应根据 KaiwuDB Sink Connector 配置文件中的 `tasks.max` 参数值进行设置，分区数必须大于或等于 `tasks.max` 的值。例如，如果 `tasks.max` 值为 `5`，那么 `--partitions` 参数至少应设置为 `5`。
+
+    :::
+
+    ```shell
+    ./kafka-topics.sh --create --topic kw-tsdb-ts_json_kaiwudb_tb --partitions 5 --bootstrap-server localhost:9092
+    ```
+
+2. 创建 KaiwuDB Sink Connector 配置文件，定义 Kafka 主题、KaiwuDB 连接信息及数据格式等信息。
 
     以下示例创建一个名为 `kw-json-kaiwudb-sink.json` 的 KaiwuDB Sink Connector 文件。
 
@@ -98,7 +112,7 @@ KaiwuDB Sink Connector 将指定的 Kafka 主题数据写入到 KWDB 数据库�
       "name": "KwdbSinkConnector",
       "config": {
         "connector.class": "com.kaiwudb.kafka.connect.sink.KwdbSinkConnector",
-        "tasks.max": "1",
+        "tasks.max": "5",
         "topics": "kw-tsdb-ts_json_kaiwudb_tb",
         "connection.url": "jdbc:kaiwudb://localhost:26257",
         "connection.user": "test",
@@ -116,8 +130,6 @@ KaiwuDB Sink Connector 将指定的 Kafka 主题数据写入到 KWDB 数据库�
       }
     }
     ```
-
-    有关 KaiwuDB Sink Connector 参数配置信息，参见 [KaiwuDB Sink Connector 参数配置](#kaiwudb-sink-connector-参数说明)。
 
 2. 启动 KaiwuDB Sink Connector。
 
