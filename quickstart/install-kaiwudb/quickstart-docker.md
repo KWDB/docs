@@ -8,7 +8,7 @@ id: quickstart-docker
 本文介绍如何使用 KWDB 容器镜像在单个节点上部署 KWDB。
 
 ::: warning 说明
-- 目前，KWDB 未提供可供下载的 KWDB 容器镜像。如需使用容器镜像部署 KWDB，[联系](https://www.cs.kaiwudb.com/support/) KWDB 技术支持人员获取 KWDB 容器镜像。
+- 目前，KWDB 未提供可供下载的 KWDB 容器镜像。如需使用容器镜像部署 KWDB，[联系](https://www.kaiwudb.com/support/) KWDB 技术支持人员获取 KWDB 容器镜像。
 - KWDB 支持基于 DRBD 块设备复制的开源软件方案，实现主备节点间的数据复制，如需实现单机高可用性，请先参阅[单机高可用性方案](../../best-practices/single-ha.md)。
 :::
 
@@ -38,19 +38,29 @@ id: quickstart-docker
 
 KWDB 容器镜像支持在以下已安装 Docker 的操作系统中进行安装部署。
 
-| 操作系统 | 版本 | 架构 |
-| --- | --- | --- |
-| Ubuntu | V20.04 | ARM_64 |
-|  | V20.04 | x86_64 |
-|  | V22.04 | x86_64 |
-|  | V22.04 | ARM_64 |
-| KylinOS | V10 | x86_64 |
-|  | V10 | ARM_64 |
-| Debian | V11 | ARM_64 |
-| UOS | V20 | x86_64 |
-| CentOS | 7 | x86_64 |
-|  | 8 | x86_64 |
-| openEuler | 22.03 | x86_64 |
+| **操作系统** | **版本**                     | **架构** |
+| :----------- | :--------------------------- | :------- |
+| Anolis       | 7                            | ARM_64   |
+|              | 7                            | x86_64   |
+|              | 8                            | ARM_64   |
+|              | 8                            | x86_64   |
+| CentOS       | 7                            | x86_64   |
+|              | 8                            | x86_64   |
+| Debian       | V11                          | ARM_64   |
+| KylinOS      | V10 SP3 2403<br>V10 SP3 2303 | ARM_64   |
+|              | V10 SP3 2403<br>V10 SP3 2303 | x86_64   |
+| openEuler    | 22.03                        | x86_64   |
+| Ubuntu       | V18.04                       | ARM_64   |
+|              | V20.04                       | ARM_64   |
+|              | V20.04                       | x86_64   |
+|              | V22.04                       | ARM_64   |
+|              | V22.04                       | x86_64   |
+|              | V24.04                       | ARM_64   |
+|              | V24.04                       | x86_64   |
+| UOS          | 1050e                        | x86_64   |
+|              | 1060e                        | x86_64   |
+|              | 1060e                        | ARM_64   |
+|              | 1070e                        | x86_64   |
 
 ### 软件依赖
 
@@ -89,7 +99,6 @@ tar -zxvf <install_package_name>
 | `deploy.sh`       | 安装部署脚本，用于安装、卸载、启动、状态获取、关停和重启等操作。  |
 | `packages` 目录   | 存放 DEB、RPM 和镜像包。                                      |
 | `utils` 目录      | 存放工具类脚本。                                             |
-| `monitoring` 目录 | 存放 Prometheus 配置文件、Grafana Dashboard 模板等文件。|
 
 ## 部署 KWDB
 
@@ -116,7 +125,7 @@ tar -zxvf <install_package_name>
 
 如需使用 YAML 文件部署 KWDB，遵循以下步骤。
 
-1. 在 `kaiwudb_install/packages` 目录下导入 `KaiwuDB.tar` 文件，获取镜像名称。
+1. 在 `kwdb_install/packages` 目录下导入 `KaiwuDB.tar` 文件，获取镜像名称。
 
     ```yaml
     # docker load < KaiwuDB.tar
