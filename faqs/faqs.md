@@ -13,23 +13,18 @@ id: faqs
 
     安装 KWDB 时，系统提示安装失败。
 
-    ```shell
-    root@node:/home/admin/kwdb_install# ./deploy.sh install --single
-    [ERROR] 2024-05-27 06:02:25 Error occurred during libopentelemetry-kw_1.8.1_amd64.deb installation. Please check log.
-    ```
-
 - **问题解答**
 
     用户可能未安装所需依赖。建议查看 `kwdb_install/log` 目录下的相关日志，然后根据日志信息，使用 `apt install` 命令安装缺失的依赖。
 
     日志示例：
 
-    ```sql
-    root@node:/home/admin/kwdb_install/log# cat 2024-05-27
-    [INFO] 2024-05-27 06:02:25 start init directory /etc/kwdb /var/lib/kwdb
-    [INFO] 2024-05-27 06:02:25 init directory success
-    [INFO] 2024-05-27 06:02:25 start install binaries and libraries to /usr/local/kwdb
-    [ERROR] 2024-05-27 06:02:25 Selecting previously unselected package libopentelemetry-kw. (Reading database ... 181016 files and directories currently installed.) Preparing to unpack .../libopentelemetry-kw_1.8.1_amd64.deb ... Unpacking libopentelemetry-kw (1.8.1) ... dpkg: dependency problems prevent configuration of libopentelemetry-kw: libopentelemetry-kw depends on libprotobuf17 | libprotobuf23; however: Package libprotobuf17 is not installed. Package libprotobuf23 is not installed. dpkg: error processing package libopentelemetry-kw (--install): dependency problems - leaving unconfigured Errors were encountered while processing: libopentelemetry-kw
+    ```shell
+    root@node:/home/admin/kwdb_install/log# cat 2024-08-28
+    [INFO] 2024-08-28 09:35:57 start init directory /etc/kaiwudb/data/kaiwudb
+    [INFO] 2024-08-28 09:35:57 init directory success
+    [INFO] 2024-08-28 09:35:57 start install binaries and libraries to /usr/local/kaiwudb
+    [ERROR] 2024-08-28 09:35:57 error: Failed dependencies: squashfs-tools is needed by kaiwudb-server-2.0.3.2-kylin.kyl0.aarch64
     ```
 
 ## SQL FAQ
