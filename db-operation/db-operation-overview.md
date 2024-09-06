@@ -14,6 +14,7 @@ id: log-mgmt
 - [时区管理](./timezone-mgmt.md)
 - [集群高可用](./cluster-ha.md)
 - [容灾和备份](./backup-and-restore.md)
+- [数据库升级](./db-upgrade.md)
 - 错误码
   - [错误码概述](./error-code/error-code-overview.md)
   - [KWDB 专有错误码](./error-code/error-code-kaiwudb.md)

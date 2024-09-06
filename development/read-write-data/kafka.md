@@ -131,7 +131,7 @@ KaiwuDB Sink Connector 将指定的 Kafka 主题数据写入到 KWDB 数据库�
     }
     ```
 
-2. 启动 KaiwuDB Sink Connector。
+3. 启动 KaiwuDB Sink Connector。
 
     ```shell
     curl -X POST -d @kw-json-kaiwudb-sink.json http://localhost:8083/connectors -H "Content-Type: application/json"

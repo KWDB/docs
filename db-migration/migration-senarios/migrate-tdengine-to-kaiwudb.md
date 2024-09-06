@@ -60,10 +60,10 @@ KWDB 支持以单表、多表的形式将数据从 TDengine 迁移到 KWDB。本
         percentage: 0.02
     ```
 
-3. 在 `kaiwudb-datax-utils-2.0.3.jar` 所在目录，执行以下命令，开始迁移数据。
+3. 在 `kaiwudb-datax-utils-1.2.2.jar` 所在目录，执行以下命令，开始迁移数据。
 
     ```shell
-    java -jar -DyamlPath=<yml_path> -DdataxPath=<datax_path> -Dpython=<python> -Darguments=<arguments> kaiwudb-datax-utils-2.0.3.jar
+    java -jar -DyamlPath=<yml_path> -DdataxPath=<datax_path> -Dpython=<python> -Darguments=<arguments> kaiwudb-datax-utils-1.2.2.jar
     ```
 
     参数说明：

@@ -18,7 +18,7 @@ KaiwuDB 开发者中心支持使用 SQL 编辑器进行以下操作：
 
 1. 单击菜单栏中的 SQL 编辑器，然后选择**新建 SQL 编辑器**。
 
-    ![](../static/kdc/HyBBbkcrGo6YqMxLUXOcgOSjnBg.png)
+    <img src="../static/kdc/HyBBbkcrGo6YqMxLUXOcgOSjnBg.png" style="zoom:67%;" />
 
 2. 在 SQL 编辑器中输入 SQL 语句，单击左侧的**执行 SQL 语句**按钮或**在新标签页中执行 SQL 语句**按钮。
 
@@ -36,11 +36,11 @@ KaiwuDB 开发者中心支持使用 SQL 编辑器进行以下操作：
 
     - 设置活动连接
 
-        ![](../static/kdc/XZGobHjSColocsxnjzycCUcJnGe.png)
+        <img src="../static/kdc/XZGobHjSColocsxnjzycCUcJnGe.png" style="zoom:67%;" />
 
     - 选择活动模式
 
-        ![](../static/kdc/WGDEbmLOVoZ1JIxuDSrcfPl1nfe.png)
+        <img src="../static/kdc/WGDEbmLOVoZ1JIxuDSrcfPl1nfe.png" style="zoom:67%;" />
 
 ## 保存 SQL 脚本
 
@@ -52,7 +52,7 @@ KaiwuDB 开发者中心支持使用 SQL 编辑器进行以下操作：
 
 2. 选择文档保存位置，然后单击**保存**。
 
-    ![](../static/kdc/MmRcbnQ0WoRZmrxMDkWcnA8xnqf.png)
+    <img src="../static/kdc/MmRcbnQ0WoRZmrxMDkWcnA8xnqf.png" style="zoom: 67%;" />
 
 ## 修改 SQL 语句格式
 
@@ -67,7 +67,7 @@ KaiwuDB 开发者中心支持使用 SQL 编辑器进行以下操作：
 1. 在 SQL 编辑器页面，右键单击页面空白处，然后从右键菜单中选择**将 SQL 复制为源代码**。
 2. 在**选择格式**窗口，选择格式和相关设置，然后单击**复制**。
 
-    ![](../static/kdc/TvP8bIbezo9yXSxKoNGcj4KDnDf.png)
+    <img src="../static/kdc/TvP8bIbezo9yXSxKoNGcj4KDnDf.png" style="zoom: 67%;" />
 
 ## 导入和执行 SQL 脚本
 
@@ -75,11 +75,11 @@ KaiwuDB 开发者中心支持使用 SQL 编辑器进行以下操作：
 
 1. 单击菜单栏中的 **SQL 编辑器**，然后选择**导入 SQL 脚本**。
 
-    ![](../static/kdc/VOSxb8GX6oBsQIx0BIGcdBaNnVd.png)
+    <img src="../static/kdc/VOSxb8GX6oBsQIx0BIGcdBaNnVd.png" style="zoom:67%;" />
 
 2. 选择需要导入的脚本，然后单击**打开**。
 
-    ![](../static/kdc/XuGkb4kLbovKJxxMWJkcffLfnTe.png)
+    <img src="../static/kdc/XuGkb4kLbovKJxxMWJkcffLfnTe.png" style="zoom:67%;" />
 
 3. 单击左侧的**执行 SQL 脚本**按钮或**在单独的标签页中执行 SQL 脚本**按钮。
 

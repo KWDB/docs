@@ -153,7 +153,7 @@ id: ts-data-query
 | 参数 | 说明 |
 | --- | --- |
 | `timestamp_column` | 时间戳列。 |
-| `interval` | 指定窗口间隔（单位：秒）。|
+| `interval` | 指定时间间隔，支持的单位包括秒（s）、分（m）、小时（h）、天（d）、周（w）、月（mon）、年（y）。目前，KWDB 不支持复合时间格式，例如 `1d1h`。|
 | `alias` | 为生产的时间桶结果起的别名，便于后续引用。|
 | `expression_1` |  补值算法，必须是聚合函数且数据类型为数字。 |
 | `expression_2` | 补值模式，支持常量值（constant）、前值（prev）、后值（next）、线性值（linear）和 NULL。补值结果类型应与原始值一致。 |

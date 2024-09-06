@@ -10,10 +10,6 @@ KWDB 支持以下数据导出功能：
 - 表级别数据导出
 - 库级别数据导出
 
-:::warning 说明
-在数据导出过程中，避免增删列操作。
-:::
-
 ## 表级别数据导出
 
 KWDB 支持使用 SQL 语句导出以下信息：
@@ -45,7 +41,7 @@ KWDB 支持使用 SQL 语句导出以下信息：
 - 导出时序表
 
     ```sql
-    EXPORT INTO CSV "<expt_path>" FROM TABLE <table_name> WITH [ column_name | meta_only | data_only | delimiter = '<char>' | chunk_rows = '<number>' | enclosed = '<char>' | escaped = '<char>' | nullas = '<char>' ];
+    EXPORT INTO CSV "<expt_path>" FROM TABLE <table_name> WITH [ column_name | meta_only | data_only | delimiter = '<char>' | chunk_rows = '<number>' | enclosed = '<char>' | escaped = '<char>' | nullas = '<char>' | comment];
     ```
 
 - 筛选数据范围后，导出时序表数据
@@ -96,6 +92,7 @@ KWDB 支持使用 SQL 语句导出以下信息：
 | `enclosed` | 可选参数，导出时序数据时，用于指定包围符。默认为双引号（`"`），支持单引号（`'`）。使用单引号（`'`）作为包围符时，格式为 `"'"`。使用双引号（`"`）作为包围符时，格式为 `'"'`。包围符不能与分隔符相同。|
 | `escaped` | 可选参数，导出时序数据时，用于指定转义符。默认为双引号（`"`），支持反斜杠（`\`）。转义符不能与分隔符相同。|
 | `nullas` | 可选参数，导出时序数据时，用于指定空值的表示形式。默认不显示内容，支持指定为 `NULL`、`null`、`Null` 或 `\N`。|
+| `comment` | 可选参数，导出时序数据时，用于指定是否导出时序数据的注释信息。默认不导出注释信息。<br > - 如果要导出的时序表或表中的列带有注释信息，指定 `WITH comment` 参数后，系统导出带有注释信息的 SQL 文件。否则，系统导出的 SQL 文件不会带有注释信息。<br > - 如果要导出的时序表或表中的列没有注释信息，指定 `WITH comment` 参数后，系统报错，提示 `TABLE or COLUMN without COMMENTS cannot be used 'WITH COMMENT'`。|
 
 ### 语法示例
 
@@ -264,6 +261,19 @@ KWDB 支持使用 SQL 语句导出以下信息：
     (1 row)
     ```
 
+- 将时序表导出到本地节点时，指定携带注释信息。
+
+    ```sql
+    EXPORT INTO CSV "nodelocal://1/a" FROM TABLE ts_table WITH COMMENT;
+    ```
+
+    ```sql
+      result
+    -----------
+      succeed
+    (1 row)
+    ```
+
 ## 库级别数据导出
 
 KWDB 支持一次性导出数据库中所有表的元数据和用户数据。
@@ -314,7 +324,7 @@ KWDB 支持一次性导出数据库中所有表的元数据和用户数据。
 - 导出时序数据库
 
     ```sql
-    EXPORT INTO CSV "<expt_path>" FROM DATABASE <db_name> WITH [ column_name | meta_only | data_only | delimiter = '<char>' | chunk_rows = '<number>' | enclosed = '<char>' | escaped = '<char>' | nullas = '<char>'];
+    EXPORT INTO CSV "<expt_path>" FROM DATABASE <db_name> WITH [ column_name | meta_only | data_only | delimiter = '<char>' | chunk_rows = '<number>' | enclosed = '<char>' | escaped = '<char>' | nullas = '<char>' | comment];
     ```
 
 - 导出关系数据库
@@ -337,6 +347,7 @@ KWDB 支持一次性导出数据库中所有表的元数据和用户数据。
 | `enclosed`    | 可选参数，导出时序数据时，用于指定包围符。默认为双引号（`"`），支持单引号（`'`）。使用单引号（`'`）作为包围符时，格式为 `"'"`。使用双引号（`"`）作为包围符时，格式为 `'"'`。包围符不能与分隔符相同。                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | `escaped`     | 可选参数，导出时序数据时，用于指定转义符。默认为双引号（`"`），支持反斜杠（`\`）。转义符不能与分隔符相同。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | `nullas`      | 可选参数，导出时序数据时，用于指定空值的表示形式。默认不显示内容，支持指定为 `NULL`、`null`、`Null` 或 `\N`。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `comment` | 可选参数，导出时序数据时，用于指定是否导出时序数据的注释信息。默认不导出注释信息。<br > - 如果要导出的时序数据库、时序表或表中的列带有注释信息，指定 `WITH comment` 参数后，系统导出带有注释信息的 SQL 文件。否则，系统导出的 SQL 文件不会带有注释信息。<br > - 如果要导出的时序数据库、时序表或表中的列没有注释信息，指定 `WITH comment` 参数后，系统报错，提示 `DATABASE or TABLE or COLUMN without COMMENTS cannot be used 'WITH COMMENT'`。|
 
 ### 语法示例
 
@@ -484,6 +495,21 @@ KWDB 支持一次性导出数据库中所有表的元数据和用户数据。
 
     ```sql
     EXPORT INTO CSV "nodelocal://1/ts_db" FROM DATABASE ts_db WITH NULLAS = 'NULL';
+    ```
+
+    执行成功后，控制台输出以下信息：
+
+    ```sql
+      result
+    -----------
+      succeed
+    (1 row)
+    ```
+
+- 将时序数据库数据导出到本地节点时，指定携带注释信息。
+
+    ```sql
+    EXPORT INTO CSV "nodelocal://1/ts_db" FROM DATABASE ts_db WITH COMMENT;
     ```
 
     执行成功后，控制台输出以下信息：

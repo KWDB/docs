@@ -34,13 +34,13 @@ KaiwuDB 开发者中心支持创建、编辑、查看、截断、删除、重命
 
 2. 右键单击**表**，然后选择**新建表**。
 
-    ![](../../static/kdc/DNlRbecD6opCQBxtcVTc7aQcnTd.png)
+    <img src="../../static/kdc/DNlRbecD6opCQBxtcVTc7aQcnTd.png" style="zoom:67%;" />
 
     系统将自动创建名为 `newtable` 的表，并打开对象窗口。
 
 3. 在对象窗口，填写表名、描述信息、添加字段，然后单击**保存**。
 
-   ![](../../static/kdc/A3jGb9S9ToFREuxCOxtc8ms4n1f.png)
+   <img src="../../static/kdc/A3jGb9S9ToFREuxCOxtc8ms4n1f.png" style="zoom:67%;" />
 
 4. 在**执行修改**窗口，确认 SQL 语句无误，然后单击**执行**。
 
@@ -48,27 +48,27 @@ KaiwuDB 开发者中心支持创建、编辑、查看、截断、删除、重命
 
 输入以下特殊数据类型时，需要进行特殊处理：
 
-- JSONB 类型：需要在数值查看器中手动输入数据。
+- `JSONB` 类型：需要在数值查看器中手动输入数据。
 
-    ![](../../static/kdc/CUA8bEKD9omlZsxDAjecChx1nob.png)
+    <img src="../../static/kdc/CUA8bEKD9omlZsxDAjecChx1nob.png" style="zoom:67%;" />
 
-- BYTEA 类型：使用外部程序将二进制数据输入到数据库中，或者在数值查看器中手动输入数据。
+- `BYTEA` 类型：使用外部程序将二进制数据输入到数据库中，或者在数值查看器中手动输入数据。
 
-- TIMESTAMP 类型：输入 TIMESTAMP 或 TIMESTAMPTZ 类型数据时，日期部分需要使用短横线（`-`）、双引号（`""`）或正斜杠符号（`/`）分割，时间部分需要使用冒号（`:`）分割，支持精确到微秒，例如：`'2023-01-25 10:10:10.123'`、`'2023 01 25 10:10:10.123'` 或 `'2023/01/25 10:10:10.123'`。
+- `TIMESTAMP` 类型：输入 `TIMESTAMP` 或 `TIMESTAMPTZ` 类型数据时，日期部分需要使用短横线（`-`）、双引号（`""`）或正斜杠符号（`/`）分割，时间部分需要使用冒号（`:`）分割，支持精确到微秒，例如：`'2023-01-25 10:10:10.123'`、`'2023 01 25 10:10:10.123'` 或 `'2023/01/25 10:10:10.123'`。
 
-    ![](../../static/kdc/M6l5b1MU2ooEY2x1yg4cz0sCnhH.png)
+    <img src="../../static/kdc/M6l5b1MU2ooEY2x1yg4cz0sCnhH.png" style="zoom:80%;" />
 
 如需向关系表中写入数据或者修改表中数据，遵循以下步骤。
 
 1. 在数据库导航区，右键单击需要修改的表，然后选择**编辑表**。
 
-    ![](../../static/kdc/PSqNbY3dxo8EWWxTjrBcoNs2nPb.png)
+    <img src="../../static/kdc/PSqNbY3dxo8EWWxTjrBcoNs2nPb.png" style="zoom:67%;" />
 
 2. 在**属性**页签，编辑字段、约束、外键、索引或权限，然后单击**保存**。
 
 3. 切换到**数据**页签，单击表格最下方的**添加新行**按钮，向表中加入相应的数据。
 
-    ![](../../static/kdc/YLdNb5CQRoLA8mxXJp3cvz1mnLf.png)
+    <img src="../../static/kdc/YLdNb5CQRoLA8mxXJp3cvz1mnLf.png" style="zoom:67%;" />
 
 4. 如需修改已有数据，直接双击数据进行修改。
 5. 如需查看相应的 SQL 语句，单击**生成 SQL 语句**，然后单击**执行**。
@@ -93,11 +93,11 @@ KaiwuDB 开发者中心支持创建、编辑、查看、截断、删除、重命
 1. 在数据库导航区，右键单击需要截断的表，然后选择**工具** > **截断**。
 2. 在**截断表**窗口，选择是否**在单独的事务中运行**以及是否**级联**，然后单击**复制**或**确定**。
 
-    ![](../../static/kdc/UvfGbIsXUoROitxL1xCcmburnzd.png)
+    <img src="../../static/kdc/UvfGbIsXUoROitxL1xCcmburnzd.png" style="zoom:67%;" />
 
     系统将自动弹出**截断表**窗口，显示进度及是否完成截断。
 
-    ![](../../static/kdc/QG7sbIoHgowbrOxyPMtcCYMGngc.png)
+    <img src="../../static/kdc/QG7sbIoHgowbrOxyPMtcCYMGngc.png" style="zoom:67%;" />
 
 ::: warning 说明
 完成截断后，双击已截断的表即可查看是否已清除数据。
@@ -110,7 +110,7 @@ KaiwuDB 开发者中心支持创建、编辑、查看、截断、删除、重命
 1. 在数据库导航区，右键单击需要删除的表，然后选择**删除**。
 2. 在**删除对象**窗口，选择是否需要**级联删除**，然后单击**是**。
 
-    ![](../../static/kdc/OaCPbJzsFoKu2cx2jYWckGS0nje.png)
+    <img src="../../static/kdc/OaCPbJzsFoKu2cx2jYWckGS0nje.png" style="zoom:67%;" />
 
 ### 重命名关系表
 
@@ -123,13 +123,13 @@ KaiwuDB 开发者中心支持创建、编辑、查看、截断、删除、重命
 1. 在数据库导航区，右键单击需要重命名的表，然后选择**重命名**。
 2. 在**重命名**窗口，编辑表名称，然后单击**确定**。
 
-    ![](../../static/kdc/KgDSbyWAWoac29xP1KicEPrjn6e.png)
+    <img src="../../static/kdc/KgDSbyWAWoac29xP1KicEPrjn6e.png" style="zoom:67%;" />
 
 ### 显示 ER 图
 
 在数据库导航区，右键单击需要查看 ER 图的表，然后选择**显示 ER 图**。
 
-![](../../static/kdc/XFSebVywMoaUbKxWUayc5AVInrf.png)
+<img src="../../static/kdc/XFSebVywMoaUbKxWUayc5AVInrf.png" style="zoom:80%;" />
 
 ### 导出数据
 
@@ -138,15 +138,15 @@ KaiwuDB 开发者中心支持创建、编辑、查看、截断、删除、重命
 1. 在数据库导航区，右键单击需要导出数据的表，然后选择**导出数据**。
 2. 在**数据转化**窗口，选择数据传输目标的类型和格式，然后单击**下一步**。
 
-    ![](../../static/kdc/Jn5jbojGvoPaaox2UPockzU9nSc.png)
+    <img src="../../static/kdc/Jn5jbojGvoPaaox2UPockzU9nSc.png" style="zoom:67%;" />
 
 3. 设置提取、格式和导出选项，然后单击**下一步**。
 
-    ![](../../static/kdc/McOgb78LOoRpaIx7hWcclBEhnAh.png)
+    <img src="../../static/kdc/McOgb78LOoRpaIx7hWcclBEhnAh.png" style="zoom:67%;" />
 
 4. 设置导出输出参数，例如目录、文件名称、编码、是否压缩和分割等，然后单击**下一步**。
 
-    ![](../../static/kdc/H5ycbi9HmobPEexIKNJc0fCun7f.png)
+    <img src="../../static/kdc/H5ycbi9HmobPEexIKNJc0fCun7f.png" style="zoom:67%;" />
 
 5. 检查导出设置，然后单击**完成**。成功导出数据后，系统将提示完成数据转换。
 
@@ -157,22 +157,22 @@ KaiwuDB 开发者中心支持创建、编辑、查看、截断、删除、重命
 1. 在数据库导航区，右键单击需要导入数据的表，然后选择**导入数据**。
 2. 在**数据转化**窗口，选择数据传输源的类型和格式，然后单击**下一步**。
 
-    ![](../../static/kdc/PXTybbFCSohTTcxM9Y4caZvFnkb.png)
+    <img src="../../static/kdc/PXTybbFCSohTTcxM9Y4caZvFnkb.png" style="zoom:67%;" />
 
 3. 在输入文件窗口，单击**源端名称**下的表，选择文件或文件所在目录，然后单击**下一步**。
 
     - 如需导入单个数据文件，选择需要导入的数据文件。
     - 如需导入多个文件，勾选**批量导入**，然后选择文件所在的目录。
 
-    ![](../../static/kdc/X0q9b80w6oNOU2xfECjcGb3mnwb.png)
+    <img src="../../static/kdc/X0q9b80w6oNOU2xfECjcGb3mnwb.png" style="zoom:67%;" />
 
 4. 在**预览数据导入过程**窗口，设置 `rowid`, 确认预览数据，然后单击**下一步**。
 
-    ![](../../static/kdc/JYcKb4zpoo6ZOoxkFubcq1xxnxg.png)
+    <img src="../../static/kdc/JYcKb4zpoo6ZOoxkFubcq1xxnxg.png" style="zoom:67%;" />
 
 5. 设置数据加载方式、执行过程和打开方式，然后单击**下一步**。
 
-    ![](../../static/kdc/FLwZba6m7oPNxCxM2BSc0dK4nxa.png)
+    <img src="../../static/kdc/FLwZba6m7oPNxCxM2BSc0dK4nxa.png" style="zoom:67%;" />
 
 6. 检查导入设置，然后单击**完成**。成功导入数据后，系统将提示完成数据转换。
 
@@ -191,11 +191,11 @@ KaiwuDB 开发者中心支持为指定表生成以下 SQL 语句：
 
 1. 在数据库导航区，右键单击需要生成 SQL 语句的表，选择**生成 SQL**，然后选择需要生成的 SQL 语句。
 
-    ![](../../static/kdc/LtLGbPWL7o8YaWxm8PHcoZGgnEh.png)
+    <img src="../../static/kdc/LtLGbPWL7o8YaWxm8PHcoZGgnEh.png" style="zoom:67%;" />
 
 2. 在**生成 SQL 语句**窗口，选择是否**使用标准名称**和**紧凑型 SQL**，然后单击**复制**或**关闭**。
 
-    ![](../../static/kdc/GMEQbiJoNoQWQdxmys9ccbFFn8q.png)
+    <img src="../../static/kdc/GMEQbiJoNoQWQdxmys9ccbFFn8q.png" style="zoom:67%;" />
 
     默认情况下，使用标准名称，不使用紧凑型 SQL。
 
@@ -214,11 +214,11 @@ KaiwuDB 开发者中心支持为指定表生成以下 SQL 语句：
 
 1. 单击字段右下角的**新建字段**按钮，或者右键单击字段页面空白处，然后选择**新建字段**。
 
-    ![](../../static/kdc/HX2PbdqANoq6MRx77CscXo7UnRb.png)
+    <img src="../../static/kdc/HX2PbdqANoq6MRx77CscXo7UnRb.png" style="zoom:67%;" />
 
 2. 在**编辑属性**窗口，编辑字段名称和属性，然后单击**确定**。
 
-    ![](../../static/kdc/LBzlblb4WoWVzaxTP0scvgfcnIJ.png)
+    <img src="../../static/kdc/LBzlblb4WoWVzaxTP0scvgfcnIJ.png" style="zoom:67%;" />
 
 3. 单击页面右下方的保存按钮。
 4. 在**执行修改**窗口，确认 SQL 语句无误，然后单击**执行**。
@@ -229,7 +229,7 @@ KaiwuDB 开发者中心支持为指定表生成以下 SQL 语句：
 
 1. 双击需要编辑的字段信息，即可编辑字段。
 
-    ![](../../static/kdc/CtCIbHYXLoaXXax6yN8chjV1nQd.png)
+    <img src="../../static/kdc/CtCIbHYXLoaXXax6yN8chjV1nQd.png" style="zoom:67%;" />
 
 2. 单击页面右下方的保存按钮。
 3. 在**执行修改**窗口，确认 SQL 语句无误，然后单击**执行**。
@@ -240,7 +240,7 @@ KaiwuDB 开发者中心支持为指定表生成以下 SQL 语句：
 
 1. 右键单击需要删除的字段，然后选择**删除**。
 
-    ![](../../static/kdc/B5bCbY4Yao0ek0xGnwxcOfWenmf.png)
+    <img src="../../static/kdc/B5bCbY4Yao0ek0xGnwxcOfWenmf.png" style="zoom:67%;" />
 
 2. 单击页面右下方的保存按钮。
 3. 在**执行修改**窗口，确认 SQL 语句无误，然后单击**执行**。
@@ -251,11 +251,11 @@ KaiwuDB 开发者中心支持为指定表生成以下 SQL 语句：
 
 1. 右键单击需要重命名的字段，然后选择**重命名**。
 
-    ![](../../static/kdc/P0kkbz6EIotMSxx84Ghcqae5nCg.png)
+    <img src="../../static/kdc/P0kkbz6EIotMSxx84Ghcqae5nCg.png" style="zoom:67%;" />
 
 2. 在**重命名**窗口，编辑字段名称，然后单击**确定**。
 
-    ![](../../static/kdc/ICaubtwzGoalS6xl8lRcSI8kndh.png)
+    <img src="../../static/kdc/ICaubtwzGoalS6xl8lRcSI8kndh.png" style="zoom:67%;" />
 
 3. 单击页面右下方的保存按钮。
 4. 在**执行修改**窗口，确认 SQL 语句无误，然后单击**执行**。
@@ -266,11 +266,11 @@ KaiwuDB 开发者中心支持为指定表生成以下 SQL 语句：
 
 1. 右键单击字段，选择**生成 SQL** > **DDL**。
 
-    ![](../../static/kdc/GJ0PbH5NEo6VRbxA8l6cqf0Xnvd.png)
+    <img src="../../static/kdc/GJ0PbH5NEo6VRbxA8l6cqf0Xnvd.png" style="zoom:67%;" />
 
 2. 在**生成 SQL 语句**窗口，选择是否**使用标准名称**和**紧凑型 SQL**，然后单击**复制**或**关闭**。
 
-    ![](../../static/kdc/BHeBb2OWoofOfpxLvskc8PLAnTe.png)
+    <img src="../../static/kdc/BHeBb2OWoofOfpxLvskc8PLAnTe.png" style="zoom:67%;" />
 
     默认情况下，使用标准名称，不使用紧凑型 SQL。
 
@@ -290,19 +290,19 @@ KaiwuDB 开发者中心支持为指定表生成以下 SQL 语句：
 
     - 新建约束页面
 
-      ![](../../static/kdc/Ic06bmrbMoBvlNxUy5XcqRwDn1g.png)
+      <img src="../../static/kdc/Ic06bmrbMoBvlNxUy5XcqRwDn1g.png" style="zoom:67%;" />
 
     - 右键菜单页面
 
-      ![](../../static/kdc/J6JObQvzXoYGqVxaSuechUjtn0e.png)
+      <img src="../../static/kdc/J6JObQvzXoYGqVxaSuechUjtn0e.png" style="zoom:67%;" />
 
 2. 在**添加约束**窗口，设置约束名称，然后选择约束类型和字段。
 
-    ![](../../static/kdc/GYxAbTORIogeQFxKxPLck63wnsh.png)
+    <img src="../../static/kdc/GYxAbTORIogeQFxKxPLck63wnsh.png" style="zoom:67%;" />
 
 3. 如果选择新建检查约束，需要添加相应的约束表达式。
 
-    ![](../../static/kdc/PKoHbXtN9ogXoFxJcB4c2ncLnKc.png)
+    <img src="../../static/kdc/PKoHbXtN9ogXoFxJcB4c2ncLnKc.png" style="zoom:67%;" />
 
 4. 单击**确定**。
 5. 单击页面右下方的保存按钮。
@@ -317,7 +317,7 @@ KaiwuDB 开发者中心支持修改约束的名称。
 1. 双击需要编辑的约束。
 2. 在**约束**页面，编辑约束名称。
 
-    ![](../../static/kdc/FevQbc7psoMc0LxmsNsc7uxjnBc.png)
+    <img src="../../static/kdc/FevQbc7psoMc0LxmsNsc7uxjnBc.png" style="zoom:67%;" />
 
 3. 单击页面右下方的保存按钮。
 4. 在**执行修改**页面检查 SQL 语句无误后，单击**执行**。
@@ -337,7 +337,7 @@ KaiwuDB 开发者中心支持修改约束的名称。
 1. 右键单击需要重命名的约束，然后选择**重命名**。
 2. 在**重命名**窗口，编辑约束名称，然后单击**确定**。
 
-    ![](../../static/kdc/GoD6bWbhpoDYPHxTyhRc83man8c.png)
+    <img src="../../static/kdc/GoD6bWbhpoDYPHxTyhRc83man8c.png" style="zoom:67%;" />
 
 3. 单击页面右下方的保存按钮。
 4. 在**执行修改**窗口，确认 SQL 语句无误，然后单击**执行**。
@@ -362,14 +362,14 @@ KaiwuDB 开发者中心支持修改约束的名称。
     选择的字段必须是主键、唯一键或者索引。
     :::
 
-    ![](../../static/kdc/QJ0ib2xQToQK0Qx9nfRcioVmn8g.png)
+    <img src="../../static/kdc/QJ0ib2xQToQK0Qx9nfRcioVmn8g.png" style="zoom:67%;" />
 
 4. 单击页面右下方的保存按钮。
 5. 在**执行修改**窗口，确认 SQL 语句无误，然后单击**执行**。
 
     系统将自动校验外键数据。如发现数据不匹配，系统报错，要求人工检查是否已修改数据。
 
-    ![](../../static/kdc/TGXxbJPI5oOeJSxlsMnc6jQYnWf.png)
+    <img src="../../static/kdc/TGXxbJPI5oOeJSxlsMnc6jQYnWf.png" style="zoom:67%;" />
 
 ### 校验数据
 
@@ -381,7 +381,7 @@ KaiwuDB 开发者中心保存外键时会自动校验外键数据，也支持对
 2. 单击页面右下方的保存按钮。
 3. 在**执行修改**窗口，确认 SQL 语句无误，然后单击**执行**。
 
-    ![](../../static/kdc/FAqWbg5zWojhNExSSpzcy1UUnMc.png)
+    <img src="../../static/kdc/FAqWbg5zWojhNExSSpzcy1UUnMc.png" style="zoom:67%;" />
 
 ### 编辑外键
 
@@ -389,7 +389,7 @@ KaiwuDB 开发者中心保存外键时会自动校验外键数据，也支持对
 
 1. 双击需要编辑的外键，即可对外键进行重命名操作。
 
-    ![](../../static/kdc/JLkmbBfHSooDhjx8pNYcikTGnxc.png)
+    <img src="../../static/kdc/JLkmbBfHSooDhjx8pNYcikTGnxc.png" style="zoom:67%;" />
 
 2. 单击页面右下方的保存按钮。
 3. 在**执行修改**窗口，确认 SQL 语句无误，然后单击**执行**。
@@ -409,7 +409,7 @@ KaiwuDB 开发者中心保存外键时会自动校验外键数据，也支持对
 1. 右键单击需要重命名的外键，然后选择**重命名**。
 2. 在**重命名**窗口，编辑外键名称，然后单击**确定**。
 
-    ![](../../static/kdc/S5n5bLkWMo6fhgxoGmqcB3hYnu3.png)
+    <img src="../../static/kdc/S5n5bLkWMo6fhgxoGmqcB3hYnu3.png" style="zoom:67%;" />
 
 3. 单击页面右下方的保存按钮。
 4. 在**执行修改**窗口，确认 SQL 语句无误，然后单击**执行**。
@@ -421,7 +421,7 @@ KaiwuDB 开发者中心保存外键时会自动校验外键数据，也支持对
 1. 右键单击指定外键，然后选择**生成 SQL** > **DDL**。
 2. 在**生成 SQL 语句**窗口，选择是否**使用标准名称**和**紧凑型 SQL**，然后单击**复制**或**关闭**。
 
-    ![](../../static/kdc/R7ABbundsoaFuZxJYR4cLvg2nLg.png)
+    <img src="../../static/kdc/R7ABbundsoaFuZxJYR4cLvg2nLg.png" style="zoom:67%;" />
 
     默认情况下，使用标准名称，不使用紧凑型 SQL。
 
@@ -437,7 +437,7 @@ KaiwuDB 开发者中心保存外键时会自动校验外键数据，也支持对
 2. 切换到**索引**页签，右键单击页签空白处，然后选择**新建索引**。
 3. 在**编辑索引**窗口，选择是否为唯一索引和字段，然后单击**确定**。索引页签将自动更新索引信息。
 
-    ![](../../static/kdc/PlVPbOaHZoGjeTxX2Q3cuGKRn6d.png)
+    <img src="../../static/kdc/PlVPbOaHZoGjeTxX2Q3cuGKRn6d.png" style="zoom:67%;" />
 
 4. 单击页面右下方的保存按钮。
 5. 在**执行修改**窗口，确认 SQL 语句无误，然后单击**执行**。
@@ -465,7 +465,7 @@ KaiwuDB 开发者中心保存外键时会自动校验外键数据，也支持对
 1. 右键单击需要重命名的索引，然后选择**重命名**。
 2. 在**重命名**窗口，编辑索引名称，然后单击**确定**。
 
-    ![](../../static/kdc/PMGvbmSwcoLZJzxVnfZcLpDxn2c.png)
+    <img src="../../static/kdc/PMGvbmSwcoLZJzxVnfZcLpDxn2c.png" style="zoom:67%;" />
 
 3. 单击页面右下方的保存按钮。
 4. 在**执行修改**窗口，确认 SQL 语句无误，然后单击**执行**。
@@ -477,7 +477,7 @@ KaiwuDB 开发者中心保存外键时会自动校验外键数据，也支持对
 1. 右键单击指定外键，选择选择**生成 SQL** > **DDL**。
 2. 在**生成 SQL 语句**窗口，选择是否**使用标准名称**和**紧凑型 SQL**，然后单击**复制**或**关闭**
 
-    ![](../../static/kdc/BxLUbqGdKopQC0x9SAacKnbDnFh.png)
+    <img src="../../static/kdc/BxLUbqGdKopQC0x9SAacKnbDnFh.png" style="zoom:67%;" />
 
     默认情况下，使用标准名称，不使用紧凑型 SQL。
 
@@ -491,11 +491,11 @@ KaiwuDB 开发者中心保存外键时会自动校验外键数据，也支持对
 
 1. 在指定表的对象窗口，单击**权限**页签，打开指定表的权限页面。
 
-    ![](../../static/kdc/UA59b5g0woyE9txzsHkcDSJxnYe.png)
+    <img src="../../static/kdc/UA59b5g0woyE9txzsHkcDSJxnYe.png" style="zoom:67%;" />
 
 2. 选择需要授权的用户，勾选相应的权限。
 
-    ![](../../static/kdc/TWo1bDCzaobn4Kxm7b2cL25Mn0e.png)
+    <img src="../../static/kdc/TWo1bDCzaobn4Kxm7b2cL25Mn0e.png" style="zoom:67%;" />
 
 3. 单击页面右下方的保存按钮。
 4. 在**执行修改**窗口，确认 SQL 语句无误后，单击**执行**
@@ -507,7 +507,7 @@ KaiwuDB 开发者中心保存外键时会自动校验外键数据，也支持对
 1. 在指定表的对象窗口，单击**权限**页签，打开指定表的权限页面。
 2. 选择需要撤销授权的用户，取消勾选相应的权限。
 
-    ![](../../static/kdc/XHIgbz85YoUwvFxuxMFcVQhzn3g.png)
+    <img src="../../static/kdc/XHIgbz85YoUwvFxuxMFcVQhzn3g.png" style="zoom:67%;" />
 
 3. 单击页面右下方的保存按钮。
 4. 在**执行修改**窗口，确认 SQL 语句无误，然后单击**执行**。
@@ -516,4 +516,4 @@ KaiwuDB 开发者中心保存外键时会自动校验外键数据，也支持对
 
 在指定表的对象窗口，单击 **DDL** 页签，即可查看相关 DDL 语句。
 
-![](../../static/kdc/RliebCXEVoF3n6x8kxTcFV5mnCb.png)
+<img src="../../static/kdc/RliebCXEVoF3n6x8kxTcFV5mnCb.png" style="zoom:67%;" />
