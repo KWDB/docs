@@ -15,12 +15,12 @@ id: faqs
 
 - **问题解答**
 
-    用户可能未安装所需依赖。建议查看 `kwdb_install/log` 目录下的相关日志，然后根据日志信息，使用 `apt install` 命令安装缺失的依赖。
+    用户可能未安装所需依赖。建议查看 `kaiwudb_install/log` 目录下的相关日志，然后根据日志信息，使用 `apt install` 命令安装缺失的依赖。
 
     日志示例：
 
     ```shell
-    root@node:/home/admin/kwdb_install/log# cat 2024-08-28
+    root@node:/home/admin/kaiwudb_install/log# cat 2024-08-28
     [INFO] 2024-08-28 09:35:57 start init directory /etc/kaiwudb/data/kaiwudb
     [INFO] 2024-08-28 09:35:57 init directory success
     [INFO] 2024-08-28 09:35:57 start install binaries and libraries to /usr/local/kaiwudb
