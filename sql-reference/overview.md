@@ -24,6 +24,8 @@ id: overview
     - [时序表](./ddl/ts-db/ts-table.md)
     - [列](./ddl/ts-db/ts-column.md)
     - [标签](./ddl/ts-db/ts-label.md)
+    - [分区](./ddl/ts-db/ts-range.md)
+    - [区域配置](./ddl/ts-db/ts-zone.md)
     - [注释](./ddl/ts-db/ts-comment.md)
   - 关系数据
     - [关系数据库](./ddl/relational-db/relational-database.md)
@@ -33,9 +35,9 @@ id: overview
     - [视图](./ddl/relational-db/relational-view.md)
     - [索引](./ddl/relational-db/relational-index.md)
     - [约束](./ddl/relational-db/relational-constraint.md)
-    - [区域配置](./ddl/relational-db/relational-zone.md)
     - [序列](./ddl/relational-db/relational-sequence.md)
-    - [Range](./ddl/relational-db/relational-range.md)
+    - [分区](./ddl/relational-db/relational-range.md)
+    - [区域配置](./ddl/relational-db/relational-zone.md)
     - [注释](./ddl/relational-db/relational-comment.md)
 - DML 语句
   - 时序数据
@@ -68,7 +70,6 @@ id: overview
   - [定时任务](./other-sql-statements/schedules-sql.md)
   - [会话](./other-sql-statements/sessions-sql.md)
   - [集群设置](./other-sql-statements/cluster-settings-sql.md)
-  - [分区](./other-sql-statements/partitions-sql.md)
 - [系统视图](./system-view-sql.md)
 - [NULL 值管理](./null-value-mgmt.md)
 - [查看 SQL 语句](./sql-help.md)
