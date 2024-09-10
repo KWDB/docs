@@ -5,7 +5,7 @@ id: overview
 
 # 数据库管理概述
 
-本节主要介绍如何使用 SQL 语句管理 KaiwuDB 数据库和数据库对象、查询数据、管理用户权限、以及查看数据库版本信息，包括以下内容：
+本节主要介绍如何使用 SQL 语句管理 KWDB 数据库和数据库对象、查询数据、管理用户权限、以及查看数据库版本信息，包括以下内容：
 
 - 数据库管理
   - [时序数据库管理](./db-mgmt/db-mgmt-ts.md)
@@ -14,6 +14,8 @@ id: overview
   - [时序表管理](./db-object-mgmt/ts-db/table-mgmt-ts.md)
   - [列管理](./db-object-mgmt/ts-db/column-mgmt-ts.md)
   - [标签管理](./db-object-mgmt/ts-db/label-mgmt-ts.md)
+  - [区域管理](./db-object-mgmt/ts-db/zone-mgmt-ts.md)
+  - [分区管理](./db-object-mgmt/ts-db/range-mgmt-ts.md)
   - [注释管理](./db-object-mgmt/ts-db/comment-mgmt-ts.md)
 - 关系数据库对象管理
   - [关系表管理](./db-object-mgmt/relational-db/table-mgmt-relational.md)
@@ -24,7 +26,7 @@ id: overview
   - [视图管理](./db-object-mgmt/relational-db/view-mgmt-relational.md)
   - [序列管理](./db-object-mgmt/relational-db/sequence-mgmt-relational.md)
   - [区域管理](./db-object-mgmt/relational-db/zone-mgmt-relational.md)
-  - [Range 分区管理](./db-object-mgmt/relational-db/range-mgmt-relational.md)
+  - [分区管理](./db-object-mgmt/relational-db/range-mgmt-relational.md)
   - [注释管理](./db-object-mgmt/relational-db/comment-mgmt-relational.md)
 - 数据查询
   - [时序数据查询](./data-query/ts-data-query.md)
