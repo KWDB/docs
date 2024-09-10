@@ -1,13 +1,13 @@
 ---
-title: Range 管理
+title: 分区管理
 id: range-mgmt-ts
 ---
 
-# Range管理
+# 分区管理
 
 ## 查看分区
 
-`SHOW RANGES` 语句用于显示数据库、表的分区信息，验证 SQL 数据如何映射到基础 Range 分区以及 Range 副本的位置。
+`SHOW RANGES` 语句用于显示数据库、表的分区信息，验证 SQL 数据如何映射到基础分区以及分区副本的位置。
 
 ### 前提条件
 

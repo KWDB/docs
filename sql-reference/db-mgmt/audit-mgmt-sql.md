@@ -21,24 +21,23 @@ KWDB 支持监控和记录包括管理员在内的用户操作，对系统级、
 
 下表列出 KWDB 支持的语句级审计操作。
 
-| 对象       | 关系数据库                                                              | 时序数据库                                                          |
-| ---------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------- |
-| USER       | - CREATE USER <br >- ALTER USER <br >- DROP USER                                    | - CREATE USER <br >- ALTER USER <br >- DROP USER                                 |
-| ROLE       | - CREATE ROLE <br >- ALTER ROLE <br >- GRANT ROLE <br >- REVOKE ROLE  <br >- DROP ROLE           | - CREATE ROLE <br >- ALTER ROLE <br >- GRANT ROLE <br >- REVOKE ROLE <br >- DROP ROLE        |
-| DATABASE   | - CREATE DATABASE <br >- ALTER DATABASE <br >- DROP DATABASE <br >- IMPORT <br >- EXPORT       | - CREATE DATABASE <br >- ALTER DATABASE <br >- DROP DATABASE <br >- IMPORT <br >- EXPORT |
-| SCHEMA     | - CREATE SCHEMA <br >- DROP SCHEMA                                            | -                                                                   |
-| TABLE      | - CREATE TABLE <br >- ALTER TABLE <br >- DROP TABLE <br >- TRUNCATE TABLE <br >- IMPORT <br >- EXPORT | - CREATE TABLE <br >- ALTER TABLE <br >- DROP TABLE <br >- IMPORT <br >- EXPORT            |
-| VIEW       | - CREATE VIEW <br >- ALTER VIEW <br >- DROP VIEW                                    | -                                                                   |
-| INDEX      | - CREATE INDEX <br >- ALTER INDEX <br >- DROP INDEX                                 | -                                                                   |
-| SEQUENCE   | - CREATE SEQUENCE <br >- ALTER SEQUENCE <br >- DROP SEQUENCE                        | -                                                                   |
-| PRIVILEGE  | - GRANT PRIVILEGE <br >- REVOKE PRIVILEGE                                     | - GRANT PRIVILEGE <br >- REVOKE PRIVILEGE                                 |
-| AUDIT      | - CREATE AUDIT <br >- ALTER AUDIT <br >- DROP AUDIT                                 | - CREATE AUDIT <br >- ALTER AUDIT <br >- DROP AUDIT                             |
-| RANGE      | ALTER RANGE                                                           | ALTER RANGE                                                       |
-| QUERY      | - CANCEL QUERY <br >- EXPLAIN QUERY                                           | - CANCEL QUERY <br >- EXPLAIN QUERY                                       |
-| JOB        | - CANCEL JOB <br >- PAUSE JOB <br >- RESUME JOB                                     | - CANCEL JOB <br >- PAUSE JOB <br >- RESUME JOB                                  |
-| SCHEDULE   | - ALTER SCHEDULE <br >- PAUSE SCHEDULE <br >- RESUME SCHEDULE                       | - ALTER SCHEDULE <br >- PAUSE SCHEDULE <br >- RESUME SCHEDULE                   |
-| SESSION    | - SET SESSION <br >- RESET SESSION <br >- CANCEL SESSION                            | - SET SESSION <br >- RESET SESSION <br >- CANCEL SESSION                        |
-| STATISTICS | CREATE STATISTICS                                                     | CREATE STATISTICS                                                 |
+| 对象       | 关系数据库                                                   | 时序数据库                                                   |
+| ---------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| USER       | - CREATE USER <br >- ALTER USER <br >- DROP USER             | - CREATE USER <br >- ALTER USER <br >- DROP USER             |
+| ROLE       | - CREATE ROLE <br >- ALTER ROLE <br >- GRANT ROLE <br >- REVOKE ROLE  <br >- DROP ROLE | - CREATE ROLE <br >- ALTER ROLE <br >- GRANT ROLE <br >- REVOKE ROLE <br >- DROP ROLE |
+| DATABASE   | - CREATE DATABASE <br >- ALTER DATABASE <br >- DROP DATABASE <br >- IMPORT <br >- EXPORT | - CREATE DATABASE <br >- ALTER DATABASE <br >- DROP DATABASE <br >- IMPORT <br >- EXPORT |
+| SCHEMA     | - CREATE SCHEMA <br >- DROP SCHEMA                           | -                                                            |
+| TABLE      | - CREATE TABLE <br >- ALTER TABLE <br >- DROP TABLE <br >- TRUNCATE TABLE <br >- IMPORT <br >- EXPORT | - CREATE TABLE <br >- ALTER TABLE <br >- DROP TABLE <br >- IMPORT <br >- EXPORT |
+| VIEW       | - CREATE VIEW <br >- ALTER VIEW <br >- DROP VIEW             | -                                                            |
+| INDEX      | - CREATE INDEX <br >- ALTER INDEX <br >- DROP INDEX          | -                                                            |
+| SEQUENCE   | - CREATE SEQUENCE <br >- ALTER SEQUENCE <br >- DROP SEQUENCE | -                                                            |
+| PRIVILEGE  | - GRANT PRIVILEGE <br >- REVOKE PRIVILEGE                    | - GRANT PRIVILEGE <br >- REVOKE PRIVILEGE                    |
+| AUDIT      | - CREATE AUDIT <br >- ALTER AUDIT <br >- DROP AUDIT          | - CREATE AUDIT <br >- ALTER AUDIT <br >- DROP AUDIT          |
+| QUERY      | - CANCEL QUERY <br >- EXPLAIN QUERY                          | - CANCEL QUERY <br >- EXPLAIN QUERY                          |
+| JOB        | - CANCEL JOB <br >- PAUSE JOB <br >- RESUME JOB              | - CANCEL JOB <br >- PAUSE JOB <br >- RESUME JOB              |
+| SCHEDULE   | - ALTER SCHEDULE <br >- PAUSE SCHEDULE <br >- RESUME SCHEDULE | - ALTER SCHEDULE <br >- PAUSE SCHEDULE <br >- RESUME SCHEDULE |
+| SESSION    | - SET SESSION <br >- RESET SESSION <br >- CANCEL SESSION     | - SET SESSION <br >- RESET SESSION <br >- CANCEL SESSION     |
+| STATISTICS | CREATE STATISTICS                                            | CREATE STATISTICS                                            |
 
 下表列出 KWDB 支持的对象级审计操作。
 
