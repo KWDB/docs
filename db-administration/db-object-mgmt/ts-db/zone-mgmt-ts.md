@@ -1,13 +1,13 @@
 ---
 title: 区域配置管理
-id: zone-mgmt-relational
+id: zone-mgmt-ts
 ---
 
 # 区域配置管理
 
 ## 查看区域配置
 
-`SHOW ZONE CONFIGURATIONS` 语句用于查看指定数据库对象的副本区域信息。
+`SHOW ZONE CONFIGURATIONS` 语句用于查看指定对象的副本区域信息。
 
 ### 前提条件
 
@@ -15,10 +15,10 @@ id: zone-mgmt-relational
 
 ### 语法格式
 
-- 查看指定分区、数据库、表或索引的副本区域信息
+- 查看指定分区、数据库或表的副本区域信息
 
     ```sql
-    SHOW ZONE CONFIGURATION FOR [RANGE range_name | DATABASE database_name | TABLE table_name  | INDEX table_name @ index_name];
+    SHOW ZONE CONFIGURATION FOR [RANGE range_name | DATABASE database_name | TABLE table_name];
     ```
 
 - 查看所有副本区域信息
@@ -34,13 +34,12 @@ id: zone-mgmt-relational
 | `range_name` | 系统分区的名称。 |
 | `database_name` | 数据库的名称。 |
 | `table_name` | 表的名称。 |
-| `index_name` | 索引的名称。 |
 
 ### 语法示例
 
 - 查看指定系统分区的副本信息
   
-     以下示例查看 `default` 默认系统分区的副本区域信息。
+     以下示例查看 `default` 默认系统分区的副本区域信息
      
      ```sql
      SHOW ZONE CONFIGURATION FOR RANGE default;
@@ -74,7 +73,7 @@ id: zone-mgmt-relational
      ```sql
           target    |             raw_config_sql
      ---------------+------------------------------------------
-     DATABASE db1   | ALTER DATABASE db1 CONFIGURE ZONE USING
+     DATABASE db1 | ALTER DATABASE db1 CONFIGURE ZONE USING
                     |     range_min_bytes = 1048576,
                     |     range_max_bytes = 8388608,
                     |     gc.ttlseconds = 100000,

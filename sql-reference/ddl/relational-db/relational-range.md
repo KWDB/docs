@@ -5,8 +5,11 @@ id: relational-range
 
 # Range
 
-KWDB 将所有用户数据（表、索引等）和几乎所有系统数据存储在键值对的排序映射中。该键空间被划分为多个 Range，即键空间的连续块，用户始终可以在单个 Range 内找到所有键。
-从 SQL 的角度来看，一开始，表及其二级索引映射到单个 Range。Range 内的每个键值对表示表中的一行（也称为主索引）或二级索引中的一行。一旦该 Range 达到 512 MiB，就会分为两个 Range。随着表格及其索引的不断增长，这些新 Range 将继续进行相同的操作。当用户数据减少时，数据分片会自动进行合并。但是，KWDB 的关系数据采用标记删除的方式。当数据被删除后，Range 不会立即进行合并。当 Range 内的实际数据删除后被垃圾回收时，才会合并分片。
+KWDB 将所有用户数据（表、索引等）和几乎所有系统数据存储在键值对的排序映射中。这个键空间被划分为多个分区（range），即键空间的连续块，每个键始终可以在单个分区内找到。
+
+从 SQL 的角度来看，表及其二级索引最初映射到单个分区，分区内的每个键值对表示表中的一行（也称为主索引）或二级索引中的一行。一旦该分区达到 512 MiB，就会分为两个分区。随着表格及其索引的不断增长，这些新分区将继续进行相同的操作。当用户数据减少时，分区会自动进行合并。注意，由于 KWDB 的关系数据采用标记删除的方式，数据删除后，分区不会立即合并。分区内的实际数据删除被垃圾回收时，才会进行分区合并。
+
+KWDB 支持用户使用 SHOW RANGES 语句查看关系库、关系表和索引的分区信息。
 
 ## 查看 Range 分区
 
@@ -24,9 +27,9 @@ KWDB 将所有用户数据（表、索引等）和几乎所有系统数据存储
 
 | 参数 | 说明 |
 | --- | --- |
-| `table_name` | 待查看 Range 分区的表的名称。 |
-| `index_name` | 待查看 Range 分区的索引的名称。 |
-| `database_name` | 待查看 Range 分区的数据库的名称。 |
+| `table_name` | 待查看的表名。 |
+| `index_name` | 待查看的索引名。 |
+| `database_name` | 待查看的数据库名。 |
 
 ### 语法示例
 
@@ -82,61 +85,3 @@ KWDB 将所有用户数据（表、索引等）和几乎所有系统数据存储
       orders_seq | NULL      | NULL    |      183 |      0.000114 |            1 |                       | {1}      | {""}
     (3 rows)
     ```
-
-## 修改 Range 分区配置
-
-`ALTER RANGE` 语句用于修改 Range 分区的区域配置。
-
-除了用户可见的数据库和表之外，KWDB 在以下系统 Range 分区存储了部分内部数据，进行了区域配置。
-
-- `meta` 系统 Range 分区：存储集群中所有数据的位置信息。其中，`num_replicas` 设置为 `5`，提高对节点故障的容错性。`gc.ttlseconds` 设置低于默认值，保证 Range 分区大小适中，确保可靠性。
-- `liveness` 系统 Range 分区：存储特定时间内活动节点的信息。其中，`num_replicas` 设置为 `5`，提高对节点故障的容错性。`gc.ttlseconds` 设置低于默认值，保证 Range 分区大小适中，确保可靠性。
-- `system` 系统 Range 分区：存储分配新表 ID 所需的信息以及跟踪集群节点状态。其中 `num_replicas` 设置为 `5`，提高对节点故障的容错性。
-- `timeseries` 系统 Range 分区：存储集群监控数据。
-
-### 所需权限
-
-用户为 Admin 用户或者 Admin 角色成员。默认情况下，root 用户属于 admin 角色。
-
-### 语法格式
-
-![](../../../static/sql-reference/PsuSb6hDvoVcIpxpC8zcrxFdnZg.png)
-
-### 参数说明
-
-| 参数 | 说明 |
-| --- | --- |
-| `range_name` | 待修改系统 Range 分区的名称。 |
-| `variable` | 待修改的变量，KWDB 支持修改以下变量：<br > - `range_min_bytes`：区域的最小数据范围（单位：字节）。当数据范围小于该阈值时会与相邻范围合并。默认值为 `134217728`（128 MiB）。<br >- `range_max_bytes`：区域的最大数据范围（单位：字节）。数据范围达到该阈值时，KWDB 会将其切分到两个范围。默认值为 `536870912`（512 MiB）。<br >- `gc.ttlseconds`：垃圾回收前，保留被覆盖的值的时间（单位：秒）。取值较小，有助于节省磁盘空间。取值较大，增加 `AS OF SYSTEM TIME` 查询允许的范围。不建议取值小于 `600` 秒（`10` 分钟），避免对长时间运行的查询产生影响。另外，由于一行的所有版本都存储在一个永不拆分的单个范围内，也不建议取值太高，避免对该行的所有更改加起来可能超过 `64` MiB，从而导致服务器内存不足或其他问题。默认值为 `90000`（`25` 小时）。<br > - `num_replicas`：区域的副本数，默认值为 `3`。对于 `system` 数据库以及 `.meta`、`.liveness` 和 `.system` 范围，默认值为 `5`。<br > - `constraints`：全能型副本位置的必需（`+`）和/或禁止（`-`）约束。<br >- `lease_preferences`：影响租约位置的必需（`+`）和/或禁止（`-`）约束的有序列表。如果不能满足第一个优先级，KWDB 将尝试满足第二个优先级，依此类推。如果不能满足所有首选项，KWDB 使用默认的租约放置算法，该算法基于每个节点已拥有的租约数量来决定租约放置。用户可以尽量让所有节点拥有大致相同数量的租约。列表中的每个值可以包含多个约束。<br > 例如，`[[+zone=zn-east-1b, +ssd], [+zone=zn-east-1a], [+zone=zn-east-1c, +ssd]]` 列表表示首选位于 `zn-east-1b` 区域具有 SSD 的节点，然后是位于 `zn-east-1a` 区域的节点，最后位于 `zn-east-1c` 区域具有 SSD 的节点。如未指定此字段，则不应用租约偏好首选项。注意，租约偏好约束无需与 `constraints` 字段共享，用户可以只定义 `lease_preferences` 而不引用 `constraints` 字段中的任何值。用户也可以不定义 `constraints` 字段而只定义 `lease_preferences`。|
-| `COPY FROM PARENT` | 从父区域中复制取值。 |
-| `value` | 拟修改的变量值。 |
-| `DISCARD` | 移除 Range 分区配置。 |
-
-### 语法示例
-
-以下示例修改 `meta` 系统 Range 分区的区域配置。
-
-::: warning 说明
-修改系统 Range 分区的区域配置可能导致部分或全部集群停止工作，因此需要格外谨慎。
-:::
-
-```sql
--- 1. 修改 meta 系统 Range 分区的区域配置。
-
-ALTER RANGE meta CONFIGURE ZONE USING num_replicas = 7;
-ALTER RANGE 
-
--- 2. 查看 meta 系统 Range 分区的区域配置。
-
-SHOW ZONE CONFIGURATION FOR RANGE meta;
-    target   |            raw_config_sql
--------------+----------------------------------------
-  RANGE meta | ALTER RANGE meta CONFIGURE ZONE USING
-             |     range_min_bytes = 134217728,
-             |     range_max_bytes = 536870912,
-             |     gc.ttlseconds = 3600,
-             |     num_replicas = 7,
-             |     constraints = '[]',
-             |     lease_preferences = '[]'
-(1 row)
-```

@@ -110,7 +110,7 @@ USE db1;
 
 ## 修改数据库
 
-KWDB 支持修改数据库名称、配置数据库的 Range 副本参数。
+KWDB 支持修改数据库名称。
 
 ::: warning 说明
 KWDB 不支持修改视图关联的数据库的名称。
@@ -118,34 +118,20 @@ KWDB 不支持修改视图关联的数据库的名称。
 
 ### 前提条件
 
-- 修改数据库名称：用户为 Admin 用户或者 Admin 角色成员。默认情况下，root 用户具有 Admin 角色。
-- 配置系统数据库 range 副本参数：用户为 Admin 用户或者 Admin 角色成员。
-- 配置其他数据库 Range 副本参数：用户拥有目标数据库的 CREATE 或 ZONECONFIG 权限。
+用户为 Admin 用户或者 Admin 角色成员。默认情况下，root 用户具有 Admin 角色。
 
 ### 语法格式
 
-- 修改数据库的名称
-
-    ```sql
-    ALTER DATABASE <db_name> RENAME TO <new_name>;
-    ```
-
-- 修改数据库的 Range 副本参数
-
-    ```sql
-    ALTER DATABASE <db_name> CONFIGURE ZONE 
-    [USING <variable> = [<value> | COPY FROM PARENT] | DISCARD];
-    ```
+```sql
+ALTER DATABASE <db_name> RENAME TO <new_name>;
+```
 
 ### 参数说明
 
 | 参数 | 说明 |
 | --- | --- |
-| `old_name` | 当前数据库的名称。|
 | `db_name` | 待修改的数据库名称。如果目标数据库为当前数据库，或者将 `sql_safe_updates` 参数设置为 `true`，则无法重命名该数据库。|
 | `new_name` | 拟修改的数据库名称，新数据库名称必须唯一，并且[遵循数据库标识符规则](../../sql-reference/sql-identifiers.md)。|
-| `variable` | 待修改的变量，KWDB 支持修改以下变量：<br > - `range_min_bytes`：区域的最小数据范围（单位：字节）。当数据范围小于该阈值时会与相邻范围合并。默认值为 `134217728`（128 MiB）。<br >- `range_max_bytes`：区域的最大数据范围（单位：字节）。数据范围达到该阈值时，KWDB 会将其切分到两个范围。默认值为`536870912` (512 MiB)。<br >- `gc.ttlseconds`：垃圾回收前，保留被覆盖的值的时间（单位：秒）。取值较小，有助于节省磁盘空间。取值较大，增加 `AS OF SYSTEM TIME` 查询允许的范围。不建议取值小于 `600` 秒（`10` 分钟），避免对长时间运行的查询产生影响。另外，由于一行的所有版本都存储在一个永不拆分的单个范围内，也不建议取值太高，避免对该行的所有更改加起来可能超过 `64` MiB，从而导致服务器内存不足或其他问题。默认值为 `90000`（`25` 小时）。<br > - `num_replicas`：区域的副本数，默认值为 `3`。对于 `system` 数据库以及 `.meta`、`.liveness` 和 `.system` 范围，默认值为 `5`。<br > - `constraints`：全能型副本位置的必需（`+`）和/或禁止（`-`）约束。<br >- `lease_preferences`：影响租约位置的必需（`+`）和/或禁止（`-`）约束的有序列表。如果不能满足第一个优先级，KWDB 将尝试满足第二个优先级，依此类推。如果不能满足所有首选项，KWDB 使用默认的租约放置算法，该算法基于每个节点已拥有的租约数量来决定租约放置。用户可以尽量让所有节点拥有大致相同数量的租约。列表中的每个值可以包含多个约束。<br > 例如，`[[+zone=zn-east-1b, +ssd], [+zone=zn-east-1a], [+zone=zn-east-1c, +ssd]]` 列表表示首选位于 `zn-east-1b` 区域具有 SSD 的节点，然后是位于 `zn-east-1a` 区域的节点，最后位于 `zn-east-1c` 区域具有 SSD 的节点。如未指定此字段，则不应用租约偏好首选项。注意，租约偏好约束无需与 `constraints` 字段共享，用户可以只定义 `lease_preferences` 而不引用 `constraints` 字段中的任何值。用户也可以不定义 `constraints` 字段而只定义 `lease_preferences`。|
-| `value` | 要修改的变量值。 |
 
 ### 语法示例
 
@@ -155,7 +141,7 @@ KWDB 不支持修改视图关联的数据库的名称。
 
     ```sql
     -- 1. 查看所有数据库。
-
+    
     SHOW DATABASES;
     database_name|engine_type
     -------------+-----------
@@ -165,14 +151,14 @@ KWDB 不支持修改视图关联的数据库的名称。
     system       |RELATIONAL
     tsdb         |TIME SERIES
     (5 rows)
-
+    
     -- 2. 重命名数据库。
-
+    
     ALTER DATABASE rdb RENAME TO relationaldb;
     ALTER DATABASE
-
+    
     -- 3. 查看所有数据库。
-
+    
     SHOW DATABASES;
     database_name|engine_type
     -------------+-----------
@@ -182,31 +168,6 @@ KWDB 不支持修改视图关联的数据库的名称。
     system       |RELATIONAL
     tsdb         |TIME SERIES
     (5 rows)
-    ```
-
-- 设置数据库的 Range 副本参数。
-
-    以下示例将 `db3` 数据库的区域副本数量设置为 `5`，将垃圾回收之前的保留时间设置为 `100000`。
-
-    ```sql
-    -- 1. 配置 db3 数据库的区域副本数量和垃圾回收之前的时间。
-
-    ALTER DATABASE db3 CONFIGURE ZONE USING num_replicas = 5, gc.ttlseconds = 100000;
-    CONFIGURE ZONE 1
-
-    -- 2. 查看 db3 数据库的区域配置信息。
-
-    SHOW ZONE CONFIGURATION FOR DATABASE db3;
-        target    |             raw_config_sql
-    ---------------+------------------------------------------
-      DATABASE db3 | ALTER DATABASE db3 CONFIGURE ZONE USING
-                  |     range_min_bytes = 134217728,
-                  |     range_max_bytes = 536870912,
-                  |     gc.ttlseconds = 100000,
-                  |     num_replicas = 5,
-                  |     constraints = '[]',
-                  |     lease_preferences = '[]'
-    (1 row)
     ```
 
 ## 删除数据库
@@ -263,16 +224,16 @@ DROP DATABASE [IF EXISTS] <db_name> [CASCADE | RESTRICT];
 
     ```sql
     -- 1. 查看 db1 数据库中的关系表。
-
+    
     SHOW TABLES FROM db1;
     table_name|table_type
     ----------+----------
     int       |BASE TABLE
     ints      |BASE TABLE
     (2 rows)
-
+    
     -- 2. 删除 db1 数据库。
-
+    
     DROP DATABASE db1 RESTRICT;
     ERROR:  database "db1" is not empty and RESTRICT was specified
     ```
