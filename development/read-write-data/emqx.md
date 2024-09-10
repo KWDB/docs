@@ -14,14 +14,22 @@ id: emqx
 ### 前提条件
 
 - 安装 KWDB 数据库，创建数据库以及具有表级别及以上操作权限的用户。
+
 - 在 KWDB 数据库创建需要插入数据的目标表，且发送 API 请求的用户拥有目标表的 INSERT 权限。
+
 - 获取用户登录所需的令牌。
     ::: warning 说明
     默认情况下，系统生成的令牌有效期为 `60` 分钟。如果两次数据上报的间隔超过 `60` 分钟，用户需要在令牌过期前生成新的令牌，或者根据业务需求通过 `SET CLUSTER SETTING server.rest.timeout=<value>` SQL 语句设置令牌的有效期。可配置范围为 `[1, 2^63-1]`，单位为分钟。如果数据上报间隔总是小于 `60` 分钟，系统会自动对令牌进行延期。
     :::
     ```shell
-    curl -L -k -H "Username:<user_name>" -H "Password:<password>" -X GET <node_ip>:8080/restapi/login
+    curl -L -k -H "Authorization: Basic <base64(user:password)>" -X GET <node_ip>:8080/restapi/login
     ```
+    
+    参数说明：
+    
+    - `base64(user:password)`： Base64 编码后的用户名和密码信息。
+    - `node_ip`：节点的 IP 地址。
+    
 - 安装并启动 EMQX。具体安装和启动步骤，参见 [EMQX 官方文档](https://www.emqx.io/)。
 
 ### 配置步骤
