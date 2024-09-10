@@ -67,7 +67,7 @@ KWDB 支持监控和记录包括管理员在内的用户操作，对系统级、
 | --- | --- |
 | `IF NOT EXISTS` | 可选关键字。当使用 `IF NOT EXISTS` 关键字时，如果目标审计策略不存在，系统创建审计策略。如果目标审计策略存在，系统创建审计策略失败，但不会报错。当未使用 `IF NOT EXISTS` 关键字时，如果目标审计策略不存在，系统创建审计策略。如果目标审计策略存在，系统报错，提示目标审计策略已存在。 |
 | `audit_name` | 审计策略的名称。审计策略名称必须唯一。 |
-| `target_type` | 审计对象类型。支持 user、role、database、schema、table、view、index、sequence、privilege、audit、range、query、job、schedule、session、statistics。支持使用 `ALL` 作为参数值，表示对所有对象类型进行审计。 |
+| `target_type` | 审计对象类型。支持 user、role、database、schema、table、view、index、sequence、privilege、audit、query、job、schedule、session、statistics。支持使用 `ALL` 作为参数值，表示对所有对象类型进行审计。 |
 | `target_name` | 数据库已存在的审计对象的名称。格式为 `database_name.target_name`。如果只提供了审计对象名称，则默认对当前数据库的审计对象进行审计。如未指定对象名称，KWDB 对指定对象类型进行审计。<br > **说明** <br >如果对象类型为 database，无法指定对象名称。 |
 | `operations` | 审计操作。支持指定一个或多个审计操作，审计操作之间使用逗号（`,`）隔开。支持使用 `ALL` 作为参数值，表示对所有操作进行审计。支持的审计操作取决于对象可执行的操作。 |
 | `operators` | 用户或角色名称。支持指定一个或多个用户或角色，用户或角色名称之间使用逗号（`,`）隔开。支持使用 `ALL` 作为参数值，表示对所有用户和角色进行审计。 |
@@ -147,7 +147,7 @@ KWDB 支持监控和记录包括管理员在内的用户操作，对系统级、
 
 | 参数 | 说明 |
 | --- | --- |
-| `target_type` | 可选参数，审计对象类型。支持 user、role、database、schema、table、view、index、sequence、privilege、audit、range、query、job、schedule、session、statistics。支持使用 `ALL` 作为参数值，表示查看所有对象的审计策略。 |
+| `target_type` | 可选参数，审计对象类型。支持 user、role、database、schema、table、view、index、sequence、privilege、audit、query、job、schedule、session、statistics。支持使用 `ALL` 作为参数值，表示查看所有对象的审计策略。 |
 | `target_name` | 可选参数，数据库已存在的审计对象的名称。格式为 `database_name.target_name`。如果只提供了审计对象名称，则默认对查看当前数据库中指定对象的审计策略。如未指定对象名称，KWDB 查看指定对象的审计策略。<br > **说明** <br >如果对象类型为 database，无法指定对象名称。 |
 | `operations` | 可选参数，审计操作。支持指定一个或多个审计操作，审计操作之间使用逗号（`,`）隔开。 |
 | `operators` | 可选参数，用户或角色名称。支持指定一个或多个用户或角色，用户或角色名称之间使用逗号（`,`）隔开。 |
