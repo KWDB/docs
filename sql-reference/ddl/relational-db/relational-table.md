@@ -617,23 +617,24 @@ id: relational-table
 - 在现有表中添加、修改、重命名或删除列。
 - 在现有表中添加、验证、重命名或删除约束。
 - 修改现有表上的主键列。
-- 设置现有表的区域。
 - 重命名现有表。表的重命名支持跨数据库迁移操作，即重命名后的表可迁移到新的数据库和新的模式中。避免在时序数据库下重命名关系表。
+- 在表的特定行或范围上创建或移除拆分点，以提升性能。
+- 重新分布表中的数据。
+- 向表注入统计信息。
 
 ### 所需权限
 
 - 在现有表中添加、修改、重命名或删除列：用户拥有目标表的 CREATE 权限。
 - 在现有表中添加、验证、重命名或删除约束：用户拥有目标表的 CREATE 权限。
 - 修改现有表上的主键列：用户拥有目标表的 CREATE 权限。
-- 设置现有表的区域：
-  - 修改 `system` 数据库中的表：用户为 Admin 用户或者 Admin 角色成员。
-  - 修改其他数据库中的表：用户拥有目标表的 CREATE 权限或 ZONECONFIG 权限。
 - 重命名表：
   - 重命名当前数据库中的表：用户拥有表所属数据库的 CREATE 权限和原表的 DROP 权限时。当表存在视图依赖时，系统不支持重命名表。
+  - 重命名表并将其迁移表到其他数据库：用户拥有目标数据库的 CREATE 权限。
+- 在表的特定行或范围上创建或移除拆分点: 用户拥有目标表的INSERT权限。
 
 ### 语法格式
 
-![](../../../static/sql-reference/EnpIbd8uto7vQfxE5Gfcv4qunqf.png)
+![](../../../static/sql-reference/alter-table-rdb.png)
 
 ### 支持的操作
 
@@ -643,7 +644,6 @@ id: relational-table
 - ALTER
   - `ALTER COLUMN`: 修改列的默认值、是否非空以及列数据类型。
   - `ALTER PRIMARY KEY`：修改表主键。
-- `CONFIGURE ZONE`：设置表的 Range 分区。更多详细信息，参见 [Range 分区管理](./relational-range.md)。
 - DROP
   - `DROP COLUMN`: 删除列，需指定列名。`COLUMN` 为可选关键字，如未使用，默认删除列。`IF EXISTS` 关键字可选。当使用 `IF EXISTS` 关键字时，如果列名存在，系统删除列。如果列名不存在，系统删除列失败，但不会报错。当未使用 `IF EXISTS` 关键字时，如果列名存在，系统删除列。如果列名不存在，系统报错，提示列名不存在。
   - `DROP CONSTRAINT`：删除约束。更多详细信息，参见[删除约束](./relational-constraint.md#删除约束)。
@@ -652,6 +652,11 @@ id: relational-table
   - `RENAME COLUMN`：修改列的名称。更多详细信息，参见[修改列](./relational-column.md#修改列)。
   - `RENAME TAG/ATTRIBUTE`：修改约束的名称。更多详细信息，参见[重命名约束](./relational-constraint.md#重命名约束)。
 - `VALIDATE CONSTRAINT`：检查列的值是否与列的约束匹配。
+- `SPLIT AT`：在表的特定行或范围上创建拆分点，便于在数据分布不均匀、存在热点（hotspots）等情况下优化表的性能。`WITH EXPIRATION` 子句用于设置拆分点的过期时间，便于系统在指定时间后自动移除拆分点。
+- `UNSPLIT AT`：移除表的特定行或范围上的拆分点。SELECT子句可用于指定要移除拆分点的位置。
+- `UNSPLIT ALL`：移除表中所有已被拆分的范围的拆分点，便于在数据分布不均匀、存在热点（hotspots）等情况下优化表的性能。
+- `SCATTER`：重新分布表中的数据，以实现更好的负载均衡。FROM 子句可用于指定要重新分布的数据范围。
+- `INJECT STATISTICS`：实验性功能，用于向表注入统计信息，可用于测试和调试，在生产环境中应谨慎使用。
 
 ### 参数说明
 
@@ -667,35 +672,88 @@ id: relational-table
 | `collation_name`  | 排序规则的名称。 |
 | `index_params` | 索引信息。更多详细信息，参见[索引](./relational-index.md)。|
 | `interleave_clause` |可选项，支持使用交错索引（Interleaving Indexes）优化查询性能， 格式为 `INTERLEAVE IN PARENT <table_name> (<name_list>)`。这会改变 KWDB 存储数据的方式。 |
+| `json_data` | 向目标表写入的统计信息，格式必须是JSON格式，并使用单引号包围。|
 
 ### 语法示例
 
-以下示例将 `users` 表重命名为 `re_users`。
+- 重命名表
 
-```sql
--- 1. 查看当前数据库中的表。
+  以下示例将 `users` 表重命名为 `re_users`。
 
-SHOW TABLES;
-table_name
-----------
-kv        
-users     
-(2 rows)
+  ```sql
+  -- 1. 查看当前数据库中的表。
 
--- 2. 将 users 表重命名为 re_users。
+  SHOW TABLES;
+  table_name
+  ----------
+  kv        
+  users     
+  (2 rows)
 
-ALTER TABLE users RENAME TO re_users;
-ALTER TABLE
+  -- 2. 将 users 表重命名为 re_users。
 
--- 3. 查看当前数据库中的表。
+  ALTER TABLE users RENAME TO re_users;
+  ALTER TABLE
 
-SHOW TABLES;
-table_name
-----------
-kv        
-re_users  
-(2 rows)
-```
+  -- 3. 查看当前数据库中的表。
+
+  SHOW TABLES;
+  table_name
+  ----------
+  kv        
+  re_users  
+  (2 rows)
+  ```
+
+- 创建拆分点
+  
+  以下示例根据 `vehicleid` 的数值为 `vehicles` 表创建了拆分点。
+  
+  ```sql
+  -- 1. 查看表数据。
+
+  SELECT * FROM vehicles;
+    vehicleid | licenseplate | owner | model | year
+  ------------+--------------+-------+-------+-------
+            1 | 京A11111     | 李明  | 奔驰  | 2020
+            2 | 京A22222     | 赵志  | 别克  | 2022
+  (2 rows)
+
+  -- 2. 设置拆分点
+  ALTER TABLE vehicles SPLIT AT SELECT vehicleid from vehicles where vehicleid = 1;
+      key    |    pretty     |       split_enforced_until
+  -----------+---------------+-----------------------------------
+    \xda8989 | /Table/82/1/1 | 2262-04-11 23:47:16.854776+00:00
+  (1 row)
+  ```
+
+- 移除所有拆分点
+  
+  以下示例移除了 `vehicles` 表上的所有拆分点。
+
+  ```sql
+  ALTER TABLE vehicles UNSPLIT ALL;
+  ```
+
+- 重新分布数据
+  
+  以下示例对 `vehicles` 表上的数据进行了重新分布。
+
+  ```sql
+  ALTER TABLE vehicles SCATTER;
+    key  |  pretty
+  -------+------------
+    \xda | /Table/82
+  (1 row)
+  ```
+
+- 向表内注入统计信息 
+
+  以下示例将 JSON 格式的统计数据写入 `kv` 表中。
+
+  ```sql
+  ALTER TABLE kv INJECT STATISTICS '[{"name":"__auto__","created_at":"2000-01-01 00:00:00+00:00","columns":["k"],"row_count":2223475796173842391,"distinct_count":405727959889499775,"null_count":1571059772371006376},{"name":"__auto__","created_at":"2000-01-01 00:00:00+00:00","columns":["v"],"row_count":2223475796173842391,"distinct_count":2209895385460769436,"null_count":131122807856894709}]';
+  ```
 
 ## 删除表
 
