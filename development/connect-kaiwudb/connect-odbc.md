@@ -39,7 +39,7 @@ id: connect-odbc
 
     ![](../../static/development/odbc-connect-win-03.png)
 
-5. 配置数据源，然后单击 **Save**。
+5. 配置数据源。
 
     ![](../../static/development/odbc-connect-win-04.png)
 
@@ -52,9 +52,13 @@ id: connect-odbc
     - `User Name`：连接数据库的用户名。
     - `Password`：身份验证时使用的密码。安全模式下，优先使用 SSL 证书进行登录认证。
 
-6. 验证配置是否正确。
+6. （可选）验证配置是否正确。
 
     单击 **Test**。如果出现 `Connection successful`，说明配置正确。
+
+7. 单击 **Save**，保存配置信息。
+
+8. 单击**确定**。
 
 ### 连接示例
 
