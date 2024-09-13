@@ -68,9 +68,9 @@ DRBD 镜像数据具有以下特点：
 
    示例：
 
-   ```Shell
-   10.110.105.231   ha-node01
-   10.110.105.232   ha-node02
+   ```shell
+   your-master-host-ip   ha-node01
+   your-backup-host-ip   ha-node02
    ```
 
 ### 配置非交互式 SSH 登录
@@ -79,7 +79,7 @@ DRBD 镜像数据具有以下特点：
 
 1. 登录主节点，生成公私密钥对：
    
-    ```Shell
+   ```Shell
    ssh-keygen -f ~/.ssh/id_rsa -N ""
    ```
 
@@ -87,7 +87,7 @@ DRBD 镜像数据具有以下特点：
 
    - `-f`：指定生成的密钥对文件名。
 
-   -  `-N`：指定密钥的密码，为实现非交互式登录，将密码设置为空。
+   - `-N`：指定密钥的密码，为实现非交互式登录，将密码设置为空。
 
 2. 将公钥分发到备节点：
 
@@ -276,7 +276,7 @@ DRBD 镜像数据具有以下特点：
    示例：
 
    ```Shell
-   root@ha-node01:/etc# pcs resource create ClusterIP ocf:heartbeat:IPaddr2 ip=10.110.105.173 cidr_netmask=24 op monitor interval=30s
+   root@ha-node01:/etc# pcs resource create ClusterIP ocf:heartbeat:IPaddr2 ip=<virtual_ip_address> cidr_netmask=24 op monitor interval=30s
    ```
 
 7. （可选）检查资源是否创建成功：
@@ -448,13 +448,13 @@ DRBD 镜像数据具有以下特点：
               on ha-node01 {     ##主节点主机名
               device /dev/drbd3;    ##自定义设备名称
               disk /dev/sde;     ##挂载的供同步的磁盘盘符
-              address 10.110.105.231:7789;    ##主节点IP
+              address your-master-host-ip:port;    ##主节点IP
               meta-disk internal;
               }
               on ha-node02 {    ##备节点主机名
               device /dev/drbd3;    ##自定义设备名称
               disk /dev/sde;      ##挂载的供同步的磁盘盘符
-              address 10.110.105.232:7789;    ##备节点IP
+              address your-backup-host-ip:port;    ##备节点IP
               meta-disk internal;
               }
       ```
@@ -620,7 +620,7 @@ DRBD 镜像数据具有以下特点：
          示例：
 
          ```Shell
-         kwbase cert create-node 10.110.105.231 10.110.105.232 10.110.105.173 127.0.0.1 0.0.0.0 localhost  --certs-dir=/etc/kaiwudb/certs --ca-key=ca.key
+         kwbase cert create-node <primary_node_ip> <secondary_node_ip> <virtual_ip> 127.0.0.1 0.0.0.0 localhost  --certs-dir=/etc/kaiwudb/certs --ca-key=ca.key
          ```
 
       3. 将主节点`/etc/kwdb/certs/*`中的证书文件复制到备节点相同目录。
