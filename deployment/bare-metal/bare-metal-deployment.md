@@ -41,10 +41,10 @@ KWDB 支持使用 KWDB 二进制安装包部署 KWDB 集群。部署 KWDB 集群
     cpu=1
 
     [local]
-    node_addr=192.168.64.128
+    node_addr=your-host-ip
 
     [cluster]
-    node_addr=192.168.64.129, 192.168.64.130
+    node_addr=your-host-ip, your-host-ip
     ssh_port=22
     ssh_user=admin
     ```

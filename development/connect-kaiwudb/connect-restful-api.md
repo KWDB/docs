@@ -923,19 +923,7 @@ Accept: application/json
 CREATE TABLE ts_table(ts timestamp not null, power int) tags(location varchar(15) not null) primary tags (location);
 ```
 
-### Token 认证
-
-KWDB 提供 Login RESTful API 接口。Login 接口支持根据用户名和密码进行 64 位编码生成令牌。其他 API 接口，例如 DDL 接口、Insert 接口等，发送 HTTP 请求时，需要在 HTTP 请求头部中使用该令牌进行认证。
-
-::: warning 说明
-
-- 用户每次登录或使用令牌进行操作后，系统会自动更新令牌起始时间，重新计算令牌的到期时间。
-- 默认情况下，系统生成的令牌有效期为 60 分钟。用户可以通过 `SET CLUSTER SETTING server.rest.timeout=<value>` SQL 语句设置令牌的有效期。可配置范围为 `[1, 2^63-1]`，单位为分钟。
-- 使用 RESTful API 进行并发编程时，建议为每个线程分配一个独立的 token，以确保业务操作的顺利进行。并发数限制为 100。
-
-:::
-
-以下示例使用令牌认证方式发送 HTTP 请求，创建 `ts_table` 表。
+示例 2：使用令牌认证
 
 ```shell
 _<!--请求-->_
@@ -948,9 +936,7 @@ Accept: application/json
 CREATE TABLE ts_table(ts timestamp not null, power int) tags(location varchar(15));
 ```
 
-### 安全证书
-
-HTTPS 使用 SSL 加密数据。如需配置与 KWDB 数据库通信使用的加密 SSL 证书，遵循以下步骤。
+示例 3：与 KWDB 数据库进行加密通信
 
 1. 以安全模式部署和启动数据库。
 
@@ -958,23 +944,22 @@ HTTPS 使用 SSL 加密数据。如需配置与 KWDB 数据库通信使用的加
 
 2. 使用 SQL 语句在数据库中创建新用户。
 
-   ```sql
-   create user rest_user password 'user123456';
-   ```
+    ```sql
+    create user rest_user password 'your-password';
+    ```
+3. 将 KWDB 服务端生成的证书拷贝到发起请求客户端可访问的路径下。证书默认存放目录为`/etc/kaiwudb/certs`。
+4. 使用安全证书进行 Restful API 连接。
 
-3. 使用 SSL 证书进行 RESTful API 连接。
+    - 登录示例
+    
+      ```bash
+      curl -L --cacert ../certs/ca.crt -H "Username:rest_user" -H "Password:your-password" -X GET your-host-ip:port/restapi/login
+      ```
+    - 查询示例
 
-   ::: warning 说明
-   用户需要将 KWDB 服务端生成的 SSL 证书复制到发起请求客户端能访问的路径下。
-   :::
-
-   ```shell
-   # 登录示例
-   curl -L --cacert ../certs/ca.crt  -H "Username:rest_user" -H "Password:user123456" -X GET 192.168.122.57:8080/restapi/login
-   
-   # 查询示例
-   curl -L -H "Content-Type:text/plain" -H "Username:rest_user" -H "Password:user123456"    --cacert ../certs/ca.crt -d "select*from t1;" -X POST 192.168.122.57:8080/restapi/query?db=db1
-   ```
+      ```bash
+      curl -L -H "Content-Type:text/plain" -H "Username:rest_user" -H "Password:your-password"  --cacert ../certs/ca.crt -d "select*from t1;" -X POST your-host-ip:port/restapi/query?db=db1
+      ```
 
 ## HTTP 状态码
 

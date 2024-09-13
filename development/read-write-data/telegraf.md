@@ -18,7 +18,7 @@ id: telegraf
 ```toml
 [[outputs.http]]
   ## URL is the address to send metrics to
-  url = "https://192.168.122.73:8080/restapi/telegraf?db=db1
+  url = "https://your-host-ip:port/restapi/telegraf?db=db1
 
   ## Timeout for HTTP message
   timeout = "5s"

@@ -127,14 +127,14 @@ id: cluster-settings-config
         - /bin/bash
         | - -c                                                                                                                                                                                       |
         | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-        | /kaiwudb/bin/kwbase  start-single-node --certs-dir=/kaiwudb/certs --listen-addr=0.0.0.0:26257 --advertise-addr=192.168.123.128:26257 --store=/kaiwudb/deploy/kaiwudb-container --cache=25% |
+        | /kaiwudb/bin/kwbase  start-single-node --certs-dir=/kaiwudb/certs --listen-addr=0.0.0.0:26257 --advertise-addr=your-host-ip:port --store=/kaiwudb/deploy/kaiwudb-container --cache=25% |
     
         ```yaml
           command: 
             - /bin/bash
             - -c
             - |
-              /kaiwudb/bin/kwbase  start-single-node --certs-dir=/kaiwudb/certs --listen-addr=0.0.0.0:26257 --advertise-addr=192.168.123.128:26257 --store=/kaiwudb/deploy/kaiwudb-container --cache=25%
+              /kaiwudb/bin/kwbase  start-single-node --certs-dir=/kaiwudb/certs --listen-addr=0.0.0.0:26257 --advertise-addr=your-host-ip:port --store=/kaiwudb/deploy/kaiwudb-container --cache=25%
         ```
 
 5. 保存配置后，重新启动 KWDB 服务。
