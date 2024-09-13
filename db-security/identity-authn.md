@@ -97,10 +97,10 @@ SET CLUSTER SETTING server.host_based_authentication.configuration = 'host all <
 
 - 禁用特定 IP 地址的用户连接。
 
-    以下示例拒绝使用 `10.110.10.153/32` 地址的 `all` 用户连接 KWDB 集群。
+    以下示例拒绝使用 `10.xxx.xxx.2` 地址的 `all` 用户连接 KWDB 集群。
 
     ```sql
-    SET CLUSTER SETTING server.host_based_authentication.configuration = 'host all all 10.110.10.153/32 reject';
+    SET CLUSTER SETTING server.host_based_authentication.configuration = 'host all all 10.xxx.xxx.2 reject';
     ```
 
 - 允许用户使用证书连接。
