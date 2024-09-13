@@ -32,7 +32,7 @@ data_root=/var/lib/kaiwudb
 
 [local]
 # 本地节点地址
-node_addr=192.168.64.128
+node_addr=your-host-ip
 ```
 
 更多安装部署要求和配置参数信息，参见[裸机部署](../deployment/bare-metal/bare-metal-deployment.md)和[容器部署](../deployment/docker/docker-deployment.md)。
@@ -54,5 +54,5 @@ node_addr=192.168.64.128
           - /bin/bash
           - -c
           - |
-            /kaiwudb/bin/kwbase  start-single-node --certs-dir=/kaiwudb/certs --listen-addr=0.0.0.0:26257 --advertise-addr=192.168.123.128:26257 --store=/kaiwudb/deploy/kaiwudb-container
+            /kaiwudb/bin/kwbase  start-single-node --certs-dir=/kaiwudb/certs --listen-addr=0.0.0.0:26257 --advertise-addr=your-host-ip:port --store=/kaiwudb/deploy/kaiwudb-container
     ```

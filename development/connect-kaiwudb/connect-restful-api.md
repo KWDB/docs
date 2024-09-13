@@ -917,6 +917,7 @@ Accept: application/json
 
 CREATE TABLE ts_table(ts timestamp not null, power int) tags(location varchar(15) not null) primary tags (location);
 ```
+
 示例 2：使用令牌认证
 
 ```shell
@@ -929,22 +930,28 @@ Accept: application/json
 
 CREATE TABLE ts_table(ts timestamp not null, power int) tags(location varchar(15));
 ```
+
 示例 3：与 KWDB 数据库进行加密通信
+
 1. 以安全模式部署和启动数据库。
 2. 使用 SQL 语句在数据库中创建新用户。
+
     ```sql
     create user rest_user password 'user123456';
     ```
 3. 将 KWDB 服务端生成的证书拷贝到发起请求客户端可访问的路径下。证书默认存放目录为`/etc/kaiwudb/certs`。
-2. 使用安全证书进行 Restful API 连接。
-  - 登录示例
-    ```bash
-    curl -L --cacert ../certs/ca.crt -H "Authorization: Basic dTE6a3dkYnBhc3N3b3Jk" -X GET 192.168.122.57:8080/restapi/login
-    ```
-  - 查询示例
-    ```
-    curl -L -H "Content-Type:text/plain" -H "Authorization: Basic dTE6a3dkYnBhc3N3b3Jk"  --cacert ../certs/ca.crt -d "select*from t1;" -X POST 192.168.122.57:8080/restapi/query?db=db1
-    ```
+4. 使用安全证书进行 Restful API 连接。
+
+    - 登录示例
+    
+      ```bash
+      curl -L --cacert ../certs/ca.crt -H "Authorization: Basic dTE6a3dkYnBhc3N3b3Jk" -X GET your-host-ip:port/restapi/login
+      ```
+    - 查询示例
+
+      ```bash
+      curl -L -H "Content-Type:text/plain" -H "Authorization: Basic dTE6a3dkYnBhc3N3b3Jk"  --cacert ../certs/ca.crt -d "select*from t1;" -X POST your-host-ip:port/restapi/query?db=db1
+      ```
 
 ## HTTP 状态码
 
