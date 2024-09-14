@@ -128,10 +128,10 @@ tar -zxvf <package_name>
     data_root=/var/lib/kaiwudb
     cpu=1
     [local]
-    node_addr=192.168.64.128
+    node_addr=your-host-ip
 
     # [cluster]
-    # node_addr=192.168.64.129, 192.168.64.130
+    # node_addr=your-host-ip, your-host-ip
     # ssh_port=22
     # ssh_user=admin
     ```

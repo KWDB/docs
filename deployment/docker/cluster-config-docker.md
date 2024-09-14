@@ -37,7 +37,7 @@ id: cluster-config-docker
           - /bin/bash
           - -c
           - |
-            /kaiwudb/bin/kwbase  start-single-node --certs-dir=/kaiwudb/certs --listen-addr=0.0.0.0:26257 --advertise-addr=192.168.123.128:26257 --store=/kaiwudb/deploy/kaiwudb-container --cache=25%
+            /kaiwudb/bin/kwbase  start-single-node --certs-dir=/kaiwudb/certs --listen-addr=0.0.0.0:26257 --advertise-addr=your-host-ip:port --store=/kaiwudb/deploy/kaiwudb-container --cache=25%
     ```
 
 4. 保存配置, 重新创建并启动 KWDB 容器。
