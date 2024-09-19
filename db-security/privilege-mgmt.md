@@ -20,7 +20,7 @@ KWDB 支持对数据库和表在内的数据库对象的访问和操作权限进
 
 ## 授予权限
 
-权限授予指将特定权限赋予用户或角色，使其能够执行相应的操作。权限既可以授予多个用户或角色，也可以授予多个目标对象。
+授予权限的用户在目标数据库、表或模式（只适用于关系数据自定义模式）上具备被授予的权限。例如，向其他用户授予目标表的 `SELECT` 权限的用户必须具备目标表的 `GRANT` 和 `SELECT` 权限。
 
 ### 前提条件
 
@@ -54,7 +54,7 @@ GRANT CREATE ON DATABASE db1, defaultdb TO operatora;
 
 ### 前提条件
 
-用户拥有 Admin（ALL）权限。
+撤销其他用户的权限的用户具备目标数据库、表或模式（只适用于关系数据自定义模式）的 `GRANT` 权限和被撤销的权限。例如，撤销其他用户目标表的 `SELECT` 权限的用户必须具备目标表的 `GRANT` 和 `SELECT` 权限。
 
 ### 语法格式
 
@@ -88,13 +88,13 @@ REVOKE <privilege> ON [TABLE | DATABASE | SCHEMA] <target_name> FROM <user_name>
     REVOKE DELETE ON TABLE defaultdb.t1 FROM user11;
     ```
 
-## 查询权限
+## 查看权限
 
 查询权限指查看当前数据库中用户或角色的权限分配情况，帮助管理员了解和管理权限配置。
 
 ### 前提条件
 
-用户拥有 Admin（ALL）权限。
+无。如需使用 `SHOW GRANTS ON ROLE` SQL 命令，用户必须具备系统表的 `SELECT` 权限。
 
 ### 语法格式
 
