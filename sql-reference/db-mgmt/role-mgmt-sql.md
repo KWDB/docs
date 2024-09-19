@@ -11,7 +11,7 @@ id: role-mgmt-sql
 
 ### 所需权限
 
-用户拥有 Admin（ALL）权限或者具有创建角色（CREATEROLE）的权限。
+用户具备创建角色（`CREATEROLE`）的权限或者是 `admin` 角色的成员。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -174,7 +174,7 @@ SHOW ROLES;
 
 ### 所需权限
 
-用户拥有 Admin（ALL）权限或者具有创建角色（CREATEROLE）的权限。
+用户具备创建角色（`CREATEROLE`）的权限或者是 `admin` 角色的成员。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -270,7 +270,7 @@ SHOW ROLES;
 
 ### 所需权限
 
-用户拥有 Admin 权限。默认情况下，root 用户具有 Admin 角色。
+用户是角色的管理员或者 `admin` 角色的成员。如需为 `admin` 角色添加成员，用户必须是具有 `WITH ADMIN OPTION` 权限的 `admin` 角色。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -336,7 +336,7 @@ KWDB 不支持将 `root` 用户从 Admin 角色中删除。
 
 ### 所需权限
 
-用户拥有 Admin 权限。默认情况下，root 用户具有 Admin 角色。
+用户是角色的管理员或者 `admin` 角色的成员。如需删除 `admin` 角色的成员，用户必须是具有 `WITH ADMIN OPTION` 权限的 `admin` 角色。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -415,7 +415,7 @@ KWDB 不支持将 `root` 用户从 Admin 角色中删除。
 
 ### 所需权限
 
-用户拥有 Admin（ALL）权限或者具有创建角色（CREATEROLE）的权限。
+用户具备创建角色（`CREATEROLE`）的权限或者是 `admin` 角色的成员。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 

@@ -24,7 +24,7 @@ KWDB 支持对数据库和表在内的数据库对象的访问和操作权限进
 
 ### 所需权限
 
-用户拥有 Admin（ALL）权限。
+授予权限的用户在目标数据库、表或模式（只适用于关系数据自定义模式）上具备被授予的权限。例如，向其他用户授予目标表的 `SELECT` 权限的用户必须具备目标表的 `GRANT` 和 `SELECT` 权限。
 
 ### 语法格式
 
@@ -53,7 +53,7 @@ GRANT CREATE ON DATABASE db1, defaultdb TO operatora;
 
 ### 所需权限
 
-用户拥有 Admin（ALL）权限。
+撤销其他用户的权限的用户具备目标数据库、表或模式（只适用于关系数据自定义模式）的 `GRANT` 权限和被撤销的权限。例如，撤销其他用户目标表的 `SELECT` 权限的用户必须具备目标表的 `GRANT` 和 `SELECT` 权限。
 
 ### 语法格式
 
@@ -82,7 +82,7 @@ REVOKE CREATE ON DATABASE db1, defaultdb FROM user11;
 
 ### 所需权限
 
-无
+无。如需使用 `SHOW GRANTS ON ROLE` SQL 命令，用户必须具备系统表的 `SELECT` 权限。
 
 ### 语法格式
 
