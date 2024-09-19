@@ -13,7 +13,7 @@ KWDB 支持管理用户权限，确保关键、重要功能、数据的安全性
 
 ### 前提条件
 
-用户拥有 Admin（ALL）权限或者具有创建角色（CREATEROLE）的权限。
+用户具备创建角色（`CREATEROLE`）的权限或者是 `admin` 角色的成员。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -78,7 +78,7 @@ CREATE USER [IF NOT EXISTS] <name> [WITH] [CREATEROLE | NOCREATEROLE | LOGIN | N
 
 ### 前提条件
 
-用户拥有 Admin（ALL）权限。
+用户具备 `system.users` 和 `system.role_members` 表的 `SELECT` 权限。
 
 ### 语法格式
 
@@ -120,7 +120,7 @@ user3   |VALID UNTIL=2023-01-01 00:00:00+00:00|{}
 
 ### 前提条件
 
-- 用户拥有 Admin（ALL）权限或者具有创建角色（CREATEROLE）的权限。
+- 用户具备创建角色（`CREATEROLE`）的权限或者是 `admin` 角色的成员。默认情况下，`root` 用户属于 `admin` 角色。
 - 以安全模式登录 KWDB 数据库。
 
 ### 语法格式

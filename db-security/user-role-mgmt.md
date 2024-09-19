@@ -13,7 +13,7 @@ KWDB 提供多层次、细粒度的权限机制，确保只有授权的用户和
 
 ### 前提条件
 
-用户拥有 Admin（ALL）权限或者具有创建角色（CREATEROLE）的权限。
+用户具备创建角色（`CREATEROLE`）的权限或者是 `admin` 角色的成员。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -127,7 +127,7 @@ CREATE ROLE <name> [IF NOT EXISTS] [WITH <role_options>];
 
 ### 前提条件
 
-用户拥有 Admin（ALL）权限。
+用户具备 `system.users` 和 `system.role_members` 表的 `SELECT` 权限。
 
 ### 语法格式
 
@@ -173,7 +173,7 @@ SHOW ROLES;
 
 ### 前提条件
 
-用户拥有 Admin（ALL）权限或者具有创建角色（CREATEROLE）的权限。
+用户具备创建角色（`CREATEROLE`）的权限或者是 `admin` 角色的成员。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -258,7 +258,7 @@ ALTER ROLE [IF EXISTS] <role_name> [WITH <role_options>];
 
 ### 前提条件
 
-用户拥有 Admin 权限。
+用户是角色的管理员或者 `admin` 角色的成员。如需为 `admin` 角色添加成员，用户必须是具有 `WITH ADMIN OPTION` 权限的 `admin` 角色。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -272,7 +272,7 @@ GRANT <role_name> TO <user_name> [WITH ADMIN OPTION];
 | --- | --- |
 | `role_name` | 角色名称。支持一次为多个角色添加同一个成员，角色名称之间使用逗号（`,`）隔开。|
 | `user_name` | 待添加的成员的名称，成员可以是用户或角色。支持一次为角色添加多个成员，成员名称之间使用逗号（`,`）隔开。 |
-| `WITH ADMIN OPTION` | 将成员指定为角色的管理员。角色管理员有权授予或撤销角色的成员资格。 |
+| `WITH ADMIN OPTION` | 将成员指定为角色的管理员。角色的管理员有权授予或撤销角色的成员资格。 |
 
 ### 语法示例
 
@@ -326,7 +326,7 @@ KWDB 不支持将 `root` 用户从 Admin 角色中删除。
 
 ### 前提条件
 
-用户拥有 Admin 权限。
+用户是角色的管理员或者 `admin` 角色的成员。如需删除 `admin` 角色的成员，用户必须是具有 `WITH ADMIN OPTION` 权限的 `admin` 角色。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -407,7 +407,7 @@ REVOKE [ADMIN OPTION FOR] <role_name> FROM <user_name>;
 
 ### 前提条件
 
-用户拥有 Admin（ALL）权限或者具有创建角色（CREATEROLE）的权限。
+用户具备创建角色（`CREATEROLE`）的权限或者是 `admin` 角色的成员。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 

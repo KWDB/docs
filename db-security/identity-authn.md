@@ -15,7 +15,7 @@ id: identity-authn
 
 #### 前提条件
 
-用户拥有 Admin（ALL）权限或者具有创建角色（CREATEROLE）的权限。
+用户具备创建角色（`CREATEROLE`）的权限或者是 `admin` 角色的成员。默认情况下，`root` 用户属于 `admin` 角色。
 
 #### 语法格式
 
@@ -45,7 +45,7 @@ CREATE USER user1 WITH PASSWORD '11aa!!AA' VALID UNTIL '2025-01-01 00:00:00+00:0
 
 #### 前提条件
 
-用户拥有 Admin（ALL）权限或者具有创建角色（CREATEROLE）的权限。
+用户具备创建角色（`CREATEROLE`）的权限或者是 `admin` 角色的成员。默认情况下，`root` 用户属于 `admin` 角色。
 
 #### 语法格式
 
@@ -77,7 +77,7 @@ KWDB 提供基于主机的认证配置，控制客户端的访问权限。认证
 
 ### 前提条件
 
-用户拥有 Admin 权限。
+用户是 `admin` 角色的成员。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -90,7 +90,7 @@ SET CLUSTER SETTING server.host_based_authentication.configuration = 'host all <
 | 参数 | 说明 |
 | --- | --- |
 | `user_name` | 用户名称。支持设置为 `all`，表示匹配所有用户。|
-| `address` | 设置允许或拒绝访问的 IP 地址范围。如果字段值包含了 IP 地址及其掩码，则无需提供掩码值。如果字段值只包含了 IP 地址，则接下来的字段必须提供有效的 IP 掩码。支持设置为 `all`，表示允许或拒绝所有 IP 地址。|
+| `address` | 设置允许或拒绝访问的 IP 地址范围。支持以下三种表现形式：<br > - 单个主机名 <br >- IP 地址范围：支持 IP 地址 + CIDR 子网掩码长度的形式（`iP-address/mask-length`）或者 IP 地址 + 实际子网掩码的形式（`ip-address/ip-mask`）。 <br > 支持设置为 `all`，表示允许或拒绝所有 IP 地址。|
 |  `method` | 认证规则，用户可以根据需求定制认证规则，具体包括：<br >- `cert`：基于证书的身份验证（需要 SSL 连接）。<br >- `cert-password`：基于证书或密码的身份验证（需要 SSL 连接）。<br >- `password`：基于密码的身份验证（需要 SSL 连接）。<br >- `trust`：无条件允许匹配的连接。<br >- `reject`：无条件拒绝匹配的连接。|
 
 ### 语法示例
