@@ -267,7 +267,8 @@ id: functions-ts-db
 
 ::: warning 说明
 
-避免 `AVG`、`SUM` 函数的计算结果超过函数支持的最大范围。
+- 避免 `AVG`、`SUM` 函数的计算结果超过函数支持的最大范围。
+- 聚合查询与 `GROUP BY` 连用时，避免 `GROUP BY` 后的结果集行数过大。
 
 :::
 
