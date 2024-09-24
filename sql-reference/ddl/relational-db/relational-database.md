@@ -5,9 +5,6 @@ id: relational-database
 
 # 数据库
 
-::: warning 说明
-避免频繁地创建、删除数据库。
-:::
 
 ## 创建数据库
 

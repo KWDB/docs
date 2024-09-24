@@ -5,9 +5,6 @@ id: relational-table
 
 # 关系表
 
-::: warning 说明
-避免频繁地创建、删除关系表。
-:::
 
 ## 创建表
 
