@@ -7,9 +7,6 @@ id: relational-data-query
 
 关系数据库支持使用 SQL 语句完成简单查询以及与其他结构组合形成的更复杂的选择查询。具体 SQL 语法格式，参见 [SQL 参考](../../sql-reference/overview.md)。
 
-::: warning 说明
-使用 `WHERE` 子句或者 `HAVING` 子句过滤数据查询结果时，如果使用 `tuple` 形式比较字段，必须确保待比较字段的类型保持一致，否则可能导致系统宕机。
-:::
 
 ## 创建查询
 
