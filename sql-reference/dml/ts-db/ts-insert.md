@@ -14,7 +14,6 @@ id: ts-insert
 
 - KWDB 支持乱序写入数据。默认情况下，KWDB 以数据写入的顺序返回查询结果。如需对返回数据进行排序，支持在查询数据时使用 `ORDER BY` 子句并指定排序条件。
 - KWDB 支持对具有相同时间戳的数据进行去重处理。默认情况下，后写入的数据覆盖已有的具有相同时间戳的数据。用户可以通过 `SET CLUSTER SETTING ts.dedup.rule=[ merge | override | discard]` 语句设置数据去重策略。更多信息，参见[集群实时参数配置](../../../db-operation/cluster-settings-config.md#实时参数)。
-- 当用户环境的数据量大于 20 万、并发数大于 100 时，避免执行 `INSERT INTO SELECT` 语句。
 
 :::
 
