@@ -7,6 +7,16 @@ id: faqs
 
 ## 安装部署 FAQ
 
+### 操作系统适配
+
+- **问题描述**
+
+  用户希望在龙芯 3C5000L 或兆芯 KH-30000 操作系统上部署 KWDB。
+
+- **问题解答**
+
+  目前，KWDB 尚未在龙芯 3C5000L 和兆芯 KH-30000 操作系统系统进行全面、系统化的验证，用户如果有相关需求，请[联系](https://www.kaiwudb.com/support/) KWDB 技术支持人员，我们将提供编译适配和测试支持。
+
 ### 依赖缺失
 
 - **问题描述**
@@ -27,9 +37,65 @@ id: faqs
     [ERROR] 2024-08-28 09:35:57 error: Failed dependencies: squashfs-tools is needed by kaiwudb-server-2.0.3.2-kylin.kyl0.aarch64
     ```
 
+## 存储 FAQ
+
+### 删表后存储空间未释放
+
+- **问题描述**
+
+    删除表后，发现存储空间没有立即释放。
+
+- **问题解答**
+
+    在 KWDB 中，执行删除表操作后，如果有其他线程仍在使用该表，系统不会立即删除表，而会等待所有线程完成对该表的操作后再删除。系统会每 5 分钟检查一次是否可以删除该表。在异常情况下，如果有线程长时间持有该表，可能会导致存储空间无法释放。此时，建议手动删除相关数据以释放存储空间。
+
 ## SQL FAQ
 
 ### 数据写入
+
+#### 空间不足
+
+- **问题描述**
+
+    向数据库写入数据时写入失败，错误提示为 `could not PutData`，日志中显示 `resize file failed` 和 `No space left on device`。
+
+- **问题解答**
+
+    可能是因为待写入的列数过多，达到句柄上限，可以通过增加文件描述符上限来解决这个问题。
+
+    ::: warning 注意
+
+  - 该设置只适用于裸机部署。
+  - 该配置为节点级别，如果需要修改整个集群的配置，需要登录到集群的每个节点并完成相应的配置。
+    :::
+
+    **步骤：**
+
+    1. 进入 `/etc/systemd/system` 目录，打开 `kaiwudb.service` 文件。
+
+    2. 在 `[Service]` 部分添加 `LimitNOFILE=1048576`，增加单个进程能够打开的最大文件描述符数量。
+
+        ```YAML
+        ...
+        [Service]
+        ...
+        LimitNOFILE=1048576
+        ...
+        ```
+
+    3. 保存 `kaiwudb.service` 文件后，重新加载配置。
+
+          ```Shell
+          systemctl daemon-reload
+          ```
+
+    4. 检查修改是否生效：
+
+          ```Shell
+          systemctl show kaiwudb | grep LimitNOFILE
+          ```
+
+#### 建表报错
 
 - **问题描述**
 
@@ -44,6 +110,19 @@ id: faqs
     ```shell
     firewall-cmd --zone=public --add-rich-rule='rule family="ipv4" source address="172.18.0.4/24" port protocol="tcp" port="22" accept' --permanent
     ```
+
+#### 多行写入失败
+
+- **问题描述**
+
+  使用 JDBC 和 PREPARE INSERT 语句向一个包括几千列的表写入数据时，批量写入 10 行数据可以成功，批量写入 20 行数据出错。
+
+- **问题解答**
+
+  可能是批量写入的 SQL 语句长度超过了 PostgreSQL 协议规定的长度上限。建议通过以下方式解决：
+
+  - **减少 SQL 语句长度**：尝试减少单次批量写入的行数或列数。
+  - **避免使用 PREPARE 语句**：直接执行 INSERT 语句而不使用预编译的 PREPARE 语句。
 
 ### 数据查询
 
@@ -97,6 +176,113 @@ id: faqs
 
     KWDB 执行时间加减运算时，如果运算符两边均为 timestamp 或 timestamptz 类型，只支持减法运算，且差值对应的纳秒数不得超过 INT64 范围，对应的天数不得超过 `106751` 天。如果超过该范围，系统将统一显示 `106751 days 23:47:16.854776`。
 
+## 性能调优
+
+### 写入调优
+
+- **问题描述**
+
+  使用 SQL 语句向 KWDB 写入海量数据时，写入速率较慢。
+
+- **问题解答**
+
+  可以根据实际业务场景调整部分参数设置或关闭部分可能影响性能的功能，来提升数据写入速度：
+
+  1. 提高处理器可用内存上限，减少对临时存储的依赖。默认值为 64 MiB，建议设置为物理内存的 1/8，以提高处理效率。
+
+      示例：
+
+        ```SQL
+        SET CLUSTER SETTING sql.distsql.temp_storage.workmem = '32768Mib';
+        ```
+
+  2. 启用 SQL 下推功能，减少数据处理的开销。
+
+       ```SQL
+        SET CLUSTER SETTING sql.all_push_down.enabled = TRUE;
+       ```
+
+  3. 打开短路优化，减少不必要的操作步骤。
+
+      ```SQL
+        SET CLUSTER SETTING sql.pg_encode_short_circuit.enabled = TRUE;
+      ```
+
+  4. 关闭自动统计时序数据信息收集功能。注意：关闭此功能后将无法查看监控数据，适用于对性能要求较高且对监控数据依赖较低的场景。
+
+        ```SQL
+        SET CLUSTER SETTING sql.stats.ts_automatic_collection.enabled = FALSE;
+        ```
+
+  5. 启用时序写入短接功能，提高时序数据写入速度。注意：该设置不适用于 `prepare insert` 语句。
+
+        ```SQL
+        SET CLUSTER SETTING server.tsinsert_direct.enabled = TRUE;
+        ```
+
+  6. 关闭数据压缩功能，减少写入时的计算开销，适用于对空间占用不敏感的场景。
+
+        ```SQL
+        ALTER SCHEDULE scheduled_table_compress F Recurring '0 0 1 1 ？2099';
+        ```
+
+  7. 关闭生命周期管理功能，避免定期的表清理操作，适用于数据持久性要求较高且对写入性能要求较高的场景。
+
+        ```SQL
+        ALTER SCHEDULE scheduled_table_retention Recurring '0 0 1 1 ? 2099';
+        ```
+
+  8. 关闭 WAL 日志功能。注意：关闭 WAL 日志功能会影响宕机后的数据恢复，适用于对数据一致性要求较低的场景。
+
+     1. 关闭 WAL 日志功能。
+
+           ```SQL
+           SET CLUSTER SETTING ts.wal.flush_interval = -1s;
+           ```
+
+     2. 重启 KWDB 服务。
+
+           ```Bash
+           systemctl restart kaiwudb
+           ```
+
+### 查询调优
+
+- **问题描述**
+
+  使用 SQL 语句获取某个时序表的所有标签值，查询速率较慢。
+
+- **问题解答**
+
+  可以通过以下 SQL 语句向数据库查询优化器提供特定指令，优化查询性能：
+
+  ```SQL
+  SELECT /*+ STMT_HINT(ACCESS_HINT(TAG_ONLY,<table_name>)) */ <tag_name> FROM <table_name> GROUP BY <tag_name>;
+  ```
+
+  参数说明：
+
+  - `/*+ STMT_HINT(ACCESS_HINT(TAG_ONLY, <table_name>)) */`： 给优化器提供查询优化建议，具体参数如下：
+    - `ACCESS_HINT`： 表的访问方式。
+    - `TAG_ONLY`： 只查询标签数据。
+    - `table_name`： 目标表的名称。
+  - `tag_name`：目标标签的名称。
+
+  示例：
+
+  ```SQL
+  > SELECT /*+ STMT_HINT(ACCESS_HINT(TAG_ONLY,t1)) */ tag1 FROM t1 GROUP BY tag1;
+    tag1
+  ------
+     3
+     1
+     2
+     5
+     6
+     4
+  (6 rows)
+  ```
+
 ## 数据迁移 FAQ
 
 - **问题描述**
@@ -107,7 +293,7 @@ id: faqs
 
     数据的实际写入速率与数据特性、硬件规格相关。用户可以采取以下步骤，调整相关参数配置，提升写入速率。
 
-    1. 开启数据库短接写入功能。
+    1. 启用时序写入短接功能，提高时序数据写入速度。
 
         ```SQL
         SET CLUSTER SETTING server.tsinsert_direct.enabled = 'TRUE';
@@ -177,6 +363,8 @@ id: faqs
 
 ### MyBatis
 
+#### `BigInteger` 类型写入失败
+
 - **问题描述**
 
     通过 Spring + MyBatis 将 `BigInteger` 类型的数据插入时序表的 `INT8` 列时，返回 `unsupported input type *tree.DDecimal` 错误。
@@ -184,3 +372,41 @@ id: faqs
 - **问题解答**
 
     使用 JDBC 写入数据时，Java 中定义的 `BigInteger` 类型的数据会被处理为 `BigDecimal` 类型。在 KWDB 数据库中，`BigDecimal` 对应的数据类型为 `DECIMAL` 和 `NUMERIC`。时序表不支持 `DECIMAL` 和 `NUMERIC` 数据类型，因此系统报错。为避免上述错误，建议将 Java 中的数据类型修改为 `Integer`。
+
+#### `NCHAR` 类型查询报错
+
+- **问题描述**
+
+  通过 Spring + MyBatis 查询 NCHAR 列，会返回 `SQLSTATE(0A000)` 错误，提示 `getNString` 方法未实现。
+
+- **问题解答**
+
+  JDBC 2.0.3 版本不支持 `getNString` 方法，导致在查询 NCHAR 列时出现错误，建议通过自定义一个 MyBatis 类型处理器改为使用 `getString` 获取数据或升级到 JDBC 2.0.4 版本以解决该问题。
+
+#### 分页查询报错
+
+- **问题描述**
+
+  使用 MyBatis Plus 连接 KWDB，执行分页查询时，收到系统报错：`Error querying database. com.baomidou.mybatisplus.core.exceptions.MybatisPlusException: other database not supported`。
+
+- **问题解答**
+
+  可能是 MyBatis 分页插件在数据库类型校验时出错，建议显式声明 `DbType.POSTGRE_SQL` 的 `InnerInterceptor`。
+
+  具体操作如下：
+
+  1. 在应用代码中创建 MybatisPlus 配置类，比如 `MybatisPlusConfig`。
+
+  2. 添加分页配置。
+
+        ```Bash
+        @Configuration
+        public class MybatisPlusConfig {
+          @Bean
+          public MybatisPlusInterceptor mybatisPlusInterceptor() {
+            MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
+            interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.POSTGRE_SQL));
+            return interceptor;
+          }
+        }
+        ```
