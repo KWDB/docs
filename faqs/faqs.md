@@ -176,6 +176,66 @@ id: faqs
 
     KWDB 执行时间加减运算时，如果运算符两边均为 timestamp 或 timestamptz 类型，只支持减法运算，且差值对应的纳秒数不得超过 INT64 范围，对应的天数不得超过 `106751` 天。如果超过该范围，系统将统一显示 `106751 days 23:47:16.854776`。
 
+#### 内存不足
+
+- **问题描述**
+
+  在单机部署的 KWDB 上执行海量数据的复杂排序查询时，提示内存不足（Insufficient memory）。
+
+- **问题解答**
+
+  可能是排序算子在特定场景下内存占用过多，导致内存池耗尽后报错，可以通过设置启动参数`buffer-pool-size`，增大 buffer pool 的大小来解决内存不足报错的问题。
+
+  **裸机部署：**
+
+  1. 停止 KWDB 服务。
+
+     ```SQL
+     systemctl stop kaiwudb
+     ```
+
+  2. 进入 `/etc/kaiwudb/script` 目录，打开 `kaiwudb_env` 文件，添加启动参数 `buffer-pool-size`。
+
+     ```YAML
+     KAIWUDB_START_ARG="--buffer-pool-size=32657"
+     ```
+
+  3. 保存 `kaiwudb_env` 文件并重新加载文件。
+
+     ```Bash
+     systemctl daemon-reload
+     ```
+
+  4. 重新启动 KWDB 服务。
+
+     ```SQL
+     systemctl restart kaiwudb
+     ```
+
+  **容器部署：**
+
+  1. 进入 `/etc/kaiwudb/script` 目录，停止并删除 KWDB 容器。
+
+     ```Bash
+     docker-compose down
+     ```
+
+  2. 打开 `docker-compose.yml` 文件，添加启动参数 `buffer-pool-size`。
+
+     ```YAML
+     ...
+         command: 
+           - /bin/bash- -c- |
+             /kaiwudb/bin/kwbase  start-single-node --certs-dir=/kaiwudb/certs --listen-addr=0.0.0.0:26257 --advertise-addr=your-host-ip:port --store=/kaiwudb/deploy/kaiwudb-container --buffer-pool-size=32657
+     ```
+
+  3. 保存配置，重新创建并启动 KWDB 容器。
+
+     ```Bash
+     systemctl start kaiwudb
+     ```
+
+
 ## 性能调优
 
 ### 写入调优
