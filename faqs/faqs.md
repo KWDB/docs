@@ -240,6 +240,8 @@ id: faqs
 
 ### 写入调优
 
+#### 海量数据写入调优
+
 - **问题描述**
 
   使用 SQL 语句向 KWDB 写入海量数据时，写入速率较慢。
@@ -305,6 +307,68 @@ id: faqs
            ```Bash
            systemctl restart kaiwudb
            ```
+
+#### 超大宽表写入调优
+
+- **问题描述**
+
+  向超大宽表，即列字段大于 500 的表，每次批量写入 500 条以上数据或单次写入数据量大于 4M，写入性能较差。
+
+- **问题解答**
+
+  可以在集群中的每个节点配置 `KWBASE_RAFT_ELECTION_TIMEOUT_TICKS` 环境变量，具体步骤如下：
+
+  **裸机部署：**
+
+  1. 停止 KWDB 服务。
+
+     ```Shell
+     systemctl stop kaiwudb
+     ```
+
+  2. 进入 `/etc/kaiwudb/script` 目录，编辑 `kaiwudb_env` 配置文件，添加 `KWBASE_RAFT_ELECTION_TIMEOUT_TICKS` 环境变量。
+
+     ```Plain
+     KAIWUDB_START_ARG=""
+     KWBASE_RAFT_ELECTION_TIMEOUT_TICKS=100
+     ```
+
+  3. 保存文件并重新加载。
+
+     ```Shell
+     systemctl daemon-reload
+     ```
+
+  4. 重启 KWDB 服务。
+
+     ```Shell
+     systemctl restart kaiwudb
+     ```
+
+  **容器部署：**
+
+  1. 在 `/etc/kaiwudb/script` 目录停止并删除 KWDB 容器。
+
+     ```Shell
+     docker-compose down
+     ```
+
+  2. 打开 `docker-compose.yml` 文件，添加 `KWBASE_RAFT_ELECTION_TIMEOUT_TICKS` 环境变量。
+
+     ```Plain
+     ...
+         environment:
+           - LD_LIBRARY_PATH=/kaiwudb/lib
+           - KWBASE_RAFT_ELECTION_TIMEOUT_TICKS=100
+     ...
+     ```
+
+  3. 保存配置，重新创建和启动 KWDB 容器。
+
+     ```Shell
+     systemctl start kaiwudb
+     ```
+
 
 ### 查询调优
 
