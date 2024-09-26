@@ -1,5 +1,5 @@
 ---
-title: 2.0.4
+title: 2.0.4 发版说明
 id: 2.0.4-release-notes
 ---
 
