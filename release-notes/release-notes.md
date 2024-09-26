@@ -5,7 +5,7 @@ id: 2.0.4-release-notes
 
 # KWDB 2.0.4 发版说明
 
-KWDB 是一款面向 AIoT 场景的分布式、多模融合的数据库产品。KWDB 支持在同一实例同时创建时序库和关系库并融合处理多模数据，具备时序数据高效处理能力，具有稳定安全、高可用、易运维等特点。面向工业物联网、数字能源、车联网、智慧产业等领域，KWDB 提供一站式数据存储、管理与分析的基座。
+KWDB 是一款面向 AIoT 场景的分布式多模数据库产品，支持在同一实例同时建立时序库和关系库并融合处理多模数据，具备千万级设备接入、百万级数据秒级写入、亿级数据秒级读取等时序数据高效处理能力，具有稳定安全、高可用、易运维等特点，一站式满足 AIoT 等场景下数据管理需求及关键行业核心系统的自主可控需求。
 
 KWDB 2.0.4 版本在保持原有特性的基础上，在分布式架构、DDL 操作、数据查询、数据存储、数据库运维等方面都进行了一定的改进和增强。
 
@@ -52,19 +52,11 @@ KWDB 2.0.4 版本在保持原有特性的基础上，在分布式架构、DDL �
 
 新增对鲲鹏、龙蜥环境的支持，更多信息见[裸机部署准备](../deployment/bare-metal/before-deploy-bare-metal.md#操作系统)和[容器部署准备](../deployment/docker/before-deploy-docker.md#操作系统)。
 
-### 安装部署
-
-无变化，更多信息见[快速上手概述](../quickstart/overview.md)和[集群部署概述](../deployment/overview.md)。
-
 ### 使用语言及数据库连接方式
 
 - 支持通过 ODBC 及 Hibernate 框架协议连接数据库，更多信息见 [PostgreSQL ODBC 连接 KWDB 数据库](../development/connect-kaiwudb/connect-odbc.md)和 [Hibernate 连接 KWDB 数据库](../development/connect-kaiwudb/connect-hibernate.md)。
 - 允许普通用户删除用户自身的 Restful API 连接，更多信息见 [RESTful API 连接 KWDB 数据库](../development/connect-kaiwudb/connect-restful-api.md)。
 - 优化 Kafka 连接数据库的写入性能，单节点 10 万条数据的插入耗时不超过 1 秒。
-
-### 配置说明
-
-最低配置建议不低于 4 核 CPU、8G 内存，存储建议使用 SSD。更多信息见[裸机部署准备](../deployment/bare-metal/before-deploy-bare-metal.md)和[容器部署准备](../deployment/docker/before-deploy-docker.md)。
 
 ## 升级说明
 
