@@ -36,11 +36,19 @@ KaiwuDB 开发者中心的安装需满足以下环境要求：
 
 如需安装 KaiwuDB 开发者中心，遵循以下步骤。
 
-1. 解压缩安装包，文件目录如下：
+1. 根据操作系统[下载](https://gitee.com/kwdb/kwdb/releases) KaiwuDB 开发者中心对应的安装包。
+
+   ::: warning 提示：
+
+   因文件大小限制，可能需要下载多个安装包。
+
+   :::
+
+2. 合并解压缩安装包，文件目录如下：
 
    ![安装包](../../static/quickstart/JD1MbIGlXoE7qzxwqOjcc8Wtn4e.png)
 
-2. 双击运行 `KaiwuDB Developer Center.exe` 应用程序。
+3. 双击运行 `KaiwuDB Developer Center.exe` 应用程序。
 
 ## 连接 KWDB 数据库
 
