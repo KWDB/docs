@@ -93,14 +93,16 @@ KaiwuDBReader 通过 DataX 将 KWDB 数据库的数据写出到其他数据库�
 3. 执行创建的 JSON 配置文件，启动 DataX，开启数据同步。
 
    ::: warning 说明
+   
    在迁移大数据量数据时，建议在启动命令后加上参数 `--jvm`，增大 JVM 内存，例如 `python ../bin/datax.py mysql2kaiwudb.json --jvm="-Xms10G -Xmx10G"`。
+
+   :::
 
    ```shell
    cd datax/datax/job/
    python ../bin/datax.py mysql2kaiwudb.json
    ```
 
-   :::
 
    如果同步正常结束，控制台将输出以下信息：
 
