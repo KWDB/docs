@@ -49,37 +49,37 @@ id: connect-mybatis
     ```yaml
     spring:
       # 时序库数据源配置
-
+    
       tsdb-datasource:
         driver-class-name: com.kaiwudb.Driver
         jdbc-url: jdbc:kaiwudb://127.0.0.1:26257/ts_db
         username: kwdbuser
         password: *******
-
+    
       # 关系库数据源配置
-
+    
       rdb-datasource:
         driver-class-name: com.kaiwudb.Driver
         jdbc-url: jdbc:kaiwudb://127.0.0.1:26257/defaultdb
         username: kwdbuser
         password: *******
-
+    
     # 日志信息输出配置
-
+    
     logging:
       config: classpath:log4j2-dev.xml
-
+    
     # Swagger-UI 配置
-
+    
     knife4j:
       enable: true
       basic:
         enable: false
         username: kwdbuser
         password: *******
-
+    
     # 服务启动端口配置
-
+    
     server:
       port: 8989
     ```
@@ -88,7 +88,7 @@ id: connect-mybatis
 
         ```java
         @Configuration
-        @MapperScan(basePackages = "com.inspur.kwdb.mapper.tsdb", sqlSessionTemplateRef = "tsdbSqlSessionTemplate")
+        @MapperScan(basePackages = "com.kaiwudb.kwdb.mapper.tsdb", sqlSessionTemplateRef = "tsdbSqlSessionTemplate")
         public class TsDatabaseConfig {
           @Bean(name = "tsdbDataSource")
           @ConfigurationProperties(prefix = "spring.tsdb-datasource")
@@ -126,7 +126,7 @@ id: connect-mybatis
 
         ```java
         @Configuration
-        @MapperScan(basePackages = "com.inspur.kwdb.mapper.rdb", sqlSessionTemplateRef = "sqlSessionTemplate")
+        @MapperScan(basePackages = "com.kaiwudb.kwdb.mapper.rdb", sqlSessionTemplateRef = "sqlSessionTemplate")
         public class DatabaseConfig {
         @Bean(name = "dataSource")
         @ConfigurationProperties(prefix = "spring.rdb-datasource")
@@ -134,12 +134,12 @@ id: connect-mybatis
         public DataSource dataSource() {
         return DataSourceBuilder.create().build();
         }
-
+        
         @Bean(name = "jdbcTemplate")
         public JdbcTemplate jdbcTemplate(@Qualifier("dataSource") DataSource dataSource) {
         return new JdbcTemplate(dataSource);
         }
-
+        
         @Bean(name = "sqlSessionFactory")
         @Primary
         public SqlSessionFactory sqlSessionFactory(@Qualifier("dataSource") DataSource dataSource) throws Exception {
@@ -149,13 +149,13 @@ id: connect-mybatis
         bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mapper/rdb/*.xml"));
         return bean.getObject();
         }
-
+        
         @Bean(name = "transactionManager")
         @Primary
         public DataSourceTransactionManager transactionManager(@Qualifier("dataSource") DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
         }
-
+        
         @Bean(name = "sqlSessionTemplate")
         @Primary
         public SqlSessionTemplate sqlSessionTemplate(@Qualifier("sqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
@@ -272,8 +272,8 @@ XML 文件是 Mapper 接口的实现类。用户在 XML 中定义和实现 SQL �
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
  <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
- <mapper namespace="com.inspur.kwdb.mapper.tsdb.TsdbMapper">
-  <update id="createTsTable" parameterType="com.inspur.kwdb.po.TsdbTable" statementType="STATEMENT">
+ <mapper namespace="com.kaiwudb.kwdb.mapper.tsdb.TsdbMapper">
+  <update id="createTsTable" parameterType="com.kaiwudb.kwdb.po.TsdbTable" statementType="STATEMENT">
     CREATE TABLE ${tableName} (${columns}) TAGS (${tags} PRIMARY TAGS (${tagName})
   </update>
 
@@ -294,7 +294,7 @@ XML 文件是 Mapper 接口的实现类。用户在 XML 中定义和实现 SQL �
     </foreach>
   </insert>
 
-  <resultMap id="map" type="com.inspur.kwdb.po.TsdbData">
+  <resultMap id="map" type="com.kaiwudb.kwdb.po.TsdbData">
     <result column="k_timestamp" property="timestamp" jdbcType="VARCHAR"/>
     <result column="temperature" property="temperature" jdbcType="FLOAT"/>
     <result column="humidity" property="humidity" jdbcType="FLOAT"/>
@@ -308,7 +308,7 @@ XML 文件是 Mapper 接口的实现类。用户在 XML 中定义和实现 SQL �
     FROM ${tableName}
   </select>
 
-  <resultMap id="tagMap" type="com.inspur.kwdb.po.TsdbTag">
+  <resultMap id="tagMap" type="com.kaiwudb.kwdb.po.TsdbTag">
     <result column="tag" property="tag" jdbcType="VARCHAR"/>
     <result column="type" property="type" jdbcType="VARCHAR"/>
     <result column="value" property="value" jdbcType="VARCHAR"/>
@@ -507,8 +507,8 @@ Controller 层是应用程序的表示层，Controller 层接收用户的请求�
 ```java
 // 定义关系表结构实体类
 @ApiModel(value = "RdbTable", description = "关系表结构实体类")
- @Data
- public class RdbTable implements Serializable {
+@Data
+public class RdbTable implements Serializable {
   @ApiModelProperty(value = "表名", required = true)
   private String tableName;
   @ApiModelProperty(value = "表字段", required = true)
@@ -520,22 +520,24 @@ Controller 层是应用程序的表示层，Controller 层接收用户的请求�
     this.tableName = tableName;
     this.columns = columns;
   }
- }
+}
+
 // 定义表的列信息实体类
 @ApiModel(value = "RdbData", description = "关系数据类")
- @Data
- public class RdbData implements Serializable {
+@Data
+public class RdbData implements Serializable {
   @ApiModelProperty(value = "数据ID", required = true)
   private String dataId;
   @ApiModelProperty(value = "数据内容", required = true)
   private String dataContent;
   @ApiModelProperty(value = "数据值")
   private Double dataValue;
- }
+}
+
  //关系表列元数据类
- @ApiModel(value = "RdbColumnMetadata", description = "关系表Column类")
- @Data
- public class RdbColumnMetadata implements Serializable {
+@ApiModel(value = "RdbColumnMetadata", description = "关系表Column类")
+@Data
+public class RdbColumnMetadata implements Serializable {
   @ApiModelProperty(value = "列名")
   private String columnName;
   @ApiModelProperty(value = "数据类型")
@@ -550,7 +552,7 @@ Controller 层是应用程序的表示层，Controller 层接收用户的请求�
   private String indices;
   @ApiModelProperty(value = "是否隐藏")
   private String isHidden;
- }
+}
 ```
 
 #### Mapper
@@ -559,8 +561,8 @@ Mapper 用于定义数据库的操作接口。接口的实现类需要通过 XML
 
 ```java
 @Mapper
- @Repository
- public interface RdbMapper {
+@Repository
+public interface RdbMapper {
   // 创建关系数据库
   void createDatabase(@Param("databaseName") String databaseName);
   
@@ -590,7 +592,7 @@ Mapper 用于定义数据库的操作接口。接口的实现类需要通过 XML
   
   // 查询指定关系表的Column元数据
   List<RdbColumnMetadata> findColumns(@Param("tableName") String tableName);
- }
+}
 ```
 
 #### XML
@@ -599,17 +601,17 @@ XML 文件是 Mapper 接口的实现类。用户在 XML 中定义和实现 SQL �
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
- <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
- <mapper namespace="com.inspur.kwdb.mapper.rdb.RdbMapper">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kaiwudb.kwdb.mapper.rdb.RdbMapper">
   <update id="createDatabase" statementType="STATEMENT">
-    CREATE TS DATABASE ${databaseName}
+    CREATE DATABASE ${databaseName}
   </update>
 
   <update id="dropDatabase" statementType="STATEMENT">
     DROP DATABASE ${databaseName}
   </update>
 
-  <update id="createTable" parameterType="com.inspur.kwdb.po.RdbTable" statementType="STATEMENT">
+  <update id="createTable" parameterType="com.kaiwudb.kwdb.po.RdbTable" statementType="STATEMENT">
     CREATE TABLE ${tableName} (${columns})
   </update>
 
@@ -635,7 +637,7 @@ XML 文件是 Mapper 接口的实现类。用户在 XML 中定义和实现 SQL �
     WHERE data_id = #{dataId}
   </delete>
 
-  <resultMap id="map" type="com.inspur.kwdb.po.RdbData">
+  <resultMap id="map" type="com.kaiwudb.kwdb.po.RdbData">
     <result column="data_id" property="dataId" jdbcType="VARCHAR"/>
     <result column="data_content" property="dataContent" jdbcType="VARCHAR"/>
     <result column="data_value" property="dataValue" jdbcType="FLOAT"/>
@@ -658,7 +660,7 @@ XML 文件是 Mapper 接口的实现类。用户在 XML 中定义和实现 SQL �
     FROM ${tableName}
   </select>
 
-  <resultMap id="columnMap" type="com.inspur.kwdb.po.RdbColumnMetadata">
+  <resultMap id="columnMap" type="com.kaiwudb.kwdb.po.RdbColumnMetadata">
     <result column="column_name" property="columnName" jdbcType="VARCHAR"/>
     <result column="data_type" property="dataType" jdbcType="VARCHAR"/>
     <result column="is_nullable" property="isNullable" jdbcType="VARCHAR"/>
@@ -671,7 +673,7 @@ XML 文件是 Mapper 接口的实现类。用户在 XML 中定义和实现 SQL �
   <select id="findColumns" resultMap="columnMap">
     SHOW COLUMNS FROM ${tableName}
   </select>
- </mapper>
+</mapper>
 ```
 
 ::: warning 说明
@@ -703,23 +705,33 @@ public interface RdbService {
   RdbData findOne(String tableName, String dataId);
   // 查询关系数据列表
   List<RdbData> findList(String tableName);
-  // 查询指定关系表的column元数据
+  // 查询指定关系表的Column元数据
   List<RdbColumnMetadata> findColumns(String tableName);
- }
- //关系数据库Service接口实现类
- @Service
- class TsdbServiceImpl implements TsdbService {
+}
+
+//关系数据库Service接口实现类
+@Service
+class RdbServiceImpl implements RdbService {
   @Autowired
-  private TsdbMapper mapper;
+  private RdbMapper mapper;
+
+  @Override
+  public void createDatabase(String databaseName) {
+    mapper.createDatabase(databaseName);
+  }
+
+  @Override
+  public void dropDatabase(String databaseName) {
+    mapper.dropDatabase(databaseName);
+  }
 
   @Override
   public void createTable(String tableName) {
-    String columns = "k_timestamp TIMESTAMP NOT NULL," +
-      " temperature FLOAT," +
-      " humidity FLOAT," +
-      " pressure FLOAT";
-    String tags = "location VARCHAR(64) 'tianjin'";
-    TsdbTable table = new TsdbTable(tableName, columns, tags);
+    String columns = "data_id varchar(64) NOT NULL," +
+      " data_content varchar(255) NOT NULL," +
+      " data_value float8 NOT NULL," +
+      " PRIMARY KEY (data_id)";
+    RdbTable table = new RdbTable(tableName, columns);
     mapper.createTable(table);
   }
 
@@ -729,29 +741,35 @@ public interface RdbService {
   }
 
   @Override
-  public int insert(String tableName, TsdbData tsdbData) {
-    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-    tsdbData.setTimestamp(format.format(new Date(System.currentTimeMillis())));
-    return mapper.insert(tableName, tsdbData);
+  public int insert(String tableName, RdbData rdbData) {
+    return mapper.insert(tableName, rdbData);
   }
 
   @Override
-  public int insertBatch(String tableName, List<TsdbData> list) {
-    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-    list.forEach(item -> item.setTimestamp(format.format(new Date(System.currentTimeMillis()))));
-    return mapper.insertBatch(tableName, list);
+  public int update(String tableName, RdbData rdbData) {
+    return mapper.update(tableName, rdbData);
   }
 
   @Override
-  public List<TsdbData> findList(String tableName) {
+  public int delete(String tableName, String dataId) {
+    return mapper.delete(tableName, dataId);
+  }
+
+  @Override
+  public RdbData findOne(String tableName, String dataId) {
+    return mapper.findOne(tableName, dataId);
+  }
+
+  @Override
+  public List<RdbData> findList(String tableName) {
     return mapper.findList(tableName);
   }
-  
+
   @Override
   public List<RdbColumnMetadata> findColumns(String tableName) {
     return mapper.findColumns(tableName);
   }
- }
+}
 ```
 
 #### Controller
@@ -760,10 +778,10 @@ Controller 层是应用程序的表示层，负责接收用户的请求并处理
 
 ```java
 @RestController
- @RequestMapping("rdb")
- @Api(tags = "1 关系数据库接口")
- @ApiSort(value = 1)
- public class RdbController {
+@RequestMapping("rdb")
+@Api(tags = "1 关系数据库接口")
+@ApiSort(value = 1)
+public class RdbController {
   private final static Logger LOGGER = LoggerFactory.getLogger(RdbController.class);
 
   @Autowired
@@ -940,5 +958,5 @@ Controller 层是应用程序的表示层，负责接收用户的请求并处理
     }
     return null;
   }
- }
+}
 ```
