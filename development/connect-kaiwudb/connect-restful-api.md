@@ -570,38 +570,63 @@ Content-Type: application/json
 
 ## Telegraf Insert 接口
 
-Telegraf 是一款开源的数据采集器。Telegraf Insert 接口是特殊的 RESTful API 接口，用于将来自 Telegraf 的数据通过 HTTP 请求的方式写入 KWDB 数据库。与其它 API 接口不同，Telegraf Insert 接口的请求体不是 SQL 语句而是 InfluxDB Line 格式的数据。
+Telegraf 是一款开源的数据采集器。Telegraf Insert 接口是特殊的 RESTful API 接口，用于将来自 Telegraf 的数据通过 HTTP 请求写入 KWDB 数据库。与其它 API 接口不同， Telegraf Insert 接口的请求体不是 SQL 语句而是 InfluxDB Line 协议格式的数据。
 
-KWDB 会将该格式的数据转为数据库可执行的 SQL 语句，然后执行对应的操作。发送 Telegraf Insert API 请求的用户，需要拥有目标表的 INSERT 权限。使用 Telegraf Insert API 向 KWDB 时序库写入数据之前，用户需要根据 Telegraf 数据及数据顺序提前在 KWDB 数据库创建好对应的时序表。
+KWDB 会将该格式的数据转为数据库可执行的建表、添加列、添加标签或数据写入 SQL 语句，然后执行相应操作。发送 Telegraf Insert API 请求的用户需要拥有执行相关 SQL 语句的权限。
 
 InfluxDB Line 格式的数据如下所示：
 
 ```json
-<measurement>[,<tag_key>=<tag_value>[,<tag_key>=<tag_value>]] <field_key>=<field_value>[,<field_key>=<field_value>] [<timestamp>]
+<measurement>,<tag_set> <field_set> <timestamp>
 ```
 
 参数说明：
 
-- `measurement`：对应数据库的表名，KWDB 根据该字段确定向时序数据库中的哪个表写入数据。用户需要根据 `measurement` 字段在 KWDB 数据库提前创建相应名称的时序表。时序表名需要与 `measurement` 字段保持一致。
-- `tag_key=tag_value`：数据标签，对应 KWDB 时序数据库中表的 attribute（属性）或者 tag（标签）。创建时序表时，用户根据 `tag_key=tag_value` 字段定义对应的 `tag_key` 及 `tag_value`。
-- `field_key=field_value`：表的列及列数据，多个列之间使用英文逗号（`,`）隔开。KWDB 根据 `field_key` 字段确定向表的哪个列插入对应的数据。创建时序表时，用户需要根据 `field_key=field_value` 字段名及字段顺序创建对应的列。
-- `timestamp`：本行数据对应的主键时间戳。
+- `measurement`：必填参数，指定 KWDB 的时序表名， KWDB 根据该字段确定是否需要创建新表或向现有时序表中写入数据。如果指定的时序表名不存在， KWDB 会先创建该表，然后写入数据。`measurement` 和 `tag_set` 之间使用英文逗号（`,`）分隔。
+- `tag_set`: 可选参数，格式为 `<tag_key>=<tag_value>,<tag_key>=<tag_value>, ...`, 用于指定时序表的标签名和标签值，多个标签之间使用英文逗号（`,`）分隔。KWDB 根据 `tag_key` 确定向表的哪个标签写入对应数据以及是否需要新增标签。如果指定的标签名不存在， KWDB 会先添加标签，然后写入数据，未指定的标签列会自动填充为 NULL 值。KWDB 会自动添加主标签列，命名为 `primary_tag`, 并生成对应的主标签值。`tag_set` 和 `field_set` 之间使用半角空格分隔。
+- `field_set`：必填参数，格式为 `<field_key>=<field_value>,<field_key>=<field_value>, ...`, 用于指定时序表的数据列及列数据，多列之间使用英文逗号（`,`）分隔。KWDB 根据 `field_key` 确定向表的哪个列写入对应数据以及是否需要新增列。如果指定的列名不存在， KWDB 会先添加列，然后写入数据，未指定的列会自动填充为 NULL 值。 `field_set` 和 `timestamp` 之间使用半角空格分隔。
+- `timestamp`：可选参数，指定本行数据对应的时间戳。未指定时， KWDB 将使用所在主机的系统时间( UTC 时区)作为时间戳。
 
-以下示例说明如何将 InfluxDB Line 格式的数据转换为 SQL 语句，并在 KWDB 数据库中创建对应的表：
+数据类型转换：
 
-- InfluxDB Line 格式的数据
+| InfluxDB       | KWDB     |
+| -------------- | ----------- |
+| Float          | FLOAT8      |
+| Integer        | INT8        |
+| UInteger       | INT8        |
+| String         | VARCHAR     |
+| Boolean        | BOOL        |
+| Unix timestamp | TIMESTAMPTZ |
 
-  ```sql
-  meters,location=Beijing, current=17.01,voltage=220,phase=0.29 1556813561098000000
+有关 InfluxDB Line 协议、参数、支持的数据类型和符号，参见 [InfluxDB 官方文档](https://docs.influxdata.com/influxdb/v2.0/reference/syntax/line-protocol/)。
+
+以下示例说明 KWDB 如何将 InfluxDB Line 协议格式的数据转换为 SQL 语句，在数据库中创建对应的时序表，并写入数据：
+
+- InfluxDB Line 协议格式的数据
+
+  ```json
+  meters,location=Beijing current=17.01,voltage=220,phase=0.29
   ```
 
-- SQL 语句
+- 转换后的 SQL 语句
 
   ```sql
-  create table meters (ts timestamp not null, current float, voltage int, phase float) tags (location varchar(20) not null) primary tags (location);
+  -- 创建时序表 meters
+  CREATE TABLE meters (k_timestamp TIMESTAMPTZ NOT NULL, current FLOAT8, voltage FLOAT8, phase FLOAT8) TAGS (primary_tag VARCHAR(64) NOT NULL, location VARCHAR) PRIMARY TAGS (primary_tag);
+  
+  -- 写入数据
+  INSERT INTO meters VALUES (NOW(), 17.01, 220, 0.29, 'c15cf362f37e0acc7ecc2db55ec1cc57fc9579ccba9e72c273abb140f568472d', 'Beijing');
   ```
-
-有关 InfluxDB Line 的详细信息，参见 [InfluxDB Line 官方文档](https://docs.influxdata.com/influxdb/v2.0/reference/syntax/line-protocol/)。
+  
+- 对应的时序表数据
+  
+  ```sql
+  > SELECT * FROM meters;
+            k_timestamp           | current | voltage | phase |                           primary_tag                               | location
+  --------------------------------+---------+---------+-------+---------------------------------------------------------------------+-----------
+    2024-10-08 07:16:30.404+00:00 |   17.01 |     220 |  0.29 | c15cf362f37e0acc7ecc2db55ec1cc57fc9579ccba9e72c273abb140f568472d    | Beijing
+  (1 row)
+  ```
 
 ### 请求信息
 
@@ -636,7 +661,7 @@ Authorization: Basic "token" 或 Basic "base64(user:password)"</code></pre></td>
     <tr>
       <td>请求体</td>
       <td><code>"line_format"</code></td>
-      <td> <code>line_format（string）</code>：待插入的 InfluxDB Line 格式的数据。KWDB 会将该格式的数据转为数据库可执行的 SQL 语句。</td>
+      <td> <code>line_format（string）</code>：待插入一行或多行的 InfluxDB Line 格式的数据。KWDB 会将该格式的数据转为数据库可执行的 SQL 语句。</td>
     </tr>
   </tbody>
 </table>
@@ -682,7 +707,7 @@ Accept: text/plain</code></pre></td>
 
 ### 配置示例
 
-以下示例发送 HTTP 请求，创建表 `myMeasurement`。
+以下示例发送 HTTP 请求，创建表 `myMeasurement`或向 `myMeasurement` 表中写入数据。
 
 ```shell
 POST /restapi/telegraf HTTP/1.1
