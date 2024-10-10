@@ -12,7 +12,7 @@ id: telegraf
 用户通过 Telegraf Insert 接口将 InfluxDB Line 协议格式的 Telegraf 数据以无模式方式写入 KWDB 时序库时，需要拥有相应语句的执行权限或者是 admin 角色的成员。
 :::
 
-如需将 Telegraf 的数据写入到 KWDB，用户需要在 Telegraf 配置文件（`telegraf.conf`）的 `[[outputs.http]]` 区域配置 KaiwuDB Telegraf Insert 接口的节点、认证信息、数据格式，如下所示：
+如需将 Telegraf 的数据写入到 KWDB，用户需要在 Telegraf 配置文件（`telegraf.conf`）的 `[[outputs.http]]` 区域配置接口的节点、认证信息、数据格式，如下所示：
 
 ```toml
 [[outputs.http]]
