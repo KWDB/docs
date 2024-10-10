@@ -142,7 +142,7 @@ KWDB 支持通过 `ALTER TABLE` 语句修改标签的数据类型和宽度。
 以下示例将 `ts_table` 表的 `color` 标签的数据类型和宽度修改为 `VARCHAR(50)`。
 
 ```sql
-ALTER TABLE ts_table ALTER color TYPE VARCHAR(50);
+ALTER TABLE ts_table ALTER TAG color TYPE VARCHAR(50);
 ```
 
 ## 重命名标签
