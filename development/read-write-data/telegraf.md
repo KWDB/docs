@@ -25,9 +25,9 @@ id: telegraf
   ## HTTP method, one of: "POST" or "PUT"
   method = "POST"
 
-  ## HTTP Basic Auth credentials
-  username = 'kwdb'
-  password = 'kwdb@example'
+  ## Custom HTTP headers for authroization
+  ## The format is "Authorization = Basic <base64(username:password)>" 
+  headers = { "Authorization" = "Basic cm9vdDprd2RicGFzc3dvcmQ=" }
 
   ## Data format to output.
   data_format = "influx"
