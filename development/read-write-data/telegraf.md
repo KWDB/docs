@@ -26,7 +26,7 @@ id: telegraf
   ## HTTP method, one of: "POST" or "PUT"
   method = "POST"
 
-  ## Custom HTTP headers for authroization
+  ## Custom HTTP headers for authorization
   ## The format is "Authorization = Basic <base64(username:password)>" 
   headers = { "Authorization" = "Basic cm9vdDprd2RicGFzc3dvcmQ=" }
 
