@@ -19,5 +19,6 @@ id: overview
 
     用户可以采取以下任一方式连接 KWDB 服务端并进行 SQL 操作：
 
+  - 通过 kwbase CLI 工具[连接](./access-kaiwudb/access-kaiwudb-cli.md)和[管理](./use-kaiwudb/use-kaiwudb-cli.md) KWDB
   - 通过 KaiwuDB Developer Center（KaiwuDB 开发者中心）[连接](./access-kaiwudb/access-kaiwudb-kdc.md)和[使用](./use-kaiwudb/use-kaiwudb-kdc.md) KWDB
   - 通过 KaiwuDB JDBC [连接](./access-kaiwudb/access-kaiwudb-jdbc.md)和[使用](./use-kaiwudb/use-kaiwudb-jdbc.md) KWDB
