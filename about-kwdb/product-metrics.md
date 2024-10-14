@@ -24,7 +24,9 @@ KWDB 支持在以下服务器操作系统进行安装部署。
 | openEuler | 22.03 | x86_64 | √ | - |
 
 ::: warning 说明
-未提及的操作系统版本**也许可以**运行 KWDB，但尚未得到 KWDB 官方支持。
+
+- 未提及的操作系统版本**也许可以**运行 KWDB，但尚未得到 KWDB 官方支持。
+- KWDB 单机容器部署和集群容器部署支持的操作系统有所不同，单机容器部署支持的系统见[单节点容器部署](../quickstart/install-kaiwudb/quickstart-docker.md)，集群容器部署支持的系统见[集群容器部署准备](../deployment/docker/before-deploy-docker.md)。
 :::
 
 ## 硬件环境
