@@ -33,7 +33,8 @@ KWDB 提供以下 RESTful API 接口进行数据操作：
 | DDL             | 用于数据库创建、删除等 DDL 操作请求。                        | `POST/restapi/ddl`                                 |
 | Insert          | 用于数据插入操作请求。                                       | `POST/restapi/insert`                              |
 | Query           | 用于数据查询操作请求。                                       | `POST/restapi/query`                               |
-| Telegraf Insert | 用于将来自 Telegraf 的数据插入表中。                         | `POST/restapi/telegraf`                            |
+| Telegraf | 用于将来自 Telegraf 的数据插入表中。                         | `POST/restapi/telegraf`                            |
+| InfluxDB | 用于将来自 InfluxDB 的数据写入数据库中。                         | `POST/restapi/influxdb`                            |
 | Session         | 用于查询本节点会话信息或删除指定会话信息。管理员用户可以查看所有会话信息或删除指定会话信息。普通用户可以查看或删除自己的会话信息。 | `GET/restapi/session` <br>`DELETE/restapi/session` |
 
 ## Login 接口
@@ -568,11 +569,164 @@ Content-Type: application/json
 }
 ```
 
-## Telegraf Insert 接口
+## Telegraf 接口
 
-Telegraf 是一款开源的数据采集器。Telegraf Insert 接口是特殊的 RESTful API 接口，用于将来自 Telegraf 的数据通过 HTTP 请求写入 KWDB 数据库。与其它 API 接口不同， Telegraf Insert 接口的请求体不是 SQL 语句而是 InfluxDB Line 协议格式的数据。
+Telegraf 是一款开源的数据采集器。Telegraf 接口是特殊的 RESTful API 接口，用于将来自 Telegraf 的数据通过 HTTP 请求的方式写入 KWDB 数据库。与其它 API 接口不同，Telegraf 接口的请求体不是 SQL 语句而是 InfluxDB Line 格式的数据。
 
-KWDB 会将该格式的数据转为数据库可执行的建表、添加列、添加标签或数据写入 SQL 语句，然后执行相应操作。发送 Telegraf Insert API 请求的用户需要拥有执行相关 SQL 语句的权限。
+使用 Telegraf API 向 KWDB 时序库写入数据之前，用户需要根据 Telegraf 数据及数据顺序提前在 KWDB 数据库创建好对应的时序表。发送 Telegraf API 请求的用户，需要拥有目标表的 INSERT 权限。KWDB 收到请求后，会将 InfluxDB Line 格式的数据转为 SQL 语句，然后执行写入操作。
+
+Telegraf 接口使用的 InfluxDB Line 格式的数据如下所示：
+
+```json
+<measurement>,<tag_set> <field_set> <timestamp>
+```
+
+参数说明：
+
+- `measurement`：必填参数，指定 KWDB 的时序表名， KWDB 根据该字段确定向时序数据库中的哪个表写入数据。用户需要根据 `measurement` 字段在 KWDB 时序库中提前创建时序表。时序表名需要与 `measurement` 字段保持一致。`measurement` 和 `tag_set` 之间使用英文逗号（`,`）分隔。
+- `tag_set`: 格式为 `<tag_key>=<tag_value>,<tag_key>=<tag_value>, ...`, 对应时序表的标签列和标签值，多个标签之间使用英文逗号（`,`）分隔。创建时序表时，用户根据 `tag_key=tag_value` 字段定义标签名和数据类型。
+- `field_set`：格式为 `<field_key>=<field_value>,<field_key>=<field_value>, ...`, 对应时序表的数据列及列数据，多列之间使用英文逗号（`,`）分隔。KWDB 根据 `field_key` 字段确定向表的哪个列插入对应的数据。创建时序表时，用户需要根据 `field_key` 字段名及字段顺序创建对应的列。
+- `timestamp`：本行数据对应的主键时间戳。
+
+以下示例说明如何根据 InfluxDB Line 格式的数据，在 KWDB 数据库中创建对应的时序表：
+
+- InfluxDB Line 格式的数据
+
+  ```sql
+  meters,location=Beijing current=17.01,voltage=220,phase=0.29 1556813561098000000
+  ```
+
+- SQL 语句
+
+  ```sql
+  create table meters (ts timestamp not null, current float, voltage int, phase float) tags (location varchar(20) not null) primary tags (location);
+  ```
+
+有关 InfluxDB Line 的详细信息，参见 [InfluxDB Line 官方文档](https://docs.influxdata.com/influxdb/v2.0/reference/syntax/line-protocol/)。
+
+### 请求信息
+
+下表列出 Telegraf 接口的请求信息：
+
+<table>
+  <thead>
+    <tr>
+      <th>信息</th>
+      <th>内容</th>
+      <th>说明</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Endpoint</td>
+      <td><code>/restapi/telegraf</code></td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>Method</td>
+      <td><code>POST</code></td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>请求头部</td>
+      <td><pre><code>Content-Type: text/plain
+Accept: application/json
+Authorization: Basic "token" 或 Basic "base64(user:password)"</code></pre></td>
+      <td> - <code>token（string）</code>：Login 接口生成的认证令牌。<br> - <code>base64(user:password)</code>：Base64 编码后的用户名和密码信息。</td>
+    </tr>
+      <td>请求体</td>
+      <td><code>"line_format"</code></td>
+      <td> <code>line_format（string）</code>：待插入的 InfluxDB Line 格式的数据。KWDB 会将该格式的数据转为数据库可执行的 SQL 语句。</td>
+    </tr>
+  </tbody>
+</table>
+
+### 响应信息
+
+下表列出 Telegraf 接口的响应信息：
+
+<table>
+  <thead>
+    <tr>
+      <th>信息</th>
+      <th>内容</th>
+      <th>说明</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>HTTP 状态码</td>
+      <td><code>HTTP/1.1 "code" "desc"</code></td>
+      <td><br>- <code>code（int）</code>：HTTP 状态码。<br>- <code>desc（string）</code>：状态码描述。有关 HTTP 状态码详细信息，参见 <a href="#http-状态码">HTTP 状态码</a>。</td>
+    </tr>
+    <tr>
+      <td>响应头部</td>
+      <td><pre><code>
+      Content-Type: application/json
+      Accept: text/plain
+      </code></pre></td>
+      <td> - </td>
+    </tr>
+    <tr>
+      <td>响应体</td>
+      <td><pre><code>
+      {
+        "code": "code",
+        "desc": "desc",
+        "rows": "rows",
+        "time": "time"
+      }</code></pre></td>
+      <td><br>- <code>code（int）</code>：SQL 语句执行状态码。所有语句执行成功，返回 <code>0</code>。如有执行失败的语句，返回 <code>-1</code>。<br>- <code>desc（string）</code>：SQL 语句执行失败对应的错误码描述。只有失败时，才会出现并返回该字段。<br />- <code>rows（int）</code>：查询的数据行数。<br >- <code>time（float）</code>：SQL 语句的执行时间（单位：秒）。</td>
+    </tr>
+  </tbody>
+</table>
+
+### 配置示例
+
+以下示例发送 HTTP 请求，向表 `myMeasurement` 中写入数据。
+
+```shell
+POST /restapi/telegraf HTTP/1.1
+Host: localhost:8080
+Authorization: Basic cm9vdDprd2RicGFzc3dvcmQ=
+Content-Type: plain/text
+
+myMeasurement,tag1=value1,tag2=value2 fieldKey="fieldValue" 1556813561098000000
+```
+
+如果请求成功，返回以下信息：
+
+```shell
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "code": 0,
+  "desc": null,
+  "rows": 1,
+  "time": 0.002
+}
+```
+
+如果请求失败，返回以下信息：
+
+```shell
+HTTP/1.1 401 Unauthorized
+Content-Type: application/json
+
+{
+  "code": 500,
+  "desc": "Incorrect authentication token",
+  "rows": null,
+  "time": null
+}
+```
+
+## InfluxDB 接口
+
+InfluxDB 接口是 KWDB 开发的特殊 RESTful API 接口，用于将 InfluxDB 的数据通过 HTTP 请求写入 KWDB 数据库。InfluxDB 接口的请求体不是 SQL 语句而是 InfluxDB Line 协议格式的数据。
+
+使用 InfluxDB API 向 KWDB 写入数据前，用户只需要创建好时序库， KWDB 会将 InfluxDB Line 协议格式的数据转为数据库可执行的建表、添加列、添加标签或数据写入 SQL 语句，然后执行相应操作。发送请求的用户需要拥有执行相关 SQL 语句的权限。
 
 InfluxDB Line 格式的数据如下所示：
 
@@ -630,7 +784,7 @@ InfluxDB Line 格式的数据如下所示：
 
 ### 请求信息
 
-下表列出 Telegraf Insert 接口的请求信息：
+下表列出 InfluxDB 接口的请求信息：
 
 <table>
   <thead>
@@ -643,7 +797,7 @@ InfluxDB Line 格式的数据如下所示：
   <tbody>
     <tr>
       <td>Endpoint</td>
-      <td><code>/restapi/telegraf</code></td>
+      <td><code>/restapi/influxdb</code></td>
       <td>-</td>
     </tr>
     <tr>
@@ -669,7 +823,7 @@ Authorization: Basic "token" 或 Basic "base64(user:password)"</code></pre></td>
 
 ### 响应信息
 
-下表列出 Telegraf Insert 接口的响应信息：
+下表列出 InfluxDB 接口的响应信息：
 
 <table>
   <thead>
@@ -710,7 +864,7 @@ Accept: text/plain</code></pre></td>
 以下示例发送 HTTP 请求，创建表 `myMeasurement`或向 `myMeasurement` 表中写入数据。
 
 ```shell
-POST /restapi/telegraf HTTP/1.1
+POST /restapi/influxdb HTTP/1.1
 Host: localhost:8080
 Authorization: Basic cm9vdDprd2RicGFzc3dvcmQ=
 Content-Type: plain/text
@@ -745,6 +899,7 @@ Content-Type: application/json
   "time": null
 }
 ```
+
 
 ## Session 接口
 
