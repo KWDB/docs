@@ -5,14 +5,15 @@ id: telegraf
 
 # Telegraf 读写数据
 
-[Telegraf](https://www.influxdata.com/time-series-platform/telegraf/) 是一款基于插件化的开源指标收集工具。KWDB 支持通过 RESTful API 将 Telegraf 收集的数据同步写入到 KWDB 数据库。KWDB RESTful API 提供 Telegraf Insert 接口，该接口通过发送 HTTP 请求将 InfluxDB Line 格式的 Telegraf 数据以无模式方式写入 KWDB 时序库。用户无需提前建表，即可通过该接口完成建表、字段添加和数据写入等操作。有关 Telegraf Insert API 接口的请求信息，参见 [Telegraf Insert 接口](../connect-kaiwudb/connect-restful-api.md#telegraf-insert-接口)。
+[Telegraf](https://www.influxdata.com/time-series-platform/telegraf/) 是一款基于插件化的开源指标收集工具。KWDB 支持通过 RESTful API 将 Telegraf 收集的数据同步写入到 KWDB 数据库。KWDB RESTful API 提供了 Telegraf 接口，该接口通过发送 HTTP 请求将 InfluxDB Line 格式的 Telegraf 数据写入 KWDB 数据库。有关 Telegraf API 接口的请求信息，参见 [Telegraf 接口](../connect-kaiwudb/connect-restful-api.md#telegraf-接口)。
 
 ::: warning 说明
 
-用户通过 Telegraf Insert 接口将 InfluxDB Line 协议格式的 Telegraf 数据以无模式方式写入 KWDB 时序库时，需要拥有相应语句的执行权限或者是 admin 角色的成员。
-:::
+- 发送 `Telegraf` API 请求的用户，需要有目标表的 `INSERT` 权限。
+- 使用 `Telegraf` API 向 KWDB 时序库中写入数据之前，用户需要根据 Telegraf 数据及数据顺序提前在 KWDB 数据库创建好相应的时序表。
+  :::
 
-如需将 Telegraf 的数据写入到 KWDB，用户需要在 Telegraf 配置文件（`telegraf.conf`）的 `[[outputs.http]]` 区域配置接口的节点、认证信息、数据格式，如下所示：
+如需将 Telegraf 的数据写入到 KWDB，用户需要在 Telegraf 配置文件（`telegraf.conf`）的 `[[outputs.http]]` 区域配置 KWDB Telegraf 接口的节点、认证信息、数据格式，如下所示：
 
 ```toml
 [[outputs.http]]
