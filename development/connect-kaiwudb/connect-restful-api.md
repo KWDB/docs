@@ -634,6 +634,7 @@ Accept: application/json
 Authorization: Basic "token" 或 Basic "base64(user:password)"</code></pre></td>
       <td> - <code>token（string）</code>：Login 接口生成的认证令牌。<br> - <code>base64(user:password)</code>：Base64 编码后的用户名和密码信息。</td>
     </tr>
+    <tr>
       <td>请求体</td>
       <td><code>"line_format"</code></td>
       <td> <code>line_format（string）</code>：待插入的 InfluxDB Line 格式的数据。KWDB 会将该格式的数据转为数据库可执行的 SQL 语句。</td>
@@ -900,7 +901,6 @@ Content-Type: application/json
 }
 ```
 
-
 ## Session 接口
 
 Session 接口用于查询本节点会话信息或删除指定会话信息，管理员用户可查看所有会话信息和删除指定会话信息，普通用户只可查看和删除自己的会话信息。
@@ -1122,16 +1122,14 @@ CREATE TABLE ts_table(ts timestamp not null, power int) tags(location varchar(15
 3. 将 KWDB 服务端生成的证书拷贝到发起请求客户端可访问的路径下。证书默认存放目录为`/etc/kaiwudb/certs`。
 4. 使用安全证书进行 Restful API 连接。
 
-    - 登录示例
-    
-      ```bash
-      curl -L --cacert ../certs/ca.crt -H "Authorization: Basic dTE6a3dkYnBhc3N3b3Jk" -X GET your-host-ip:port/restapi/login
-      ```
-    - 查询示例
-
-      ```bash
-      curl -L -H "Content-Type:text/plain" -H "Authorization: Basic dTE6a3dkYnBhc3N3b3Jk"  --cacert ../certs/ca.crt -d "select*from t1;" -X POST your-host-ip:port/restapi/query?db=db1
-      ```
+      - 登录示例
+        ```bash
+        curl -L --cacert ../certs/ca.crt -H "Authorization: Basic dTE6a3dkYnBhc3N3b3Jk" -X GET your-host-ip:port/restapi/login
+        ```
+      - 查询示例
+        ```
+        curl -L -H "Content-Type:text/plain" -H "Authorization: Basic dTE6a3dkYnBhc3N3b3Jk"  --cacert ../certs/ca.crt -d "select*from t1;" -X POST your-host-ip:port/restapi/query?db=db1
+        ```
 
 ## HTTP 状态码
 
