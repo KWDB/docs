@@ -36,19 +36,32 @@ id: uninstall-db-docker
         docker rmi <image_name>
         ```
 
-4. 删除 `/etc/kaiwudb` 目录及其内容。
+4. 检查是否有 loop 设备挂载在 KWDB 数据目录下。
+    
+    ```shell
+    df -h
+    ```
+
+5. 如果有设备挂载，取消设备挂载。
+
+    ```shell
+    umount /dev/loop<device_number>
+    ```   
+
+
+6. 删除 `/etc/kaiwudb` 目录及其内容。
 
     ```shell
     sudo rm -rf /etc/kaiwudb
     ```
 
-5. 删除与 KWDB 服务相关的 `systemd` 配置文件。
+7. 删除与 KWDB 服务相关的 `systemd` 配置文件。
 
     ```shell
     sudo rm -rf /etc/systemd/system/kaiwudb.service
     ```
 
-6. 删除 KWDB 的数据目录及其内容。默认情况下，数据目录为 `/var/lib/kaiwudb`。
+8. 删除 KWDB 的数据目录及其内容。默认情况下，数据目录为 `/var/lib/kaiwudb`。
 
     ```shell
     sudo rm -rf <data_root>
