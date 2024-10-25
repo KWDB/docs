@@ -84,7 +84,7 @@ SHOW TAGS FROM sensor_data;
 
 ### 前提条件
 
-用户拥有目标表的任何权限。
+用户拥有目标表的 SELECT 权限。
 
 ### 语法格式
 
