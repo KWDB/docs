@@ -147,7 +147,7 @@ KWDB 的插值函数支持与以下功能联合使用：
     [OFFSET <m>];
     ```
 
-- 插入缺失的时间戳行并进行补值
+- 插入缺失时间戳行并进行补值
 
     ```sql
     SELECT time_bucket_gapfill(<timestamp_column>, <interval>) AS <alias_1>, 
