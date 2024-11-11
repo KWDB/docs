@@ -20,11 +20,11 @@ KWDB 支持使用 KWDB 容器镜像或二进制安装包部署 KWDB 集群。在
   - [启动与停止 KWDB 服务](./bare-metal/local-start-stop-bare-metal.md)
   - [配置集群](./bare-metal/cluster-config-bare-metal.md)
   - [创建用户](./bare-metal/user-config-bare-metal.md)
-  - [卸载 KWDB 数据库](./bare-metal/uninstall-db-bare-metal.md)
+  - [卸载集群](./bare-metal/uninstall-cluster-bare-metal.md)
 - 容器部署
   - [部署准备](./docker/before-deploy-docker.md)
   - [容器部署](./docker/docker-deployment.md)
   - [启动与停止 KWDB 服务](./docker/local-start-stop-docker.md)
   - [配置集群](./docker/cluster-config-docker.md)
   - [创建用户](./docker/user-config-docker.md)
-  - [卸载 KWDB 数据库](./docker/uninstall-db-docker.md)
+  - [卸载集群](./docker/uninstall-cluster-docker.md)
