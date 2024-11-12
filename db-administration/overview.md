@@ -24,6 +24,7 @@ id: overview
   - [约束管理](./db-object-mgmt/relational-db/constraint-mgmt-relational.md)
   - [索引管理](./db-object-mgmt/relational-db/index-mgmt-relational.md)
   - [视图管理](./db-object-mgmt/relational-db/view-mgmt-relational.md)
+  - [物化视图管理](./db-object-mgmt/relational-db/materialized-view-mgmt-relational.md)
   - [序列管理](./db-object-mgmt/relational-db/sequence-mgmt-relational.md)
   - [区域管理](./db-object-mgmt/relational-db/zone-mgmt-relational.md)
   - [分区管理](./db-object-mgmt/relational-db/range-mgmt-relational.md)

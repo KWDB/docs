@@ -33,6 +33,7 @@ id: overview
     - [关系表](./ddl/relational-db/relational-table.md)
     - [列](./ddl/relational-db/relational-column.md)
     - [视图](./ddl/relational-db/relational-view.md)
+    - [物化视图](./ddl/relational-db/relational-materialized-view.md)
     - [索引](./ddl/relational-db/relational-index.md)
     - [约束](./ddl/relational-db/relational-constraint.md)
     - [序列](./ddl/relational-db/relational-sequence.md)
