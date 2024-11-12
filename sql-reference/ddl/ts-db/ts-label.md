@@ -11,13 +11,10 @@ KWDB 支持使用 ATTRIBUTE 和 ATTRIBUTES 作为 TAG 和 TAGS 的别名。
 
 ## 添加标签
 
-用户可以在创建表的时候直接创建表的标签，也可以使用 `ALTER TABLE` 语句向表中添加标签。
+KWDB 支持在创建表时创建表的标签，也支持使用 `ALTER TABLE ... ADD TAG` 语句为表添加标签。`ADD TAG` 为在线操作，不会阻塞表中的数据读写。
 
 ::: warning 说明
-
-- 添加标签时需要应用停机，待修改的表不在修改过程中，以确保结构变更的原子性、一致性，避免潜在的一致性问题。
-- 目前，KWDB 不支持一次添加多个标签或者为已有时序表添加主标签和非空标签。
-
+目前，KWDB 不支持一次添加多个标签或者为已有时序表添加主标签和非空标签。
 :::
 
 ### 所需权限
@@ -119,7 +116,7 @@ SHOW TAG VALUES FROM sensor_data;
 
 ## 修改标签
 
-KWDB 支持通过 `ALTER TABLE` 语句修改标签的数据类型和宽度。
+KWDB 支持使用 `ALTER TABLE ... ALTER TAG` 语句修改标签的数据类型和宽度。`ALTER TAG` 为在线操作，不会阻塞表中的数据读写。
 
 ::: warning 说明
 
@@ -153,7 +150,7 @@ ALTER TABLE ts_table ALTER TAG color TYPE VARCHAR(50);
 
 ## 重命名标签
 
-KWDB 支持通过 `ALTER TABLE` 语句修改标签名称。
+KWDB 支持使用 `ALTER TABLE ... RENAME TAG` 语句修改标签名称。
 
 ### 所需权限
 
@@ -181,11 +178,10 @@ ALTER TABLE ts_table RENAME TAG site TO location;
 
 ## 删除标签
 
-KWDB 支持通过 `ALTER TABLE` 语句删除标签。
+KWDB 支持使用 `ALTER TABLE ... DROP TAG` 语句删除标签。`DROP TAG` 为在线操作，不会阻塞表中的数据读写。
 
 ::: warning 说明
 
-- 删除标签时需要应用停机，待修改的表不在修改过程中，以确保结构变更的原子性、一致性，避免潜在的一致性问题。
 - KWDB 不支持删除主标签。
 - 目前，KWDB 不支持一次删除多个标签。
 
