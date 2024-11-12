@@ -10,13 +10,14 @@ KWDB 支持用户通过发送 HTTP 请求与数据库进行交互。用户可以
 KWDB 支持同时使用多个 HTTP 请求连接数据库，最多支持 150 个 HTTP 连接。所有请求通过 HTTPS 发送，并在 HTTP 请求头部包含认证信息。HTTP 请求的 URL 格式为：
 
 ```shell
-https://<hostname>:<port>/<endpoint>?[db=<db_name>]
+https://<hostname>:<port>/<endpoint>?[tz=<timezone>][db=<db_name>]
 ```
 
 参数说明：
 
 - `hostname`：KWDB 服务器的 IP 地址或者 FQDN（Fully Qualified Domain Name，完全限定域名）。
 - `port`：KWDB 服务器的 HTTP 访问端口，默认是 `8080`。
+- `tz`：可选参数，用于指定 RESTful API 请求的时区。如果 RESTful API 请求中存在时区设置，则使用该时区取值。否则使用 `server.restful_service.default_request_timezone` 集群参数的取值。如果写入的数据里带有时区信息，那么以写入数据的时区信息为准。
 - `db_name`：可选参数, 用于指定目标数据库。如未指定，则使用系统默认创建的 `defaultdb` 数据库。[Login 接口](#login-接口)不支持设置该参数。
 
 ## RESTful API 接口
@@ -65,7 +66,7 @@ Login 接口用于用户身份授权，系统根据用户提供的 Base64 编码
   <tbody>
     <tr>
       <td>Endpoint</td>
-      <td><code>/restapi/login</code></td>
+      <td><br>- 不带时区设置：<code>/restapi/login</code><br>- 带时区设置：<code>/restapi/login?tz="timezone"</code></td>
       <td>-</td>
     </tr>
     <tr>
@@ -128,7 +129,6 @@ Accept: text/plain</code></pre></td>
   </tbody>
 </table>
 
-
 ### 配置示例
 
 以下示例发送 HTTP 请求，获取认证令牌。
@@ -184,7 +184,7 @@ DDL 接口用于发送包含 DDL 语句的 HTTP 请求。用户可以使用此�
   <tbody>
     <tr>
       <td>Endpoint</td>
-      <td><code>/restapi/ddl</code></td>
+      <td><br>- 不带时区设置：<code>/restapi/ddl</code><br>- 带时区设置：<code>/restapi/ddl?tz="timezone"</code></td>
       <td>-</td>
     </tr>
     <tr>
@@ -206,7 +206,6 @@ Authorization: Basic "token" 或 Basic "base64(user:password)</code></pre></td>
     </tr>
   </tbody>
 </table>
-
 
 ### 响应信息
 
@@ -247,7 +246,6 @@ Accept: text/plain</code></pre></td>
     </tr>
   </tbody>
 </table>
-
 
 ### 配置示例
 
@@ -298,7 +296,7 @@ Insert 接口用于发送 INSERT 语句的 HTTP 请求。该接口支持来自 E
   <tbody>
     <tr>
       <td>Endpoint</td>
-      <td><code>/restapi/insert</code></td>
+      <td><br>- 不带时区设置：<code>/restapi/insert</code><br>- 带时区设置：<code>/restapi/insert?tz="timezone"</code></td>
       <td>-</td>
     </tr>
     <tr>
@@ -320,7 +318,6 @@ Authorization: Basic "token" 或 Basic "base64(user:password)"</code></pre></td>
     </tr>
   </tbody>
 </table>
-
 
 ### 响应信息
 
@@ -358,7 +355,6 @@ Accept: text/plain</code></pre></td>
     </tr>
   </tbody>
 </table>
-
 
 ### 配置示例
 
@@ -428,7 +424,7 @@ Query 接口用于发送 SELECT 语句的 HTTP 请求。用户通过此接口查
   <tbody>
     <tr>
       <td>Endpoint</td>
-      <td><code>/restapi/query</code></td>
+      <td><br>- 不带时区设置：<code>/restapi/query</code><br>- 带时区设置：<code>/restapi/query?tz="timezone"</code></td>
       <td>-</td>
     </tr>
     <tr>
@@ -450,7 +446,6 @@ Authorization: Basic "token" 或 Basic "base64(user:password)"</code></pre></td>
     </tr>
   </tbody>
 </table>
-
 
 ### 响应信息
 
@@ -495,7 +490,6 @@ Accept: text/plain</code></pre></td>
     </tr>
   </tbody>
 </table>
-
 
 ### 配置示例
 
@@ -821,7 +815,6 @@ Authorization: Basic "token" 或 Basic "base64(user:password)"</code></pre></td>
   </tbody>
 </table>
 
-
 ### 响应信息
 
 下表列出 InfluxDB 接口的响应信息：
@@ -858,7 +851,6 @@ Accept: text/plain</code></pre></td>
     </tr>
   </tbody>
 </table>
-
 
 ### 配置示例
 
@@ -920,7 +912,7 @@ Session 接口用于查询本节点会话信息或删除指定会话信息，管
   <tbody>
     <tr>
       <td>Endpoint</td>
-      <td><code>/restapi/session</code></td>
+      <td><br>- 不带时区设置：<code>/restapi/session</code><br>- 带时区设置：<code>/restapi/session?tz="timezone"</code></td>
       <td>-</td>
     </tr>
     <tr>
@@ -942,7 +934,6 @@ Authorization: Basic "token" 或 Basic "base64(user:password)"</code></pre></td>
     </tr>
   </tbody>
 </table>
-
 
 ### 响应信息
 
@@ -972,13 +963,12 @@ Accept: text/plain</code></pre></td>
       <td>响应体</td>
       <td><pre><code>{
     "code": "code",
-    "conns": [{"conn_info"}]
+    "tokens": [{"session_info"}]
 }</code></pre></td>
       <td><br>- <code>code（int）</code>：状态码。<code>0</code>表示成功，其它值表示失败。 <br>- <code>conn_info</code>：会话连接相关信息，如连接ID、用户名、令牌、超时时间等。</td>
     </tr>
   </tbody>
 </table>
-
 
 下表列出删除会话的响应信息：
 
@@ -1013,7 +1003,6 @@ Accept: text/plain</code></pre></td>
   </tbody>
 </table>
 
-
 ### 配置示例
 
 示例 1：以下示例发送 HTTP 请求，查看会话信息。
@@ -1030,23 +1019,22 @@ Authorization: Basic cm9vdDprd2RicGFzc3dvcmQ=
 - 普通用户：查看自己正在使用的会话的信息。
 
     ```json
-  {"code":0,
-  "conns":[
-  {"Connid":"50830553-3e83-11ef-a323-b4055d17f786","Username":"u1","Token":"c2ff2c6d*","MaxLife Time":3600,"LastLoginTime":"2024-07-10 06:11:58","ExpirationTime":"2024-07-10 07:11:58"}
-  ]
-  }
-  ```
+    {
+    "code":0,
+    "tokens":[{"SessionID":"1970e371-5947-11ef-8726-000c29585cae","Username":"u1","Token":"9c7e0ad44a9e02dc67fb2f3e48446769","MaxLifeTime":3600,"LastLoginTime":"2024-08-13 07:41:08","ExpirationTime":"2024-08-13 08:41:08"}]
+    }
+    ```
 
 - 管理员用户：查看所有会话的相关信息。
 
-  ```json
-  {"code":0,
-  "conns":[
-  {"Connid":"50830553-3e83-11ef-a323-b4055d17f786","Username":"u1","Token":"c2ff2c6d*","MaxLife Time":3600,"LastLoginTime":"2024-07-10 06:11:58","ExpirationTime":"2024-07-10 07:11:58"},
-  {"Connid":"9bf2fa13-3e83-11ef-a323-b4055d17f786","Username":"u1","Token":"f9f3a39d*","MaxLife Time":3600,"LastLoginTime":"2024-07-10 06:14:04","ExpirationTime":"2024-07-10 07:14:04"}
-  ]
-  }
-  ```
+    ```json
+    {"code":0,
+    "tokens":[
+    {"SessionID":"50830553-3e83-11ef-a323-b4055d17f786","Username":"u1","Token":"c2ff2c6d*","MaxLife Time":3600,"LastLoginTime":"2024-07-10 06:11:58","ExpirationTime":"2024-07-10 07:11:58"},
+    {"SessionID":"9bf2fa13-3e83-11ef-a323-b4055d17f786","Username":"u1","Token":"f9f3a39d*","MaxLife Time":3600,"LastLoginTime":"2024-07-10 06:14:04","ExpirationTime":"2024-07-10 07:14:04"}
+    ]
+    }
+    ```
 
 示例 2：以下示例发送 HTTP 请求，删除会话。
 
@@ -1140,6 +1128,6 @@ CREATE TABLE ts_table(ts timestamp not null, power int) tags(location varchar(15
 | 200                                        | 成功                                         |
 | 400                                        | 参数错误                                     |
 | 401                                        | 认证失败                                     |
-| 404                                        | URL不存在                                   |
+| 404                                        | URL 不存在                                   |
 | 500                                        | 内部错误                                    |
 | 503                                        | 系统资源不足                                 |
