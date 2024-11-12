@@ -5,8 +5,7 @@ id: relational-select
 
 # SELECT
 
-简单 `SELECT` 子句是读取和处理现有数据的主要 SQL 语法。当用作独立语句时，简单 `SELECT` 子句也称为 `SELECT` 语句。但是，它也是一个选择子句，可以与其他结构组合以形成更复杂的选择查询。
-
+简单 `SELECT` 子句是读取和处理现有数据的主要 SQL 语法。当用作独立语句时，简单 `SELECT` 子句也称为 `SELECT` 语句。但是，它也是一个选择子句，可以与其他结构组合以形成更复杂的选择查询。KWDB 支持通过 `SET CLUSTER SETTING sql.auto_limit.quantity = <value>` 配置 SQL 查询结果的返回行数。
 
 KWDB 支持在查询中对列类型为时间戳、时间戳常量以及结果类型为时间戳的函数和表达式进行时间加减运算，运算结果支持使用大于号（`>`）、小于号（`<`）、等号（`=`）、大于等于号（`>=`）、小于等于号（`<=`）进行比较。运算中可以包含 `interval` 常量、其他时间戳列以及结果类型为 interval、timestamp 或 timstamptz 的函数和表达式。如果运算符两边均为 timestamp 或 timestamptz 类型，则只支持减法运算，差值对应的纳秒数不得超过 INT64 范围，对应的天数不得超过 `106751` 天。超出范围时，系统将显示为 `106751 days 23:47:16.854776`。
 
@@ -108,7 +107,7 @@ KWDB 支持在查询中对列类型为时间戳、时间戳常量以及结果类
 | `SELECT` 子句 | `SELECT` 子句支持以下任一形式：<br >- `simple_SELECT_clause`：简单 `SELECT` 子句。<br >- `values_clause`：`VALUES` 子句。<br >- `table_clause`：表子句。<br >- `set_operation`：集合操作。|
 | `ORDER BY` | `ORDER BY` 子句由若干个 `ORDER` 规范列表（可选，使用逗号（`,`）隔开）和 `ASC`/`DESC` 关键字（可选）组成。`ORDER` 规范支持以下任一形式：<br >- `a_expr`：任意标量表达式，使用计算该表达式的结果作为排序键。<br >- `PRIMARY KEY` + `table_name`：表的主键，使用给定表的主键作为排序键。该表必须是数据源的一部分。<br >- `INDEX` + `table_name` + `@` + `index_name`：表示法索引 `@`，使用给定表的索引的索引列作为排序键。该表必须是数据源的一部分。<br >- 可选的关键字 `ASC` 和 `DESC`：用来指定排列的顺序，默认值为 `ASC`。当关键字为 `ASC` 时，按照排序键的升序（从小到大）来排列。当关键字为 `DESC` 时，按照排序键的降序（从大到小）来排列。|
 | `FOR LOCKING` 子句 | 通过控制对表中一个或多个行的并发访问来排序事务。|
-| `LIMIT` 子句 | 支持 `LIMIT + count` 格式，操作限制为仅检索 `count` 行。|
+| `LIMIT` 子句 | 支持 `LIMIT + count` 格式，操作限制为仅检索 `count` 行。KWDB 也支持使用 `sql.auto_limit.quantity` 集群参数配置 SQL 查询结果的返回行数。但是，`Limit` 子句的优先级大于 `sql.auto_limit.quantity` 集群参数。|
 | `OFFSET` 子句| 跳过指定行数，通常与 `LIMIT` 子句组合使用，以实现结果集分页。如果希望限制查询结果的数量并跳过初始结果集中的若干行，可以使用 `OFFSET` 子句来获取下一部分结果集。通常用于处理大型表的数据分页，从而避免一次性检索所有行。|
 
 ## 语法示例
