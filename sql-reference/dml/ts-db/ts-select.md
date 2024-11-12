@@ -7,10 +7,16 @@ id: ts-select
 
 时序数据库支持使用 SQL 语句执行简单查询、嵌套查询、关联查询、联合查询和插值查询。
 
-
 ## 简单查询
 
-`SELECT` 语句是读取和处理现有数据的主要 SQL 语法。当用作独立语句时，`SELECT` 子句也称为 `SELECT` 语句。但是，它也是一个选择子句，可以与其他结构组合以形成更复杂的选择查询。KWDB 支持通过 `SET CLUSTER SETTING ts.parallel_degree = <value>` 语句设置并行查询数目。更多参数设置，参见[集群实时参数](../../../db-operation/cluster-settings-config.md#实时参数)。
+`SELECT` 语句是读取和处理现有数据的主要 SQL 语法。当用作独立语句时，`SELECT` 子句也称为 `SELECT` 语句。但是，它也是一个选择子句，可以与其他结构组合以形成更复杂的选择查询。
+
+KWDB 支持通过以下集群参数设置时序数据查询的相关配置：
+
+- `SET CLUSTER SETTING ts.parallel_degree = <value>`：设置并行查询数目。
+- `SET CLUSTER SETTING sql.auto_limit.quantity = <value>`：配置 SQL 查询结果的返回行数。
+
+更多参数设置，参见[集群实时参数](../../../db-operation/cluster-settings-config.md)。
 
 KWDB 支持在查询中对列类型为时间戳、时间戳常量以及结果类型为时间戳的函数和表达式进行时间加减运算，运算结果支持使用大于号（`>`）、小于号（`<`）、等号（`=`）、大于等于号（`>=`）、小于等于号（`<=`）进行比较。运算中可以包含 `interval` 常量、其他时间戳列以及结果类型为 interval、timestamp 或 timstamptz 的函数和表达式。如果运算符两边均为 timestamp 或 timestamptz 类型，则只支持减法运算，差值对应的纳秒数不得超过 INT64 范围，对应的天数不得超过 `106751` 天。超出范围时，计算结果将取决于实际处理引擎，可能是正确的结果，也可能为 `106751 days 23:47:16.854776`。
 
@@ -72,7 +78,7 @@ KWDB 支持在查询中对列类型为时间戳、时间戳常量以及结果类
 | 参数 | 说明 |
 | --- | --- |
 | `order_by_clause` | `ORDER BY` 子句由一个或多个排序规范组成，每个规范可以是标量表达式。系统通过给定的排序规范对结果集进行排序，可以指定 `ASC`（升序，默认）或 `DESC`（降序）关键字来控制排序顺序。|
-| `limit_clause` | `LIMIT` 子句指定返回结果的最大行数。例如，`LIMIT 10` 表示限制查询结果最多为 10 行。支持设置为 `LIMIT ALL`，表示返回所有行。|
+| `limit_clause` | `LIMIT` 子句指定返回结果的最大行数。例如，`LIMIT 10` 表示限制查询结果最多为 10 行。支持设置为 `LIMIT ALL`，表示返回所有行。KWDB 也支持使用 `sql.auto_limit.quantity` 集群参数配置 SQL 查询结果的返回行数。但是，`Limit` 子句的优先级大于 `sql.auto_limit.quantity` 集群参数。 |
 | `offset_clause` | `OFFSET` 子句用于跳过前面的偏移量行数。`OFFSET` 子句通常与 `LIMIT` 组合使用，通过限制结果的数量，实现分页显示结果，避免一次性检索所有数据。|
 | `DISTINCT` | 当使用 `DISTINCT` 关键字时，系统删除返回结果中重复的行。 |
 | `target_elem` | `target_elem` 可以是标量表达式，也可以是星号（`*`）。<br >- 当 `target_elem` 是标量表达式时，系统使用标量表达式计算每个结果行的值，然后将计算结果作为结果集中的一列返回。<br >- 当 `target_elem` 为星号（`*`）时，系统自动从 `FROM` 子句中检索所有列。如果 `target_elem` 包含聚合函数，可以使用 `GROUP BY` 子句进一步控制聚合。 |
