@@ -23,12 +23,12 @@ id: relational-view
 | --- | --- |
 | `IF NOT EXISTS` | 可选关键字，当使用 `IF NOT EXISTS` 关键字时，如果目标视图不存在，系统创建视图。如果目标视图存在，系统创建视图失败，但不会报错。当未使用 `IF NOT EXISTS` 关键字时，如果目标视图不存在，系统创建视图。如果目标视图存在，系统报错，提示目标视图已存在。 |
 | `view_name` | 待创建视图的名称，该名称在数据库中必须唯一，并且遵循[数据库标识符规则](../../../sql-reference/sql-identifiers.md)。如果没有将父数据库设置为默认值，必须将视图名称格式设置为 `database.view_name`。 |
-| `name_list` | 可选项，视图列名列表。支持指定一个或多个视图的列名，列名之间使用逗号（`,`）隔开。如果指定视图的列名，控制台输出指定的列名，而不是输出通过 `SELECT_stmt` 语句指定的列的列名。 |
-| `select_stmt` | `SELECT` 查询语句。 |
+| `name_list` | 可选项，视图列名列表。支持指定一个或多个视图的列名，列名之间使用逗号（`,`）隔开。如果指定视图的列名，控制台输出指定的列名，而不是输出通过 `select_stmt` 语句指定的列的列名。 |
+| `select_stmt` | `SELECT` 查询语句。支持使用 `*` 选择源表中的所有列。<br >- 当 `select_stmt` 的结果集中存在同名列时，系统报错，提示 `duplicate column name: "a"`。<br >- 当源表新增列后，视图结构不会发生变化。<br >- 当删除视图依赖的源表中的列时，系统报错，提示 `cannot drop column "b" because view "v" depends on it`。 |
 
 ### 语法示例
 
-以下示例假设已经创建一个名为 `orders` 的表，包括顾客 ID，订单号和订单金额，并为 `orders` 表创建一个名为 `short-order` 视图，获取订单号和订单金额，并显示列名。
+以下示例假设已经创建一个名为 `orders` 的表，包括顾客 ID，订单号和订单金额，并为 `orders` 表创建一个名为 `short_order` 视图，获取订单号和订单金额，并显示列名。
 
 ```sql
 -- 1. 查看 orders 表的信息。
@@ -42,7 +42,7 @@ SELECT * FROM orders;
        100002 | 100004 |   120
 (4 rows)
 
--- 2. 创建 short-order 视图，获取订单号和订单金额，并显示列名。
+-- 2. 创建 short_order 视图，获取订单号和订单金额，并显示列名。
 
 CREATE VIEW short_order (id, amount) AS SELECT id, total FROM orders;
 CREATE VIEW
@@ -115,7 +115,7 @@ SELECT * FROM information_schema.tables WHERE table_type = 'VIEW';
 ### 所需权限
 
 - 删除无依赖关系的视图：用户拥有目标视图的 DROP 权限。
-- 删除存在依赖关系的视图：用户拥有目标表视图的 DROP 权限及其关联对象的 DROP 权限。
+- 删除存在依赖关系的视图：用户拥有目标视图的 DROP 权限及其关联对象的 DROP 权限。
 
 ### 语法格式
 
