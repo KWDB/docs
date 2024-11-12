@@ -22,3 +22,7 @@ id: overview
   - 通过 kwbase CLI 工具[连接](./access-kaiwudb/access-kaiwudb-cli.md)和[管理](./use-kaiwudb/use-kaiwudb-cli.md) KWDB
   - 通过 KaiwuDB Developer Center（KaiwuDB 开发者中心）[连接](./access-kaiwudb/access-kaiwudb-kdc.md)和[使用](./use-kaiwudb/use-kaiwudb-kdc.md) KWDB
   - 通过 KaiwuDB JDBC [连接](./access-kaiwudb/access-kaiwudb-jdbc.md)和[使用](./use-kaiwudb/use-kaiwudb-jdbc.md) KWDB
+
+- 卸载 KWDB
+
+  如需了解如何卸载 KaiwuDB，请参见[卸载 KWDB 数据库](./uninstall-kaiwudb/uninstall-db.md)
