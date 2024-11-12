@@ -15,6 +15,7 @@ KWDB 支持通过以下集群参数设置时序数据查询的相关配置：
 
 - `SET CLUSTER SETTING ts.parallel_degree = <value>`：设置并行查询数目。
 - `SET CLUSTER SETTING sql.auto_limit.quantity = <value>`：配置 SQL 查询结果的返回行数。
+- `SET CLUSTER SETTING ts.ordered_table.enabled`：当用户未使用 `ORDER BY` 子句指定排序时，配置是否按照数据写入的时间戳逆序返回查询结果。当设置为 `true` 时，对于单设备查询，按照数据写入的时间戳逆序返回查询结果。对于多设备查询，先转换成单设备查询，然后再合并所有的数据。
 
 更多参数设置，参见[集群实时参数](../../../db-operation/cluster-settings-config.md)。
 
