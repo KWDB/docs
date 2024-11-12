@@ -7,7 +7,6 @@ id: table-mgmt-ts
 
 时序表（TIME SERIES TABLE）是用于存储时间序列数据的数据表。
 
-
 ## 创建表
 
 ### 前提条件
@@ -35,8 +34,8 @@ PRIMARY [TAGS|ATTRIBUTES] (<primary_tag_list>)
 | 参数 | 说明 |
 | --- | --- |
 | `table_name`| 待创建的时序表的名称，表名的最大长度为 128 字节。在指定数据库中，时序表名称必须唯一，并且遵循[数据库标识符规则](../../../sql-reference/sql-identifiers.md)。 |
-| `column_list`| 待创建的数据列列表，支持添加两个以上的列定义，最多可指定 4096 列。列定义包括列名和数据类型，列名的最大长度为 128 字节，支持指定 NOT NULL， 默认为空值。支持自定义第一列的列名，但数据类型必须是 TIMESTAMPTZ 或 TIMESTAMP 且非空。默认时区为 UTC。 |
-| `tag_list`| 标签列表，支持添加一个或多个标签定义，最多可指定 `128` 个标签。标签定义包含标签名和数据类型，标签名的最大长度为 128 字节，支持指定 NOT NULL， 默认为空值。不支持 TIMESTAMP、TIMESTAMPTZ、NVARCHAR 和 GEOMETRY 数据类型。 |
+| `column_list`| 待创建的数据列列表，支持添加两个以上的列定义，最多可指定 4096 列。列定义包括列名、数据类型和默认值。<br> 列名的最大长度为 128 字节，支持指定 NOT NULL，默认为空值。支持自定义第一列的列名，但数据类型必须是 TIMESTAMPTZ 或 TIMESTAMP 且非空。默认时区为 UTC。<br > 对于非时间类型的数据列，默认值只能是常量。对于时间类型的列（TIMESTAMPTZ 或 TIMESTAMP），默认值可以是常量，也可以是 `now()` 函数。如果默认值类型与列类型不匹配，设置默认值时，系统报错。支持默认值设置为 NULL。 |
+| `tag_list`| 标签列表，支持添加一个或多个标签定义，最多可指定 `128` 个标签。标签定义包含标签名和数据类型，标签名的最大长度为 128 字节，支持指定 NOT NULL，默认为空值。不支持 TIMESTAMP、TIMESTAMPTZ、NVARCHAR 和 GEOMETRY 数据类型。 |
 | `primary_tag_list`| 主标签列表，支持添加一个或多个主标签名称，最多可指定 `4` 个。主标签必须包含在标签列表内且指定为 NOT NULL，不支持浮点类型和除 VARCHAR 之外的变长数据类型。VARCHAR 类型长度默认 `64` 字节，最大长度为 `128` 字节。|
 | `keep_duration`| 可选参数，指定表的生命周期。超过设置的生命周期后，系统自动从数据库中清除目标表。默认值为 `0d`，即不会过期删除。支持配置的时间单位包括：秒（S 或 SECOND）、分钟（M 或 MINUTE）、小时（H 或 HOUR）、天（D 或 DAY）、周（W 或 WEEK）、月（MON 或 MONTH）、年（Y 或 YEAR）。取值必须是整数值，最大值不得超过 `1000` 年。<br > **说明** <br > - 当用户单独指定或者修改数据库内某一时序表的生命周期或分区时间范围时，该配置只适用于该时序表。<br > - 生命周期的配置不适用于当前分区。当生命周期的取值小于分区时间范围的取值时，即使表的生命周期已到期，由于数据存储在当前分区中，用户仍然可以查询数据。 <br > - 当时间分区的所有数据超过生命周期时间点（`now() - retention time`）时，系统尝试删除该分区的数据。如果此时用户正在读写该分区的数据，或者系统正在对该分区进行压缩或统计信息处理等操作，系统无法立即删除该分区的数据。系统会在下一次生命周期调度时再次尝试删除数据（默认情况下，每小时调度一次）。 <br > - 生命周期和分区时间范围设置与系统的存储空间密切相关。生命周期越长，分区时间范围越大，系统所需的存储空间也越大。有关存储空间的计算公式，参见[预估磁盘使用量](../../../db-operation/cluster-planning.md#预估磁盘使用量)。|
 | `active_duration`| 可选参数，指定数据的活跃时间。超过设置的时间后，系统自动压缩表数据。默认值为 `1d`，表示系统对表数据中 1 天前的分区进行压缩。支持配置的时间单位包括：秒（S 或 SECOND）、分钟（M 或 MINUTE）、小时（H 或 HOUR）、天（D 或 DAY）、周（W 或 WEEK）、月（MON 或 MONTH）、年（Y 或 YEAR）。默认时间单位为天（D 或 DAY）。取值必须是整数值，最大值不得超过 `1000` 年。如果设置为 `0`，表示不压缩表数据。 |
@@ -244,11 +243,9 @@ PRIMARY [TAGS|ATTRIBUTES] (<primary_tag_list>)
 
 `ALTER TABLE` 语句用于修改以下表信息：
 
-- 添加列或标签
-- 修改列或标签的数据类型或宽度
-- 删除列或标签
-- 修改表名、列名和标签名
-- 设置表的数据生命周期、活跃时间和数据目录分区的时间范围
+- 修改表名、设置表的数据生命周期、活跃时间和数据目录分区的时间范围
+- 添加列、修改列名、列的数据类型或宽度、设置列的默认值、删除列的默认值
+- 添加标签、修改标签名、标签的数据类型或宽度、删除标签
 
 ::: warning 说明
 
@@ -269,9 +266,9 @@ PRIMARY [TAGS|ATTRIBUTES] (<primary_tag_list>)
 
 ```sql
 ALTER TABLE <table_name> 
-[ADD [COLUMN] [IF NOT EXISTS] <colunm_name> <data_type> [NULL] 
+[ADD [COLUMN] [IF NOT EXISTS] <colunm_name> <data_type> [DEFAULT <expr> | NULL ] 
 |ADD [TAG | ATTRIBUTE] <tag_name> <tag_type>
-|ALTER [COLUMN] <colunm_name> [SET DATA] TYPE <new_type>
+|ALTER [COLUMN] <colunm_name> [SET DATA] TYPE <new_type> [SET DEFAULT <default_expr> | DROP DEFAULT ]
 |ALTER [TAG | ATTRIBUTE] <tag_name> [SET DATA] TYPE <new_type>
 |DROP [COLUMN] [IF EXISTS] <colunm_name>
 |DROP [TAG | ATTRIBUTE] <tag_name>
@@ -284,13 +281,22 @@ ALTER TABLE <table_name>
 ### 支持的操作
 
 - ADD
-  - `ADD COLUMN`: 添加列，需指定列名和数据类型。`COLUMN` 为可选关键字，如未使用，默认添加列。`IF NOT EXISTS` 关键字可选。当使用 `IF NOT EXISTS` 关键字时，如果列名不存在，系统创建列。如果列名存在，系统创建列失败，但不会报错。当未使用 `IF NOT EXISTS` 关键字时，如果列名不存在，系统创建列。如果列名存在，系统报错，提示列名已存在。`NULL` 关键字可选，默认为 `NULL`，且只支持 `NULL`。每张表最多支持 4096 列。
+  - `ADD COLUMN`: 添加列，需指定列名和数据类型，也支持指定列的默认值。每张表最多支持 4096 列。
+    - `COLUMN`：可选关键字，如未使用，默认添加列。
+    - `IF NOT EXISTS`：可选关键字。当使用 `IF NOT EXISTS` 关键字时，如果列名不存在，系统创建列。如果列名存在，系统创建列失败，但不会报错。当未使用 `IF NOT EXISTS` 关键字时，如果列名不存在，系统创建列。如果列名存在，系统报错，提示列名已存在。
+    - `DEFAULT <default_Expr>`：可选关键字。设置数据列的默认值。对于非时间类型的数据列，默认值只能是常量。对于时间类型的列（TIMESTAMPTZ 或 TIMESTAMP），默认值可以是常量，也可以是 `now()` 函数。如果默认值类型与列类型不匹配，设置默认值时，系统报错。支持默认值设置为 NULL。
+    - `NULL`：可选关键字，默认为 `NULL`，且只支持 `NULL`。
   - `ADD TAG/ATTRITBUTE`：添加标签，需指定标签的名称和数据类型，不支持添加主标签。
 - ALTER
-  - `ALTER COLUMN`: 修改列的数据类型或宽度，其中 `SET DATA` 为可选关键字，是否使用不影响修改列的数据类型和宽度。
+  - `ALTER COLUMN`: 修改列的数据类型或宽度，设置或删除列的默认值。
+    - `SET DATA`：可选关键字，是否使用不影响修改列的数据类型和宽度。
+    - `SET DEFAULT <default_expr>`：必选关键字。系统写入表数据时写入指定的默认值，从而不需要显式定义该列的值。对于非时间类型的数据列，默认值只能是常量。对于时间类型的列（TIMESTAMPTZ 或 TIMESTAMP），默认值可以是常量，也可以是 `now()` 函数。如果默认值类型与列类型不匹配，设置默认值时，系统报错。支持默认值设置为 NULL。
+    - `DROP DEFAULT`：必选关键字。删除已定义的列的默认值，删除后将不再写入默认值。
   - `ALTER TAG/ATTRITBUTE`：修改标签的数据类型或宽度，其中 `SET DATA` 为可选关键字，是否使用不影响修改标签的数据类型和宽度，不支持修改主标签的数据类型和宽度。
 - DROP
-  - `DROP COLUMN`: 删除列，需指定列名。`COLUMN` 为可选关键字，如未使用，默认删除列。`IF EXISTS` 关键字可选。当使用 `IF EXISTS` 关键字时，如果列名存在，系统删除列。如果列名不存在，系统删除列失败，但不会报错。当未使用 `IF EXISTS` 关键字时，如果列名存在，系统删除列。如果列名不存在，系统报错，提示列名不存在。
+  - `DROP COLUMN`: 删除列，需指定列名。
+    - `COLUMN`：可选关键字，如未使用，默认添加列。
+    - `IF EXISTS`：可选关键字。当使用 `IF EXISTS` 关键字时，如果列名存在，系统删除列。如果列名不存在，系统删除列失败，但不会报错。当未使用 `IF EXISTS` 关键字时，如果列名存在，系统删除列。如果列名不存在，系统报错，提示列名不存在。
   - `DROP TAG/ATTRITBUTE`：删除标签，需指定标签名称。不支持删除主标签。
 - RENAME
   - `RENAME TO`: 修改表的名称。
@@ -347,6 +353,10 @@ ALTER TABLE ts_table SET PARTITION INTERVAL = 2d;
 
 ALTER TABLE ts_table ADD COLUMN c3 INT NULL;
 
+-- 新增列并设置列的默认值。
+
+ALTER TABLE ts_table ADD COLUMN c4 default 'aaa';
+
 -- 删除列。
 
 ALTER TABLE ts_table DROP c3;
@@ -358,6 +368,14 @@ ALTER TABLE ts_table RENAME COLUMN c2 TO c4;
 -- 修改列的数据类型。
 
 ALTER TABLE ts_table ALTER COLUMN c3 TYPE INT8;
+
+-- 修改列的默认值。
+
+ALTER TABLE ts_table ALTER COLUMN c4 SET DEFAULT '789';
+
+-- 删除列的默认值。
+
+ALTER TABLE ts_table ALTER COLUMN c4 DROP DEFAULT;
 
 -- 新增标签。
 

@@ -7,7 +7,7 @@ id: ts-column
 
 ## 添加列
 
-KWDB 支持使用 `ALTER TABLE ... ADD COLUMN` 语句执行以下操作。`ADD COLUMN` 为在线操作，不会阻塞表中的数据读写。每张表最多支持 4096 列。
+KWDB 支持使用 `ALTER TABLE ... ADD COLUMN` 语句添加列。`ADD COLUMN` 为在线操作，不会阻塞表中的数据读写。每张表最多支持 4096 列。
 
 ::: warning 说明
 目前，KWDB 不支持一次添加多列。
@@ -19,7 +19,7 @@ KWDB 支持使用 `ALTER TABLE ... ADD COLUMN` 语句执行以下操作。`ADD C
 
 ### 语法格式
 
-![](../../../static/sql-reference/ts-add-column.png)
+![](../../../static/sql-reference/add_column_ts.png)
 
 ### 参数说明
 
@@ -30,15 +30,22 @@ KWDB 支持使用 `ALTER TABLE ... ADD COLUMN` 语句执行以下操作。`ADD C
 | `IF NOT EXISTS` | 可选关键字，当使用 `IF NOT EXISTS` 关键字时，如果列名不存在，系统创建列。如果列名存在，系统创建列失败，但不会报错。当未使用 `IF NOT EXISTS` 关键字时，如果列名不存在，系统创建列。如果列名存在，系统报错，提示列名已存在。 |
 | `column_name` | 列名，新增列名不得与待修改表的当前列名和标签名重复。列名的最大长度为 128 字节。 |
 | `data_type` | 数据类型。有关时序表支持的数据类型，参见[时序数据类型](../../data-type/data-type-ts-db.md)。|
+| `DEFAULT <default expr>` | 可选关键字。设置数据列的默认值。对于非时间类型的数据列，默认值只能是常量。对于时间类型的列（TIMESTAMPTZ 或 TIMESTAMP），默认值可以是常量，也可以是 `now()` 函数。如果默认值类型与列类型不匹配，设置默认值时，系统报错。支持默认值设置为 NULL。|
 | `NULL` | 可选关键字，默认为 `NULL`，且只支持 `NULL`。 |
 
 ### 语法示例
 
-以下示例为 `ts_table` 表增加一个名为 `color` 的列。
+- 以下示例为 `ts_table` 表增加一个名为 `color` 的列。
 
-```sql
-ALTER TABLE ts_table ADD COLUMN color varchar(30);
-```
+    ```sql
+    ALTER TABLE ts_table ADD COLUMN c3 INT NULL;
+    ```
+
+- 以下示例为 `ts_table` 表增加一个名为 `c4` 的列并设置该列的默认值为 `aaa`。
+
+    ```sql
+    ALTER TABLE ts_table ADD COLUMN c4 DEFAULT 'aaa';
+    ```
 
 ## 查看列
 
@@ -114,7 +121,7 @@ ALTER TABLE ts_table ADD COLUMN color varchar(30);
 
 ## 修改列
 
-KWDB 支持使用 `ALTER TABLE ... ALTER COLUMN` 语句修改列的数据类型和宽度。`ALTER COLUMN` 为在线操作，不会阻塞表中的数据读写。
+KWDB 支持使用 `ALTER TABLE ... ALTER COLUMN` 语句修改列的数据类型、宽度、设置或者删除列的默认值。`ALTER COLUMN` 为在线操作，不会阻塞表中的数据读写。
 
 ### 所需权限
 
@@ -122,7 +129,7 @@ KWDB 支持使用 `ALTER TABLE ... ALTER COLUMN` 语句修改列的数据类型�
 
 ### 语法格式
 
-![](../../../static/sql-reference/A1ypbwKAdoiJPfxQlTScIY0knOh.png)
+![](../../../static/sql-reference/alter_column_ts.png)
 
 ### 参数说明
 
@@ -131,14 +138,28 @@ KWDB 支持使用 `ALTER TABLE ... ALTER COLUMN` 语句修改列的数据类型�
 | `table_name` | 表名，支持通过 `<database_name>.<table_name>` 指定其他数据库中的表。如未指定，则默认使用当前数据库。 |
 | `column_name` | 待修改列的名称。 |
 | `new_type` | 拟修改的数据类型和宽度。<br > **说明** <br >- 转换后的数据类型宽度必须大于原数据类型的宽度。例如，INT4 可以转成 INT8，但不能转成 INT2，CHAR(200) 可以转为 VARCHAR (254), 但不能转为 VARCHAR (100)。<br >- CHAR、VARCHAR、NCHAR、NVARCHAR 字符类型支持同数据类型的宽度转换，但只能增加宽度不能降低宽度。例如，CHAR(100) 可以转转为 CHAR(200)，不能转为 CHAR(50)。有关 KWDB 支持修改的数据类型、默认宽度、最大宽度、可转换的数据类型等详细信息，参见[时序数据类型](../../data-type/data-type-ts-db.md)。 |
+| `SET DEFAULT <default_expr>` | 必选关键字。系统写入表数据时写入指定的默认值，从而不需要显式定义该列的值。对于非时间类型的数据列，默认值只能是常量。对于时间类型的列（TIMESTAMPTZ 或 TIMESTAMP），默认值可以是常量，也可以是 `now()` 函数。如果默认值类型与列类型不匹配，设置默认值时，系统报错。支持默认值设置为 NULL。|
+| `DROP DEFAULT` | 必选关键字。删除已定义的列的默认值，删除后将不再写入默认值。|
 
 ### 语法示例
 
-以下示例修改 `ts_table` 表中 `c3` 列的数据类型。
+- 以下示例修改 `ts_table` 表中 `c3` 列的数据类型。
 
-```sql
-ALTER TABLE ts_table ALTER COLUMN c3 TYPE INT8;
-```
+    ```sql
+    ALTER TABLE ts_table ALTER COLUMN c3 TYPE INT8;
+    ```
+
+- 以下示例为 `ts_table` 表中 `c4` 列设置默认值 `789`。
+
+    ```sql
+    ALTER TABLE ts_table ALTER COLUMN c4 SET DEFAULT '789';
+    ```
+
+- 以下示例删除 `ts_table` 表中 `c4` 列的默认值。
+
+    ```sql
+    ALTER TABLE ts_table ALTER COLUMN c4 DROP DEFAULT;
+    ```
 
 ## 重命名列
 
