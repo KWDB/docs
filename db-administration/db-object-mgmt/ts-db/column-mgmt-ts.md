@@ -201,7 +201,7 @@ ALTER TABLE ts_table RENAME COLUMN c2 TO c4;
 
 ## 删除列
 
-KWDB 支持使用 `ALTER TABLE ... DROP COLUMN` 语句修改列名。`DROP COLUMN` 为在线操作，不会阻塞表中的数据读写。
+KWDB 支持使用 `ALTER TABLE ... DROP COLUMN` 语句删除列。`DROP COLUMN` 为在线操作，不会阻塞表中的数据读写。
 
 ::: warning 说明
 
