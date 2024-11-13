@@ -3,37 +3,32 @@ title: MyBatis
 id: connect-mybatis
 ---
 
-# MyBatis 连接 KWDB 数据库
+# 使用 MyBatis 连接 KWDB 数据库
 
 [MyBatis](https://mybatis.org/mybatis-3/index.html) 是开源 Java 应用持久层框架，支持定制化 SQL、存储过程以及高级映射。MyBatis 避免了几乎所有的 JDBC 代码和手动设置参数以及获取结果集。该框架可以通过简单的 XML 或注解来配置和映射原生信息，将接口和 Java 的 POJOs 对象映射成数据库中的记录。在 Java 应用程序中，开发人员通常会基于 JDBC 驱动，集成 MyBatis 框架，创建一个基于 SpringBoot+Maven 的 Java 应用程序，从而实现用户应用程序与底层数据库之间的数据信息交互和 CRUD 等操作。
 
-本文档介绍基于 SpringBoot+Maven 项目使用 MyBatis 连接 KWDB 的配置信息。用户在完成配置后，可以基于 MyBatis 框架的应用程序开发流程，编写应用程序对 KWDB 数据库进行操作。
+本文档介绍基于 SpringBoot+Maven 项目使用 MyBatis 连接 KWDB 的配置信息。用户在完成配置后，可以基于 MyBatis 框架的应用程序开发流程，编写应用程序对 KWDB 数据库进行操作。MyBatis 使用时的常见问题可参见 [Mybatis 和 Mybatis-Plus](../../../faqs/faqs.md#mybatis-和-mybatis-plus)。
 
 ## 前提条件
 
-- [安装 Java](https://docs.oracle.com/en/java/javase/22/install/overview-jdk-installation.html)（1.8 及以上版本）。
+- [安装 openJDK](https://openjdk.org/install/)（1.8 及以上版本）。
 - [安装 Maven](https://maven.apache.org/install.html)（3.6 及以上版本）。
 - 安装 KWDB 数据库、配置数据库认证方式、创建数据库。
+- 创建具有表级别及以上操作权限的用户。
 - 获取 KaiwuDB JDBC 驱动包。
 
 ## 配置连接
 
-1. 运行以下命令，将 KaiwuDB JDBC 安装到本地 Maven 仓库中。
-
-    ```shell
-    mvn install:install-file"-Dfile=../kaiwudb-jdbc.2.0.4.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=2.0.4" "-Dpackaging=jar"
-    ```
-
-2. 在 `pom.xml` 中添加依赖，将 KaiwuDB JDBC 驱动和 MyBatis 引入到应用程序中。
+1. 在 `pom.xml` 中添加依赖，将 KaiwuDB JDBC 驱动和 MyBatis 引入到应用程序中。
 
     ```xml
     <!--kaiwudb-jdbc-->
     <dependency>
     <groupId>com.kaiwudb</groupId>
     <artifactId>kaiwudb-jdbc</artifactId>
-    <version>2.0.4</version>
+    <version>2.0.4.1</version>
     </dependency>
-
+    
     <!--mybatis-->
     <dependency>
     <groupId>org.mybatis.spring.boot</groupId>
@@ -41,6 +36,12 @@ id: connect-mybatis
     <version>2.1.3</version>
     </dependency>
     ```
+    
+2. 如果 KaiwuDB JDBC 无法正常加载使用，运行以下命令，将 KaiwuDB JDBC 驱动安装到本地 Maven 仓库中。
+
+   ```shell
+   mvn install:install-file "-Dfile=../kaiwudb-jdbc-2.0.4.1.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=2.0.4.1" "-Dpackaging=jar"
+   ```
 
 3. 配置数据源。
 
@@ -168,7 +169,7 @@ id: connect-mybatis
 
 在 SpringBoot+MyBatis 应用程序中，用户调用接口访问及操作数据时，内部数据传递流程如下图所示：
 
-![](../../static/development/HA0TbvWieoRopKxMB66cM4rSngg.png)
+![](../../../static/development/HA0TbvWieoRopKxMB66cM4rSngg.png)
 
 当 SpringBoot 集成 KaiwuDB JDBC 和 MyBatis 后，用户可以使用 MyBatis 编写 Controller 层、Service 层、Mapper 层及 XML 应用程序，从而实现与 KWDB 的数据信息交互及操作使用等。为了便于用户基于 MyBatis 快速开发适用于 KWDB 数据库的应用程序，本节介绍 MyBatis 应用开发的基本流程并针对流程中的 Controller 层、Service 层、Mapper 层及 XML 提供相应的配置示例。
 

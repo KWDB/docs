@@ -3,19 +3,20 @@ title: Hibernate
 id: connect-hibernate
 ---
 
-# Hibernate 连接 KWDB 数据库
+# 使用 Hibernate 连接 KWDB 数据库
 
 Hibernate 是一个广泛使用的 ORM 框架，简化了 Java 应用程序中的数据库持久化操作。开发者可以使用 Java 对象与数据库交互，而不需要编写大量的 SQL 代码。
 
-KWDB 开发了适用于 KWDB 的`Dialect`，定义了 KWDB 数据库特有的 SQL 方言，使 Hibernate 能够生成与 KWDB 兼容的 SQL 查询。
+KWDB 开发了适用于 KWDB 的 `Dialect`，定义了 KWDB 数据库特有的 SQL 方言，使 Hibernate 能够生成与 KWDB 兼容的 SQL 查询。
 
 KWDB 支持开发人员通过在 SpringBoot 项目中集成 JPA、KaiwuDB JDBC 和 Lombok 等工具，使用 Hibernate 框架协议来连接 KWDB 数据库，执行数据查询、写入和删除操作。
 
 ## 前提条件
 
-- [安装 Java](https://docs.oracle.com/en/java/javase/22/install/overview-jdk-installation.html)（1.8 及以上版本）。
+- [安装 openJDK](https://openjdk.org/install/)（1.8 及以上版本）。
 - [安装 Maven](https://maven.apache.org/install.html)（3.6 及以上版本）。
-- 安装 KWDB 数据库、创建具有表级别及以上操作权限的用户、创建数据库。
+- 安装 KWDB 2.0.4 及以上版本、配置数据库认证方式、创建数据库。
+- 创建具有表级别及以上操作权限的用户。
 - 获取 KaiwuDB JDBC 驱动包。
 - 获取 KWDB 开发适配的 Hibernate Core 5.6.16 安装包。
 
@@ -112,19 +113,19 @@ KWDB 支持开发人员通过在 SpringBoot 项目中集成 JPA、KaiwuDB JDBC �
    </project>
    ```
 
-2. 将 Hibernate 安装到本地 Maven 仓库中。
+2. 如果 KaiwuDB JDBC 无法正常加载使用，运行以下命令，将 KaiwuDB JDBC 驱动安装到本地 Maven 仓库中。
+
+   ```shell
+   mvn install:install-file "-Dfile=../kaiwudb-jdbc-2.0.4.1.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=2.0.4.1" "-Dpackaging=jar"
+   ```
+
+3. 将 Hibernate 安装到本地 Maven 仓库中。
 
    示例：
 
    ```Shell
    mvn install:install-file "-Dfile=../hibernate-core-5.6.16.RELEASE.jar" "-DpomFile=../hibernate-core-5.6.16.RELEASE.pom" "-DgroupId=org.hibernate -DartifactId=hibernate-core" "-Dversion=5.6.16.RELEASE" "-Dpackaging=jar"
    ```
-
-3. 将 KaiwuDB JDBC 安装到本地 Maven 仓库中。
-
-    ```Shell
-    mvn install:install-file -Dfile=./kaiwudb-jdbc-2.0.4.jar -DgroupId=com.kaiwudb -DartifactId=kaiwudb-jdbc -Dversion=2.0.4 -Dpackaging=jar
-    ```
 
 ## 配置示例
 
@@ -151,8 +152,8 @@ KWDB 时序库和关系库在配置和使用上有所不同，以下章节分别
      datasource:
        driver-class-name: com.kaiwudb.Driver
        url: jdbc:kaiwudb://127.0.0.1:26257/test_tsdb
-       username: test
-       password: Password@2024
+       username: <user_name>
+       password: <password>
      jpa:
        properties:
          # 禁用事务管理
@@ -170,7 +171,7 @@ KWDB 时序库和关系库在配置和使用上有所不同，以下章节分别
 
    示例：
 
-   示例中，@Table 标签中的 name 名称`tsdb_table`为对应的时序表名称，每列字段对应目前 KWDB 支持的各种数据类型；`t1` 列作为时序表的主标签列使用。
+   示例中，@Table 标签中的 name 名称`tsdb_table`为对应的时序表名称，每列字段对应目前 KWDB 支持的各种数据类型；`t1` 列作为 KWDB 时序表的主标签列使用。
 
    ```Java
    @Data
@@ -235,42 +236,42 @@ KWDB 时序库和关系库在配置和使用上有所不同，以下章节分别
    2. 在`service/impl`目录下定义 Service 实现类。
 
       ::: warning 说明
-      由于时序库不支持事务管理，而 JPA 要求对事务的管理，对于 DML 语法的 INSERT 和 DELETE 操作，需通过使用 JdbcTemplate 来实现。
+      由于 KWDB 时序库不支持事务管理，而 JPA 要求对事务的管理，对于 DML 语法的 INSERT 和 DELETE 操作，需通过使用 JdbcTemplate 来实现。
       :::
       示例：
 
       ```Java
       @Service
       class TsdbServiceImpl implements TsdbService {
-      
+
         @Autowired
         private JdbcTemplate jdbcTemplate;
         @Autowired
         private TsdbEntityRepository repository;
-      
+
         @Override
         public int insert(TsdbEntity entity) {
           String sql = "INSERT INTO tsdb_table (ts, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, t1) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
           return jdbcTemplate.update(sql, entity.getTs(), entity.getC1(), entity.getC2(), entity.getC3(), entity.getC4(), entity.getC5(), entity.getC6(), entity.getC7(), entity.getC8(), entity.getC9(), entity.getC10(), entity.getC11(), entity.getC12(), entity.getT1());
         }
-      
+
         @Override
         public int delete(int t1, String ts) {
           String sql = "DELETE FROM tsdb_table WHERE t1 = ? AND ts = ?";
           return jdbcTemplate.update(sql, t1, ts);
         }
-      
+
         @Override
         public TsdbEntity findByT1AndTs(int t1, String ts) throws Exception {
           SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
           return repository.findByT1AndTs(t1, new Timestamp(sdf.parse(ts).getTime()));
         }
-      
+
         @Override
         public List<TsdbEntity> findList() {
           return repository.findAll();
         }
-      
+
       }
       ```
 
@@ -332,13 +333,13 @@ KWDB 时序库和关系库在配置和使用上有所不同，以下章节分别
 
 6. 验证操作
    - 添加数据
-      ![img](../../static/development/ts-add.png)
+      ![img](../../../static/development/ts-add.png)
    - 删除数据
-      ![img](../../static/development/ts-delete.png)
+      ![img](../../../static/development/ts-delete.png)
    - 查询指定主标签和时间的数据详情
-      ![img](../../static/development/ts-query.png)
+      ![img](../../../static/development/ts-query.png)
    - 查询全部数据集合
-      ![img](../../static/development/ts-full-query.png)
+      ![img](../../../static/development/ts-full-query.png)
 
 ### 关系数据库
 
@@ -351,8 +352,8 @@ KWDB 时序库和关系库在配置和使用上有所不同，以下章节分别
      datasource:
        driver-class-name: com.kaiwudb.Driver
        url: jdbc:kaiwudb://127.0.0.1:26257/test_rdb
-       username: test
-       password: Password@2024
+       username: <user_name>
+       password: <password>
      jpa:
        open-in-view: false
        hibernate:
@@ -495,7 +496,7 @@ KWDB 时序库和关系库在配置和使用上有所不同，以下章节分别
         }
       
       }
-      ```
+         ```
 
 5. 在`controller`目录下定义 Controller 层。
 
@@ -549,10 +550,10 @@ KWDB 时序库和关系库在配置和使用上有所不同，以下章节分别
 
 6. 验证操作
    - 添加数据
-    ![img](../../static/development/rdb-add.png)
+    ![img](../../../static/development/rdb-add.png)
    - 删除数据
-    ![img](../../static/development/rdb-delete.png)
+    ![img](../../../static/development/rdb-delete.png)
    - 查询指定时间的数据
-      ![img](../../static/development/rdb-query.png)
+      ![img](../../../static/development/rdb-query.png)
    - 查询全部数据集合
-      ![img](../../static/development/rdb-full-query.png)
+      ![img](../../../static/development/rdb-full-query.png)

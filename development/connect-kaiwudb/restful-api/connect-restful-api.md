@@ -3,7 +3,7 @@ title: RESTful API
 id: connect-restful-api
 ---
 
-# RESTful API 连接 KWDB 数据库
+# 使用 RESTful API 连接 KWDB 数据库
 
 KWDB 支持用户通过发送 HTTP 请求与数据库进行交互。用户可以在 HTTP 请求头部添加认证信息，在请求体中包含执行数据库操作的 SQL 语句，并获得 JSON 格式的响应结果。KWDB 提供的 RESTful API 接口见 [RESTful API 接口](#restful-api-接口)，支持的认证方式见[认证方式](#认证方式)，使用的 HTTP 状态码见 [HTTP 状态码](#http-状态码)。
 
@@ -129,6 +129,7 @@ Accept: text/plain</code></pre></td>
   </tbody>
 </table>
 
+
 ### 配置示例
 
 以下示例发送 HTTP 请求，获取认证令牌。
@@ -196,7 +197,7 @@ DDL 接口用于发送包含 DDL 语句的 HTTP 请求。用户可以使用此�
       <td>请求头部</td>
       <td><pre><code>Content-Type: text/plain
 Accept: application/json
-Authorization: Basic "token" 或 Basic "base64(user:password)</code></pre></td>
+Authorization: Basic "token" 或 Basic "base64(user:password)"</code></pre></td>
       <td> - <code>token（string）</code>：Login 接口生成的认证令牌。<br> - <code>base64(user:password)</code>：Base64 编码后的用户名和密码信息。</td>
     </tr>
     <tr>
@@ -348,6 +349,7 @@ Accept: text/plain</code></pre></td>
       <td><pre><code>{
   "code": "code",
   "desc": "desc1","desc2" ... "descN",
+  "rows": "string",
   "notice": "string",
   "time": "time"
 }</code></pre></td>
@@ -815,6 +817,7 @@ Authorization: Basic "token" 或 Basic "base64(user:password)"</code></pre></td>
   </tbody>
 </table>
 
+
 ### 响应信息
 
 下表列出 InfluxDB 接口的响应信息：
@@ -851,6 +854,7 @@ Accept: text/plain</code></pre></td>
     </tr>
   </tbody>
 </table>
+
 
 ### 配置示例
 
@@ -1019,22 +1023,22 @@ Authorization: Basic cm9vdDprd2RicGFzc3dvcmQ=
 - 普通用户：查看自己正在使用的会话的信息。
 
     ```json
-    {
-    "code":0,
-    "tokens":[{"SessionID":"1970e371-5947-11ef-8726-000c29585cae","Username":"u1","Token":"9c7e0ad44a9e02dc67fb2f3e48446769","MaxLifeTime":3600,"LastLoginTime":"2024-08-13 07:41:08","ExpirationTime":"2024-08-13 08:41:08"}]
-    }
-    ```
+  {
+   "code":0,
+   "tokens":[{"SessionID":"1970e371-5947-11ef-8726-000c29585cae","Username":"u1","Token":"9c7e0ad44a9e02dc67fb2f3e48446769","MaxLifeTime":3600,"LastLoginTime":"2024-08-13 07:41:08","ExpirationTime":"2024-08-13 08:41:08"}]
+  }
+  ```
 
 - 管理员用户：查看所有会话的相关信息。
 
-    ```json
-    {"code":0,
-    "tokens":[
-    {"SessionID":"50830553-3e83-11ef-a323-b4055d17f786","Username":"u1","Token":"c2ff2c6d*","MaxLife Time":3600,"LastLoginTime":"2024-07-10 06:11:58","ExpirationTime":"2024-07-10 07:11:58"},
-    {"SessionID":"9bf2fa13-3e83-11ef-a323-b4055d17f786","Username":"u1","Token":"f9f3a39d*","MaxLife Time":3600,"LastLoginTime":"2024-07-10 06:14:04","ExpirationTime":"2024-07-10 07:14:04"}
-    ]
-    }
-    ```
+  ```json
+  {"code":0,
+  "tokens":[
+  {"SessionID":"50830553-3e83-11ef-a323-b4055d17f786","Username":"u1","Token":"c2ff2c6d*","MaxLife Time":3600,"LastLoginTime":"2024-07-10 06:11:58","ExpirationTime":"2024-07-10 07:11:58"},
+  {"SessionID":"9bf2fa13-3e83-11ef-a323-b4055d17f786","Username":"u1","Token":"f9f3a39d*","MaxLife Time":3600,"LastLoginTime":"2024-07-10 06:14:04","ExpirationTime":"2024-07-10 07:14:04"}
+  ]
+  }
+  ```
 
 示例 2：以下示例发送 HTTP 请求，删除会话。
 
@@ -1128,6 +1132,6 @@ CREATE TABLE ts_table(ts timestamp not null, power int) tags(location varchar(15
 | 200                                        | 成功                                         |
 | 400                                        | 参数错误                                     |
 | 401                                        | 认证失败                                     |
-| 404                                        | URL 不存在                                   |
+| 404                                        | URL不存在                                   |
 | 500                                        | 内部错误                                    |
 | 503                                        | 系统资源不足                                 |

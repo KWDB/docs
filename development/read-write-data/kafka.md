@@ -19,6 +19,7 @@ id: kafka
 - [安装 Java](https://docs.oracle.com/en/java/javase/22/install/overview-jdk-installation.html)（1.8 及以上版本）。
 - [安装 Maven](https://maven.apache.org/install.html)（3.6 及以上版本）。
 - [安装 Kafka](https://kafka.apache.org/)（3.4.1 及以上版本），并且将 `$KAFKA_HOME/bin` 目录加入系统环境变量路径中。
+
   ```shell
   // 打开profile文件
   vi ~/.profile
@@ -26,6 +27,7 @@ id: kafka
   export KAFKA_HOME=/opt/kafka
   export PATH=$PATH:$KAFKA_HOME/bin
   ```
+  
 - 安装 KWDB 数据库、配置数据库认证方式、创建数据库。
 - 获取 KaiwuDB Kafka Connector 插件安装包。
 

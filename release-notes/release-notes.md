@@ -54,8 +54,8 @@ KWDB 2.0.4 版本在保持原有特性的基础上，在分布式架构、DDL �
 
 ### 使用语言及数据库连接方式
 
-- 支持通过 ODBC 及 Hibernate 框架协议连接数据库，更多信息见 [PostgreSQL ODBC 连接 KWDB 数据库](../development/connect-kaiwudb/connect-odbc.md)和 [Hibernate 连接 KWDB 数据库](../development/connect-kaiwudb/connect-hibernate.md)。
-- 允许普通用户删除用户自身的 Restful API 连接，更多信息见 [RESTful API 连接 KWDB 数据库](../development/connect-kaiwudb/connect-restful-api.md)。
+- 支持通过 ODBC 及 Hibernate 框架协议连接数据库，更多信息见 [PostgreSQL ODBC 连接 KWDB 数据库](../development/connect-kaiwudb/c-plus-plus/connect-odbc.md)和 [Hibernate 连接 KWDB 数据库](../development//connect-kaiwudb/java/connect-hibernate.md)。
+- 允许普通用户删除用户自身的 Restful API 连接，更多信息见 [RESTful API 连接 KWDB 数据库](../development/connect-kaiwudb/restful-api/connect-restful-api.md)。
 - 优化 Kafka 连接数据库的写入性能，单节点 10 万条数据的插入耗时不超过 1 秒。
 
 ## 升级说明
