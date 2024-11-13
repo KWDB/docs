@@ -7,7 +7,7 @@ id: connect-odbc
 
 开放数据库连接（Open Database Connectivity，ODBC）是一种应用程序编程接口（Application Programming Interface，API），为应用程序访问数据库存储的信息提供了一种标准。ODBC 为异构数据库访问提供统一接口，实现异构数据库间的数据共享。使用 ODBC API 的应用程序可以访问任何符合 ODBC 标准的数据库中的数据，通常无需修改应用程序代码。
 
-![](../../static/development/odbc-connect-architecture.png)
+![](../../../static/development/odbc-connect-architecture.png)
 
 本文介绍如何使用 PostgreSQL ODBC 连接 KWDB 数据库。
 
@@ -27,21 +27,21 @@ id: connect-odbc
 
 1. 单击**开始**，然后选择 **控制面板** > **系统和安全** > **管理工具**，打开**管理工具**窗口。
 
-    ![](../../static/development/odbc-connect-win-01.png)
+    ![](../../../static/development/odbc-connect-win-01.png)
 
 2. 在**管理工具**窗口，双击 **ODBC 数据源(64位)**，打开 **ODBC 数据源管理程序**窗口。
 
 3. 在 **ODBC 数据源管理程序**窗口，选择**用户 DSN** 页签，然后单击**添加**。
 
-    ![](../../static/development/odbc-connect-win-02.png)
+    ![](../../../static/development/odbc-connect-win-02.png)
 
 4. 在**创建新数据源**窗口，选择 **PostgreSQL ANSI(x64)**，然后单击**完成**。
 
-    ![](../../static/development/odbc-connect-win-03.png)
+    ![](../../../static/development/odbc-connect-win-03.png)
 
 5. 配置数据源。
 
-    ![](../../static/development/odbc-connect-win-04.png)
+    ![](../../../static/development/odbc-connect-win-04.png)
 
     - `Data Source`：数据源名称。
     - `Description`：可选项，数据源描述信息。

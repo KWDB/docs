@@ -5,7 +5,7 @@ id: use-kaiwudb-jdbc
 
 # 使用 KaiwuDB JDBC 管理 KWDB
 
-安装部署完 KWDB 以后，用户可以使用 [KaiwuDB JDBC](../../development/connect-kaiwudb/connect-jdbc.md) 连接 KWDB 数据库，并创建数据库、管理数据库对象等。
+安装部署完 KWDB 以后，用户可以使用 [KaiwuDB JDBC](../../development/connect-kaiwudb/java/connect-jdbc.md) 连接 KWDB 数据库，并创建数据库、管理数据库对象等。
 
 ## 时序数据
 

@@ -5,7 +5,7 @@ id: emqx
 
 # EMQX 读写数据
 
-[EMQX](https://www.emqx.io/) 是一款开源的高可用分布式 MQTT 消息服务器。KWDB 支持通过 RESTful API 将 EMQX 管理的数据同步写入到 KWDB 数据库。KWDB RESTful API 提供了 Insert 接口，该接口通过发送包含 INSERT 语句的 HTTP 请求，将来自 EMQX 的数据插入 KWDB 数据库的表中。有关 Insert API 接口的请求信息，参见 [Insert 接口](../connect-kaiwudb/connect-restful-api.md#insert-接口)。
+[EMQX](https://www.emqx.io/) 是一款开源的高可用分布式 MQTT 消息服务器。KWDB 支持通过 RESTful API 将 EMQX 管理的数据同步写入到 KWDB 数据库。KWDB RESTful API 提供了 Insert 接口，该接口通过发送包含 INSERT 语句的 HTTP 请求，将来自 EMQX 的数据插入 KWDB 数据库的表中。有关 Insert API 接口的请求信息，参见 [Insert 接口](../connect-kaiwudb/restful-api/connect-restful-api.md#insert-接口)。
 
 用户需要基于 Insert 接口请求信息，在 EMQX Dashboard 配置面向 KWDB 的连接和请求信息，以便 EMQX 在收到数据时，将数据同步写入到 KWDB 数据库。
 
