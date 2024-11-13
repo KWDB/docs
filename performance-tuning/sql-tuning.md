@@ -17,7 +17,7 @@ KWDB 支持以下 SQL 查询性能调优方式：
 用户可以使用 `ts.sql.query_opt_mode` 集群参数配置是否开启各优化功能。以下示例开启多谓词顺序优化和标量子查询优化。
 
 ```sql
-SET CLUSTER SETTING sql.query_opt_mode = 1100;
+SET CLUSTER SETTING ts.sql.query_opt_mode = 1100;
 ```
 
 有关开启各优化功能的详细信息，参见[集群参数配置](../db-operation/cluster-settings-config.md)。
