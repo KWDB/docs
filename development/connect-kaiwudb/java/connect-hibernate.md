@@ -9,7 +9,7 @@ Hibernate 是一个广泛使用的 ORM 框架，简化了 Java 应用程序中�
 
 KWDB 开发了适用于 KWDB 的 `Dialect`，定义了 KWDB 数据库特有的 SQL 方言，使 Hibernate 能够生成与 KWDB 兼容的 SQL 查询。
 
-KWDB 支持开发人员通过在 SpringBoot 项目中集成 JPA、KWDB JDBC 和 Lombok 等工具，使用 Hibernate 框架协议来连接 KWDB 数据库，执行数据查询、写入和删除操作。
+KWDB 支持开发人员通过在 SpringBoot 项目中集成 JPA、KaiwuDB JDBC 和 Lombok 等工具，使用 Hibernate 框架协议来连接 KWDB 数据库，执行数据查询、写入和删除操作。
 
 ## 前提条件
 

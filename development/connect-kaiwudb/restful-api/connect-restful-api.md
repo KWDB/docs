@@ -197,7 +197,7 @@ DDL 接口用于发送包含 DDL 语句的 HTTP 请求。用户可以使用此�
       <td>请求头部</td>
       <td><pre><code>Content-Type: text/plain
 Accept: application/json
-Authorization: Basic "token" 或 Basic "base64(user:password)</code></pre></td>
+Authorization: Basic "token" 或 Basic "base64(user:password)"</code></pre></td>
       <td> - <code>token（string）</code>：Login 接口生成的认证令牌。<br> - <code>base64(user:password)</code>：Base64 编码后的用户名和密码信息。</td>
     </tr>
     <tr>
