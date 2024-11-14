@@ -22,7 +22,7 @@ SET CLUSTER SETTING ts.sql.query_opt_mode = 1100;
 
 有关开启各优化功能的详细信息，参见[集群参数配置](../db-operation/cluster-settings-config.md)。
 
-## 多谓语顺序优化
+## 多谓词顺序优化
 
 通常，在数据库查询中，谓词用于 `SELECT` 语句中的 `WHERE` 子句或者 `HAVING` 子句中，筛选出满足特定条件的数据行。多谓词顺序优化指的是针对查询语句中的多个过滤条件，根据谓词选择率调整谓词顺序，使得尽可能少的执行过滤条件，减少查询的数据集大小，从而提高查询的效率。
 
@@ -47,7 +47,7 @@ SET CLUSTER SETTING ts.sql.query_opt_mode = 1100;
 
 在跨模查询中，Inside 指跨模场景中的时序端，Outside 指跨模场景中的关系端。Inside-out 优化指跨模场景中，由时序端发起的优化。当跨模场景中需要内连接（`INNER JOIN`）关联查询数据时，若符合分组（`GROUP BY`）和关联查询（`JOIN ON`）前提条件，时序相关的查询操作下推至时序引擎执行，减少数据传输和编码量，提升查询效率。
 
-Inside-out 优化包括 Inside-out 下推聚合优化和 Inside-out 下推 time_bucket 优化两种方式。这两种方式都必须满足一定的前提条件，才能实查询优化。Inside-out 下推聚合优化和 Inside-out 下推 time_bucket 优化对分组（`GROUP BY`） 和关联查询（`JOIN ON`）的要求基本一致。只是对于 Inside-out 下推 time_bucket 优化而言，`GROUP BY` 列可以是时序表的单个标签列，也可以是 `time_bucket` 列。
+Inside-out 优化包括 Inside-out 下推聚合优化和 Inside-out 下推 time_bucket 优化两种方式。这两种方式都必须满足一定的前提条件，才能实现查询优化。Inside-out 下推聚合优化和 Inside-out 下推 time_bucket 优化对分组（`GROUP BY`） 和关联查询（`JOIN ON`）的要求基本一致。只是对于 Inside-out 下推 time_bucket 优化而言，`GROUP BY` 列可以是时序表的单个标签列，也可以是 `time_bucket` 列。
 
 - 分组（`GROUP BY`）
   - 跨模查询未使用 `GROUP BY` 子句对查询结果进行分组，直接对时序表和关系表的关联查询结果进行聚合操作，例如 `SELECT MAX(ts.e1) FROM ts, re WHERE ts.tag1 = re.id;`。
