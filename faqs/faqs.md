@@ -574,7 +574,7 @@ id: faqs
     4. 在 KaiwuDB DataX Utils 所在目录，执行数据迁移命令时，设置 JVM 参数，增加内存。
 
         ```shell
-        java -jar -Dtype=data -DyamlPath=<yml_path> -DdataxPath=<datax_path> -Dpython=<python>  -Darguments="$bin_path --jvm=\"-Xms2G -Xmx4G\"" kaiwudb-datax-utils-2.1.0.jar
+        java -jar -Dtype=data -DyamlPath=<yml_path> -DdataxPath=<datax_path> -Dpython=<python>  -Darguments="--jvm=\"-Xms2G -Xmx4G\"" kaiwudb-datax-utils-2.1.0.jar
         ```
 
 ## 产品生态 FAQ
