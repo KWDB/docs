@@ -189,7 +189,7 @@ tar -zxvf <package_name>
 
     或者
 
-    ```sql
+    ```shell
     systemctl status kaiwudb
     ```
 
