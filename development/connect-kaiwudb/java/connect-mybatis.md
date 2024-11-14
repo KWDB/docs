@@ -129,39 +129,39 @@ id: connect-mybatis
         @Configuration
         @MapperScan(basePackages = "com.kaiwudb.kwdb.mapper.rdb", sqlSessionTemplateRef = "sqlSessionTemplate")
         public class DatabaseConfig {
-        @Bean(name = "dataSource")
-        @ConfigurationProperties(prefix = "spring.rdb-datasource")
-        @Primary
-        public DataSource dataSource() {
-        return DataSourceBuilder.create().build();
-        }
+          @Bean(name = "dataSource")
+          @ConfigurationProperties(prefix = "spring.rdb-datasource")
+          @Primary
+          public DataSource dataSource() {
+            return DataSourceBuilder.create().build();
+          }
         
-        @Bean(name = "jdbcTemplate")
-        public JdbcTemplate jdbcTemplate(@Qualifier("dataSource") DataSource dataSource) {
-        return new JdbcTemplate(dataSource);
-        }
+          @Bean(name = "jdbcTemplate")
+          public JdbcTemplate jdbcTemplate(@Qualifier("dataSource") DataSource dataSource) {
+            return new JdbcTemplate(dataSource);
+          }
         
-        @Bean(name = "sqlSessionFactory")
-        @Primary
-        public SqlSessionFactory sqlSessionFactory(@Qualifier("dataSource") DataSource dataSource) throws Exception {
-        SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
-        bean.setDataSource(dataSource);
-        /*加载所有的 mapper.xml 映射文件*/
-        bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mapper/rdb/*.xml"));
-        return bean.getObject();
-        }
+          @Bean(name = "sqlSessionFactory")
+          @Primary
+          public SqlSessionFactory sqlSessionFactory(@Qualifier("dataSource") DataSource dataSource) throws Exception {
+            SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
+            bean.setDataSource(dataSource);
+            /*加载所有的 mapper.xml 映射文件*/
+            bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mapper/rdb/*.xml"));
+            return bean.getObject();
+          }
         
-        @Bean(name = "transactionManager")
-        @Primary
-        public DataSourceTransactionManager transactionManager(@Qualifier("dataSource") DataSource dataSource) {
-        return new DataSourceTransactionManager(dataSource);
-        }
+          @Bean(name = "transactionManager")
+          @Primary
+          public DataSourceTransactionManager transactionManager(@Qualifier("dataSource") DataSource dataSource) {
+            return new DataSourceTransactionManager(dataSource);
+          }
         
-        @Bean(name = "sqlSessionTemplate")
-        @Primary
+          @Bean(name = "sqlSessionTemplate")
+          @Primary
         public SqlSessionTemplate sqlSessionTemplate(@Qualifier("sqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
-        return new SqlSessionTemplate(sqlSessionFactory);
-        }
+            return new SqlSessionTemplate(sqlSessionFactory);
+          }
         }
         ```
 
@@ -239,12 +239,10 @@ Mapper 用于定义数据库的操作接口。接口的实现类需要通过 XML
  public interface TsdbMapper {
   // 创建时序表
   void createTsTable(TsdbTable table);
-
  
   // 删除时序表
   void dropTable(@Param("tableName") String tableName);
 
- 
   // 插入时序数据
   int insert(@Param("tableName") String tableName, @Param("tsdbData") TsdbData tsdbData);
 
@@ -396,10 +394,10 @@ Controller 层是应用程序的表示层，Controller 层接收用户的请求�
 
 ```java
 @RestController
- @RequestMapping("ts_db")
- @Api(tags = "2 时序数据库接口")
- @ApiSort(value = 2)
- public class TsdbController {
+@RequestMapping("ts_db")
+@Api(tags = "2 时序数据库接口")
+@ApiSort(value = 2)
+public class TsdbController {
   private final static Logger LOGGER = LoggerFactory.getLogger(TsdbController.class);
 
   @Autowired
