@@ -11,29 +11,28 @@ id: access-kaiwudb-jdbc
 
 ### 前提条件
 
-- [安装 Java](https://docs.oracle.com/en/java/javase/22/install/overview-jdk-installation.html)（1.8 及以上版本）。
+- [安装 openJDK](https://openjdk.org/install/)（1.8 及以上版本）。
 - [安装 Maven](https://maven.apache.org/install.html)（3.6 及以上版本）。
 - 安装 KWDB 数据库、配置数据库认证方式、创建数据库。
+- 创建具有表级别及以上操作权限的用户。
 - 获取 KaiwuDB JDBC 驱动包。
 
-### 安装步骤
+### 配置连接
 
-如需安装 KaiwuDB JDBC 连接器，遵循以下步骤。
-
-1. 运行以下命令，将 KaiwuDB JDBC 安装到本地 Maven 仓库中。
-
-   ```shell
-   mvn install:install-file "-Dfile=../kaiwudb-jdbc.2.0.4.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=2.0.4" "-Dpackaging=jar"
-   ```
-
-2. 在 `pom.xml` 中添加依赖，将 KaiwuDB JDBC 引入到 Java 应用程序中。
+1. 在 `pom.xml` 中添加依赖，将 KaiwuDB JDBC 引入到 Java 应用程序中。
 
    ```xml
    <dependency>
      <groupId>com.kaiwudb</groupId>
      <artifactId>kaiwudb-jdbc</artifactId>
-     <version>2.0.4</version>
+     <version>2.0.4.1</version>
    </dependency>
+   ```
+
+2. 如上述依赖无法正常加载使用，运行以下命令，将 KaiwuDB JDBC 驱动安装到本地 Maven 仓库中。
+
+   ```shell
+   mvn install:install-file "-Dfile=../kaiwudb-jdbc-2.0.4.1.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=2.0.4.1" "-Dpackaging=jar"
    ```
 
 ## 连接 KWDB 数据库

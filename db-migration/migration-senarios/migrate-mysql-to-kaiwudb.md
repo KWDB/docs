@@ -31,8 +31,8 @@ KWDB 支持以单表、多表、单库、多库的形式将数据从 MySQL 迁�
       databases:
         - name: sensor_data_db
           url: jdbc:mysql://127.0.0.1:3306/sensor_data_db?useSSL=false&useUnicode=true&characterEncoding=utf8
-          username: root
-          password: 12345678
+          username: <user_name>
+          password: <password>
           tables:
             - name: sensor_data
               column: timestamp, sensor_id, temperature, humidity, 1 as tag1
@@ -42,8 +42,8 @@ KWDB 支持以单表、多表、单库、多库的形式将数据从 MySQL 迁�
       databases:
         - name: tsdb
           url: jdbc:kaiwudb://127.0.0.1:26257/tsdb
-          username: admin
-          password: Password@2024
+          username: <user_name>
+          password: <password>
           tables:
             - name: sensor_data
               column: time, sensor_id, temperature, humidity, tag1
@@ -63,10 +63,10 @@ KWDB 支持以单表、多表、单库、多库的形式将数据从 MySQL 迁�
             record: 1000
     ```
 
-3. 在 `kaiwudb-datax-utils-1.2.2.jar` 所在目录，执行以下命令，开始迁移数据。
+3. 在 KaiwuDB DataX Utils 的 JAR 文件所在目录，执行以下命令，开始迁移数据。
 
     ```shell
-    java -jar -DyamlPath=<yml_path> -DdataxPath=<datax_path> -Dpython=<python> -Darguments=<arguments> kaiwudb-datax-utils-1.2.2.jar
+    java -jar -Dtype=data -DyamlPath=<yml_path> -DdataxPath=<datax_path> -Dpython=<python> -Darguments=<arguments> kaiwudb-datax-utils-2.1.0.jar
     ```
 
     参数说明：
@@ -98,15 +98,15 @@ KWDB 支持以单表、多表、单库、多库的形式将数据从 MySQL 迁�
       databases:
         - name: metrics_db
           url: jdbc:mysql://127.0.0.1:3306/metrics_db?useSSL=false&useUnicode=true&characterEncoding=utf8
-          username: root
-          password: 123456
+          username: <user_name>
+          password: <password>
     target:
       pluginName: kaiwudbwriter
       databases:
         - name: metrics
           url: jdbc:kaiwudb://127.0.0.1:26257/metrics
-          username: test
-          password: Password@2024
+          username: <user_name>
+          password: <password>
       batchSize: 1000
     setting:
       speed:
@@ -115,10 +115,10 @@ KWDB 支持以单表、多表、单库、多库的形式将数据从 MySQL 迁�
         percentage: 0.02
     ```
 
-3. 在 `kaiwudb-datax-utils-1.2.2.jar` 所在目录，执行以下命令，开始迁移数据。
+3. 在 KaiwuDB DataX Utils 的 JAR 文件所在目录，执行以下命令，开始迁移数据。
 
     ```shell
-    java -jar -DyamlPath=<yml_path> -DdataxPath=<datax_path> -Dpython=<python> -Darguments=<arguments> kaiwudb-datax-utils-1.2.2.jar
+    java -jar -Dtype=data -DyamlPath=<yml_path> -DdataxPath=<datax_path> -Dpython=<python> -Darguments=<arguments> kaiwudb-datax-utils-2.1.0.jar
     ```
 
 ## 多库迁移
@@ -140,23 +140,23 @@ KWDB 支持以单表、多表、单库、多库的形式将数据从 MySQL 迁�
       databases:
         - name: production_db
           url: jdbc:mysql://127.0.0.1:3306/production_db?useSSL=false&useUnicode=true&characterEncoding=utf8
-          username: root
-          password: 123456
+          username: <user_name>
+          password: <password>
         - name: analytics_db
           url: jdbc:mysql://127.0.0.1:3306/analytics_db?useSSL=false&useUnicode=true&characterEncoding=utf8
-          username: root
-          password: 123456
+          username: <user_name>
+          password: <password>
     target:
       pluginName: kaiwudbwriter
       databases:
         - name: production_data
           url: jdbc:kaiwudb://127.0.0.1:26257/production_data
-          username: test
-          password: Password@2024
+          username: <user_name>
+          password: <password>
         - name: analytics_data
           url: jdbc:kaiwudb://127.0.0.1:26257/analytics_data
-          username: test
-          password: Password@2024
+          username: <user_name>
+          password: <password>
       batchSize: 1000
     setting:
       speed:
@@ -165,8 +165,8 @@ KWDB 支持以单表、多表、单库、多库的形式将数据从 MySQL 迁�
         percentage: 0.02
     ```
 
-3. 在 `kaiwudb-datax-utils-1.2.2.jar` 所在目录，执行以下命令，开始迁移数据。
+3. 在 KaiwuDB DataX Utils 的 JAR 文件所在目录，执行以下命令，开始迁移数据。
 
     ```shell
-    java -jar -DyamlPath=<yml_path> -DdataxPath=<datax_path> -Dpython=<python> -Darguments=<arguments> kaiwudb-datax-utils-1.2.2.jar
+    java -jar -Dtype=data -DyamlPath=<yml_path> -DdataxPath=<datax_path> -Dpython=<python> -Darguments=<arguments> kaiwudb-datax-utils-2.1.0.jar
     ```

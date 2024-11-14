@@ -18,7 +18,7 @@ KWDB 支持以单表、多表的形式将数据从 TDengine 迁移到 KWDB。本
 1. 解压缩 KaiwuDB DataX 插件包，将解压后的 Reader 和 Writer 插件复制到 DataX 对应的插件目录下。例如，复制 `kaiwudbwriter` 到 `datax/plugin/writer` 目录。
 2. 创建配置文件（`.yml`），配置源数据库和目标数据库的连接信息、数据表信息、以及迁移设置参数。有关源数据库、目标数据库、迁移设置、核心信息的配置参数，参见[配置参数](../config-params.md)。
 
-    以下配置文件使用 `column` 和 `querySql` 参数，限定源数据库中表的读取范围，使用 `preSql` 参数在目标数据库中创建待写入数据的 `temperature_humidity` 和 `custom_metrics` 时序表。
+    以下配置文件分别使用 `column` 和 `querySql` 参数，限定源数据库中 `temperature_humidity` 和 `custom_metrics` 表的读取范围，使用 `preSql` 参数在目标数据库中创建待写入数据的 `temperature_humidity` 和 `custom_metrics` 时序表。
 
     ```yaml ts{10,12-13,24-31}
     source:
@@ -26,8 +26,8 @@ KWDB 支持以单表、多表的形式将数据从 TDengine 迁移到 KWDB。本
       databases:
         - name: tdengine_kaiwudb
           url: jdbc:TAOS-RS://127.0.0.1:6041/tdengine_kaiwudb?timestampFormat=STRING&timezone=Asia%2FShanghai
-          username: root
-          password: taosdata
+          username: <user_name>
+          password: <password>
           tables:
             - name: temperature_humidity
               column: timestamp, sensor_id, temperature, humidity, tag1
@@ -39,8 +39,8 @@ KWDB 支持以单表、多表的形式将数据从 TDengine 迁移到 KWDB。本
       databases:
         - name: tdengine_kaiwudb
           url: jdbc:kaiwudb://127.0.0.1:26257/tdengine_kaiwudb
-          username: kaiwu_user
-          password: Password@2024
+          username: <user_name>
+          password: <password>
           tables:
             - name: temperature_humidity
               column: timestamp, sensor_id, temperature, humidity, tag1
@@ -60,10 +60,10 @@ KWDB 支持以单表、多表的形式将数据从 TDengine 迁移到 KWDB。本
         percentage: 0.02
     ```
 
-3. 在 `kaiwudb-datax-utils-1.2.2.jar` 所在目录，执行以下命令，开始迁移数据。
+3. 在 KaiwuDB DataX Utils 的 JAR 文件所在目录，执行以下命令，开始迁移数据。
 
     ```shell
-    java -jar -DyamlPath=<yml_path> -DdataxPath=<datax_path> -Dpython=<python> -Darguments=<arguments> kaiwudb-datax-utils-1.2.2.jar
+    java -jar -Dtype=data -DyamlPath=<yml_path> -DdataxPath=<datax_path> -Dpython=<python> -Darguments=<arguments> kaiwudb-datax-utils-2.1.0.jar
     ```
 
     参数说明：
