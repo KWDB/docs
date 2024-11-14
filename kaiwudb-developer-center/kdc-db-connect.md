@@ -88,7 +88,7 @@ id: kdc-db-connect
 - 已经使用 OpenSSL 命令将 `client.<user>.key` 文件转换为 `.pk8` 格式。
 
 ::: warning 说明
-启用 TLS 安全模式安装部署 KWDB 时，系统会自动生成 `ca.crt` 和 `client.<user>.crt` 文件。文件的存储目录是 `/etc/kwdb/certs/`。
+启用 TLS 安全模式安装部署 KWDB 时，系统会自动生成 `ca.crt` 和 `client.<user>.crt` 文件。文件的存储目录是 `/etc/kaiwudb/certs/`。
 :::
 
 ### 步骤
