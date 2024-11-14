@@ -59,7 +59,7 @@ KaiwuDB 开发者中心支持创建、编辑、查看、删除、重命名时序
 
 ### 编辑时序表
 
-KaiwuDB 时序表支持以下编辑表操作：
+时序表支持以下编辑表操作：
 
 - 添加、修改、删除、重命名字段。更多详细信息，参见[字段](#字段)。
 - 添加、修改、删除、重命名主标签之外的其它标签，更多详细信息，参见[标签](#标签)。
@@ -74,7 +74,7 @@ KaiwuDB 时序表支持以下编辑表操作：
 
 - 系统支持为指定的列写入数据，对于未指定的列，如果该列支持 `NULL` 值，系统将自动插入默认值 `NULL`。如果该列不支持 `NULL` 值，系统将提示 `Null value in column %s violates null-null constraints.`。
 - 输入 `TIMESTAMP` 或 `TIMESTAMPTZ` 类型数据时，日期部分需要使用短横线（`-`）、空格（` `）或正斜杠符号（`/`）分割，时间部分需要使用冒号（`:`）分割，支持精确到微秒，例如：`2023-01-25 10:10:10.123`、`2023 01 25 10:10:10.123` 或 `2023/01/25 10:10:10.123`。
-- KaiwuDB 支持对具有相同时间戳的数据进行去重处理。默认情况下，后写入的数据会覆盖已存在的具有相同时间戳的数据。用户可通过 `SET CLUSTER SETTING ts.dedup.rule=[ merge | override | discard]` 语句设置数据去重策略。有关详细信息，参见[集群参数配置](../../db-operation/cluster-settings-config.md)
+- KWDB 支持对具有相同时间戳的数据进行去重处理。默认情况下，后写入的数据会覆盖已存在的具有相同时间戳的数据。用户可通过 `SET CLUSTER SETTING ts.dedup.rule=[ merge | override | discard]` 语句设置数据去重策略。有关详细信息，参见[集群参数配置](../../db-operation/cluster-settings-config.md)
 
 :::
 

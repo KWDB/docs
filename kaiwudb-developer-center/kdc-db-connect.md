@@ -1,5 +1,5 @@
 ---
-title: 连接 KaiwuDB 数据库
+title: 连接 KWDB 数据库
 id: kdc-db-connect
 ---
 
@@ -88,7 +88,7 @@ id: kdc-db-connect
 - 已经使用 OpenSSL 命令将 `client.<user>.key` 文件转换为 `.pk8` 格式。
 
 ::: warning 说明
-启用 TLS 安全模式安装部署 KaiwuDB 时，系统会自动生成 `ca.crt` 和 `client.<user>.crt` 文件。文件的存储目录是 `/etc/kwdb/certs/`。
+启用 TLS 安全模式安装部署 KWDB 时，系统会自动生成 `ca.crt` 和 `client.<user>.crt` 文件。文件的存储目录是 `/etc/kwdb/certs/`。
 :::
 
 ### 步骤
@@ -104,7 +104,7 @@ id: kdc-db-connect
 
     ::: warning 提示
 
-    KaiwuDB 默认支持用户使用证书或密钥连接数据库，如果选择使用证书连接数据库，可不填写密码。KaiwuDB 支持用户通过 `server.host_based_authentication.configuration` 集群参数设置用户连接数据库时的身份鉴别方式，更多信息，参见[身份鉴别](../db-security/identity-authn.md)。
+    KWDB 默认支持用户使用证书或密钥连接数据库，如果选择使用证书连接数据库，可不填写密码。
     
     :::
 
