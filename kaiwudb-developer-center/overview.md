@@ -24,6 +24,7 @@ KaiwuDB 开发者中心涵盖了数据库连接、数据库管理、模式管理
   - [模式管理](./relational-db/relational-schema-mgmt.md)
   - [关系表管理](./relational-db/relational-table-mgmt.md)
   - [视图管理](./relational-db/relational-view-mgmt.md)
+  - [物化视图管理](./relational-db/relational-materialized-view-mgmt.md)
   - [会话信息](./relational-db/relational-session-mgmt.md)
 - [角色与用户管理](./role-and-user-mgmt.md)
 - [系统信息](./system-info.md)

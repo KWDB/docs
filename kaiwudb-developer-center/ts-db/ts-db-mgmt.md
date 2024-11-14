@@ -5,14 +5,13 @@ id: ts-db-mgmt
 
 # 数据库管理
 
-KaiwuDB 开发者中心支持创建、编辑、查看、重命名和删除时序数据库。
-
+KaiwuDB 开发者中心支持创建、编辑、查看、切换、重命名和删除时序数据库。
 
 ## 创建数据库
 
 ### 前提条件
 
-用户拥有 DATABASE CREATE 或 ALL 权限。
+用户为 Admin 用户、Admin 角色成员或拥有 DATABASE CREATE 或 ALL 权限。
 
 ### 步骤
 
@@ -22,19 +21,17 @@ KaiwuDB 开发者中心支持创建、编辑、查看、重命名和删除时序
 
     <img src="../../static/kdc/VmR7be1F9o041HxegtzcDVMsnCj.png" style="zoom:80%;" />
 
-2. 在**创建时序数据库**窗口，填写数据库名称，设置数据库生命周期，然后单击**确定**。默认情况下，数据库的生命周期为 `0` 天，即永不过期。
+2. 在**创建时序数据库**窗口，填写数据库名称，根据需要设置数据库生命周期和分区间隔，然后单击**确定**。默认情况下，数据库的生命周期为 `0` 天，即永不过期，分区间隔默认为 `10` 天，即每 10 天进行一次分区。
 
-    <img src="../../static/kdc/JkUGbMGs1oxENrxxnwccYsR8nOf.png" style="zoom:80%;" />
+    <img src="../../static/kdc/create-ts-db.png" style="zoom:80%;" />
 
-    创建成功后，新建数据库将自动显示在数据库导航区内，继承 KWDB 数据库系统的角色和用户设置。
-
-    <img src="../../static/kdc/IeJhbo7h5oMVenx5wfWcPB9Unad.png" style="zoom:80%;" />
+    创建成功后，新建数据库将自动显示在数据库导航区内，继承 KaiwuDB 数据库系统的角色和用户设置。
 
 ## 编辑数据库
 
 ### 前提条件
 
-用户拥有 DATABASE CREATE 或 ALL 权限。
+用户为 Admin 用户、Admin 角色成员或拥有 DATABASE CREATE 或 ALL 权限。
 
 ### 步骤
 
@@ -42,9 +39,9 @@ KaiwuDB 开发者中心支持创建、编辑、查看、重命名和删除时序
 
 1. 在数据库导航区，双击需要修改的数据库，或者右键单击需要修改的数据库，然后选择**编辑时序数据库**。
 
-2. 在数据库对象窗口，根据需要修改数据库的生命周期和描述信息。
+2. 在数据库对象窗口，根据需要修改数据库的生命周期、分区间隔和描述信息。
 
-    ![](../../static/kdc/ts-db-comment.png)
+    ![](../../static/kdc/ts-db-edit.png)
 
 3. 单击页面右下方的保存按钮。
 
@@ -56,11 +53,21 @@ KaiwuDB 开发者中心支持创建、编辑、查看、重命名和删除时序
 
 ![](../../static/kdc/ts-show-db.png)
 
+
+## 切换数据库
+
+切换数据库用于设置正在使用的数据库。如需切换正在使用的数据库，遵循以下步骤：
+
+1. 在数据库导航区，右键单击需要切换使用的数据库，然后选择**设为活动对象**。
+
+![](../../static/kdc/ts-db-use.png)
+
+
 ## 删除数据库
 
 ### 前提条件
 
-- 用户拥有 DATABASE DROP 权限。
+- 用户为 Admin 用户、Admin 角色成员或拥有 DATABASE DROP 权限。
 - 要删除的数据库不是当前使用的数据库。
 
 ### 步骤
@@ -69,16 +76,15 @@ KaiwuDB 开发者中心支持创建、编辑、查看、重命名和删除时序
 
 1. 在数据库导航区，右键单击需要删除的数据库，然后选择**删除**。
 
-    <img src="../../static/kdc/PYJhbQxkSo4vKlxrRkYcH86WnUb.png" style="zoom:67%;" />
+    <img src="../../static/kdc/ts-db-delete.png" style="zoom:67%;" />
 
 2. 在**删除对象**窗口，单击**是**。删除成功后，系统将自动更新导航栏菜单。
-
-    <img src="../../static/kdc/FVwRborHAoCV5dxsOM4cJtF9n9c.png" style="zoom: 67%;" />
 
 ## 重命名数据库
 
 ::: warning 说明
-新数据库名称必须唯一，并且遵循[数据库标识符规则](../../sql-reference/sql-identifiers.md)，最大长度不得超过 63 字节。目前，数据库名称不支持中文字符。
+新数据库名称必须唯一，并且遵循[数据库标识符规则](../../sql-reference/sql-identifiers.md)，最大长度不得超过 63 字节。
+目前，数据库名称不支持中文字符。
 :::
 
 ### 前提条件
@@ -92,10 +98,8 @@ KaiwuDB 开发者中心支持创建、编辑、查看、重命名和删除时序
 
 1. 在数据库导航区，右键单击需要重命名的数据库，然后选择**重命名**。
 
-    <img src="../../static/kdc/G31fbK7q6oljU7xa3P7c0yuVnxb.png" style="zoom:67%;" />
+    <img src="../../static/kdc/ts-db-rename.png" style="zoom:67%;" />
 
 2. 在**重命名**窗口，设置新的数据库名称，然后单击**确定**。
-
-    <img src="../../static/kdc/MpDcbE31xoRPyVxjYZ4cCRYrnLb.png" style="zoom:67%;" />
 
 3. 在**重命名脚本**窗口，确认新数据库名称，然后单击**执行**。

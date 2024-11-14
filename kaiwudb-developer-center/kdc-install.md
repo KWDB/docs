@@ -44,4 +44,4 @@ KaiwuDB 开发者中心的安装需满足以下环境要求：
 
    ![安装包](../static/kdc/install-package.png)
 
-2. 双击运行 `KaiwuDB Developer Center.exe` 应用程序。
+3. 双击运行 `KaiwuDB Developer Center.exe` 应用程序。

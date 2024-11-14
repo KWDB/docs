@@ -623,7 +623,7 @@ DRBD 镜像数据具有以下特点：
          kwbase cert create-node <primary_node_ip> <secondary_node_ip> <virtual_ip> 127.0.0.1 0.0.0.0 localhost  --certs-dir=/etc/kaiwudb/certs --ca-key=ca.key
          ```
 
-      3. 将主节点`/etc/kwdb/certs/*`中的证书文件复制到备节点相同目录。
+      3. 将主节点`/etc/kaiwudb/certs/*`中的证书文件复制到备节点相同目录。
 
          ```Shell
          scp /etc/kaiwudb/certs/* ha-node02:/etc/kaiwudb/certs/
