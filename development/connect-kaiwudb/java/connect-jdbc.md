@@ -64,7 +64,7 @@ KaiwuDB JDBC 是 KWDB 的官方 Java 语言连接器。它基于 PgJDBC 扩展�
 
   - 带属性的连接
 
-    `Connection conn = DriverManager.getConnection(url, props)`：通过 `url` 参数指定数据库地址、端口和名称。通过 `props` 参数单独指定其它需要必要信息。有关支持的属性参数，参见 [URL 参数](#属性参数)。
+    `Connection conn = DriverManager.getConnection(url, props)`：通过 `url` 参数指定数据库地址、端口和名称。通过 `props` 参数单独指定其它需要必要信息。有关支持的属性参数，参见 [属性参数](#属性参数)。
 
 ### 连接参数
 
@@ -163,7 +163,7 @@ public Connection getConnection() throws Exception{
 
 ## 配置示例
 
-本节通过一些简单的示例展示如何使用 Java 应用程序进行数据库的 SQL 操作。如需了解更多 SQL 语句的使用，参见 [SQL 参考](../../sql-reference/overview.md)。
+本节通过一些简单的示例展示如何使用 Java 应用程序进行数据库的 SQL 操作。如需了解更多 SQL 语句的使用，参见 [SQL 参考](../../../sql-reference/overview.md)。
 
 ::: warning 说明
 由于不同数据引擎对 JDBC 不同接口的支持有差异，在连接不同引擎后，部分接口的使用存在一些限制：
@@ -326,9 +326,9 @@ while(resultSet.next()){
 
 KaiwuDB JDBC 连接器的错误码分为两种：
 
-- KaiwuDB JDBC Driver 本身的报错。有关详细信息，参见 [KaiwuDB JDBC Driver 错误码](../../db-operation/error-code/error-code-jdbc-driver.md)。
-- KWDB 其它功能模块的报错。有关详细信息，参见 [KWDB 专有错误码](../../db-operation/error-code/error-code-kaiwudb.md)和 [PostgreSQL 错误码](../../db-operation/error-code/error-code-postgresql.md)。
+- KaiwuDB JDBC Driver 本身的报错。有关详细信息，参见 [KaiwuDB JDBC Driver 错误码](../../../db-operation/error-code/error-code-jdbc-driver.md)。
+- KWDB 其它功能模块的报错。有关详细信息，参见 [KWDB 专有错误码](../../../db-operation/error-code/error-code-kaiwudb.md)和 [PostgreSQL 错误码](../../../db-operation/error-code/error-code-postgresql.md)。
 
 ### 故障诊断与排查
 
-更多详细信息，参见 [KaiwuDB JDBC 故障排查](../../troubleshooting-guide/troubleshooting.md#kaiwudb-jdbc)。
+更多详细信息，参见 [KaiwuDB JDBC 故障排查](../../../troubleshooting-guide/troubleshooting.md#kaiwudb-jdbc)。

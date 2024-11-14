@@ -80,7 +80,13 @@ id: docker-deployment
     INSTALL COMPLETED: KaiwuDB has been installed successfuly! ...
     ```
 
-4. 初始化并启动集群。
+4. 根据系统提示重新加载 `systemd` 守护进程的配置文件。
+
+    ```shell
+    systemctl daemon-reload
+    ```
+
+5. 初始化并启动集群。
 
     ::: warning 提示
     集群初始化和启动大约需要 10 秒左右时间。在此期间，如果有节点死亡，可能会导致集群无法触发高可用机制。
@@ -96,7 +102,7 @@ id: docker-deployment
     ./deploy.sh cluster --init
     ```
 
-5. 查看集群节点状态。
+6. 查看集群节点状态。
 
     ```shell
     ./deploy.sh cluster -s
@@ -109,6 +115,7 @@ id: docker-deployment
     ```
 
     返回字段说明：
+
     | 字段         | 描述                                                                                                                                                                      |
     |--------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
     | `id`           | 节点 ID。                                                                                                                                                                   |
@@ -120,8 +127,8 @@ id: docker-deployment
     | `locality`     | 节点机器的地理位置，例如国家、数据中心或机架等。                                                                                                            |
     | `start_mode`   | 节点启动模式。                                                                                                                                  |
     | `is_available`<br>`is_live` | 如果均为 `true`，表示节点为存活状态。<br>如果均为 `false`，表示节点为异常状态。                                                                                     |
-    
-6. （可选）配置 KWDB 开机自启动。
+
+7. （可选）配置 KWDB 开机自启动。
 
     配置 KWDB 开机自启动后，如果系统重启，则自动启动 KWDB。
 

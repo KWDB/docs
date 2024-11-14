@@ -169,7 +169,13 @@ tar -zxvf <package_name>
     INSTALL COMPLETED: KaiwuDB has been installed successfuly! ...
     ```
 
-4. 启动 KWDB 节点。
+4. 根据系统提示重新加载 `systemd` 守护进程的配置文件。
+
+    ```shell
+    systemctl daemon-reload
+    ```
+
+5. 启动 KWDB 节点。
 
     ```shell
     ./deploy.sh start
@@ -178,10 +184,10 @@ tar -zxvf <package_name>
     执行成功后，控制台输出以下信息：
 
     ```shell
-    START COMPLETED: KaiwuDB has started successfuly! ...
+    START COMPLETED: KaiwuDB has started successfuly.
     ```
 
-5. 查看 KWDB 节点状态。
+6. 查看 KWDB 节点状态。
 
     ```shell
     ./deploy.sh status
@@ -193,7 +199,7 @@ tar -zxvf <package_name>
     systemctl status kaiwudb
     ```
 
-6. （可选）配置 KWDB 开机自启动。
+7. （可选）配置 KWDB 开机自启动。
 
     配置 KWDB 开机自启动后，如果系统重启，则自动启动 KWDB。
 
