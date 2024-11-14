@@ -9,4 +9,4 @@ id: ts-schema-mgmt
 
 在数据库导航区，双击时序数据库下的 `public` 模式，即可查看 `public` 模式的表、权限和源信息。
 
-![](../../static/kdc/AvYrbSuhDoA5ilxdOtxcJBrHn5d.png)
+![](../../static/kdc/ts-schema.png)

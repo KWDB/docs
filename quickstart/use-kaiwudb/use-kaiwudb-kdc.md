@@ -9,11 +9,17 @@ id: use-kaiwudb-kdc
 
 KaiwuDB 开发者中心窗口包含菜单栏、工具栏、导航区、对象窗口、结果窗口以及状态栏。
 
-![](../../static/quickstart/D2ItbzgMCobJovxVdslcwHR4nTh.png)
+![](../../static/kdc/user-interface.png)
 
 ## 时序数据
 
 ### 创建时序数据库
+
+**前提条件**：
+
+用户为 Admin 用户、Admin 角色成员或拥有 DATABASE CREATE 或 ALL 权限。
+
+**步骤**：
 
 如需创建时序数据库，遵循以下步骤。
 
@@ -21,58 +27,69 @@ KaiwuDB 开发者中心窗口包含菜单栏、工具栏、导航区、对象窗
 
    ![](../../static/quickstart/UNUrbCKASoAh4lxCJDIc02bpnAg.png)
 
-2. 在**创建时序数据库**窗口，填写数据库名称，设置数据库生命周期，然后单击**确定**。默认情况下，数据库的生命周期为 `0` 天，即永不过期。
+2. 在**创建时序数据库**窗口，填写数据库名称，根据需要设置数据库生命周期和分区间隔，然后单击**确定**。默认情况下，数据库的生命周期为 `0` 天，即永不过期，分区间隔默认为 `10` 天，即每 10 天进行一次分区。
 
-   ![](../../static/quickstart/Kq6obMHXMo16SCxyaRucvKHOnCc.png)
+    <img src="../../static/kdc/create-ts-db.png" style="zoom:80%;" />
 
-   创建成功后，新建数据库将自动显示在数据库导航区内，继承 KWDB 数据库系统的角色和用户设置。
-
-   ![](../../static/quickstart/I77LbWmXCojubdxQ6sXcV1bgnIc.png)
+    创建成功后，新建数据库将自动显示在数据库导航区内，继承 KaiwuDB 数据库系统的角色和用户设置。
 
 ### 创建时序表
+
+**前提条件**：
+
+用户为 Admin 用户、Admin 角色成员或拥有 TABLE CREATE 或 ALL 权限。
+
+**步骤**：
 
 如需创建时序表，遵循以下步骤。
 
 1. 在数据库导航区，选择要操作的数据库和模式。
 2. 右键单击**时序表**，然后选择**新建时序表**。
 
-   ![](../../static/quickstart/MT2WbcXCeor3oZxFr6Kc0eSBnGf.png)
+   <img src="../../static/kdc/ts-table-create.png" style="zoom: 80%;" />
 
    系统将自动创建名为 `newtable` 的表，并打开对象窗口。
 
-3. 在**属性**页签，填写表名，配置表的生命周期。表名的最大长度为 128 字节。默认情况下，表的生命周期为 `0` 天， 即永不过期。
-4. 在**字段**页签，至少添加两个字段。字段名的最大长度为 128 字节。第一个字段的数据类型必须为 timestamp 或 timestamptz 且非空。实际上，系统会将 timestamp 数据类型处理为 timestamptz 数据类型。
+3. 在**属性**页签，填写表名，表名的最大长度为 128 字节。根据需要设置表的数据活跃时间、生命周期、分区间隔和描述信息。默认情况下，数据活跃时间为 `1` 天，表示自动对 1 天前的分区进行压缩。生命周期为 `0` 天， 即数据永不过期，分区间隔为 `10` 天，即每 10 天进行一次分区。
+4. 在**字段**页签，新建至少两个字段，设置字段名称、数据类型、长度、是否非空、默认值和描述信息，字段名的最大长度为 128 字节。第一个字段的数据类型必须为 `timestamp` 或 `timestamptz` 且非空。实际上，系统会将 `timestamp` 数据类型处理为 `timestamptz` 数据类型。
 
-   ![](../../static/quickstart/WM9JbwXBRoMEKsxlUSZcjFsTnqg.png)
+    <img src="../../static/kdc/ts-table-create-01.png" style="zoom:67%;" />
 
-5. 在**标签**页签添加标签，设置标签名称、数据类型、长度、是否为主标签以及是否非空，然后单击**保存**。
+5. 在**标签**页签添加标签，设置标签名称、数据类型、长度、是否为主标签，是否非空和描述信息，然后单击**保存**。
 
-   ::: warning 说明
+    ::: warning 说明
 
-   - 每张时序表至少需要设置一个主标签，且主标签必须为非空标签。
-   - 标签名的最大长度为 128 字节。
+    - 每张时序表至少需要设置一个主标签，且主标签必须为非空标签。
+    - 标签名暂时不支持中文字符，最大长度为 128 字节。
 
-   :::
+    :::
 
-   ![](../../static/quickstart/O8KIbHGpjoukK0xVFcvcav2unGb.png)
+    <img src="../../static/kdc/ts-table-create-02.png" style="zoom:67%;" />
 
 6. 在**执行修改**窗口，确认 SQL 语句无误，然后单击**执行**。
 
 ### 写入数据
+
+**前提条件**：
+
+用户为 Admin 用户、Admin 角色成员或拥有目标表的 INSERT 权限。
 
 ::: warning 说明
 
 - 系统支持为指定的列写入数据，对于未指定的列，如果该列支持 NULL 值，系统将自动插入默认值 `NULL`。如果该列不支持 NULL 值，系统将提示 `Null value in column %s violates null-null constraints.`。
 - 输入 TIMESTAMP 或 TIMESTAMPTZ 类型数据时，日期部分需要使用短横线（`-`）、空格（` `）或正斜杠符号（`/`）分割，时间部分需要使用冒号（`:`）分割，支持精确到微秒，例如：`2023-01-25 10:10:10.123`、`2023 01 25 10:10:10.123` 或 `2023/01/25 10:10:10.123`。
 - KWDB 支持对具有相同时间戳的数据进行去重处理。默认情况下，后写入的数据会覆盖已存在的具有相同时间戳的数据。用户可通过 `SET CLUSTER SETTING ts.dedup.rule=[ merge | override | discard]` 语句设置数据去重策略。有关详细信息，参见[集群参数配置](../../db-operation/cluster-settings-config.md)。
-  :::
+
+:::
+
+**步骤**：
 
 如需向时序表中写入数据，遵循以下步骤。
 
 1. 在数据库导航区，右键单击需要编辑数据的表，然后选择**编辑数据**。
 2. 在**数据**页面，单击页面下方的**添加新行**按钮，向表中加入相应的数据。
 
-   ![](../../static/quickstart/Dx0XbImeyornwwxQvU7cRk0an4b.png)
+   <img src="../../static/kdc/ts-table-edit.png" style="zoom:67%;" />
 
 3. 如需查看对应的 SQL 语句，单击**生成 SQL 语句**，然后单击**执行**。
 4. 如果无需查看 SQL 语句，单击**保存**。
@@ -81,11 +98,16 @@ KaiwuDB 开发者中心窗口包含菜单栏、工具栏、导航区、对象窗
 
 在数据库导航区，双击需要查看的时序表，即可查看表的属性和数据信息。
 
-![](../../static/quickstart/LZw1b9QNiozgaWx8GeGc0cVbnyf.png)
 
 ## 关系数据
 
 ### 创建关系数据库
+
+**前提条件**：
+
+用户为 Admin 用户、Admin 角色成员或拥有 DATABASE CREATE 或 ALL 权限。
+
+**步骤**：
 
 如需创建关系数据库，遵循以下步骤。
 
@@ -102,6 +124,12 @@ KaiwuDB 开发者中心窗口包含菜单栏、工具栏、导航区、对象窗
    ![](../../static/quickstart/MTDQbdQXxomoQMxbuZzc6hzVnPg.png)
 
 ### 创建关系表
+
+**前提条件**：
+
+用户为 Admin 用户、Admin 角色成员或拥有 TABLE CREATE 或 ALL 权限。
+
+**步骤**：
 
 如需创建关系表，遵循以下步骤。
 
@@ -120,6 +148,12 @@ KaiwuDB 开发者中心窗口包含菜单栏、工具栏、导航区、对象窗
 4. 在**执行修改**窗口，确认 SQL 语句无误，然后单击**执行**。
 
 ### 写入数据
+
+**前提条件**：
+
+用户为 Admin 用户、Admin 角色成员或拥有目标表的 INSERT 权限。
+
+**步骤**
 
 如需向关系表中写入数据或者修改表中数据，遵循以下步骤。
 
