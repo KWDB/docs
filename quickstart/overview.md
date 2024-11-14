@@ -5,7 +5,7 @@ id: overview
 
 # 快速上手概述
 
-本节介绍如何快速上手体验 KWDB 数据库。
+本节介绍如何通过单节点部署方式快速上手体验 KWDB 数据库。集群部署相关信息，参见[集群部署](../deployment/overview.md)。
 
 - 部署 KWDB
 
