@@ -26,14 +26,14 @@ KWDB 单机部署仅支持离线升级。
   - root 用户和配置 sudo 免密的普通用户在执行命令时无需输入密码。
   - 未配置免密的普通用户在执行命令时需要输入密码进行提权。
   ::: warning 提示
-   容器部署方式下，如果用户为非 root 用户，还需要通过`sudo usermod -aG docker $USER`命令将用户添加到`docker`组。
+   容器部署方式下，如果用户为非 root 用户，还需要通过 `sudo usermod -aG docker $USER` 命令将用户添加到 `docker` 组。
   :::
 
 步骤：
 
 1. 将新版本的安装包拷贝到待升级的节点，解压安装包。
 
-2. 检查 KWDB 服务是否已停止，如果KWDB服务仍在运行中，需执行`systemctl stop kaiwudb` 命令停止服务。
+2. 检查 KWDB 服务是否已停止，如果KWDB服务仍在运行中，需执行 `systemctl stop kaiwudb` 命令停止服务。
 
    ```Shell
    systemctl status kaiwudb
@@ -71,7 +71,7 @@ KWDB 单机部署仅支持离线升级。
 
 ## 集群升级
 
-KWDB 集群支持 KWDB 2.0 版本通过导入导出方式升级到 2.0.4 版本，具体导入导出操作见[数据导出](../db-administration/import-export-data/export-data.md)和[数据导入](../db-administration/import-export-data/import-data.md)。
+KWDB 集群支持 KWDB 2.0 和 2.0.4 版本通过导入导出方式升级到 2.1.0 版本，具体导入导出操作见[数据导出](../db-administration/import-export-data/export-data.md)和[数据导入](../db-administration/import-export-data/import-data.md)。
 
 ::: warning 注意
 由于 2.0.4 版本与早期版本之间存在兼容性差异，使用导入导出方式升级到 2.0.4 版本后，集群的高可用性可能会受到影响.

@@ -5,12 +5,6 @@ id: docker-deployment
 
 # 容器部署
 
-部署 KWDB 集群时，系统将对配置文件、运行环境、硬件配置、软件依赖和 SSH 免密登录进行检查。如果相应硬件未能满足要求，系统将继续安装，并提示硬件规格不满足要求。如果软件依赖未能满足要求，系统将中止安装，并提供相应的提示信息。
-
-在部署过程中，系统会自动生成相关日志。如果部署时出现错误，用户可以通过查看终端输出或 KWDB 安装目录中 `log` 目录里的日志文件，获取详细的错误信息。
-
-部署完成后，系统将生成 `/etc/kaiwudb/` 目录。Docker Compose 配置文件 `docker-compose.yml` 位于 `/etc/kaiwudb/script` 目录下。部署完成后，用户可以修改 Docker Compose 配置文件 `docker-compose.yml`，配置 KWDB 的启动参数和 CPU 资源占用率。有关定制化部署配置的详细信息，参见[配置集群](./cluster-config-docker.md)。
-
 ## 前提条件
 
 - [联系](https://www.kaiwudb.com/support/) KWDB 技术支持人员，获取 KWDB 容器镜像。
@@ -30,18 +24,17 @@ id: docker-deployment
 
     ```yaml
     [global]
-    secure_mode=y
+    secure_mode=tls
     management_user=kaiwudb
     rest_port=8080
     kaiwudb_port=26257
     data_root=/var/lib/kaiwudb
-    cpu=1
 
     [local]
-    node_addr=your-host-ip
+    node_addr= local_node_ip
 
     [cluster]
-    node_addr=your-host-ip, your-host-ip
+    node_addr= cluster_node_ips
     ssh_port=22
     ssh_user=admin
     ```
@@ -49,18 +42,21 @@ id: docker-deployment
     配置参数说明：
 
     - `global`：全局配置
-        - `secure_mode`：是否开启安全模式，默认开启安全模式。开启安全模式后，KWDB 生成 TLS 安全证书，作为客户端或应用程序连接数据库的凭证。生成的客户端相关证书存放在 `/etc/kaiwudb/certs` 目录。
+        - `secure_mode`：是否开启安全模式，支持以下两种取值：
+            - `insecure`：使用非安全模式。
+            - `tls`：（默认选项）开启 TLS 安全模式。开启安全模式后，KWDB 生成 TLS 证书，作为客户端或应用程序连接数据库的凭证。生成的客户端相关证书存放在 `/etc/kaiwudb/certs` 目录。
         - `management_user`：KWDB 的管理用户，默认为 `kaiwudb`。安装部署后，KWDB 创建相应的管理用户以及和管理用户同名的用户组。
         - `rest_port`：KWDB Web 服务端口，默认为 `8080`。
         - `kaiwudb_port`：KWDB 服务端口，默认为 `26257`。
         - `data_root`：数据目录，默认为 `/var/lib/kaiwudb`。
-        - `cpu`: 可选参数，用于指定 KWDB 服务占用当前节点服务器 CPU 资源的比例，默认无限制。取值范围为 `[0,1]`，最大精度为小数点后两位。KWDB 支持调整 CPU 资源占用率。更多信息，参见[配置集群](./cluster-config-docker.md)。
+        - `cpu`: 可选参数，用于指定 KWDB 服务占用当前节点服务器 CPU 资源的比例，默认无限制。取值范围为 `[0,1]`，最大精度为小数点后两位。KWDB 支持调整 CPU 资源占用率。更多信息，参见[配置集群](./cluster-config-bare-metal.md)。
     - `local`：本地节点配置
-        - `node_addr`：本地节点对外提供服务的 IP 地址，监听地址为 `0.0.0.0`，端口为 KWDB 服务端口。
+        - `local_node_ip`：本地节点对外提供服务的 IP 地址，监听地址为 `0.0.0.0`，端口为 KWDB 服务端口。
     - `cluster`：集群内其他节点的配置
-        - `node_addr`：远程节点对外提供服务的 IP 地址。各节点的 IP 地址使用逗号（`,`）分割，远程节点数应不少于 2 个。
+        - `cluster_node_ips`：远程节点对外提供服务的 IP 地址。各节点的 IP 地址使用逗号（`,`）分割，远程节点数应不少于 2 个。
         - `ssh_port`：远程节点的 SSH 服务端口。各节点的 SSH 服务端口必须相同。
         - `ssh_user`：远程节点的 SSH 登录用户。各节点的 SSH 登录用户必须相同。
+
 
 2. 为 `deploy.sh` 脚本增加运行权限。
 
@@ -70,15 +66,23 @@ id: docker-deployment
 
 3. 执行安装命令。
 
-    ```shell
-    ./deploy.sh install --multi-replica
-    ```
+   - 多副本集群
 
-    执行成功后，控制台输出以下信息：
+        ```shell
+        ./deploy.sh install --multi-replica
+        ```
 
-    ```shell
-    INSTALL COMPLETED: KaiwuDB has been installed successfuly! ...
-    ```
+   - 单副本集群
+
+        ```shell
+        ./deploy.sh install --single-replica
+        ```
+
+        执行成功后，控制台输出以下信息：
+
+        ```shell
+        INSTALL COMPLETED: KaiwuDB has been installed successfuly! ...
+        ```
 
 4. 根据系统提示重新加载 `systemd` 守护进程的配置文件。
 
