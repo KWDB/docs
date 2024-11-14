@@ -32,7 +32,7 @@ KWDB 支持以单表、多表、单库、多库的形式将数据从 MySQL 迁�
         - name: sensor_data_db
           url: jdbc:mysql://127.0.0.1:3306/sensor_data_db?useSSL=false&useUnicode=true&characterEncoding=utf8
           username: <user_name>
-          password: <password>78
+          password: <password>
           tables:
             - name: sensor_data
               column: timestamp, sensor_id, temperature, humidity, 1 as tag1

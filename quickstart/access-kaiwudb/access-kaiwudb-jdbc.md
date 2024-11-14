@@ -9,7 +9,7 @@ id: access-kaiwudb-jdbc
 
 ## 安装 KaiwuDB JDBC
 
-## 前提条件
+### 前提条件
 
 - [安装 openJDK](https://openjdk.org/install/)（1.8 及以上版本）。
 - [安装 Maven](https://maven.apache.org/install.html)（3.6 及以上版本）。
@@ -17,7 +17,7 @@ id: access-kaiwudb-jdbc
 - 创建具有表级别及以上操作权限的用户。
 - 获取 KaiwuDB JDBC 驱动包。
 
-## 配置连接
+### 配置连接
 
 1. 在 `pom.xml` 中添加依赖，将 KaiwuDB JDBC 引入到 Java 应用程序中。
 

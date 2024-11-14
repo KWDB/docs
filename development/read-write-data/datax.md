@@ -125,7 +125,7 @@ KaiwuDBReader 通过 DataX 将 KWDB 数据库的数据写出到其他数据库�
    | KaiwuDBWriter-00:您的配置错误                         | 检查 DataX 作业配置文件。                                                                             |
    | KaiwuDBWriter-01:缺少必要的值                          | 检查 JSON 配置文件中必须字段，确认是否配置相应的值。                                                  |
    | KaiwuDBWriter-02:值非法                                | 检查 JSON 配置文件中相关字段的值，确认是否符合规范和数据类型要求。                                    |
-   | KaiwuDBWriter-03:运行时异常                            | 检查 JSON 配置文件后重试。如果问题仍然存在，请联系 KaiwuDB 技术支持人员。                             |
+   | KaiwuDBWriter-03:运行时异常                            | 检查 JSON 配置文件后重试。如果问题仍然存在，请联系 KWDB 技术支持人员。                             |
    | KaiwuDBWriter-04:DataX 类型无法正确映射到 KWDB 类型 | 检查使用的 DataX 是否支持映射到 KWDB 数据类型。更多信息，参见[数据类型映射](#数据类型映射)。 |
    | KaiwuDBWriter-05:尚未支持实现                          | 功能不支持。                                                                                          |
 
