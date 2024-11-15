@@ -124,7 +124,7 @@ tar -zxvf <package_name>
 
     ```yaml
     [global]
-    secure_mode=y
+    secure_mode=tls
     management_user=kaiwudb
     rest_port=8080
     kaiwudb_port=26257
@@ -142,14 +142,16 @@ tar -zxvf <package_name>
     参数说明：
 
     - `global`：全局配置
-      - `secure_mode`：是否开启安全模式，默认开启安全模式。开启安全模式后，KWDB 生成 TLS 安全证书，作为客户端或应用程序连接数据库的凭证。生成的客户端相关证书存放在 `/etc/kaiwudb/certs` 目录。
-      - `management_user`：KWDB 的管理用户，默认为 `kaiwudb`。安装部署后，KWDB 创建相应的管理用户以及和管理用户同名的用户组。
-      - `rest_port`：KWDB Web 服务端口，默认为 `8080`。
-      - `kaiwudb_port`：KWDB 服务端口，默认为 `26257`。
+      - `secure_mode`：是否开启安全模式，支持以下两种取值：
+        - `insecure`：使用非安全模式。
+        - `tls`：（默认选项）开启 TLS 安全模式。开启安全模式后，KaiwuDB 生成 TLS 证书，作为客户端或应用程序连接数据库的凭证。生成的客户端相关证书存放在 `/etc/kaiwudb/certs` 目录。
+      - `management_user`：KaiwuDB 的管理用户，默认为 `kaiwudb`。安装部署后，KaiwuDB 创建相应的管理用户以及和管理用户同名的用户组。
+      - `rest_port`：KaiwuDB Web 服务端口，默认为 `8080`。
+      - `kaiwudb_port`：KaiwuDB 服务端口，默认为 `26257`。
       - `data_root`：数据目录，默认为 `/var/lib/kaiwudb`。
-      - `cpu`: 可选参数，用于指定 KWDB 服务占用当前节点服务器 CPU 资源的比例，默认无限制。取值范围为 `[0,1]`，最大精度为小数点后两位。
+      - `cpu`: 可选参数，用于指定 KaiwuDB 服务占用当前节点服务器 CPU 资源的比例，默认无限制。取值范围为 `[0,1]`，最大精度为小数点后两位。
     - `local`：本地节点配置
-      - `node_addr`：本地节点对外提供服务的 IP 地址，监听地址为 `0.0.0.0`，端口为 KWDB 服务端口。
+      - `node_addr`：本地节点对外提供服务的 IP 地址，监听地址为 `0.0.0.0`，端口为 KaiwuDB 服务端口。
 
 2. 为 `deploy.sh` 脚本添加运行权限。
 

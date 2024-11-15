@@ -1,13 +1,15 @@
 ---
-title: 分区管理
+title: 数据分片管理
 id: range-mgmt-relational
 ---
 
-# 分区管理
+# 数据分片管理
 
-## 查看分区
+KWDB 将所有用户数据和几乎所有系统数据存储在排序的键值对映射中。这个键空间被划分为多个键空间中的连续块，即数据分片（range）。每个键始终可以在单个数据分片内找到。 从 SQL 的角度来看，表最初会映射到单个数据分片，数据分片中的每个键值对对应表中的一行。数据分片的大小达到 512 MiB后，系统会自动将其拆分为两个数据分片。随着表的增长，新生成的数据分片也会继续进行类似的拆分操作。当用户数据减少时，数据分片会自动合并。注意：由于 KWDB 采用标记删除的方式处理数据删除，数据分片不会立即合并，只有在垃圾回收过程中实际删除数据后，数据分片才会合并。
 
-`SHOW RANGES` 语句用于显示数据库、表、索引的 Range 分区信息，验证 SQL 数据如何映射到基础 Range 分区以及 Range 副本的位置。
+## 查看数据分片
+
+`SHOW RANGES` 语句用于显示数据库、表、索引的数据分片信息，验证 SQL 数据如何映射到基础数据分片以及数据分片副本的位置。
 
 ### 前提条件
 
@@ -29,9 +31,9 @@ SHOW RANGES FROM [TABLE <table_name> | INDEX <table_name> @ <index_name> | DATAB
 
 ### 语法示例
 
-- 查看表的分区。
+- 查看表的数据分片。
 
-    以下示例查看 `orders` 表的分区。
+    以下示例查看 `orders` 表的数据分片。
 
     ```sql
     SHOW RANGES FROM TABLE orders;
@@ -46,9 +48,9 @@ SHOW RANGES FROM [TABLE <table_name> | INDEX <table_name> @ <index_name> | DATAB
     (1 row)
     ```
 
-- 查看索引的分区。
+- 查看索引的数据分片。
 
-    以下示例查看 `orders` 表的 `primary` 索引的分区。
+    以下示例查看 `orders` 表的 `primary` 索引的数据分片。
 
     ```sql
     SHOW RANGES FROM INDEX orders @ primary;
@@ -63,9 +65,9 @@ SHOW RANGES FROM [TABLE <table_name> | INDEX <table_name> @ <index_name> | DATAB
     (1 row)
     ```
 
-- 查看数据库的分区。
+- 查看数据库的数据分片。
 
-    以下示例查看 `db3` 数据库的分区。
+    以下示例查看 `db3` 数据库的数据分片。
 
     ```sql
     SHOW RANGES FROM DATABASE db3;
