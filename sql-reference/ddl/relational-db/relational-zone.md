@@ -5,7 +5,7 @@ id: relational-zone
 
 # 区域配置
 
-在 KWDB 集群中，每个分区都隶属于一个特定的副本区域（zone）。集群在重新平衡分区时，会考虑副本区域的配置，以确保遵守所有约束条件。
+在 KWDB 集群中，每个数据分片都隶属于一个特定的副本区域（zone）。集群在重新平衡数据分片时，会考虑副本区域的配置，以确保遵守所有约束条件。
 
 集群启动时，会自动生成预配置的副本区域和`default`副本区域。其中预配置的副本区域适用于内部系统数据，`default`副本区域适用于集群中的其他数据。用户可以直接使用或调整上述副本区域，也可以为指定数据库或表单独设置副本区域。
 
@@ -17,10 +17,10 @@ id: relational-zone
 
 数据复制过程中，副本区域的优先级排序为 表 > 数据库 > 集群。
 
-内部系统数据存储在系统分区内，适用于以下级别的副本区域：
+内部系统数据存储在系统数据分片内，适用于以下级别的副本区域：
 
 - **集群级**：预配置的`default`副本区域，适用于未受具体副本区域约束的系统数据。
-- **系统分区**：KWDB 为`meta` 和 `liveness`等关键系统分区预先设置了副本区域。用户也可以根据需要为系统分区配置新的副本区域。系统分区的副本区域修改后可能会覆盖默认设置。KWDB 还为内部系统数据库和 `system.jobs` 表配置了预设的副本区域。
+- **系统数据分片**：KWDB 为`meta` 和 `liveness`等关键系统数据分片预先设置了副本区域。KWDB 还为内部系统数据库和 `system.jobs` 表配置了预设的副本区域。
 
 用户可以使用`SHOW ZONE CONFIGURATION`语句查看指定对象及集群内的所有副本区域设置。
 
@@ -28,7 +28,7 @@ id: relational-zone
 
 - `SHOW ZONE CONFIGURATION` 语句用于查看指定对象的副本区域信息。
 
-- `SHOW ZONE CONFIGURATIONS`和`SHOW ALL ZONE CONFIGURATIONS`用于查看集群所有系统分区、`system`数据库和系统表的副本信息。
+- `SHOW ZONE CONFIGURATIONS`和`SHOW ALL ZONE CONFIGURATIONS`用于查看集群所有系统数据分片、`system`数据库和系统表的副本信息。
 
 ### 所需权限
 
@@ -42,16 +42,16 @@ id: relational-zone
 
 | 参数 | 说明 |
 | --- | --- |
-| `range_name` | 分区名称，包括：<br>-  `default`：默认副本设置<br>- `meta`：所有数据的位置信息<br>- `liveness`：给定时间活动节点的信息 <br>- `system`：分配新表ID所需的信息以及追踪集群节点状态<br>- `timeseries`：集群监控数据 |
+| `range_name` | 数据分片名称，包括：<br>-  `default`：默认副本设置<br>- `meta`：所有数据的位置信息<br>- `liveness`：给定时间活动节点的信息 <br>- `system`：分配新表ID所需的信息以及追踪集群节点状态<br>- `timeseries`：集群监控数据 |
 | `database_name` | 数据库的名称。 |
 | `table_name` | 表的名称。 |
 | `index_name` | 索引的名称。 |
 
 ### 语法示例
 
-- 查看指定系统分区的副本信息
+- 查看指定系统数据分片的副本信息
   
-     以下示例查看 `default` 默认系统分区的副本区域信息。
+     以下示例查看 `default` 默认系统数据分片的副本区域信息。
      
      ```sql
      SHOW ZONE CONFIGURATION FOR RANGE default;

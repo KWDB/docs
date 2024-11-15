@@ -24,7 +24,6 @@ id: overview
     - [时序表](./ddl/ts-db/ts-table.md)
     - [列](./ddl/ts-db/ts-column.md)
     - [标签](./ddl/ts-db/ts-label.md)
-    - [分区](./ddl/ts-db/ts-range.md)
     - [区域配置](./ddl/ts-db/ts-zone.md)
     - [注释](./ddl/ts-db/ts-comment.md)
   - 关系数据
@@ -37,7 +36,7 @@ id: overview
     - [索引](./ddl/relational-db/relational-index.md)
     - [约束](./ddl/relational-db/relational-constraint.md)
     - [序列](./ddl/relational-db/relational-sequence.md)
-    - [分区](./ddl/relational-db/relational-range.md)
+    - [数据分片](./ddl/relational-db/relational-range.md)
     - [区域配置](./ddl/relational-db/relational-zone.md)
     - [注释](./ddl/relational-db/relational-comment.md)
 - DML 语句

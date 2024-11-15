@@ -5,9 +5,13 @@ id: zone-mgmt-relational
 
 # 区域配置管理
 
+KWDB 集群中，每个数据分片都隶属于一个特定的副本区域（zone）。集群在重新平衡数据分片时，会考虑副本区域的配置，以确保遵守所有约束条件。
+
+集群启动时，会自动生成预配置的副本区域和 `default` 副本区域。其中预配置的副本区域适用于内部系统数据，`default` 副本区域适用于集群中的其他数据。
+
 ## 查看区域配置
 
-`SHOW ZONE CONFIGURATIONS` 语句用于查看指定数据库对象的副本区域信息。
+`SHOW ZONE CONFIGURATIONS` 语句用于查看指定数据库对象的区域配置。
 
 ### 前提条件
 
@@ -15,7 +19,7 @@ id: zone-mgmt-relational
 
 ### 语法格式
 
-- 查看指定分区、数据库、表或索引的副本区域信息
+- 查看指定数据分片、数据库、表或索引的区域配置
 
     ```sql
     SHOW ZONE CONFIGURATION FOR [RANGE range_name | DATABASE database_name | TABLE table_name  | INDEX table_name @ index_name];
@@ -31,16 +35,16 @@ id: zone-mgmt-relational
 
 | 参数 | 说明 |
 | --- | --- |
-| `range_name` | 系统分区的名称。 |
+| `range_name` | 系统数据分片的名称。 |
 | `database_name` | 数据库的名称。 |
 | `table_name` | 表的名称。 |
 | `index_name` | 索引的名称。 |
 
 ### 语法示例
 
-- 查看指定系统分区的副本信息
+- 查看指定系统数据分片的副本信息
   
-     以下示例查看 `default` 默认系统分区的副本区域信息。
+     以下示例查看 `default` 默认系统数据分片的副本区域信息。
      
      ```sql
      SHOW ZONE CONFIGURATION FOR RANGE default;

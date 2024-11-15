@@ -348,7 +348,7 @@ SHOW INDEX FROM re_users;
       \xf6c18af80186a3 | /Table/193/2/100003 | 2262-04-11 23:47:16.854776+00:00
     (3 rows)
 
-    -- 3. 查看 customers_id_idx 索引 的 Range 分区。
+    -- 3. 查看 customers_id_idx 索引 的数据分片。
 
     SHOW RANGES FROM INDEX customers@customers_id_idx;
       start_key | end_key | range_id | range_size_mb | lease_holder | lease_holder_locality | replicas | replica_localities
