@@ -34,7 +34,7 @@ id: kafka
 1. 解压缩 KaiwuDB Kafka Connector 安装包，将解压后的 KaiwuDB Kafka Connector 插件放置在 `$KAFKA_HOME/components/` 目录。
 
     ```shell
-    unzip -d $KAFKA_HOME/components/target/components/packages/kaiwudb-kafka-connect-*.zip
+    unzip -d $KAFKA_HOME/components/ target/components/packages/kaiwudb-kafka-connect-*.zip
     ```
 
 2. 修改 Kafka 的 `$KAFKA_HOME/config/connect-distributed.properties` 配置文件。在文件的 `plugin.path` 字段添加 KaiwuDB Kafka Connector 的路径。
