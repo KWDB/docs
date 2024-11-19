@@ -256,6 +256,12 @@ ALTER ROLE [IF EXISTS] <role_name> [WITH <role_options>];
 
 `GRANT` 语句用于为角色添加成员。成员继承角色的所有权限。
 
+::: warning 说明
+
+如果用户权限未能及时更新，可以删除该用户后再创建非同名用户，重新授予权限。
+
+:::
+
 ### 前提条件
 
 用户是角色的管理员或者 `admin` 角色的成员。如需为 `admin` 角色添加成员，用户必须是具有 `WITH ADMIN OPTION` 权限的 `admin` 角色。默认情况下，`root` 用户属于 `admin` 角色。

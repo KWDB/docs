@@ -120,11 +120,6 @@ SHOW TAG VALUES FROM sensor_data;
 
 KWDB 支持使用 `ALTER TABLE ... ALTER TAG` 语句修改标签的数据类型和宽度。`ALTER TAG` 为在线操作，不会阻塞表中的数据读写。
 
-::: warning 说明
-
-在分布式集群下避免修改标签的数据类型和宽度。
-
-:::
 
 #### 前提条件
 

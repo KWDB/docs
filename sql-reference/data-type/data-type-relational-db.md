@@ -789,7 +789,6 @@ KWDB 关系数据库支持 TIMESTAMP 和 TIMESTAMPTZ 时间类型。
 
 - KWDB 在存储 TIMESTAMPTZ 类型时不包含时区数据。
 - KWDB 默认时区为 UTC。因此 TIMESTAMPTZ 的默认值与 TIMESTAMP 一致。
-- 避免使用 `::` 操作符将 `TIMESTAMPTZ` 数据类型转化为 `TIMESTAMP` 数据类型。
 
 :::
 
