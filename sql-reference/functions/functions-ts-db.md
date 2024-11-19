@@ -11,6 +11,12 @@ id: functions-ts-db
 
 为了兼容 SQL 标准，KWDB 支持以下函数，这些函数与常规的内置函数具有等效功能。
 
+::: warning 说明
+
+避免在 SUBSTRING 函数中使用转义字符 `+`。
+
+:::
+
 | 特殊形式                                                 | 等价于                                   |
 | ------------------------------------------------------- | ---------------------------------------- |
 | `AT TIME ZONE`                                            | `timezone()`                               |
@@ -253,14 +259,14 @@ id: functions-ts-db
 | rpad(string: string, length: int8, fill: string) → string             | 在字符串的右侧添加 fill，以填充字符串的长度。如果字符串的长度超过长度，则会被截断。                            |
 | rtrim(input: string, trim_chars: string) → string                     | 从输入的末尾（右侧）删除 `trim_chars` 中包含的任何字符（递归应用）。例如，`rtrim('doggie'，'ei')` 返回 `dogg`。 |
 | rtrim(val: string) → string                                           | 从 val 的末端（右侧）移除所有空格。                                                                            |
-| substr(input: string, regex: string) → string                         | 返回与正则表达式 regex 匹配的 input 子字符串。                                                                 |
-| substr(input: string, regex: string, escape_char: string) → string    | 返回与正则表达式 regex 匹配的 input 子字符串，使用 `escape_char` 作为转义字符而不是作为正则表达式的特殊符号。    |
-| substr(input: string, start_pos: int8) → string                       | 返回 `start_pos` 和 `end_pos` 之间的 input 子字符串（从 1 开始计数）。                                           |
-| substr(input: string, start_pos: int8, length: int8) → string         | 返回从 `substr_pos` 开始的 input 子字符串（从 1 开始计数）。                                                   |
-| substring(input: string, regex: string) → string                      | 返回与正则表达式匹配 regex 的 input 子字符串。                                                                 |
-| substring(input: string, regex: string, escape_char: string) → string | 返回与正则表达式匹配 regex 的 input 子字符串，使用 `escape_char` 作为转义字符而不是作为正则表达式的特殊符号。    |
-| substring(input: string, start_pos: int8) → string                    | 返回 `start_pos` 和 `end_pos` 之间的 input 子字符串（从 1 开始计数）。                                           |
-| substring(input: string, start_pos: int8, length: int8) → string      | 返回从 `substr_pos` 开始的 input 子字符串（从 1 开始计数）。                                                   |
+| substr(input: string, regex: string) → string                         | 返回与正则表达式 regex 匹配的 input 子字符串。**提示**：避免在函数中使用转义字符 `+`。                                                                 |
+| substr(input: string, regex: string, escape_char: string) → string    | 返回与正则表达式 regex 匹配的 input 子字符串，使用 `escape_char` 作为转义字符而不是作为正则表达式的特殊符号。**提示**：避免在函数中使用转义字符 `+`。    |
+| substr(input: string, start_pos: int8) → string                       | 返回 `start_pos` 和 `end_pos` 之间的 input 子字符串（从 1 开始计数）。**提示**：避免在函数中使用转义字符 `+`。                                          |
+| substr(input: string, start_pos: int8, length: int8) → string         | 返回从 `substr_pos` 开始的 input 子字符串（从 1 开始计数）。**提示**：避免在函数中使用转义字符 `+`。                                                   |
+| substring(input: string, regex: string) → string                      | 返回与正则表达式匹配 regex 的 input 子字符串。**提示**：避免在函数中使用转义字符 `+`。                                                                 |
+| substring(input: string, regex: string, escape_char: string) → string | 返回与正则表达式匹配 regex 的 input 子字符串，使用 `escape_char` 作为转义字符而不是作为正则表达式的特殊符号。**提示**：避免在函数中使用转义字符 `+`。   |
+| substring(input: string, start_pos: int8) → string                    | 返回 `start_pos` 和 `end_pos` 之间的 input 子字符串（从 1 开始计数）。**提示**：避免在函数中使用转义字符 `+`。                                           |
+| substring(input: string, start_pos: int8, length: int8) → string      | 返回从 `substr_pos` 开始的 input 子字符串（从 1 开始计数）。**提示**：避免在函数中使用转义字符 `+`。                                                   |
 | upper(val: string) → string                                           | 将 val 中的所有字符转换为大写字母。                                                                            |
 
 ## 聚合函数
