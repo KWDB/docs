@@ -124,7 +124,7 @@ id: ts-data-query
 
 ::: warning 说明
 
-`time_bucket_gapfill()` 函数必须与 `GROUP BY` 配合使用。如果查询的其他列不在 `GROUP BY` 指定的范围内，需要使用聚合函数来处理这些列。例如，系统不支持以下查询：
+`time_bucket_gapfill()` 函数必须与 `GROUP BY` 配合使用。如果需要同时查询其他列信息，且待查询的列不在 `GROUP BY` 指定的范围内，需要使用聚合函数来处理这些列。例如，系统不支持以下查询：
 
 ```sql
 SELECT time_bucket_gapfill (time, 86400) AS a, c1 FROM t1 GROUP BY a;
