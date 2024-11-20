@@ -120,9 +120,23 @@ id: ts-data-query
 
 ## 插值查询
 
-时间序列数据有时会存在缺失和偏离的数据，影响后续数据的使用和分析。插值查询可以实现对指定窗口间隔的数据进行时间戳对齐，插入缺失的时间戳行，并选择是否进行补值。
+时间序列数据中，有时会存在缺失和偏离的数据，影响后续数据的使用和分析。KWDB 提供了 `time_bucket_gapfill()` 函数和 `interpolate()` 函数，支持用户对指定窗口间隔的数据进行时间戳对齐，插入缺失的时间戳行，并根据需要选择是否进行补值。
 
-如需插值查询，需要使用 `time_bucket_gapfill` 函数和 `GROUP BY` 语句。如需查询其他时间窗口的数据，需要使用聚合函数。如果选择补值，需要使用 `interpolate` 函数。
+::: warning 说明
+
+`time_bucket_gapfill()` 函数必须与 `GROUP BY` 配合使用。如果查询的其他列不在 `GROUP BY` 指定的范围内，需要使用聚合函数来处理这些列。例如，系统不支持以下查询：
+
+```sql
+SELECT time_bucket_gapfill (time, 86400) AS a, c1 FROM t1 GROUP BY a;
+```
+
+但支持使用聚合函数的查询：
+
+```sql
+SELECT time_bucket_gapfill (time, 86400) AS a, max(c1) FROM t1 GROUP BY a;
+```
+
+:::
 
 ### 前提条件
 
