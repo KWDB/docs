@@ -50,7 +50,7 @@ MyBatis 使用时的常见问题可参见 [Mybatis 和 Mybatis-Plus](../../../fa
 
     ```SQL
     CREATE DATABASE test_mybatis;
-    
+
     CREATE TABLE test_mybatis.rel_table
     (
         id  INT PRIMARY KEY,
@@ -93,25 +93,25 @@ MyBatis 使用时的常见问题可参见 [Mybatis 和 Mybatis-Plus](../../../fa
 
 1. 在项目的 `pom.xml` 文件，引入 MyBatis 依赖。
 
-      ```XML
-      <!-- mybatis-spring-boot-starter -->
-      <dependency>
-        <groupId>org.mybatis.spring.boot</groupId>
-        <artifactId>mybatis-spring-boot-starter</artifactId>
-        <version>2.3.2</version>
-      </dependency>
-      ```
+    ```XML
+    <!-- mybatis-spring-boot-starter -->
+    <dependency>
+      <groupId>org.mybatis.spring.boot</groupId>
+      <artifactId>mybatis-spring-boot-starter</artifactId>
+      <version>2.3.2</version>
+    </dependency>
+    ```
 
 2. 在项目的 `pom.xml` 文件，引入 KaiwuDB JDBC 依赖。
 
-     ```XML
-      <!-- KaiwuDB JDBC 2.0.4.1 -->
-      <dependency>
-        <groupId>com.kaiwudb</groupId>
-        <artifactId>kaiwudb-jdbc</artifactId>
-        <version>2.0.4.1</version>
-      </dependency>
-     ```
+    ```XML
+    <!-- KaiwuDB JDBC 2.0.4.1 -->
+    <dependency>
+      <groupId>com.kaiwudb</groupId>
+      <artifactId>kaiwudb-jdbc</artifactId>
+      <version>2.0.4.1</version>
+    </dependency>
+    ```
 
 3. 如果 KaiwuDB JDBC 无法正常加载使用，运行以下命令，将 KaiwuDB JDBC 驱动安装到本地 Maven 仓库中。
 
@@ -123,24 +123,24 @@ MyBatis 使用时的常见问题可参见 [Mybatis 和 Mybatis-Plus](../../../fa
 
 1. 在 `application.yml` 文件中设置数据库的数据源及服务启动时的端口信息。
 
-      ```YAML
-      spring:
-        # 时序库数据源配置
-        tsdb-datasource:
-          driver-class-name: com.kaiwudb.Driver
-          jdbc-url: jdbc:kaiwudb://127.0.0.1:26257/test_ts_mybatis
-          username: <user_name>
-          password: <password>      
-        # 关系库数据源配置
-        rdb-datasource:
-          driver-class-name: com.kaiwudb.Driver
-          jdbc-url: jdbc:kaiwudb://127.0.0.1:26257/test_mybatis
-          username: <user_name>
-          password: <password>
-      # 服务启动端口配置
-      server:
-        port: 9000
-      ```
+    ```YAML
+    spring:
+      # 时序库数据源配置
+      tsdb-datasource:
+        driver-class-name: com.kaiwudb.Driver
+        jdbc-url: jdbc:kaiwudb://127.0.0.1:26257/test_ts_mybatis
+        username: <user_name>
+        password: <password>      
+      # 关系库数据源配置
+      rdb-datasource:
+        driver-class-name: com.kaiwudb.Driver
+        jdbc-url: jdbc:kaiwudb://127.0.0.1:26257/test_mybatis
+        username: <user_name>
+        password: <password>
+    # 服务启动端口配置
+    server:
+      port: 9000
+    ```
 
 2. 在项目 `src/main/java/com/kaiwudb/mybatis/config` 目录下分别配置对应 `application.yml` 文件中配置的数据源配置类。
 
@@ -155,30 +155,30 @@ MyBatis 使用时的常见问题可参见 [Mybatis 和 Mybatis-Plus](../../../fa
           public DataSource tsDataSource() {
             return DataSourceBuilder.create().build();
           }
-        
+
           @Bean(name = "tsJdbcTemplate")
           public JdbcTemplate tsJdbcTemplate(@Qualifier("tsDataSource") DataSource tsDataSource) {
             return new JdbcTemplate(tsDataSource);
           }
-        
+
           @Bean(name = "tsSqlSessionFactory")
           public SqlSessionFactory tsSqlSessionFactory(@Qualifier("tsDataSource") DataSource tsDataSource) throws Exception {
             SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
             bean.setDataSource(tsDataSource);
             return bean.getObject();
           }
-        
+
           @Bean(name = "tsTransactionManager")
           public DataSourceTransactionManager tsTransactionManager(@Qualifier("tsDataSource") DataSource tsDataSource) {
             return new DataSourceTransactionManager(tsDataSource);
           }
-        
+
           @Bean(name = "tsSqlSessionTemplate")
           public SqlSessionTemplate tsdbSqlSessionTemplate(@Qualifier("tsSqlSessionFactory") SqlSessionFactory tsSqlSessionFactory) {
             return new SqlSessionTemplate(tsSqlSessionFactory);
           }
         }
-       ```
+        ```
 
      - 关系库数据源配置类
 
@@ -192,13 +192,13 @@ MyBatis 使用时的常见问题可参见 [Mybatis 和 Mybatis-Plus](../../../fa
           public DataSource dataSource() {
             return DataSourceBuilder.create().build();
           }
-        
+
           @Primary
           @Bean(name = "jdbcTemplate")
           public JdbcTemplate jdbcTemplate(@Qualifier("dataSource") DataSource dataSource) {
             return new JdbcTemplate(dataSource);
           }
-        
+
           @Primary
           @Bean(name = "sqlSessionFactory")
           public SqlSessionFactory sqlSessionFactory(@Qualifier("dataSource") DataSource dataSource) throws Exception {
@@ -206,13 +206,13 @@ MyBatis 使用时的常见问题可参见 [Mybatis 和 Mybatis-Plus](../../../fa
             bean.setDataSource(dataSource);
             return bean.getObject();
           }
-        
+
           @Primary
           @Bean(name = "transactionManager")
           public DataSourceTransactionManager transactionManager(@Qualifier("dataSource") DataSource dataSource) {
             return new DataSourceTransactionManager(dataSource);
           }
-        
+
           @Primary
           @Bean(name = "sqlSessionTemplate")
           public SqlSessionTemplate sqlSessionTemplate(@Qualifier("sqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
@@ -307,17 +307,17 @@ public interface TimeSeriesMapper {
 
 - `TimeSeriesService` 接口服务类
 
-    ```Java
-    public interface TimeSeriesService {
-      int insert(TimeSeriesEntity entity);
-    
-      int deleteByTimeStamp(String timestamp);
-    
-      List<TimeSeriesEntity> findByTimeStamp(String beginTime, String endTime);
-    
-      List<TimeSeriesEntity> findAll();
-    }
-    ```
+  ```Java
+  public interface TimeSeriesService {
+    int insert(TimeSeriesEntity entity);
+
+    int deleteByTimeStamp(String timestamp);
+
+    List<TimeSeriesEntity> findByTimeStamp(String beginTime, String endTime);
+
+    List<TimeSeriesEntity> findAll();
+  }
+  ```
 
   结果如下：
 
@@ -325,36 +325,36 @@ public interface TimeSeriesMapper {
 
 - `TimeSeriesServiceImpl` 接口服务实现类
 
-    ```Java
-    @Service
-    public class TimeSeriesServiceImpl implements TimeSeriesService {
-      @Autowired
-      private TimeSeriesMapper mapper;
-    
-      @Override
-      public int insert(TimeSeriesEntity entity) {
-        return mapper.insert(entity);
-      }
-    
-      @Override
-      public int deleteByTimeStamp(String timestamp) {
-        LocalDateTime dateTime = LocalDateTime.parse(timestamp, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
-        return mapper.deleteByTimeStamp(Timestamp.valueOf(dateTime));
-      }
-    
-      @Override
-      public List<TimeSeriesEntity> findByTimeStamp(String beginTime, String endTime) {
-        LocalDateTime beginDateTime = LocalDateTime.parse(beginTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        LocalDateTime endDateTime = LocalDateTime.parse(endTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        return mapper.selectListBetweenTime(Timestamp.valueOf(beginDateTime), Timestamp.valueOf(endDateTime));
-      }
-    
-      @Override
-      public List<TimeSeriesEntity> findAll() {
-        return mapper.selectList();
-      }
+  ```Java
+  @Service
+  public class TimeSeriesServiceImpl implements TimeSeriesService {
+    @Autowired
+    private TimeSeriesMapper mapper;
+
+    @Override
+    public int insert(TimeSeriesEntity entity) {
+      return mapper.insert(entity);
     }
-    ```
+
+    @Override
+    public int deleteByTimeStamp(String timestamp) {
+      LocalDateTime dateTime = LocalDateTime.parse(timestamp, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
+      return mapper.deleteByTimeStamp(Timestamp.valueOf(dateTime));
+    }
+
+    @Override
+    public List<TimeSeriesEntity> findByTimeStamp(String beginTime, String endTime) {
+      LocalDateTime beginDateTime = LocalDateTime.parse(beginTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+      LocalDateTime endDateTime = LocalDateTime.parse(endTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+      return mapper.selectListBetweenTime(Timestamp.valueOf(beginDateTime), Timestamp.valueOf(endDateTime));
+    }
+
+    @Override
+    public List<TimeSeriesEntity> findAll() {
+      return mapper.selectList();
+    }
+  }
+  ```
 
   结果如下：
 
@@ -433,7 +433,7 @@ public class RelationalEntity {
 
 #### 创建 Mapper 接口
 
-在 `src/main/java/com/kaiwudb/mybatis/mapper/rdb`目录下创建 `RelationalMapper` 接口类，用于定义关系数据库的操作接口，使用 `@Mapper` 和 `@Repository` 注解，以快速实现常见的数据插入、更新、删除和查询等操作。
+在 `src/main/java/com/kaiwudb/mybatis/mapper/rdb`目录下创建 `RelationalMapper `接口类，用于定义关系数据库的操作接口，使用 `@Mapper` 和 `@Repository` 注解，以快速实现常见的数据插入、更新、删除和查询等操作。
 
 ```Java
 @Mapper
@@ -480,21 +480,21 @@ public interface RelationalMapper {
 
 - `RelationalService` 接口服务类
 
-    ```Java
-    public interface RelationalService {
-      int insert(RelationalEntity entity);
-    
-      int update(RelationalEntity entity);
-    
-      int deleteById(Integer id);
-    
-      RelationalEntity findById(Integer id);
-    
-      List<RelationalEntity> findByTimeStamp(String beginTime, String endTime);
-    
-      List<RelationalEntity> findAll();
-    }
-    ```
+  ```Java
+  public interface RelationalService {
+    int insert(RelationalEntity entity);
+
+    int update(RelationalEntity entity);
+
+    int deleteById(Integer id);
+
+    RelationalEntity findById(Integer id);
+
+    List<RelationalEntity> findByTimeStamp(String beginTime, String endTime);
+
+    List<RelationalEntity> findAll();
+  }
+  ```
 
   结果如下：
 
@@ -502,45 +502,45 @@ public interface RelationalMapper {
 
 - `RelationalServiceImpl`接口服务实现类
 
-    ```Java
-    @Service
-    public class RelationalServiceImpl implements RelationalService {
-      @Autowired
-      private RelationalMapper mapper;
-    
-      @Override
-      public int insert(RelationalEntity entity) {
-        return mapper.insert(entity);
-      }
-    
-      @Override
-      public int update(RelationalEntity entity) {
-        return mapper.update(entity);
-      }
-    
-      @Override
-      public int deleteById(Integer id) {
-        return mapper.deleteById(id);
-      }
-    
-      @Override
-      public RelationalEntity findById(Integer id) {
-        return mapper.selectById(id);
-      }
-    
-      @Override
-      public List<RelationalEntity> findByTimeStamp(String beginTime, String endTime) {
-        LocalDateTime beginDateTime = LocalDateTime.parse(beginTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        LocalDateTime endDateTime = LocalDateTime.parse(endTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        return mapper.selectListBetweenTime(Timestamp.valueOf(beginDateTime), Timestamp.valueOf(endDateTime));
-      }
-    
-      @Override
-      public List<RelationalEntity> findAll() {
-        return mapper.selectList(null);
-      }
+  ```Java
+  @Service
+  public class RelationalServiceImpl implements RelationalService {
+    @Autowired
+    private RelationalMapper mapper;
+
+    @Override
+    public int insert(RelationalEntity entity) {
+      return mapper.insert(entity);
     }
-    ```
+
+    @Override
+    public int update(RelationalEntity entity) {
+      return mapper.update(entity);
+    }
+
+    @Override
+    public int deleteById(Integer id) {
+      return mapper.deleteById(id);
+    }
+
+    @Override
+    public RelationalEntity findById(Integer id) {
+      return mapper.selectById(id);
+    }
+
+    @Override
+    public List<RelationalEntity> findByTimeStamp(String beginTime, String endTime) {
+      LocalDateTime beginDateTime = LocalDateTime.parse(beginTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+      LocalDateTime endDateTime = LocalDateTime.parse(endTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+      return mapper.selectListBetweenTime(Timestamp.valueOf(beginDateTime), Timestamp.valueOf(endDateTime));
+    }
+
+    @Override
+    public List<RelationalEntity> findAll() {
+      return mapper.selectList(null);
+    }
+  }
+  ```
 
   结果如下：
 
