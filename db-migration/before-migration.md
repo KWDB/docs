@@ -7,7 +7,7 @@ id: before-migration
 
 - 部署环境
   - Linux 系统环境。
-  - [安装 Java](https://docs.oracle.com/en/java/javase/22/install/overview-jdk-installation.html)（1.8 及以上版本）。
+  - [安装 openJDK](https://openjdk.org/install/)（1.8 及以上版本）。
   - [安装 Python](https://www.python.org/downloads/)（2.X 或 3.X）。
   - [安装 Maven](https://maven.apache.org/install.html)（3.6 及以上版本）。
   - [安装 DataX 3.0](https://gitee.com/mirrors/DataX/blob/master/userGuid.md)。

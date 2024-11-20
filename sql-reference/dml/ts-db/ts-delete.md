@@ -37,7 +37,7 @@ id: ts-delete
 ```sql
 -- 1. 创建和使用时序数据库。
 
-create ts database ts;
+CREATE TS DATABASE ts;
 use ts;
 SET
 

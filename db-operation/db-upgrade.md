@@ -57,13 +57,24 @@ KWDB 单机部署仅支持离线升级。
    UPGRADE COMPLETED: KaiwuDB has been upgraded successfully! ...
    ```
 
-4. 启动 KWDB。
+4. 如需升级至 2.1.0 及以上版本，执行时序标签调整命令。
+
+   ```Shell
+   <alter_tag_path>/alter_tag <store_path>
+   ```
+
+   参数说明：
+
+   - `alter_tag_path`：`alter_tag` 脚本所在目录，默认为`/kaiwudb/bin`。
+   - `store_path`：数据文件的存储路径，使用 `deploy.sh` 脚本部署时，数据文件的存储路径默认为`/var/lib/kaiwudb`；使用 YAML 文件或源码编译部署时，存储路径取决于 `--store` 的配置，未指定时，KaiwuDB 将在 `kwbase` 所在目录下创建名为 `kwbase-data` 的数据目录。
+
+5. 启动 KWDB。
 
    ```Shell
    systemctl start kaiwudb
    ```
 
-5. 启动成功后，检查数据库是否已正常运行。
+6. 启动成功后，检查数据库是否已正常运行。
 
    ```Shell
    systemctl status kaiwudb

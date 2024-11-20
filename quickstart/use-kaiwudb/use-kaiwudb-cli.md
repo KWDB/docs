@@ -15,7 +15,6 @@ id: use-kaiwudb-cli
 
     ```sql
     CREATE TS DATABASE ts_db;
-    CREATE TS DATABASE
     ```
 
 2. 创建时序表。
@@ -24,7 +23,6 @@ id: use-kaiwudb-cli
 
     ```sql
     CREATE TABLE ts_db.t1(ts timestamp not null,a int, b int) tags(tag1 int not null, tag2 int) primary tags(tag1);
-    CREATE TABLE
     ```
 
 3. 向 `t1` 时序表中写入数据。
@@ -69,7 +67,6 @@ id: use-kaiwudb-cli
 
     ```sql
     CREATE DATABASE db1;
-    CREATE DATABASE
     ```
 
 2. 创建关系表。
@@ -78,14 +75,12 @@ id: use-kaiwudb-cli
 
     ```sql
     CREATE TABLE db1.accounts(id INT8 DEFAULT unique_rowid() PRIMARY KEY, name STRING, balance DECIMAL, enabled BOOL);
-    CREATE TABLE
     ```
 
 3. 向 `accounts` 关系表中写入数据。
 
     ```sql
     INSERT INTO db1.accounts VALUES (1, 'lily', 10000.5, true), (2, 'ruarc', 20000.75, true), (3, 'tullia', 30000, false), (4, 'arturo', 45000, false);
-    INSERT 4
     ```
 
 4. 查询 `accounts` 关系表中的数据。

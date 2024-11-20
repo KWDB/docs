@@ -26,7 +26,7 @@ Connection conn = DriverManager.getConnection("jdbc:kaiwudb://127.0.0.1:26257/de
 Statement stmt = conn.createStatement();
 
 // 创建 ts_db 时序数据库。
-stmt.executeUpdate("create ts database ts_db");
+stmt.executeUpdate("CREATE TS DATABASE ts_db");
 
 // 使用 ts_db 时序数据库。
 stmt.executeUpdate("use ts_db");
@@ -112,7 +112,7 @@ Connection conn = DriverManager.getConnection("jdbc:kaiwudb://127.0.0.1:26257/de
 Statement stmt = conn.createStatement();
 
 // 创建 rdb 关系数据库。
-stmt.executeUpdate("create database rdb");
+stmt.executeUpdate("CREATE DATABASE rdb");
 
 // 使用 rdb 数据库。
 stmt.executeUpdate("use rdb");
