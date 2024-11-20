@@ -29,13 +29,12 @@ id: connect-mybatis-plus
 1. 创建关系库。
 
     ```SQL
-    create database kaiwudb_app;
+    CREATE DATABASE kaiwudb_app;
     ```
 
 2. 创建关系表。
 
-    ```sql
-    SQL
+    ```SQL
     CREATE TABLE IF NOT EXISTS kaiwudb_app.sensor_data (
         id SERIAL PRIMARY KEY,
         sensor_id VARCHAR(20) NOT NULL,

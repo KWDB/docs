@@ -17,7 +17,7 @@ id: uninstall-db
 
 2. 进入 `kwdb_install` 目录。
 
-3. 运行数据库卸载命令。
+3. 执行数据库卸载命令。
 
     ```shell
     ./deploy.sh uninstall 

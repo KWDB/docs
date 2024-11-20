@@ -68,7 +68,7 @@ KaiwuDBReader 通过 DataX 将 KWDB 数据库的数据写出到其他数据库�
 
 - DataX 部署环境
   - Linux 系统环境。
-  - [安装 Java](https://docs.oracle.com/en/java/javase/22/install/overview-jdk-installation.html)（1.8 及以上版本）。
+  - [安装 openJDK](https://openjdk.org/install/)（1.8 及以上版本）。
   - [安装 Python](https://www.python.org/downloads/)（2.X 或 3.X）。
 - DataX 工具
   - [安装 DataX](https://gitee.com/mirrors/DataX/blob/master/userGuid.md)。
@@ -365,7 +365,7 @@ DataX 支持通过 reader 插件中的 `querySql` 或  `where` 参数限定数�
 
 ```sql
 /*创建关系库：order_db*/
-create database order_db;
+CREATE DATABASE order_db;
 
 /*创建关系表：orders */
 create table order_db.orders (order_id serial primary key, created_at timestamp, product_count int, total_amount float, customer_id int);
@@ -541,7 +541,7 @@ DataX 作业配置示例如下：
 
 ```sql
 /*创建时序数据库：benchmark */
-create ts database benchmark;
+CREATE TS DATABASE benchmark;
 /*创建时序表：st */
 CREATE TABLE benchmark.st (k_timestamp TIMESTAMPTZ NOT NULL, usage_user INT8 NOT NULL, usage_system INT8 NOT NULL, usage_idle INT8 NOT NULL) TAGS (id INT8 NOT NULL, hostname VARCHAR NOT NULL, region VARCHAR NOT NULL, datacenter VARCHAR NOT NULL) PRIMARY TAGS (id);
 ```
@@ -617,7 +617,7 @@ DataX 作业配置示例如下：
 
 - DataX 部署环境：
   - Linux 系统环境。
-  - [安装 Java](https://docs.oracle.com/en/java/javase/22/install/overview-jdk-installation.html)（1.8 及以上版本）。
+  - [安装 openJDK](https://openjdk.org/install/)（1.8 及以上版本）。
   - [安装 Python](https://www.python.org/downloads/)（2.X 或 3.X）。
 - DataX 工具：
   - [安装 DataX](https://gitee.com/mirrors/DataX/blob/master/userGuid.md)。

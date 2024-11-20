@@ -104,7 +104,7 @@ ThinkPHP 是一个免费开源，快速、简单的面向对象的轻量级 PHP 
     git clone https://gitee.com/ruoshuiyx/tp6.git
     ```
 
-2. 修改 `.env` 配置文件中的数据库设置。
+2. 修改 `.env` 配置文件中的数据库设置：
 
     ```env
     [DATABASE]
@@ -155,7 +155,7 @@ ThinkPHP 是一个免费开源，快速、简单的面向对象的轻量级 PHP 
     }
     ```
 
-5. 修改 `app/common.php` 文件, 将 `$tags = explode(',', $info[$v['field']]);` 修改为 `$tags = explode(',', $info[$v['field']][0]);`
+5. 修改 `app/common.php` 文件, 将 `$tags = explode(',', $info[$v['field']]);` 修改为 `$tags = explode(',', $info[$v['field']][0]);`。
 
 6. 修改 `app/common/model/Admin.php` 文件，注释掉 `open_code` 代码块：
 
