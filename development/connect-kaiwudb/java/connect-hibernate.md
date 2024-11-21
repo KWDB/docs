@@ -139,7 +139,7 @@ KWDB 支持开发人员通过在 SpringBoot 项目中集成 JPA、KaiwuDB JDBC �
 
 KWDB 时序库和关系库在配置和使用上有所不同，以下章节分别提供了时序库和关系库的配置示例。
 
-### 时序库配置示例
+### 时序库
 
 1. 在`resources`目录下的`application.yml`文件中配置数据源，指定方言包并禁用事务管理。
     ::: warning 提示
@@ -341,7 +341,7 @@ KWDB 时序库和关系库在配置和使用上有所不同，以下章节分别
    - 查询全部数据集合
       ![img](../../../static/development/ts-full-query.png)
 
-### 关系数据库
+### 关系库
 
 1. 在`application.yml`文件配置数据源，指定使用的方言包。
 
