@@ -127,17 +127,17 @@ SHOW COLUMNS FROM <table_name> [WITH COMMENT];
 
 KWDB 支持使用 `ALTER TABLE ... ALTER COLUMN` 语句修改列的数据类型、宽度、设置或者删除列的默认值。`ALTER COLUMN` 为在线操作，不会阻塞表中的数据读写。
 
-#### 前提条件
+### 前提条件
 
 用户拥有目标表的 CREATE 权限。
 
-#### 语法格式
+### 语法格式
 
 ```sql
 ALTER TABLE <table_name> ALTER [COLUMN] <colunm_name> [SET DATA] TYPE <new_type> [ SET DEFAULT <default_expr> | DROP DEFAULT];
 ```
 
-#### 参数说明
+### 参数说明
 
 | 参数 | 说明 |
 | --- | --- |
@@ -149,7 +149,7 @@ ALTER TABLE <table_name> ALTER [COLUMN] <colunm_name> [SET DATA] TYPE <new_type>
 | `SET DEFAULT <default_expr>` | 必选关键字。系统写入表数据时写入指定的默认值，从而不需要显式定义该列的值。对于非时间类型的数据列，默认值只能是常量。对于时间类型的列（TIMESTAMPTZ 或 TIMESTAMP），默认值可以是常量，也可以是 `now()` 函数。如果默认值类型与列类型不匹配，设置默认值时，系统报错。支持默认值设置为 NULL。|
 | `DROP DEFAULT` | 必选关键字。删除已定义的列的默认值，删除后将不再写入默认值。|
 
-#### 语法示例
+### 语法示例
 
 - 以下示例修改 `ts_table` 表中 `c3` 列的数据类型。
 
@@ -173,17 +173,17 @@ ALTER TABLE <table_name> ALTER [COLUMN] <colunm_name> [SET DATA] TYPE <new_type>
 
 KWDB 支持使用 `ALTER TABLE ... RENAME COLUMN` 语句修改列名。
 
-#### 前提条件
+### 前提条件
 
 用户拥有目标表的 CREATE 权限。
 
-#### 语法格式
+### 语法格式
 
 ```sql
 ALTER TABLE <table_name> RENAME COLUMN <old_name> TO <new_name>;
 ```
 
-#### 参数说明
+### 参数说明
 
 | 参数 | 说明 |
 | --- | --- |
@@ -191,7 +191,7 @@ ALTER TABLE <table_name> RENAME COLUMN <old_name> TO <new_name>;
 | `old_name` | 当前列名。|
 | `new_name` | 拟修改的列名。新增列名不得与待修改表的当前列名和标签名称重复。列名的最大长度为 128 字节。 |
 
-#### 语法示例
+### 语法示例
 
 以下示例将 `ts_table` 表的 `c2` 列重命名为 `c4`。
 
