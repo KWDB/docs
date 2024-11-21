@@ -13,7 +13,7 @@ KWDB 2.1.0 版本在保持原有特性的基础上，在分布式架构、DDL �
 
 | 版本号   | 日期   |
 | :------- | :--------- |
-| 2.1.0    | 2024.11.XX |
+| 2.1.0    | 2024.11.22 |
 
 ## 新增特性
 
@@ -70,4 +70,4 @@ KWDB 2.1.0 版本在保持原有特性的基础上，在分布式架构、DDL �
 ## 升级说明
 
 支持 KWDB 2.0.3.2 和 2.0.4 集群版本通过导入导出方式升级到 KWDB 2.1.0 版本，相关信息见[数据导出](../db-administration/import-export-data/export-data.md)和[数据导入](../db-administration/import-export-data/import-data.md)。
-支持 KWDB 2.0.3.2 及以上单机版本离线升级到 KWDB 2.1.0 版本。相关信息见[数据库升级](../db-operation/db-upgrade.md)。
+支持 KWDB 2.0.4 单机版本离线升级到 KWDB 2.1.0 版本。相关信息见[数据库升级](../db-operation/db-upgrade.md)。

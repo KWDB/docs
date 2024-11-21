@@ -34,19 +34,19 @@ KWDB 多副本集群采用 3 副本机制。为了确保系统在节点发生故
 
 - KWDB 集群启动后，副本和 leaseholder 均匀分布在所有节点上，确保数据的高可用性和平衡性。
 
-![img](../static/db-operation/cluster-start.png)
+  ![img](../static/db-operation/cluster-start.png)
 
 - 如果单个节点因网络断开、延迟、操作系统故障、磁盘故障等原因导致节点状态变为异常（`is_available`和`is_live`均为`false`），系统会开始迁移该节点的 leaseholder，迁移期间数据查询和 DML 操作可能受影响，DDL 操作可能会报错，生命周期会顺延至下一执行周期执行。待节点恢复为可用状态后恢复正常。
 
-![img](../static/db-operation/unhealthy.png)
+  ![img](../static/db-operation/unhealthy.png)
 
 - 节点离线时间达到设定值后，系统会将该节点标记为不可用。如果剩余节点数量仍大于副本数，系统自动补足缺失的副本，确保数据的高可用性、副本补足期间，数据查询不受影响，DML 操作不受影响，DDL 操作可能会报错，副本补足后，DDL 操作恢复正常。
 
-![img](../static/db-operation/dead.png)
+  ![img](../static/db-operation/dead.png)
 
 - 不可用节点恢复后，系统会将副本和 leaseholder 回迁到该节点。迁移期间数据查询和 DML 操作可能受影响，DDL 操作可能会报错，生命周期会顺延至下一执行周期执行。待节点恢复为可用状态后恢复正常。
   
   ![img](../static/db-operation/recover.png)
 - 如果两个或更多节点出现故障，由于剩余节点数小于或等于副本数，系统无法补足缺失的副本，可能导致部分数据无法访问，甚至出现集群无法使用的情况。
 
-![img](../static/db-operation/cluster-dead.png)
+  ![img](../static/db-operation/cluster-dead.png)
