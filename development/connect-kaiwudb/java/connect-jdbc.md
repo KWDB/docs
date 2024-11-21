@@ -149,7 +149,7 @@ KaiwuDB JDBC 是 KWDB 的官方 Java 语言连接器。它基于 PgJDBC 扩展�
     }
     ```
 
-### TLS 安全连接
+#### TLS 安全连接
 
 以下示例使用 `url` 参数连接数据库。
 
@@ -193,7 +193,7 @@ Connection conn = DriverManager.getConnection("jdbc:kaiwudb://127.0.0.1:26257/de
 Statement stmt = conn.createStatement();
 
 // 创建时序数据库
-stmt.executeUpdate("create ts database ts_db");
+stmt.executeUpdate("CREATE TS DATABASE ts_db");
 
 // 使用数据库
 stmt.executeUpdate("use ts_db");

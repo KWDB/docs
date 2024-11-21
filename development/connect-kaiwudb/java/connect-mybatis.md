@@ -5,9 +5,11 @@ id: connect-mybatis
 
 # 使用 MyBatis 连接 KWDB 数据库
 
-[MyBatis](https://mybatis.org/mybatis-3/index.html) 是开源 Java 应用持久层框架，支持定制化 SQL、存储过程以及高级映射。MyBatis 避免了几乎所有的 JDBC 代码和手动设置参数以及获取结果集。该框架可以通过简单的 XML 或注解来配置和映射原生信息，将接口和 Java 的 POJOs 对象映射成数据库中的记录。在 Java 应用程序中，开发人员通常会基于 JDBC 驱动，集成 MyBatis 框架，创建一个基于 SpringBoot+Maven 的 Java 应用程序，从而实现用户应用程序与底层数据库之间的数据信息交互和 CRUD 等操作。
+[MyBatis](https://mybatis.org/mybatis-3/index.html) 是开源 Java 应用持久层框架，支持定制化 SQL、存储过程以及高级映射。MyBatis 避免了几乎所有的 JDBC 代码，简化了参数设置及结果集处理，用户通过简单的 XML 或注解配置，即可将接口和 Java 的 POJOs 对象映射到数据库中的记录。
 
-本文档介绍基于 SpringBoot+Maven 项目使用 MyBatis 连接 KWDB 的配置信息。用户在完成配置后，可以基于 MyBatis 框架的应用程序开发流程，编写应用程序对 KWDB 数据库进行操作。MyBatis 使用时的常见问题可参见 [Mybatis 和 Mybatis-Plus](../../../faqs/faqs.md#mybatis-和-mybatis-plus)。
+本文档介绍了如何基于 SpringBoot + Maven 项目使用 MyBatis 连接 KWDB。用户完成配置后，可以基于 MyBatis 框架的应用程序开发流程，编写应用程序对 KWDB 数据库进行操作。
+
+MyBatis 使用时的常见问题可参见 [Mybatis 和 Mybatis-Plus](../../../faqs/faqs.md#mybatis-和-mybatis-plus)。
 
 ## 前提条件
 
@@ -17,945 +19,633 @@ id: connect-mybatis
 - 创建具有表级别及以上操作权限的用户。
 - 获取 KaiwuDB JDBC 驱动包。
 
+以下示例假设已在 KWDB 中创建了时序库、时序表、关系库和关系表。
+
+1. 创建时序库和时序表。
+
+    ```SQL
+    CREATE TS DATABASE test_ts_mybatis;
+
+    CREATE TABLE test_ts_mybatis.ts_table
+    (
+        ts  TIMESTAMPTZ NOT NULL,
+        c1  INT,
+        c2  FLOAT4,
+        c3  FLOAT8,
+        c4  BOOL,
+        c5  CHAR(1),
+        c6  NCHAR(10),
+        c7  VARCHAR(10),
+        c8  NVARCHAR(10),
+        c9  VARBYTES(10),
+        c10 TIMESTAMP
+    ) TAGS (
+        t1 INT NOT NULL,
+        t2 FLOAT4,
+        t3 VARCHAR(10)
+    ) PRIMARY TAGS (t1);
+    ```
+
+2. 创建关系库和关系表。
+
+    ```SQL
+    CREATE DATABASE test_mybatis;
+
+    CREATE TABLE test_mybatis.rel_table
+    (
+        id  INT PRIMARY KEY,
+        c1  INT,
+        c2  FLOAT,
+        c3  DOUBLE,
+        c4  BOOLEAN,
+        c5  CHAR(1),
+        c6  NCHAR(10),
+        c7  VARCHAR(10),
+        c8  NVARCHAR(10),
+        c9  BYTES,
+        c10 TIMESTAMP
+    );
+    ```
+
+## 环境搭建
+
+### 初始化应用项目
+
+1. 在 IntelliJ IDEA 中创建 Spring Boot 项目，配置 JDK 8 环境。
+
+    ::: warning 说明
+
+    由于官网默认 JDK 最低版本为 JDK 17，需要先将 Server URL 地址更换为阿里云服务：start.aliyun.com，再设置 Java 版本。
+
+    :::
+
+    ![img](../../../static/development/mybatis-java.png)
+
+2. 选择需要加载的依赖项，完成项目创建。
+
+    ![img](../../../static/development/mybatics-dependency.png)
+
+3. 将项目 `/src/main/resources` 目录下的 `application.properties` 修改为更常用的 `application.yml` 文件。
+
+    ![img](../../../static/development/mybatis-yaml.png)
+
+### 引入依赖
+
+1. 在项目的 `pom.xml` 文件，引入 MyBatis 依赖。
+
+    ```XML
+    <!-- mybatis-spring-boot-starter -->
+    <dependency>
+      <groupId>org.mybatis.spring.boot</groupId>
+      <artifactId>mybatis-spring-boot-starter</artifactId>
+      <version>2.3.2</version>
+    </dependency>
+    ```
+
+2. 在项目的 `pom.xml` 文件，引入 KaiwuDB JDBC 依赖。
+
+    ```XML
+    <!-- KaiwuDB JDBC 2.0.4.1 -->
+    <dependency>
+      <groupId>com.kaiwudb</groupId>
+      <artifactId>kaiwudb-jdbc</artifactId>
+      <version>2.0.4.1</version>
+    </dependency>
+    ```
+
+3. 如果 KaiwuDB JDBC 无法正常加载使用，运行以下命令，将 KaiwuDB JDBC 驱动安装到本地 Maven 仓库中。
+
+      ```Shell
+      mvn install:install-file "-Dfile=../kaiwudb-jdbc.2.0.4.1.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=2.0.4.1" "-Dpackaging=jar"
+      ```
+
 ## 配置连接
 
-1. 在 `pom.xml` 中添加依赖，将 KaiwuDB JDBC 驱动和 MyBatis 引入到应用程序中。
+1. 在 `application.yml` 文件中设置数据库的数据源及服务启动时的端口信息。
 
-    ```xml
-    <!--kaiwudb-jdbc-->
-    <dependency>
-    <groupId>com.kaiwudb</groupId>
-    <artifactId>kaiwudb-jdbc</artifactId>
-    <version>2.0.4.1</version>
-    </dependency>
-    
-    <!--mybatis-->
-    <dependency>
-    <groupId>org.mybatis.spring.boot</groupId>
-    <artifactId>mybatis-spring-boot-starter</artifactId>
-    <version>2.1.3</version>
-    </dependency>
-    ```
-    
-2. 如果 KaiwuDB JDBC 无法正常加载使用，运行以下命令，将 KaiwuDB JDBC 驱动安装到本地 Maven 仓库中。
-
-   ```shell
-   mvn install:install-file "-Dfile=../kaiwudb-jdbc-2.0.4.1.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=2.0.4.1" "-Dpackaging=jar"
-   ```
-
-3. 配置数据源。
-
-    SpringBoot 集成 MyBatis 框架，连接 KWDB 数据库。用户在 `application.yml` 文件配置数据源，使用对应的 `@Configuration` 类加载配置信息。
-
-    ```yaml
+    ```YAML
     spring:
       # 时序库数据源配置
-    
       tsdb-datasource:
         driver-class-name: com.kaiwudb.Driver
-        jdbc-url: jdbc:kaiwudb://127.0.0.1:26257/ts_db
-        username: kwdbuser
-        password: *******
-    
+        jdbc-url: jdbc:kaiwudb://127.0.0.1:26257/test_ts_mybatis
+        username: <user_name>
+        password: <password>      
       # 关系库数据源配置
-    
       rdb-datasource:
         driver-class-name: com.kaiwudb.Driver
-        jdbc-url: jdbc:kaiwudb://127.0.0.1:26257/defaultdb
-        username: kwdbuser
-        password: *******
-    
-    # 日志信息输出配置
-    
-    logging:
-      config: classpath:log4j2-dev.xml
-    
-    # Swagger-UI 配置
-    
-    knife4j:
-      enable: true
-      basic:
-        enable: false
-        username: kwdbuser
-        password: *******
-    
+        jdbc-url: jdbc:kaiwudb://127.0.0.1:26257/test_mybatis
+        username: <user_name>
+        password: <password>
     # 服务启动端口配置
-    
     server:
-      port: 8989
+      port: 9000
     ```
 
-    - 对于时序数据库，通过 `TsDatabaseConfig` 时序数据源配置类，加载 `application.yml` 配置文件中设置的时序数据库连接信息，示例如下：
+2. 在项目 `src/main/java/com/kaiwudb/mybatis/config` 目录下分别配置对应 `application.yml` 文件中配置的数据源配置类。
 
-        ```java
+     - 时序数据源配置类
+
+        ```Java
         @Configuration
-        @MapperScan(basePackages = "com.kaiwudb.kwdb.mapper.tsdb", sqlSessionTemplateRef = "tsdbSqlSessionTemplate")
+        @MapperScan(basePackages = "com.kaiwudb.mybatis.mapper.tsdb", sqlSessionTemplateRef = "tsSqlSessionTemplate")
         public class TsDatabaseConfig {
-          @Bean(name = "tsdbDataSource")
+          @Bean(name = "tsDataSource")
           @ConfigurationProperties(prefix = "spring.tsdb-datasource")
-          public DataSource tsdbDataSource() {
+          public DataSource tsDataSource() {
             return DataSourceBuilder.create().build();
           }
 
-          @Bean(name = "tsdbJdbcTemplate")
-          public JdbcTemplate tsdbJdbcTemplate(@Qualifier("tsdbDataSource") DataSource tsdbDataSource) {
-            return new JdbcTemplate(tsdbDataSource);
+          @Bean(name = "tsJdbcTemplate")
+          public JdbcTemplate tsJdbcTemplate(@Qualifier("tsDataSource") DataSource tsDataSource) {
+            return new JdbcTemplate(tsDataSource);
           }
 
-          @Bean(name = "tsdbSqlSessionFactory")
-          public SqlSessionFactory tsdbSqlSessionFactory(@Qualifier("tsdbDataSource") DataSource tsdbDataSource) throws Exception {
+          @Bean(name = "tsSqlSessionFactory")
+          public SqlSessionFactory tsSqlSessionFactory(@Qualifier("tsDataSource") DataSource tsDataSource) throws Exception {
             SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
-            bean.setDataSource(tsdbDataSource);
-            /*加载所有的mapper.xml映射文件*/
-            bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mapper/tsdb/*.xml"));
+            bean.setDataSource(tsDataSource);
             return bean.getObject();
           }
 
-          @Bean(name = "tsdbTransactionManager")
-          public DataSourceTransactionManager tsdbTransactionManager(@Qualifier("tsdbDataSource") DataSource tsdbDataSource) {
-            return new DataSourceTransactionManager(tsdbDataSource);
+          @Bean(name = "tsTransactionManager")
+          public DataSourceTransactionManager tsTransactionManager(@Qualifier("tsDataSource") DataSource tsDataSource) {
+            return new DataSourceTransactionManager(tsDataSource);
           }
 
-          @Bean(name = "tsdbSqlSessionTemplate")
-          public SqlSessionTemplate tsdbSqlSessionTemplate(@Qualifier("tsdbSqlSessionFactory") SqlSessionFactory tsdbSqlSessionFactory) {
-            return new SqlSessionTemplate(tsdbSqlSessionFactory);
+          @Bean(name = "tsSqlSessionTemplate")
+          public SqlSessionTemplate tsdbSqlSessionTemplate(@Qualifier("tsSqlSessionFactory") SqlSessionFactory tsSqlSessionFactory) {
+            return new SqlSessionTemplate(tsSqlSessionFactory);
           }
         }
         ```
 
-    - 对于关系数据库，通过 `DatabaseConfig` 数据源配置类，加载 `application.yml` 配置文件中设置的关系数据库连接信息，示例如下：
+     - 关系库数据源配置类
 
-        ```java
+        ```Java
         @Configuration
-        @MapperScan(basePackages = "com.kaiwudb.kwdb.mapper.rdb", sqlSessionTemplateRef = "sqlSessionTemplate")
+        @MapperScan(basePackages = "com.kaiwudb.mybatis.mapper.rdb", sqlSessionTemplateRef = "sqlSessionTemplate")
         public class DatabaseConfig {
+          @Primary
           @Bean(name = "dataSource")
           @ConfigurationProperties(prefix = "spring.rdb-datasource")
-          @Primary
           public DataSource dataSource() {
             return DataSourceBuilder.create().build();
           }
-        
+
+          @Primary
           @Bean(name = "jdbcTemplate")
           public JdbcTemplate jdbcTemplate(@Qualifier("dataSource") DataSource dataSource) {
             return new JdbcTemplate(dataSource);
           }
-        
-          @Bean(name = "sqlSessionFactory")
+
           @Primary
+          @Bean(name = "sqlSessionFactory")
           public SqlSessionFactory sqlSessionFactory(@Qualifier("dataSource") DataSource dataSource) throws Exception {
             SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
             bean.setDataSource(dataSource);
-            /*加载所有的 mapper.xml 映射文件*/
-            bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mapper/rdb/*.xml"));
             return bean.getObject();
           }
-        
-          @Bean(name = "transactionManager")
+
           @Primary
+          @Bean(name = "transactionManager")
           public DataSourceTransactionManager transactionManager(@Qualifier("dataSource") DataSource dataSource) {
             return new DataSourceTransactionManager(dataSource);
           }
-        
-          @Bean(name = "sqlSessionTemplate")
+
           @Primary
-        public SqlSessionTemplate sqlSessionTemplate(@Qualifier("sqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
+          @Bean(name = "sqlSessionTemplate")
+          public SqlSessionTemplate sqlSessionTemplate(@Qualifier("sqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
             return new SqlSessionTemplate(sqlSessionFactory);
           }
         }
         ```
 
-## 配置示例
+## 配置数据增删改查操作
 
 在 SpringBoot+MyBatis 应用程序中，用户调用接口访问及操作数据时，内部数据传递流程如下图所示：
 
-![](../../../static/development/HA0TbvWieoRopKxMB66cM4rSngg.png)
+![img](../../../static/development/mybatis.png)
 
-当 SpringBoot 集成 KaiwuDB JDBC 和 MyBatis 后，用户可以使用 MyBatis 编写 Controller 层、Service 层、Mapper 层及 XML 应用程序，从而实现与 KWDB 的数据信息交互及操作使用等。为了便于用户基于 MyBatis 快速开发适用于 KWDB 数据库的应用程序，本节介绍 MyBatis 应用开发的基本流程并针对流程中的 Controller 层、Service 层、Mapper 层及 XML 提供相应的配置示例。
+SpringBoot 集成 KaiwuDB JDBC 和 MyBatis 后，用户可以使用 MyBatis 编写实体类、Mapper 接口、接口服务及实现类、控制器，实现与 KWDB 的数据信息交互及操作使用。
 
-### 时序数据库应用
+### 时序数据
 
-#### 实体类
+#### 创建实体类
 
-实体类是数据库中的表在应用程序内的映射。用户需要结合数据库中表的实际信息在应用程序中定义实体类。KWDB 时序数据库对应的实体类定义包含表结构、表标签结构、和列信息。用户可以参考以下内容定义 KWDB 表相关的实体类。
+在 `src/main/java/com/kaiwudb/mybatis/entity` 目录下创建时序表实体类 `TimeSeriesEntity`，实体类是数据库中的表在应用程序内的映射，用户需要结合数据库中表的实际信息在应用程序中定义实体类。
 
-- 时序表的结构和列信息实体类
+KWDB 时序数据库对应的实体类定义包含列信息和标签信息，用户可以参考以下内容定义 KWDB 时序表相关的实体类。
 
-    ```java
-    // 定义表结构实体类
-    @ApiModel(value = "TsdbTable", description = "时序表结构实体类")
-      @Data
-      public class TsdbTable implements Serializable {
-        @ApiModelProperty(value = "表名", required = true)
-        private String tableName;
-        @ApiModelProperty(value = "表字段", required = true)
-        private String columns;
-        @ApiModelProperty(value = "表标签", required = true)
-        private String tags;
-
-        public TsdbTable() {}
-
-        public TsdbTable(String tableName, String columns, String tags) {
-          this.tableName = tableName;
-          this.columns = columns;
-          this.tags = tags;
-        }
-      }
-    // 定义表的列信息实体类
-    @ApiModel(value = "TsdbData", description = "时序数据类")
-      @Data
-      public class TsdbData implements Serializable {
-        @ApiModelProperty(value = "时间")
-        private String timestamp;
-        @ApiModelProperty(value = "温度")
-        private double temperature;
-        @ApiModelProperty(value = "湿度")
-        private double humidity;
-        @ApiModelProperty(value = "气压")
-        private double pressure;
-      }
-    ```
-
-- 时序表的标签结构
-
-    ```java
-    @ApiModel(value = "TsdbTags", description = "表标签结构类")
-      @Data
-      public class TsdbTag {
-        @ApiModelProperty(value = "标签名")
-        private String tag;
-        @ApiModelProperty(value = "标签类型")
-        private String type;
-      }
-    ```
-
-#### Mapper
-
-Mapper 用于定义数据库的操作接口。接口的实现类需要通过 XML 配置。
-
-```java
-@Mapper
- @Repository
- public interface TsdbMapper {
-  // 创建时序表
-  void createTsTable(TsdbTable table);
- 
-  // 删除时序表
-  void dropTable(@Param("tableName") String tableName);
-
-  // 插入时序数据
-  int insert(@Param("tableName") String tableName, @Param("tsdbData") TsdbData tsdbData);
-
-  // 插入多行时序数据
-  int insertBatch(@Param("tableName") String tableName, @Param("list") List<TsdbData> list);
-
-  // 查询时序数据列表
-  List<TsdbData> findList(@Param("tableName") String tableName);
-  
-  // 查询时序表标签列表
-  List<TsdbTag> findTagList(@Param("tableName") String tableName);
- }
+```Java
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class TimeSeriesEntity {
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.SSS", timezone = "GMT+8")
+  private Timestamp ts;
+  private Integer c1;
+  private Float c2;
+  private Double c3;
+  private Boolean c4;
+  private String c5;
+  private String c6;
+  private String c7;
+  private String c8;
+  private String c9;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.SSS", timezone = "GMT+8")
+  private Timestamp c10;
+  private Integer t1;
+  private Float t2;
+  private String t3;
+}
 ```
 
-#### XML
+结果如下：
 
-XML 文件是 Mapper 接口的实现类。用户在 XML 中定义和实现 SQL 操作语句。
+![img](../../../static/development/ts-entity.png)
+
+#### 创建Mapper接口
+
+在 `src/main/java/com/kaiwudb/mybatis/mapper/tsdb` 目录下创建 `TimeSeriesMapper` 接口类，定义时序数据库的操作接口，使用 `@Mapper` 和 `@Repository` 注解，以快速实现常见的数据插入、更新、删除和查询等操作。
+
+```Java
+@Mapper
+@Repository
+public interface TimeSeriesMapper {
+  @Insert("INSERT INTO ts_table (ts, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, t1, t2, t3) VALUES (#{ts}, #{c1}, #{c2}, #{c3}, #{c4}, #{c5}, #{c6}, #{c7}, #{c8}, #{c9}, #{c10}, #{t1}, #{t2}, #{t3})")
+  int insert(TimeSeriesEntity entity);
+
+  @Delete("DELETE FROM ts_table WHERE ts=#{timestamp}")
+  int deleteByTimeStamp(@Param("timestamp") Timestamp timestamp);
+
+  @Select("SELECT * FROM ts_table WHERE ts BETWEEN #{beginTime} AND #{endTime}")
+  List<TimeSeriesEntity> selectListBetweenTime(
+    @Param("beginTime") Timestamp beginTime,
+    @Param("endTime") Timestamp endTime);
+
+  @Select("SELECT * FROM ts_table")
+  List<TimeSeriesEntity> selectList();
+}
+```
+
+结果如下：
+
+![img](../../../static/development/ts-mapper.png)
 
 ::: warning 说明
 
+- Mapper接口文件中的方法实现除了使用注解方式外，还可以通过使用XML映射文件的方式自定义SQL语句来实现对数据库中数据的操作。
 - KWDB 创建时序表的 SQL 语法与标准 SQL 语法不同，不支持使用 ORM 映射方式创建时序表。
 - KWDB 不支持自增 ID（AUTO_INCREMENT），因此 MyBatis 不支持使用 `@ID` 标签。
 
 :::
 
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
- <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
- <mapper namespace="com.kaiwudb.kwdb.mapper.tsdb.TsdbMapper">
-  <update id="createTsTable" parameterType="com.kaiwudb.kwdb.po.TsdbTable" statementType="STATEMENT">
-    CREATE TABLE ${tableName} (${columns}) TAGS (${tags} PRIMARY TAGS (${tagName})
-  </update>
+#### 创建接口服务及实现类
 
-  <update id="dropTable" statementType="STATEMENT">
-    DROP TABLE IF EXISTS ${tableName}
-  </update>
+在 `src/main/java/com/kaiwudb/mybatis/service` 目录下创建 `TimeSeriesService` 接口服务类和对应的实现类 `TimeSeriesServiceImpl`，主要用于实现业务逻辑和数据访问层的交互；使用 `TimeSeriesMapper` 数据访问接口类进行时序数据的增改删查操作，其中时序数据查询接口扩展了多种查询方式，包括：按时间范围查询和查询全部时序数据。
 
-  <insert id="insert">
-    INSERT INTO ${tableName} (k_timestamp, temperature, humidity, pressure, sensor_id, sensor_type)
-    VALUES (#{tsdbData.timestamp}, #{tsdbData.temperature}, #{tsdbData.humidity}, #{tsdbData.pressure}, #{tsdbData.sensor_id},#{tsdbData.tsdbData.sensor_type})
-  </insert>
+- `TimeSeriesService` 接口服务类
 
-  <insert id="insertBatch">
-    INSERT INTO ${tableName} (k_timestamp, temperature, humidity, pressure, sensor_id, sensor_type)
-    VALUES
-    <foreach collection="list" item="item" index="index" separator=",">
-      (#{item.timestamp}, #{item.temperature}, #{item.humidity}, #{item.pressure},#{item.sensor_id}, #{item.sensor_type})
-    </foreach>
-  </insert>
+  ```Java
+  public interface TimeSeriesService {
+    int insert(TimeSeriesEntity entity);
 
-  <resultMap id="map" type="com.kaiwudb.kwdb.po.TsdbData">
-    <result column="k_timestamp" property="timestamp" jdbcType="VARCHAR"/>
-    <result column="temperature" property="temperature" jdbcType="FLOAT"/>
-    <result column="humidity" property="humidity" jdbcType="FLOAT"/>
-    <result column="pressure" property="pressure" jdbcType="FLOAT"/>
-    <result column="sensor_id" property="sensor_id" jdbcType="INT4"/>
-    <result column="sensor_type" property="sensor_type" jdbcType="INT4"/>
-  </resultMap>
+    int deleteByTimeStamp(String timestamp);
 
-  <select id="findList" resultMap="map">
-    SELECT k_timestamp, temperature, humidity, pressure
-    FROM ${tableName}
-  </select>
+    List<TimeSeriesEntity> findByTimeStamp(String beginTime, String endTime);
 
-  <resultMap id="tagMap" type="com.kaiwudb.kwdb.po.TsdbTag">
-    <result column="tag" property="tag" jdbcType="VARCHAR"/>
-    <result column="type" property="type" jdbcType="VARCHAR"/>
-    <result column="value" property="value" jdbcType="VARCHAR"/>
-  </resultMap>
-
-  <select id="findTagList" resultMap="tagMap">
-    SHOW TAGS FROM ${tableName}
-  </select>
- </mapper>
-```
-
-#### Service
-
-Service 层是业务逻辑层，主要用于实现业务逻辑和数据访问层的交互。它封装了数据访问层的操作，为上层应用提供统一的业务逻辑接口。
-
-```java
-//时序数据库Service接口类
-public interface TsdbService {
-  // 创建时序表
-  void createTsTable(String tableName);
-  // 删除时序表
-  void dropTable(String tableName);
-  // 插入时序数据
-  int insert(String tableName, TsdbData tsdbData);
-  // 插入多行时序数据
-  int insertBatch(String tableName, List<TsdbData> list);
-  // 查询时序数据列表
-  List<TsdbData> findList(String tableName);
-  // 查询时序表标签列表
-  List<TsdbTag> findTagList(String tableName);
- }
- //时序数据库Service接口实现类
- @Service
- class TsdbServiceImpl implements TsdbService {
-  @Autowired
-  private TsdbMapper mapper;
-
-  @Override
-  public void createTsTable(String tableName) {
-    String columns = "k_timestamp TIMESTAMP NOT NULL," +
-      " temperature FLOAT," +
-      " humidity FLOAT," +
-      " pressure FLOAT";
-    String tags = "sensor_id INT4 NOT NULL, sensor_type INT4";
-    String primarytags = "sensor_id";
-    TsdbTable table = new TsdbTable(tableName, columns, tags);
-    mapper.createTsTable(table);
+    List<TimeSeriesEntity> findAll();
   }
+  ```
 
-  @Override
-  public void dropTable(String tableName) {
-    mapper.dropTable(tableName);
+  结果如下：
+
+  ![img](../../../static/development/ts-service.png)
+
+- `TimeSeriesServiceImpl` 接口服务实现类
+
+  ```Java
+  @Service
+  public class TimeSeriesServiceImpl implements TimeSeriesService {
+    @Autowired
+    private TimeSeriesMapper mapper;
+
+    @Override
+    public int insert(TimeSeriesEntity entity) {
+      return mapper.insert(entity);
+    }
+
+    @Override
+    public int deleteByTimeStamp(String timestamp) {
+      LocalDateTime dateTime = LocalDateTime.parse(timestamp, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
+      return mapper.deleteByTimeStamp(Timestamp.valueOf(dateTime));
+    }
+
+    @Override
+    public List<TimeSeriesEntity> findByTimeStamp(String beginTime, String endTime) {
+      LocalDateTime beginDateTime = LocalDateTime.parse(beginTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+      LocalDateTime endDateTime = LocalDateTime.parse(endTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+      return mapper.selectListBetweenTime(Timestamp.valueOf(beginDateTime), Timestamp.valueOf(endDateTime));
+    }
+
+    @Override
+    public List<TimeSeriesEntity> findAll() {
+      return mapper.selectList();
+    }
   }
+  ```
 
-  @Override
-  public int insert(String tableName, TsdbData tsdbData) {
-    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-    tsdbData.setTimestamp(format.format(new Date(System.currentTimeMillis())));
-    return mapper.insert(tableName, tsdbData);
-  }
+  结果如下：
 
-  @Override
-  public int insertBatch(String tableName, List<TsdbData> list) {
-    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-    list.forEach(item -> item.setTimestamp(format.format(new Date(System.currentTimeMillis()))));
-    return mapper.insertBatch(tableName, list);
-  }
+  ![img](../../../static/development/ts-service-imp.png)
 
-  @Override
-  public List<TsdbData> findList(String tableName) {
-    return mapper.findList(tableName);
-  }
-  
-  @Override
-  public List<TsdbTag> findTagList(String tableName) {
-    return mapper.findTagList(tableName);
-  }
- }
-```
+#### 创建控制器
 
-#### Controller
+在 `src/main/java/com/kaiwudb/mybatis/controller` 目录下创建 `TimeSeriesController` 控制器来处理用户的 HTTP 请求，并处理相应的业务逻辑，将用户的请求转发给 Service 层处理，实现对时序数据的增、改、删、查等操作，并将处理结果返回给用户。
 
-Controller 层是应用程序的表示层，Controller 层接收用户的请求并处理相应的业务逻辑，将用户的请求转发给 Service 层处理，并将处理结果返回给用户。
-
-```java
+```Java
 @RestController
-@RequestMapping("ts_db")
-@Api(tags = "2 时序数据库接口")
-@ApiSort(value = 2)
-public class TsdbController {
-  private final static Logger LOGGER = LoggerFactory.getLogger(TsdbController.class);
-
+@RequestMapping("/time-series")
+public class TimeSeriesController {
   @Autowired
-  private TsdbService service;
+  private TimeSeriesService service;
 
-  @ApiOperation(value = "1.1 创建时序表")
-  @ApiOperationSupport(order = 10)
-  @GetMapping("create_ts_table")
-  @ApiImplicitParam(name = "tableName", value = "时序表名", required = true, dataTypeClass = String.class, paramType = "query")
-  public String createTsTable(@RequestParam(value = "tableName") String tableName) {
-    try {
-      service.createTsTable(tableName);
-      return "创建时序表成功！";
-    } catch (Exception e) {
-      return e.getMessage();
-    }
+  @PostMapping("/add")
+  public int add(@RequestBody TimeSeriesEntity entity) {
+    return service.insert(entity);
   }
 
-  @ApiOperation(value = "1.2 删除时序表")
-  @ApiOperationSupport(order = 40)
-  @DeleteMapping("drop_table")
-  @ApiImplicitParam(name = "tableName", value = "时序表名", required = true, dataTypeClass = String.class, paramType = "query")
-  public String dropTable(@RequestParam(value = "tableName") String tableName) {
-    try {
-      service.dropTable(tableName);
-      return "删除时序表成功！";
-    } catch (Exception e) {
-      return e.getMessage();
-    }
+  @DeleteMapping("/{timestamp}")
+  public int deleteByTimeStamp(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") String timestamp) {
+    return service.deleteByTimeStamp(timestamp);
   }
 
-  @ApiOperation(value = "1.3 添加时序数据")
-  @ApiOperationSupport(order = 60)
-  @PostMapping("add")
-  @ApiImplicitParam(name = "tableName", value = "时序表名", required = true, dataTypeClass = String.class, paramType = "query")
-  public String add(@RequestParam(value = "tableName") String tableName,
-                    @RequestBody TsdbData tsdbData) {
-    try {
-      if (tsdbData == null) {
-        return "获取时序数据失败！";
-      }
-      int rows = service.insert(tableName, tsdbData);
-      if (rows < 1) {
-        return "添加时序数据失败！";
-      }
-      return "添加时序数据成功, 影响行数: " + rows;
-    } catch (Exception e) {
-      return e.getMessage();
-    }
+  @GetMapping("/by-timestamp")
+  public List<TimeSeriesEntity> getListByTime(
+    @RequestParam("beginTime") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") String beginTime,
+    @RequestParam("endTime") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") String endTime) {
+    return service.findByTimeStamp(beginTime, endTime);
   }
 
-  @ApiOperation(value = "1.4 添加多行时序数据")
-  @ApiOperationSupport(order = 70)
-  @PostMapping("add_batch")
-  @ApiImplicitParam(name = "tableName", value = "时序表名", required = true, dataTypeClass = String.class, paramType = "query")
-  public String add(@RequestParam(value = "tableName") String tableName,
-                    @RequestBody List<TsdbData> list) {
-    try {
-      if (list == null) {
-        return "获取时序数据失败！";
-      }
-      int rows = service.insertBatch(tableName, list);
-      if (rows < 1) {
-        return "添加时序数据失败！";
-      }
-      return "添加时序数据成功, 影响行数: " + rows;
-    } catch (Exception e) {
-      return e.getMessage();
-    }
+  @GetMapping("/all")
+  public List<TimeSeriesEntity> getAll() {
+    return service.findAll();
   }
-
-  @ApiOperation(value = "1.5 时序数据列表")
-  @ApiOperationSupport(order = 80)
-  @GetMapping("list")
-  @ApiImplicitParam(name = "tableName", value = "时序表名", required = true, dataTypeClass = String.class, paramType = "query")
-  public List<TsdbData> list(@RequestParam(value = "tableName") String tableName) {
-    try {
-      return service.findList(tableName);
-    } catch (Exception e) {
-      LOGGER.info(e.getMessage());
-    }
-    return null;
-  }
-  
-  @ApiOperation(value = "1.6 指定表的标签列表")
-  @ApiOperationSupport(order = 90)
-  @GetMapping("tag_list")
-  @ApiImplicitParam(name = "tableName", value = "表名", required = true, dataTypeClass = String.class, paramType = "query")
-  public List<TsdbTag> findtagList(@RequestParam(value = "tableName") String tableName) {
-    try {
-      return service.findTagList(tableName);
-    } catch (Exception e) {
-      LOGGER.info(e.getMessage());
-    }
-    return null;
-  }
- }
-```
-
-### 关系数据库应用
-
-#### 实体类
-
-实体类是数据库中的表在应用程序内的映射。用户需要结合数据库中表的实际信息在应用程序中定义实体类。KWDB 关系数据库对应的实体类定义包含表结构、列信息和列的元数据。用户可以参考以下内容定义 KWDB 表相关的实体类。
-
-```java
-// 定义关系表结构实体类
-@ApiModel(value = "RdbTable", description = "关系表结构实体类")
-@Data
-public class RdbTable implements Serializable {
-  @ApiModelProperty(value = "表名", required = true)
-  private String tableName;
-  @ApiModelProperty(value = "表字段", required = true)
-  private String columns;
-
-  public RdbTable() {}
-
-  public RdbTable(String tableName, String columns) {
-    this.tableName = tableName;
-    this.columns = columns;
-  }
-}
-
-// 定义表的列信息实体类
-@ApiModel(value = "RdbData", description = "关系数据类")
-@Data
-public class RdbData implements Serializable {
-  @ApiModelProperty(value = "数据ID", required = true)
-  private String dataId;
-  @ApiModelProperty(value = "数据内容", required = true)
-  private String dataContent;
-  @ApiModelProperty(value = "数据值")
-  private Double dataValue;
-}
-
- //关系表列元数据类
-@ApiModel(value = "RdbColumnMetadata", description = "关系表Column类")
-@Data
-public class RdbColumnMetadata implements Serializable {
-  @ApiModelProperty(value = "列名")
-  private String columnName;
-  @ApiModelProperty(value = "数据类型")
-  private String dataType;
-  @ApiModelProperty(value = "是否可空")
-  private String isNullable;
-  @ApiModelProperty(value = "列默认值")
-  private String columnDefault;
-  @ApiModelProperty(value = "生成表达式")
-  private String generationExpression;
-  @ApiModelProperty(value = "指数")
-  private String indices;
-  @ApiModelProperty(value = "是否隐藏")
-  private String isHidden;
 }
 ```
 
-#### Mapper
+结果如下：
 
-Mapper 用于定义数据库的操作接口。接口的实现类需要通过 XML 配置生成。
+![img](../../../static/development/ts-controller.png)
 
-```java
+### 关系数据
+
+#### 创建实体类
+
+在 `src/main/java/com/kaiwudb/mybatis/entity` 目录下创建关系表实体类 `RelationalEntity`，实体类是数据库中的表在应用程序内的映射，用户需要结合数据库中表的实际信息在应用程序中定义实体类。
+
+KWDB 关系数据库对应的实体类定义仅包含列信息，用户可以参考以下内容定义 KWDB 关系表相关的实体类。
+
+```Java
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class RelationalEntity {
+  private Integer id;
+  private Integer c1;
+  private Float c2;
+  private Double c3;
+  private Boolean c4;
+  private String c5;
+  private String c6;
+  private String c7;
+  private String c8;
+  private String c9;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.SSS", timezone = "GMT+8")
+  private Timestamp c10;
+}
+```
+
+结果如下：
+
+![img](../../../static/development/r-entity.png)
+
+#### 创建 Mapper 接口
+
+在 `src/main/java/com/kaiwudb/mybatis/mapper/rdb`目录下创建 `RelationalMapper `接口类，用于定义关系数据库的操作接口，使用 `@Mapper` 和 `@Repository` 注解，以快速实现常见的数据插入、更新、删除和查询等操作。
+
+```Java
 @Mapper
 @Repository
-public interface RdbMapper {
-  // 创建关系数据库
-  void createDatabase(@Param("databaseName") String databaseName);
-  
-  // 删除关系数据库
-  void dropDatabase(@Param("databaseName") String databaseName);
-  
-  // 创建关系表
-  void createTable(RdbTable table);
+public interface RelationalMapper {
+  @Insert("INSERT INTO rel_table (id, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10)" +
+    " VALUES (#{id}, #{c1}, #{c2}, #{c3}, #{c4}, #{c5}, #{c6}, #{c7}, #{c8}, #{c9}, #{c10})")
+  int insert(RelationalEntity entity);
 
-  // 删除关系表
-  void dropTable(@Param("tableName") String tableName);
+  @Update("UPDATE rel_table SET c1=#{c1}, c2=#{c2}, c3=#{c3}, c4=#{c4}, c5=#{c5}," +
+    " c6=#{c6}, c7=#{c7}, c8=#{c8}, c9=#{c9}, c10=#{c10} WHERE id=#{id}")
+  int update(RelationalEntity entity);
 
-  // 插入关系数据
-  int insert(@Param("tableName") String tableName, @Param("rdbData") RdbData rdbData);
+  @Delete("DELETE FROM rel_table WHERE id=#{id}")
+  int deleteById(Integer id);
 
-  // 更新关系数据
-  int update(@Param("tableName") String tableName, @Param("rdbData") RdbData rdbData);
+  @Select("SELECT * FROM rel_table WHERE id=#{id}")
+  RelationalEntity selectById(Integer id);
 
-  // 删除关系数据
-  int delete(@Param("tableName") String tableName, @Param("dataId") String dataId);
+  @Select("SELECT * FROM rel_table WHERE c10 BETWEEN #{beginTime} AND #{endTime}")
+  List<RelationalEntity> selectListBetweenTime(
+    @Param("beginTime") Timestamp beginTime,
+    @Param("endTime") Timestamp endTime);
 
-  // 查询关系数据详情
-  RdbData findOne(@Param("tableName") String tableName, @Param("dataId") String dataId);
-
-  // 查询关系数据列表
-  List<RdbData> findList(@Param("tableName") String tableName);
-  
-  // 查询指定关系表的Column元数据
-  List<RdbColumnMetadata> findColumns(@Param("tableName") String tableName);
+  @Select("SELECT * FROM rel_table")
+  List<RelationalEntity> selectList(Integer id);
 }
 ```
 
-#### XML
+结果如下：
 
-XML 文件是 Mapper 接口的实现类。用户在 XML 中定义和实现 SQL 操作语句。
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.kaiwudb.kwdb.mapper.rdb.RdbMapper">
-  <update id="createDatabase" statementType="STATEMENT">
-    CREATE DATABASE ${databaseName}
-  </update>
-
-  <update id="dropDatabase" statementType="STATEMENT">
-    DROP DATABASE ${databaseName}
-  </update>
-
-  <update id="createTable" parameterType="com.kaiwudb.kwdb.po.RdbTable" statementType="STATEMENT">
-    CREATE TABLE ${tableName} (${columns})
-  </update>
-
-  <update id="dropTable" statementType="STATEMENT">
-    DROP TABLE IF EXISTS ${tableName}
-  </update>
-
-  <insert id="insert">
-    INSERT INTO ${tableName} (data_id, data_content, data_value)
-    VALUES (#{rdbData.dataId}, #{rdbData.dataContent}, #{rdbData.dataValue})
-  </insert>
-
-  <update id="update">
-    UPDATE ${tableName}
-    SET data_content = #{rdbData.dataContent},
-        data_value   = #{rdbData.dataValue}
-    WHERE data_id = #{rdbData.dataId}
-  </update>
-
-  <delete id="delete">
-    DELETE
-    FROM ${tableName}
-    WHERE data_id = #{dataId}
-  </delete>
-
-  <resultMap id="map" type="com.kaiwudb.kwdb.po.RdbData">
-    <result column="data_id" property="dataId" jdbcType="VARCHAR"/>
-    <result column="data_content" property="dataContent" jdbcType="VARCHAR"/>
-    <result column="data_value" property="dataValue" jdbcType="FLOAT"/>
-  </resultMap>
-
-  <sql id="item">
-    data_id, data_content, data_value
-  </sql>
-
-  <select id="findOne" resultMap="map">
-    SELECT
-    <include refid="item"/>
-    FROM ${tableName}
-    WHERE data_id = #{dataId}
-  </select>
-
-  <select id="findList" resultMap="map">
-    SELECT
-    <include refid="item"/>
-    FROM ${tableName}
-  </select>
-
-  <resultMap id="columnMap" type="com.kaiwudb.kwdb.po.RdbColumnMetadata">
-    <result column="column_name" property="columnName" jdbcType="VARCHAR"/>
-    <result column="data_type" property="dataType" jdbcType="VARCHAR"/>
-    <result column="is_nullable" property="isNullable" jdbcType="VARCHAR"/>
-    <result column="column_default" property="columnDefault" jdbcType="VARCHAR"/>
-    <result column="generation_expression" property="generationExpression" jdbcType="VARCHAR"/>
-    <result column="indices" property="indices" jdbcType="VARCHAR"/>
-    <result column="is_hidden" property="isHidden" jdbcType="VARCHAR"/>
-  </resultMap>
-
-  <select id="findColumns" resultMap="columnMap">
-    SHOW COLUMNS FROM ${tableName}
-  </select>
-</mapper>
-```
+![img](../../../static/development/r-mapper.png)
 
 ::: warning 说明
-KWDB 不支持自增 ID（AUTO_INCREMENT），因此 MyBatis 不支持使用 `@ID` 标签。
+
+- Mapper接口文件中的方法实现除了使用注解方式外，还可以通过使用XML映射文件的方式自定义SQL语句来实现对数据库中数据的操作。
+- KWDB 不支持自增 ID（AUTO_INCREMENT），因此 MyBatis 不支持使用 `@ID` 标签。
+
 :::
 
-#### Service
+#### 创建接口服务及实现类
 
-Service 层是业务逻辑层，主要用于实现业务逻辑和数据访问层的交互。它封装了数据访问层的操作，为上层应用提供统一的业务逻辑接口。
+在 `src/main/java/com/kaiwudb/mybatis/service` 目录下创建 `RelationalService` 接口服务类和对应的实现类 `RelationalServiceImpl`，主要用于实现业务逻辑和数据访问层的交互；使用 `RelationalMapper` 数据访问接口类进行关系数据的增改删查操作，其中关系数据查询接口扩展了多种查询方式，包括：按 ID 查询、按时间范围查询和查询全部关系数据。
 
-```java
-//关系数据库Service接口类
-public interface RdbService {
-  // 创建关系数据库
-  void createDatabase(String databaseName);
-  // 删除关系数据库
-  void dropDatabase(String databaseName);
-  // 创建关系表
-  void createTable(String tableName);
-  // 删除关系表
-  void dropTable(String tableName);
-  // 插入关系数据
-  int insert(String tableName, RdbData rdbData);
-  // 更新关系数据
-  int update(String tableName, RdbData rdbData);
-  // 删除关系数据
-  int delete(String tableName, String dataId);
-  // 查询关系数据详情
-  RdbData findOne(String tableName, String dataId);
-  // 查询关系数据列表
-  List<RdbData> findList(String tableName);
-  // 查询指定关系表的Column元数据
-  List<RdbColumnMetadata> findColumns(String tableName);
-}
+- `RelationalService` 接口服务类
 
-//关系数据库Service接口实现类
-@Service
-class RdbServiceImpl implements RdbService {
-  @Autowired
-  private RdbMapper mapper;
+  ```Java
+  public interface RelationalService {
+    int insert(RelationalEntity entity);
 
-  @Override
-  public void createDatabase(String databaseName) {
-    mapper.createDatabase(databaseName);
+    int update(RelationalEntity entity);
+
+    int deleteById(Integer id);
+
+    RelationalEntity findById(Integer id);
+
+    List<RelationalEntity> findByTimeStamp(String beginTime, String endTime);
+
+    List<RelationalEntity> findAll();
   }
+  ```
 
-  @Override
-  public void dropDatabase(String databaseName) {
-    mapper.dropDatabase(databaseName);
+  结果如下：
+
+  ![img](../../../static/development/r-service.png)
+
+- `RelationalServiceImpl`接口服务实现类
+
+  ```Java
+  @Service
+  public class RelationalServiceImpl implements RelationalService {
+    @Autowired
+    private RelationalMapper mapper;
+
+    @Override
+    public int insert(RelationalEntity entity) {
+      return mapper.insert(entity);
+    }
+
+    @Override
+    public int update(RelationalEntity entity) {
+      return mapper.update(entity);
+    }
+
+    @Override
+    public int deleteById(Integer id) {
+      return mapper.deleteById(id);
+    }
+
+    @Override
+    public RelationalEntity findById(Integer id) {
+      return mapper.selectById(id);
+    }
+
+    @Override
+    public List<RelationalEntity> findByTimeStamp(String beginTime, String endTime) {
+      LocalDateTime beginDateTime = LocalDateTime.parse(beginTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+      LocalDateTime endDateTime = LocalDateTime.parse(endTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+      return mapper.selectListBetweenTime(Timestamp.valueOf(beginDateTime), Timestamp.valueOf(endDateTime));
+    }
+
+    @Override
+    public List<RelationalEntity> findAll() {
+      return mapper.selectList(null);
+    }
   }
+  ```
 
-  @Override
-  public void createTable(String tableName) {
-    String columns = "data_id varchar(64) NOT NULL," +
-      " data_content varchar(255) NOT NULL," +
-      " data_value float8 NOT NULL," +
-      " PRIMARY KEY (data_id)";
-    RdbTable table = new RdbTable(tableName, columns);
-    mapper.createTable(table);
-  }
+  结果如下：
 
-  @Override
-  public void dropTable(String tableName) {
-    mapper.dropTable(tableName);
-  }
+  ![img](../../../static/development/r-service-impl.png)
 
-  @Override
-  public int insert(String tableName, RdbData rdbData) {
-    return mapper.insert(tableName, rdbData);
-  }
+#### 创建控制器
 
-  @Override
-  public int update(String tableName, RdbData rdbData) {
-    return mapper.update(tableName, rdbData);
-  }
+在 `src/main/java/com/kaiwudb/mybatis/controller` 目录下创建 `RelationalController` 控制器来处理用户的 HTTP 请求，并处理相应的业务逻辑，将用户的请求转发给 Service 层处理，实现对关系数据的增、改、删、查等操作，并将处理结果返回给用户。
 
-  @Override
-  public int delete(String tableName, String dataId) {
-    return mapper.delete(tableName, dataId);
-  }
-
-  @Override
-  public RdbData findOne(String tableName, String dataId) {
-    return mapper.findOne(tableName, dataId);
-  }
-
-  @Override
-  public List<RdbData> findList(String tableName) {
-    return mapper.findList(tableName);
-  }
-
-  @Override
-  public List<RdbColumnMetadata> findColumns(String tableName) {
-    return mapper.findColumns(tableName);
-  }
-}
-```
-
-#### Controller
-
-Controller 层是应用程序的表示层，负责接收用户的请求并处理相应的业务逻辑。Controller 层的主要功能是将用户的请求转发给 Service 层处理，并将处理结果返回给用户。
-
-```java
+```Java
 @RestController
-@RequestMapping("rdb")
-@Api(tags = "1 关系数据库接口")
-@ApiSort(value = 1)
-public class RdbController {
-  private final static Logger LOGGER = LoggerFactory.getLogger(RdbController.class);
-
+@RequestMapping("/relational")
+public class RelationalController {
   @Autowired
-  private RdbService service;
+  private RelationalService service;
 
-  @ApiOperation(value = "1.1 创建关系数据库")
-  @ApiOperationSupport(order = 10)
-  @GetMapping("create_database")
-  @ApiImplicitParam(name = "databaseName", value = "关系数据库名", required = true, dataTypeClass = String.class, paramType = "query")
-  public String createDatabase(@RequestParam(value = "databaseName") String databaseName) {
-    try {
-      service.createDatabase(databaseName);
-      return "创建关系数据库成功！";
-    } catch (Exception e) {
-      return e.getMessage();
-    }
+  @PostMapping("/add")
+  public int add(@RequestBody RelationalEntity entity) {
+    return service.insert(entity);
   }
 
-  @ApiOperation(value = "1.2 删除关系数据库")
-  @ApiOperationSupport(order = 20)
-  @DeleteMapping("drop_database")
-  @ApiImplicitParam(name = "databaseName", value = "关系数据库名", required = true, dataTypeClass = String.class, paramType = "query")
-  public String dropDatabase(@RequestParam(value = "databaseName") String databaseName) {
-    try {
-      service.dropDatabase(databaseName);
-      return "删除关系数据库成功！";
-    } catch (Exception e) {
-      return e.getMessage();
-    }
+  @PutMapping("/update")
+  public int update(@RequestBody RelationalEntity entity) {
+    return service.update(entity);
   }
 
-  @ApiOperation(value = "1.3 创建关系表")
-  @ApiOperationSupport(order = 30)
-  @GetMapping("create")
-  @ApiImplicitParam(name = "tableName", value = "关系表名", required = true, dataTypeClass = String.class, paramType = "query")
-  public String create(@RequestParam(value = "tableName") String tableName) {
-    try {
-      service.createTable(tableName);
-      return "创建关系表成功！";
-    } catch (Exception e) {
-      return e.getMessage();
-    }
+  @DeleteMapping("/{id}")
+  public int deleteById(@PathVariable Integer id) {
+    return service.deleteById(id);
   }
 
-  @ApiOperation(value = "1.4 删除关系表")
-  @ApiOperationSupport(order = 40)
-  @DeleteMapping("drop")
-  @ApiImplicitParam(name = "tableName", value = "关系表名", required = true, dataTypeClass = String.class, paramType = "query")
-  public String drop(@RequestParam(value = "tableName") String tableName) {
-    try {
-      service.dropTable(tableName);
-      return "删除关系表成功！";
-    } catch (Exception e) {
-      return e.getMessage();
-    }
+  @GetMapping("/{id}")
+  public RelationalEntity getById(@PathVariable Integer id) {
+    return service.findById(id);
   }
 
-  @ApiOperation(value = "1.5 添加关系数据")
-  @ApiOperationSupport(order = 50)
-  @PostMapping("add")
-  @ApiImplicitParam(name = "tableName", value = "关系表名", required = true, dataTypeClass = String.class, paramType = "query")
-  public String add(@RequestParam(value = "tableName") String tableName,
-                    @RequestBody RdbData rdbData) {
-    try {
-      if (rdbData == null) {
-        return "获取数据失败！";
-      }
-      if (StringUtils.isEmpty(rdbData.getDataContent())) {
-        return "数据内容不能为空！";
-      }
-      int rows = service.insert(tableName, rdbData);
-      if (rows < 1) {
-        return "添加失败！";
-      }
-      return "添加关系数据成功, 影响行数: " + rows;
-    } catch (Exception e) {
-      return e.getMessage();
-    }
+  @GetMapping("/by-timestamp")
+  public List<RelationalEntity> getListByTime(
+    @RequestParam("beginTime") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") String beginTime,
+    @RequestParam("endTime") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") String endTime) {
+    return service.findByTimeStamp(beginTime, endTime);
   }
 
-  @ApiOperation(value = "1.6 编辑关系数据")
-  @ApiOperationSupport(order = 60)
-  @PostMapping("update")
-  @ApiImplicitParam(name = "tableName", value = "关系表名", required = true, dataTypeClass = String.class, paramType = "query")
-  public String update(@RequestParam(value = "tableName") String tableName,
-                       @RequestBody RdbData rdbData) {
-    try {
-      if (rdbData == null) {
-        return "获取数据失败！";
-      }
-
-      if (StringUtils.isEmpty(rdbData.getDataId())) {
-        return "数据ID不能为空！";
-      }
-
-      if (StringUtils.isEmpty(rdbData.getDataContent())) {
-        return "数据内容不能为空！";
-      }
-
-      RdbData rdbDataEn = service.findOne(tableName, rdbData.getDataId());
-      if (rdbDataEn == null) {
-        return "不存在该关系数据，更新失败！";
-      }
-
-      int rows = service.update(tableName, rdbData);
-      if (rows < 1) {
-        return "更新失败！";
-      }
-      return "更新关系数据成功, 影响行数: " + rows;
-    } catch (Exception e) {
-      return e.getMessage();
-    }
-  }
-
-  @ApiOperation(value = "1.7 删除关系数据")
-  @ApiOperationSupport(order = 70)
-  @DeleteMapping("delete")
-  @ApiImplicitParams({
-    @ApiImplicitParam(name = "tableName", value = "关系表名", required = true, dataTypeClass = String.class, paramType = "query"),
-    @ApiImplicitParam(name = "dataId", value = "数据ID", required = true, dataTypeClass = String.class, paramType = "query")
-  })
-  public String delete(@RequestParam(value = "tableName") String tableName,
-                       @RequestParam(value = "dataId") String dataId) {
-    try {
-      int rows = service.delete(tableName, dataId);
-      if (rows < 1) {
-        return "删除失败！";
-      }
-      return "删除关系数据成功, 影响行数: " + rows;
-    } catch (Exception e) {
-      return e.getMessage();
-    }
-  }
-
-  @ApiOperation(value = "1.8 关系数据详情")
-  @ApiOperationSupport(order = 80)
-  @GetMapping("get")
-  @ApiImplicitParams({
-    @ApiImplicitParam(name = "tableName", value = "关系表名", required = true, dataTypeClass = String.class, paramType = "query"),
-    @ApiImplicitParam(name = "dataId", value = "数据ID", required = true, dataTypeClass = String.class, paramType = "query")
-  })
-  public RdbData get(@RequestParam(value = "tableName") String tableName,
-                     @RequestParam(value = "dataId") String dataId) {
-    try {
-      return service.findOne(tableName, dataId);
-    } catch (Exception e) {
-      LOGGER.info(e.getMessage());
-    }
-    return null;
-  }
-
-  @ApiOperation(value = "1.9 关系数据列表")
-  @ApiOperationSupport(order = 90)
-  @GetMapping("list")
-  @ApiImplicitParam(name = "tableName", value = "关系表名", required = true, dataTypeClass = String.class, paramType = "query")
-  public List<RdbData> list(@RequestParam(value = "tableName") String tableName) {
-    try {
-      return service.findList(tableName);
-    } catch (Exception e) {
-      LOGGER.info(e.getMessage());
-    }
-    return null;
-  }
-  
-  @ApiOperation(value = "1.10 关系表Column元数据")
-  @ApiOperationSupport(order = 100)
-  @GetMapping("table_columns")
-  @ApiImplicitParam(name = "tableName", value = "关系表名", required = true, dataTypeClass = String.class, paramType = "query")
-  public List<RdbColumnMetadata> findColumns(@RequestParam(value = "tableName") String tableName) {
-    try {
-      return service.findColumns(tableName);
-    } catch (Exception e) {
-      LOGGER.info(e.getMessage());
-    }
-    return null;
+  @GetMapping("/all")
+  public List<RelationalEntity> getAll() {
+    return service.findAll();
   }
 }
 ```
+
+结果如下：
+
+![img](../../../static/development/r-controller.png)
+
+### 设置主程序类
+
+在根目录下创建名为 `MyBatisApplication` 的主程序类文件，设置通过 `public static void main(String[] args)` 方法启动应用程序, 添加运行时需加载的配置类注解等。
+
+```Java
+@SpringBootApplication(scanBasePackages = "com.kaiwudb.mybatis")
+@Configuration
+public class MyBatisApplication extends SpringBootServletInitializer {
+  public static void main(String[] args) {
+    SpringApplication.run(MyBatisApplication.class, args);
+  }
+
+  @Override
+  protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+    return builder.sources(MyBatisApplication.class);
+  }
+}
+```
+
+结果如下：
+
+![img](../../../static/development/mybatis-app.png)
+
+### 启动应用程序
+
+在项目中找到名为 `MyBatisApplication` 的主程序，单击右键，选择 `Run'MyBatisApplication'` 来启动应用程序。
+
+![img](../../../static/development/run-mybatis.png)
+
+启动成功后，控制台显示如下结果：
+
+![img](../../../static/development/run-mybatis-succeed.png)
+
+### 访问操作示例
+
+启动应用程序后，就可以通过 Postman 工具以 HTTP 请求的方式来访问调用接口，对 KWDB 数据库中的时序和关系数据进行增删改查等操作，以下时序数据为例：
+
+- 添加时序数据
+
+  以下示例显示成功插入 1 条时序数据。
+
+  ![img](../../../static/development/insert-ts.png)
+
+- 删除时序数据
+
+  以下示例显示成功删除 1 条时序数据。
+
+  ![img](../../../static/development/delete-ts.png)
+
+- 查询时序数据
+
+  以下示例显示在查询时间范围内的全部时序数据。
+
+  ![img](../../../static/development/query-ts.png)

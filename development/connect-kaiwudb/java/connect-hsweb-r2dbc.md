@@ -119,20 +119,20 @@ KWDB 支持用户通过 hsweb_r2dbc 连接数据库，并执行创建、插入�
 
     - 使用 curl 查询数据：
 
-    ```bash
-    curl -X GET -H  "Accept:*/*" -H  "Content-Type:application/x-www-form-urlencoded" "http://localhost:8090/hsweb_r2dbc/cpus/1?end=1706106142221&start=1705760542221"
-    ```
+        ```bash
+        curl -X GET -H  "Accept:*/*" -H  "Content-Type:application/x-www-form-urlencoded" "http://localhost:8090/hsweb_r2dbc/cpus/1?end=1706106142221&start=1705760542221"
+        ```
 
     - 使用 curl 写入数据：
 
-    ```bash
-    curl -X POST -H  "Accept:*/*" -H  "Content-Type:application/json" -d "{\"arch\":\"\",\"dataCenter\":2,\"id\":2,\"os\":\"\",\"rack\":\"\",\"region\":2,\"service\":\"\",\"team\":\"\",\"time\":1722579427867,\"usageGuest\":1,\"usageIdle\":1,\"usageIoWait\":1,\"usageIrq\":1,\"usageNice\":1,\"usageSoftIrq\":1,\"usageSteal\":1,\"usageSystem\":1,\"usageUser\":1}" "http://localhost:8090/hsweb_r2dbc/cpu"
+        ```bash
+        curl -X POST -H  "Accept:*/*" -H  "Content-Type:application/json" -d "{\"arch\":\"\",\"dataCenter\":2,\"id\":2,\"os\":\"\",\"rack\":\"\",\"region\":2,\"service\":\"\",\"team\":\"\",\"time\":1722579427867,\"usageGuest\":1,\"usageIdle\":1,\"usageIoWait\":1,\"usageIrq\":1,\"usageNice\":1,\"usageSoftIrq\":1,\"usageSteal\":1,\"usageSystem\":1,\"usageUser\":1}" "http://localhost:8090/hsweb_r2dbc/cpu"
 
-    ```
+        ```
 
     - 使用 curl 删除数据：
 
-    ```bash
-    curl -X POST -H  "Accept:*/*" -H  "Content-Type:application/json" -d "{\"id\":1,\"time\":1722579427867}" "http://localhost:8090/hsweb_r2dbc/cpu/delete"
+        ```bash
+        curl -X POST -H  "Accept:*/*" -H  "Content-Type:application/json" -d "{\"id\":1,\"time\":1722579427867}" "http://localhost:8090/hsweb_r2dbc/cpu/delete"
 
-    ```
+        ```

@@ -100,7 +100,7 @@ KWDB 支持开发人员通过在 SpringBoot 项目中集成 JPA、KaiwuDB JDBC �
        <dependency>
          <groupId>com.kaiwudb</groupId>
          <artifactId>kaiwudb-jdbc</artifactId>
-         <version>2.0.4</version>
+         <version>2.0.4.1</version>
        </dependency>
        <!-- mockito-core -->
        <dependency>
