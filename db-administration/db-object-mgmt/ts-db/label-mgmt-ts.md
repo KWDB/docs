@@ -137,7 +137,7 @@ ALTER TABLE <table_name> ALTER [TAG | ATTRIBUTE] <tag_name> [SET DATA] TYPE <new
 | --- | --- |
 | `table_name` | 表名，支持通过 `<database_name>.<table_name>` 指定其他数据库中的表。如未指定，则默认使用当前数据库。|
 | `tag_name` | 待修改标签的名称。 |
-| `SET DATA:` | 可选关键字，是否使用不影响修改标签的数据类型和宽度。 |
+| `SET DATA` | 可选关键字，是否使用不影响修改标签的数据类型和宽度。 |
 | `new_type` |  拟修改的数据类型和宽度。<br > **说明** <br >- 转换后的数据类型宽度必须大于原数据类型的宽度。例如，INT4 可以转成 INT8，但不能转成 INT2，CHAR(200) 可以转为 VARCHAR (254), 但不能转为 VARCHAR (100)。<br >- CHAR、VARCHAR、NCHAR、NVARCHAR 字符类型支持同数据类型的宽度转换，但只能增加宽度不能降低宽度。例如，CHAR(100) 可以转转为 CHAR(200)，不能转为 CHAR(50)。有关 KWDB 支持修改的数据类型、默认宽度、最大宽度、可转换的数据类型等详细信息，参见[时序数据类型](../../../sql-reference/data-type/data-type-ts-db.md)。 |
 
 #### 语法示例
