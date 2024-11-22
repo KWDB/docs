@@ -116,7 +116,7 @@ SHOW TAG VALUES FROM sensor_data;
 
 ## 修改标签
 
-KWDB 支持使用 `ALTER TABLE ... ALTER TAG` 语句修改标签的数据类型和宽度。`ALTER TAG` 为在线操作，不会阻塞表中的数据读写。
+KWDB 支持使用 `ALTER TABLE ... ALTER TAG` 语句修改标签的数据类型和宽度。`ALTER TAG` 为在线操作，不会阻塞表中的数据读写。修改数据类型时，如果已有标签的值与新数据类型不匹配，修改操作仍然可以执行成功，不符合新数据类型的标签值在查询时将显示为 `NULL`。
 
 ### 所需权限
 
