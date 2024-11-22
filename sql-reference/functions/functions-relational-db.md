@@ -966,7 +966,7 @@ id: functions-relational-db
 | matching(val: FLOAT4, excludeRule: INT8, lowerBound: decimal, upperBound: STRING, percentage: INT8) → BOOL   | 满足条件的值的数量与总数量的比值大于预先设定的百分比，返回 `true`，否则返回 `false`。                                                                                                                                                                                    |
 | matching(val: FLOAT8, excludeRule: INT8, lowerBound: decimal, upperBound: STRING, percentage: INT8) → BOOL   | 满足条件的值的数量与总数量的比值大于预先设定的百分比，返回 `true`，否则返回 `false`。                                                                                                                                                                                    |
 | matching(val: decimal, excludeRule: INT8, lowerBound: decimal, upperBound: STRING, percentage: INT8) → BOOL  | 满足条件的值的数量与总数量的比值大于预先设定的百分比，返回 `true`，否则返回 `false`。                                                                                                                                                                                    |
-| INTerpolate(method, mode)                                                                                     |  补值函数，需要与 `time_bucket_gapfill()` 配合使用，补值结果类型与原始值类型一致。参数说明：<br >- method：补值算法，只支持聚合函数，且数据类型为数字。 <br >- mode：补值模式，取值包括 constant（常量值）、prev（前值）、next（后值）、linear（线性）、null（null）。                  |
+| interpolate(method, mode)                                                                                     |  补值函数，需要与 `time_bucket_gapfill()` 配合使用，补值结果类型与原始值类型一致。参数说明：<br >- method：补值算法，只支持聚合函数，且数据类型为数字。 <br >- mode：补值模式，取值包括 constant（常量值）、prev（前值）、next（后值）、linear（线性）、null（null）。                  |
 
 ## 窗口函数
 
