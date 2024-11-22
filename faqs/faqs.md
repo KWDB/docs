@@ -539,19 +539,19 @@ id: faqs
 
 - **问题描述**
 
-使用 Mybatis-Plus 原生接口连接数据库，调用接口方法时，数据库返回时序引擎不支持事务，收到系统报错：`ERROR: explicit transaction is not supported in TS mode`。  
+  使用 Mybatis-Plus 原生接口连接数据库，调用接口方法时，数据库返回时序引擎不支持事务，收到系统报错：`ERROR: explicit transaction is not supported in TS mode`。  
 
 - **问题解答**
 
-用户需要重写 Mybatis-Plus 的接口方法的实现，使用 `@Transactional(propagation = Propagation.NOT_SUPPORTED)` 注解来禁用该方法的事务管理机制，具体示例如下：
+  用户需要重写 Mybatis-Plus 的接口方法的实现，使用 `@Transactional(propagation = Propagation.NOT_SUPPORTED)` 注解来禁用该方法的事务管理机制，具体示例如下：
 
-```java
-@Service
-public class TimeSeriesServiceImpl extends ServiceImpl<TimeSeriesMapper, TimeSeriesData> implements TimeSeriesService {
-  @Override
-  @Transactional(propagation = Propagation.NOT_SUPPORTED)
-  public boolean saveBatch(Collection<TimeSeriesData> entityList) {
-    return super.saveBatch(entityList);
+  ```java
+  @Service
+  public class TimeSeriesServiceImpl extends ServiceImpl<TimeSeriesMapper, TimeSeriesData> implements TimeSeriesService {
+    @Override
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
+    public boolean saveBatch(Collection<TimeSeriesData> entityList) {
+      return super.saveBatch(entityList);
+    }
   }
-}
-```
+  ```
