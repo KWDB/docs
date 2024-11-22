@@ -125,7 +125,7 @@ SHOW COLUMNS FROM <table_name> [WITH COMMENT];
 
 ## 修改列
 
-KWDB 支持使用 `ALTER TABLE ... ALTER COLUMN` 语句修改列的数据类型、宽度、设置或者删除列的默认值。`ALTER COLUMN` 为在线操作，不会阻塞表中的数据读写。
+KWDB 支持使用 `ALTER TABLE ... ALTER COLUMN` 语句修改列的数据类型、宽度、设置或者删除列的默认值。`ALTER COLUMN` 为在线操作，不会阻塞表中的数据读写。修改数据类型时，如果已有数值与新数据类型不匹配，修改操作仍然可以执行成功，不符合新数据类型的数值在查询时将显示为 `NULL`。
 
 ### 前提条件
 
