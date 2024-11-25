@@ -76,7 +76,7 @@ KWDB 支持以单表、多表的形式将用户数据从 InfluxDB 迁移到 KWDB
 3. 在 KaiwuDB DataX Utils 的 JAR 文件所在目录，执行以下命令，开始迁移数据。
 
     ```shell
-    java -jar -Dtype=data -DyamlPath=<yml_path> -DdataxPath=<datax_path> -Dpython=<python> -Darguments=<arguments> kaiwudb-datax-utils-2.1.0.jar
+    java -jar -Dtype=data -DyamlPath=<yml_path> -DdataxPath=<datax_path> -Dpython=<python> -Darguments=<arguments> kaiwudb-datax-utils-1.2.3.jar
     ```
 
     参数说明：
