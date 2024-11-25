@@ -44,7 +44,7 @@ KWDB 支持使用 `ALTER TABLE ... ADD COLUMN` 语句添加列。`ADD COLUMN` �
 - 以下示例为 `ts_table` 表增加一个名为 `c4` 的列并设置该列的默认值为 `aaa`。
 
     ```sql
-    ALTER TABLE ts_table ADD COLUMN c4 INT DEFAULT 'aaa';
+    ALTER TABLE ts_table ADD COLUMN c4 VARCHAR(50) DEFAULT 'aaa';
     ```
 
 ## 查看列

@@ -46,7 +46,7 @@ ALTER TABLE <table_name> ADD [COLUMN] [IF NOT EXISTS] <colunm_name> <data_type> 
 - 以下示例为 `ts_table` 表增加一个名为 `c4` 的列并设置该列的默认值为 `aaa`。
 
     ```sql
-    ALTER TABLE ts_table ADD COLUMN c4 INT DEFAULT 'aaa';
+    ALTER TABLE ts_table ADD COLUMN c4 VARCHAR(50) DEFAULT 'aaa';
     ```
 
 ## 查看列

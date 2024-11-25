@@ -83,7 +83,7 @@ KWDB 支持使用 SQL 语句导出以下信息：
 | `nullas` | 可选参数，用于指定空值的表示形式。默认不显示内容，支持指定为 `NULL`、`null`、`Null` 或 `\N`。|
 | `comment` | 可选参数，用于指定是否导出注释信息。默认不导出注释信息。<br> - 如果要导出的表或表中的列带有注释信息，指定 `WITH comment` 参数后，系统导出带有注释信息的 SQL 文件。否则，系统导出的 SQL 文件不会带有注释信息。<br> - 如果要导出的表或表中的列没有注释信息，指定 `WITH comment` 参数后，系统报错，提示 `TABLE or COLUMN without COMMENTS cannot be used 'WITH COMMENT'`。|
 | `charset` | 可选参数，用于指定待导出数据的字符集编码。默认值为 `utf8`，支持指定为 `gbk`、`gb18030` 或 `utf8`。|
-| `select_clause` | 指定待导出的数据范围。时序表支持的 SELECT 语句见 [SELECT](../../sql-reference/dml/ts-db/ts-select.md)。关系表支持的 SELECT 语句见 [SELECT](../../sql-reference/dml/relational-db/relational-select.md)。 如果指定导出的数据列带有默认值，则系统导出数据列的默认值。|
+| `select_clause` | 指定待导出的数据范围。时序表支持的 SELECT 语句见 [SELECT](../../sql-reference/dml/ts-db/ts-select.md)。关系表支持的 SELECT 语句见 [SELECT](../../sql-reference/dml/relational-db/relational-select.md)。 |
 
 ### 语法示例
 
