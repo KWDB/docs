@@ -12,7 +12,7 @@ id: before-migration
   - [安装 Maven](https://maven.apache.org/install.html)（3.6 及以上版本）。
   - [安装 DataX 3.0](https://gitee.com/mirrors/DataX/blob/master/userGuid.md)。
 - 工具
-  - 获取 KWDB 数据库迁移工具 KaiwuDB DataX Utils 的安装包。
+  - [联系](https://www.kaiwudb.com/support/) KWDB 技术支持人员获取 KWDB 数据库迁移工具 KaiwuDB DataX Utils 的安装包。
   - 获取 KaiwuDB DataX 插件压缩包。
   - 获取待迁移数据库的 DataX 插件压缩包。
     ::: warning 说明
