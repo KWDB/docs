@@ -353,7 +353,7 @@ ALTER TABLE ts_table ADD COLUMN c3 INT NULL;
 
 -- 新增列并设置列的默认值。
 
-ALTER TABLE ts_table ADD COLUMN c4 default 'aaa';
+ALTER TABLE ts_table ADD COLUMN c4 INT DEFAULT 'aaa';
 
 -- 删除列。
 
