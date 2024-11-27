@@ -81,6 +81,7 @@ public Connection getConnection() throws Exception{
 - 关系和时序引擎均不支持用户创建、使用 SQLXML 对象。
 - 关系和时序引擎均不支持用户设置可保持性级别参数（`Holdability`）。
 - 关系和时序引擎均不支持存储过程功能。
+- 关系和时序引擎均不支持执行 `EXPORT` 和 `IMPORT` 语句。
 
 :::
 
