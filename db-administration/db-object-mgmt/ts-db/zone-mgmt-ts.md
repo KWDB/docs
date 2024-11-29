@@ -37,7 +37,7 @@ KWDB 集群中，每个数据分片都隶属于一个特定的副本区域（zon
 
 | 参数 | 说明 |
 | --- | --- |
-| `range_name` | 系统数据分片的名称。 |
+| `range_name` | 数据分片的名称，包括：<br>-  `default`：默认副本设置<br>- `meta`：所有数据的位置信息<br>- `liveness`：给定时间活动节点的信息 <br>- `system`：分配新表ID所需的信息以及追踪集群节点状态<br>- `timeseries`：集群监控数据 |
 | `database_name` | 数据库的名称。 |
 | `table_name` | 表的名称。 |
 
