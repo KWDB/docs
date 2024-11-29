@@ -10,7 +10,7 @@ KWDB 支持以单表、多表的形式将数据从 TDengine 迁移到 KWDB。本
 ## 前提条件
 
 - 完成[迁移准备](../before-migration.md)。
-- 在 TDengine 数据库中创建 `tdengine_kaiwudb`、`temperature_humidity` 时序数据库和 `custom_metrics` 表。
+- 在 TDengine 数据库中创建 `tdengine_kaiwudb` 数据库以及 `temperature_humidity` 和 `custom_metrics` 表。
 - 在 KWDB 数据库中创建 `tdengine_kaiwudb` 时序数据库。
 
 ## 步骤
