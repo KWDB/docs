@@ -73,6 +73,13 @@ id: connect-mybatis-plus
 
 1. 在项目的 `pom.xml` 文件，引入 MyBatis-Plus 依赖：
 
+    ::: warning 提示
+
+    MyBatis-Plus 依赖版本建议不低于 3.4.3。
+
+    :::
+
+
     ```xml
     <!--  https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-boot-starter  -->
     <dependency>
