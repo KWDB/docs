@@ -30,14 +30,14 @@ KaiwuDB JDBC 是 KWDB 的官方 Java 语言连接器。它基于 PgJDBC 扩展�
    <dependency>
      <groupId>com.kaiwudb</groupId>
      <artifactId>kaiwudb-jdbc</artifactId>
-     <version>2.0.4.1</version>
+     <version>2.1.0</version>
    </dependency>
    ```
 
 2. 如上述依赖无法正常加载使用，运行以下命令，将 KaiwuDB JDBC 驱动安装到本地 Maven 仓库中。
 
    ```shell
-   mvn install:install-file "-Dfile=../kaiwudb-jdbc-2.0.4.1.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=2.0.4.1" "-Dpackaging=jar"
+   mvn install:install-file "-Dfile=../kaiwudb-jdbc-2.1.0.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=2.1.0" "-Dpackaging=jar"
    ```
 
 ## 连接数据库
@@ -103,6 +103,7 @@ KaiwuDB JDBC 是 KWDB 的官方 Java 语言连接器。它基于 PgJDBC 扩展�
 | `socketTimeout`       | `0`                 | 用于 Socket 读操作的超时值（单位：秒）。取值为 `0` 时，表示禁用。                 |
 | `cancelSignalTimeout` | `10`                | 发送 `cancel` 命令的超时时间（单位：秒）。                                        |
 | `readOnly`            | `false`             | 配置连接模式为只读模式。                                                             |
+| `preferQueryMode`     | `extended`          | 指定执行对数据库的查询时使用的模式。支持的取值包括：`simple`、`extended`、`extendedForPrepared` 和 `extendedCacheEverything`。<br>**注意**：使用 `PreparedStatement` 对象中的 `setXXX()`方法函数，如：`setBytes(int i, byte[] value)` 时，`preferQueryMode` 应使用默认值 `extended`，不能设置为 `simple` 模式。                                                             |
 
 #### SSL 模式参数
 
@@ -322,6 +323,10 @@ while(resultSet.next()){
    // Like closing database connection.
 }
 ```
+
+### 批量写入接口
+
+KaiwuDB JDBC 的批量写入接口，可用于将同一张时序表的多次数据写入处理合并到一条 SQL 语句中，以降低 CPU 占用并显著提升写入性能。相关配置示例，参见[使用 KaiwuDB JDBC 扩展接口优化批量数据写入](../../../best-practices/jdbc-batch.md)。
 
 ### 错误码
 
