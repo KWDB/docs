@@ -9,7 +9,7 @@ id: ts-update
 
 ## 所需权限
 
-用户拥有目标表的 UPDATE 权限。
+用户拥有目标表的 UPDATE 和 SELECT 权限。
 
 ## 语法格式
 
