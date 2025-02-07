@@ -24,6 +24,7 @@ id: overview
     - [时序表](./ddl/ts-db/ts-table.md)
     - [列](./ddl/ts-db/ts-column.md)
     - [标签](./ddl/ts-db/ts-label.md)
+    - [索引](./ddl/ts-db/ts-index.md)
     - [区域配置](./ddl/ts-db/ts-zone.md)
     - [注释](./ddl/ts-db/ts-comment.md)
   - 关系数据
