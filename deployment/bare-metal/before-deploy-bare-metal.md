@@ -52,7 +52,7 @@ KWDB 支持多种操作系统并提供多种形式的安装包。不同操作系
 | 依赖 | 版本 | 说明 |
 | --- | --- | --- |
 | OpenSSL | v1.1.1+ | N/A |
-libprotobuf | v3.6.1+ | **注意**：Ubuntu 18.04 默认的 libprotobuf 版本不满足要求，用户需要提前安装所需版本（推荐 3.6.1 和 3.12.4）。|
+| libprotobuf | v3.6.1+ | **注意**：Ubuntu 18.04 默认的 libprotobuf 版本不满足要求，用户需要提前安装所需版本（推荐 3.6.1 和 3.12.4）。|
 | GEOS | v3.3.8+ | 可选依赖 |
 | xz-libs | v5.2.0+ | N/A |
 | squashfs-tools | any | N/A |
