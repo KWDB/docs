@@ -30,3 +30,4 @@ KaiwuDB 开发者中心涵盖了数据库连接、数据库管理、模式管理
 - [系统信息](./system-info.md)
 - [SQL 编辑器](./sql-editor.md)
 - [过滤和计算查询结果](./filter-cal-results.md)
+- [故障排查](./debug.md)
