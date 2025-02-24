@@ -308,12 +308,11 @@ KWDB JSON 格式协议采用 JSON 字符串表示一行或多行数据。
 
 #### OpenTSDB JSON 格式数据
 
-OpenTSDB JSON 格式协议采用 JSON 字符串表示一行或多行数据。
+OpenTSDB JSON 格式协议采用 JSON 字符串表示一行或多行数据，更多详细信息，参见 [OpenTSDB API 文档](https://opentsdb.net/docs/build/html/api_http/put.html)。
 
 ::: warning 说明
 
-- 由于数据格式的特性，写入的时序表名是 `table_name.column_name` 形式组成。如果写入的数据表不存在，系统将自动创建时序表。每个表的数据列只有 `timestamp` 和 `value` 两列。
-- 目前，在自动创建表时，由于无法保证表对应的标签列名均一致，暂不支持对标签的处理。
+- 由于数据格式的特性，写入的时序表名采用 `table_name.column_name` 形式。如果目标表不存在，系统会自动创建时序表。每个时序表的数据列包括 `timestamp` 和 `value` 两列。自动创建的表中，数据列和标签列均以 `VARCHAR` 类型进行存储。
 - Kafka 按行接收数据，不支持发送格式化的 JSON 数据。用户必须将每个完整的 JSON 对象压缩成单行字符串，确保系统能够正确解析数据。
 
 :::
@@ -330,19 +329,18 @@ OpenTSDB JSON 格式协议采用 JSON 字符串表示一行或多行数据。
 | ----------- | ------------------------------------------------------------------------------------------------------------------------- |
 | `metric`    | 指定表名和列名，格式为 `table_name.column_name`。在 KWDB 数据库中创建的时序表表名需要与此处的 `metric` 中的表名一致。               |
 | `timestamp` | 时间戳，支持秒（s）和毫秒（ms）两种时间精度。在 KWDB 数据库中创建的表的时间戳列需要与此处定义的 `timestamp` 名称一致。 |
-| `value`     | 数据列的值。                                                                                                              |
-| `tags`      | 标签信息，所有标签自动转为 `VARCHAR` 数据类型。                                                                           |
+| `value`     | 数据列的值。数据类型必须是 `INTEGER` (整形)、`FLOAT` (浮点数)、`BOOLEAN` (布尔值)或 `STRING`（字符）。                                                                                                             |
+| `tags`      | 标签信息，所有数据类型的标签自动转为 `VARCHAR` 数据类型。                                                                          |
 
-#### OpenTSDB Line 格式数据
+#### OpenTSDB Telnet 格式数据
 
-OpenTSDB Line 格式协议采用一行字符串来表示一行数据。
+OpenTSDB Telnet 格式协议采用一行字符串来表示一行数据。
 
-OpenTSDB 采用单列模型，因此一行只能包含一个普通数据列，标签列可以有多个。
+OpenTSDB 采用单列模型，因此一行只能包含一个普通数据列，标签列可以有多个, 更多详细信息，参见 [OpenTSDB Telnet API 文档](https://opentsdb.net/docs/build/html/api_telnet/put.html)。
 
 ::: warning 说明
 
-- 由于数据格式的特性，写入的时序表名是 `table_name.column_name` 形式组成。如果写入的数据表不存在，系统将自动创建时序表。每个表的数据列只有 `timestamp` 和 `value` 两列。
-- 在自动创建表时，由于不能保证表对应的标签列名均一致，故暂不支持对标签的处理。
+由于数据格式的特性，写入的时序表名采用 `table_name.column_name` 形式。如果目标表不存在，系统会自动创建时序表。每个时序表的数据列包括 `timestamp` 和 `value` 两列。自动创建的表中，数据列和标签列均以 `VARCHAR` 类型进行存储。
 
 :::
 
@@ -358,8 +356,8 @@ OpenTSDB 采用单列模型，因此一行只能包含一个普通数据列，�
 | ----------- | --------------------------------------------------------------------------------------------------------- |
 | `metric`    | 指定表名和列名，格式为 `table_name.column_name`。用户在 KWDB 数据库中创建时序表时，需要与此处的 `metric` 名称一致。 |
 | `timestamp` | 数据对应的时间戳。支持秒（s）和毫秒（ms）两种时间精度。                                                   |
-| `value`     | 度量值，对应的列名是 `value`。                                                                            |
-| `tag_set`   | 标签集，标签间用半角空格隔开，所有标签自动转化为 `VARCHAR` 数据类型。                                     |
+| `value`     | 度量值，对应的列名是 `value`。数据类型必须是 `INTEGER` (整形)或 `FLOAT` (浮点数)。    |
+| `tag_set`   | 标签集，标签间用半角空格隔开，所有数据类型的标签自动转化为 `VARCHAR` 数据类型。                                   |
 
 数据示例：
 
