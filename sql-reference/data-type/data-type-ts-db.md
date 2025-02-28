@@ -16,8 +16,8 @@ KWDB 时序数据支持以下数据类型：
 
 | 原数据类型  | 默认宽度 | 最大宽度   | 支持转换的数据类型                                   | 说明                                                                                            |
 | ----------- | -------- | ---------- | ---------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| TIMESTAMP   | -        | -          | TIMESTAMPTZ                                          | 标签不支持该类型。                                                                              |
-| TIMESTAMPTZ | -        | -          | TIMESTAMP                                            | 标签不支持该类型。                                                                              |
+| TIMESTAMP   | -        | -          | TIMESTAMPTZ、INT8、FLOAT4、FLOAT8                     | 标签不支持该类型。TIMESTAMP 转 INT8 时，输出结果固定为毫秒精度的数字，即 13 位数字。TIMESTAMP 转 FLOAT4 时，输出结果只能保证约前 7 位有效数字的精度。TIMESTAMP 转 FLOAT8 时，输出结果只能保证约前 15-17 位有效数字的精度。    |
+| TIMESTAMPTZ | -        | -          | TIMESTAMP、INT8、FLOAT4、FLOAT8                                              | 标签不支持该类型。TIMESTAMPTZ 转 INT8 时，输出结果固定为毫秒精度的数字，即 13 位数字。TIMESTAMPTZ 转 FLOAT4 时，输出结果只能保证约前 7 位有效数字的精度。TIMESTAMPTZ 转 FLOAT8 时，输出结果只能保证约前 15-17 位有效数字的精度。                                                                              |
 | INT2        | 2 字节   | -          | INT4、INT8、VARCHAR                                  | INT2 转 VARCHAR 时，VARCHAR 的最小宽度为 6。                                                    |
 | INT4        | 4 字节   | -          | INT8、VARCHAR                                        | INT4 转 VARCHAR 时，VARCHAR 的最小宽度为 11。                                                   |
 | INT8        | 8 字节   | -          | VARCHAR                                              | INT8 转 VARCHAR 时，VARCHAR 的最小宽度为 20。                                                   |
@@ -41,7 +41,7 @@ KWDB 时序数据库支持 TIMESTAMP 和 TIMESTAMPTZ 时间类型。
 
 ### 类型描述
 
-时间戳包括 TIMESTAMP 和 TIMESTAMPTZ 两个变体。时间戳数值允许精确到毫秒，例如：`2020-02-12 07:23:25.123`。时间戳常量表示特定日期和时间值的固定值。通常情况下，时间戳常量不可更改。时间戳常量的格式为 `timestamp 'YYYY-MM-DD HH:MM:SS.SSS'`，例如 `timestamp '2023-10-19 15:30:00'`。
+时间戳包括 TIMESTAMP 和 TIMESTAMPTZ 两个变体。时间戳数值允许精确到纳秒。时间戳常量表示特定日期和时间值的固定值。通常情况下，时间戳常量不可更改。时间戳常量的格式为 `timestamp 'YYYY-MM-DD HH:MM:SS.SSS'`，例如 `timestamp '2023-10-19 15:30:00'`。
 
 | 名称        | 别名                        | 描述                                                               |
 | ----------- | --------------------------- | ------------------------------------------------------------------ |
@@ -53,14 +53,23 @@ KWDB 时序数据库支持 TIMESTAMP 和 TIMESTAMPTZ 时间类型。
 - KWDB 在存储 TIMESTAMPTZ 类型时不包含时区数据。
 - KWDB 默认时区为 UTC。因此 TIMESTAMPTZ 的默认值与 TIMESTAMP 一致。
 - 时序表第一列（时间戳列）指定为 TIMESTAMP 时，实际处理与 TIMESTAMPTZ 一致。
+- KWDB 不支持使用 `ALTER COLUMN ... SET DATA TYPE` 语句更改已有 TIMESTAMP/TIMESTAMPTZ 类型列的精度。
 
 :::
 
-KWDB 支持在查询中对列类型为时间戳、时间戳常量以及结果类型为时间戳的函数和表达式进行时间加减运算，运算结果支持使用大于号（`>`）、小于号（`<`）、等号（`=`）、大于等于号（`>=`）、小于等于号（`<=`）进行比较。有关详细信息，参见[简单查询](../dml/ts-db/ts-select.md)。
+KWDB 时序数据库 timestamp、timestamptz 时间类型支持设置时间戳精度为 3（毫秒）、6（微秒）、9（纳秒）。默认情况下，时间戳精度为 3（毫秒）。时间戳精度指定了秒字段中保留的小数位数。例如，将 `TIMESTAMPTZ` 值指定为 `TIMESTAMPTZ(3)` 会将时间部分截断为毫秒。创建表或添加列的时候，如未指定时间戳列的精度，则采用默认精度。
+
+目前，KWDB 支持采用以下方式写入时间戳：
+
+- `now()` 函数: 根据该列精度转换为 INT64，判断是否超出该精度所支持的时间范围，然后再写入
+- STRING 形式时间戳：根据该列精度转换为 INT64，判断是否超出该精度所支持的时间范围，超出精度的部分以四舍五入形式进行截取，然后再进行写入
+- INT 形式的时间戳：根据该列时间精度判断是否超出该精度所支持的时间范围，然后再写入
+
+KWDB 支持在查询中对列类型为时间戳、时间戳常量以及结果类型为时间戳的函数和表达式按最高精度进行加减运算并返回运算结果。运算结果支持使用大于号（`>`）、小于号（`<`）、等号（`=`）、大于等于号（`>=`）、小于等于号（`<=`）进行比较。有关详细信息，参见[简单查询](../dml/ts-db/ts-select.md).
 
 ### 示例
 
-以下示例创建一个名为 `timestamps` 的表，包括 TIMESTAMP 和 TIMESTAMPTZ 时间戳类型的列。
+示例 1：以下示例创建一个名为 `timestamps` 的表，包括 TIMESTAMP 和 TIMESTAMPTZ 时间戳类型的列。
 
 ```sql
 -- 1. 创建表 timestamps。
@@ -78,6 +87,27 @@ show columns from timestamps;
     c2          | TIMESTAMPTZ |    true     | NULL           |                       | {}        |   false   | false
     site        | INT4        |    false    | NULL           |                       | {}        |   false   |  true
 (4 rows)
+```
+
+示例 2：以下示例创建一个名为 `t` 的表并指定时间戳精度。
+
+```sql
+-- 1. 创建表 t。
+
+CREATE TABLE t(ts timestamptz(3), ts1 timestamp, ts2 timestamp(6), ts3 timestamp(9)) tags(ptag int not null) primary tags(ptag);
+
+-- 2. 查看创建的表。
+
+SHOW CREATE TABLE t； 
+  table_name |              create_statement
+-------------+----------------------------------------------
+  t          | CREATE TABLE t (
+             |     ts TIMESTAMPTZ(3) NOT NULL,
+             |     ts1 TIMESTAMP(3) NULL,
+             |     ts2 TIMESTAMP(6) NULL,
+             |     ts3 TIMESTAMP(9) NULL,
+             | ) TAGS (
+             |     ptag INT4 NOT NULL ) PRIMARY TAGS(ptag)
 ```
 
 ## 数值类型
