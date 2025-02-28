@@ -23,7 +23,9 @@ id: overview
   - PHP
     - [PHP pgsql](./connect-kaiwudb/php/connect-php-pgsql.md)
     - [ThinkPHP](./connect-kaiwudb/php/connect-thinkphp.md)
-  - [RESTful API](./connect-kaiwudb/restful-api/connect-restful-api.md)
+  - RESTful API
+    - [无模式写入](./connect-kaiwudb/restful-api/schemaless-writing.md)
+    - [RESTful API](./connect-kaiwudb/restful-api/connect-restful-api.md)
   - [Golang](./connect-kaiwudb/golang/connect-pgx.md)
   - [Node.js](./connect-kaiwudb/node-js/connect-knex.md)
   - [Rust](./connect-kaiwudb/rust/connect-rust.md)
