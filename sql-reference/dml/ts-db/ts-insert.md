@@ -9,11 +9,13 @@ id: ts-insert
 
 - 向指定时序表插入一行或多行时序数据。
 - 使用 `SELECT` 子句将其他时序表的查询结果插入到指定时序表或关系表中。
+- 使用 `SELECT` 子句将跨模查询结果插入到指定时序表。
 
 ::: warning 说明
 
 - KWDB 支持乱序写入数据。默认情况下，KWDB 以数据写入的顺序返回查询结果。如需对返回数据进行排序，支持在查询数据时使用 `ORDER BY` 子句并指定排序条件。
 - KWDB 支持对具有相同时间戳的数据进行去重处理。默认情况下，后写入的数据覆盖已有的具有相同时间戳的数据。用户可以通过 `SET CLUSTER SETTING ts.dedup.rule=[ merge | override | discard]` 语句设置数据去重策略。更多信息，参见[集群实时参数配置](../../../db-operation/cluster-settings-config.md#实时参数)。
+- 当使用 `SELECT` 子句将跨模查询结果插入到指定时序表时，如果首列不是时间戳列，系统报错，提示 "first column must be timestamp when the target table is table of time series"。
 
 :::
 
@@ -77,4 +79,14 @@ id: ts-insert
 
     ```sql
     INSERT INTO test.test1 SELECT * FROM test_ts.ts_table;
+    ```
+
+- 向时序表写入跨模查询结果。
+
+    ```sql
+    -- 成功
+    INSERT INTO test_ts.ts_table2 SELECT t2.time,t1.col1,t1.col2,t2.e3,t2.e4,t2.e5,t2.e6,t2.attr1 FROM test.test1 AS t1 JOIN test_ts.ts_table AS t2 ON t2.e1=t1.col1;
+
+    -- 报错：first column must be timestamp when the target table is table of time series
+    INSERT INTO test_ts.ts_table2 SELECT t2.e1, t1.col1,t1.col2,t2.e3,t2.e4,t2.e5,t2.e6,t2.attr1 FROM test.test1 AS t1 JOIN test_ts.ts_table AS t2 ON t2.e1=t1.col1;
     ```
