@@ -291,6 +291,7 @@ id: functions-ts-db
 | diff(val: int8) → int8                    | 计算表中某列与前一行非 NULL 值之间的差值。格式为 `diff (<expr>) OVER (PARTITION BY <column_list> ORDER BY <timestamp_column>)`。其中时间戳列必须是首列时间戳列，以保证顺序正确且计算正确。支持以下操作符：`+`, `-`, `*`, `/`, `%`, `//`, `\|`, `^`。如果当前行的值为 NULL 或指定分区仅有两行数据且首行为 NULL，则返回 NULL。如果前一行为 NULL，则取前面最近的非 NULL 行进行计算。<br>**注意**：该函数暂时不支持嵌套函数，同一层查询中不可与其他聚合函数同时使用。<br>**提示**：单机部署时，如果 `PARTITION BY` 后的列为所有主标签列，有助于提升查询性能。                                                |
 | diff(val: float4) → float4                | 计算表中某列与前一行非 NULL 值之间的差值。格式为 `diff (<expr>) OVER (PARTITION BY <column_list> ORDER BY <timestamp_column>)`。其中时间戳列必须是首列时间戳列，以保证顺序正确且计算正确。支持以下操作符：`+`, `-`, `*`, `/`, `%`, `//`, `\|`, `^`。如果当前行的值为 NULL 或指定分区仅有两行数据且首行为 NULL，则返回 NULL。如果前一行为 NULL，则取前面最近的非 NULL 行进行计算。<br>**注意**：该函数暂时不支持嵌套函数，同一层查询中不可与其他聚合函数同时使用。<br>**提示**：单机部署时，如果 `PARTITION BY` 后的列为所有主标签列，有助于提升查询性能。                                                                  |
 | diff(val: float8) → float8                | 计算表中某列与前一行非 NULL 值之间的差值。格式为 `diff (<expr>) OVER (PARTITION BY <column_list> ORDER BY <timestamp_column>)`。其中时间戳列必须是首列时间戳列，以保证顺序正确且计算正确。支持以下操作符：`+`, `-`, `*`, `/`, `%`, `//`, `\|`, `^`。如果当前行的值为 NULL 或指定分区仅有两行数据且首行为 NULL，则返回 NULL。如果前一行为 NULL，则取前面最近的非 NULL 行进行计算。<br>**注意**：该函数暂时不支持嵌套函数，同一层查询中不可与其他聚合函数同时使用。<br>**提示**：单机部署时，如果 `PARTITION BY` 后的列为所有主标签列，有助于提升查询性能。                                                                        |
+| ELAPSED(ts_primary_key [, time_unit]) →  float8 | 统计指定统计周期内有数据覆盖的连续时间长度。与 `TWA` 函数配合使用，可以计算统计曲线下的面积。与 `time_bucket` 函数结合使用时，统计在给定时间范围内的每个时间窗口内有数据覆盖的时间范围。如未使用 `time_bucket` 函数，则返回整个给定时间范围的有数据覆盖的时间范围。ELAPSED 函数返回时间范围的绝对值除以时间间隔单位所得到的单位个数。 <br> 参数说明：<br>- `ts_primary_key`：时间戳列，必须是首列时间戳列，用于确定数据的存在范围。<br>- `time_unit`：时间间隔，支持的单位包括纳秒（ns）、微秒（us）、ms（毫秒）、秒（s）、分（m）、小时（h）、天（d）、周（w）。若未设置，则默认以毫秒为时间间隔单位。|
 | first(val: float4) → float4               | 获取条件范围内时间戳最小的一条数据（不包含空值 NULL）。   |
 | first(val:  float8) →  float8             | 获取条件范围内时间戳最小的一条数据（不包含空值 NULL）。   |
 | first(val: INT2) → INT2                   | 获取条件范围内时间戳最小的一条数据（不包含空值 NULL）。   |
@@ -356,6 +357,7 @@ id: functions-ts-db
 | sum(arg1: INT2) → DECIMAL                 | 计算选定值的总和。                                        |
 | sum(arg1: INT4) → DECIMAL                 | 计算选定值的总和。                                        |
 | sum(arg1: INT8) → DECIMAL                 | 计算选定值的总和。                                        |
+| TWA(ts_primary_key, expr) → float8  | 计算指定时间范围内数据点的加权平均值。与 `time_bucket` 函数结合使用时，在给定时间范围内的每个时间窗口内计算加权平均值。如未使用 `time_bucket` 函数，则在整个给定时间范围内计算加权平均值。 <br> 参数说明：<br>- `ts_primary_key`：时间戳列，必须是首列时间戳列，用于确定数据的存在范围。若存在多条时间戳相同的数据，系统会报错。有关详细信息，参见[时序函数错误码](../../db-operation/error-code/error-code-ts-functions.md)。<br>- `expr`：expr 表达式，其计算结果为数据点的数值，数据点之间的时间间隔则是数据点权重。适用于数值类型的数据，支持的类型包括单列（数值类型）、常量（数值）、操作符（+、-、*、/、%、<<、>>、&#124;、&）、函数（返回值为数值类型）。|
 
 ## 地理函数
 

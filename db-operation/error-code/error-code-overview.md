@@ -10,6 +10,7 @@ id: error-code-overview
 - [KWDB 专有错误码](./error-code-kaiwudb.md)：以 `KW` 开头，由 `5` 位字符组成。
 - [PostgreSQL 错误码](./error-code-postgresql.md)：KWDB 兼容 PostgreSQL 错误码。PostgreSQL 错误码也由 `5` 位字符组成。
 - [KaiwuDB JDBC Driver 错误码](./error-code-jdbc-driver.md)：与 KaiwuDB JDBC Driver 相关的错误码，由 `5` 位字符组成。
+- [时序函数错误码](./error-code-ts-functions.md)：与 KWDB 时序函数相关的错误码，由 `5` 位字符组成。
 
 这三类错误码包含以下信息：
 
