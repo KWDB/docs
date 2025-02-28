@@ -120,17 +120,11 @@ PRIMARY [TAGS|ATTRIBUTES] (<primary_tag_list>)
 
 ### 语法格式
 
-- 查看当前或指定数据库下的所有表。如未指定，则默认使用当前数据库。
+查看当前或指定数据库下的所有表。如未指定，则默认使用当前数据库。
 
-    ```sql
-    SHOW TABLES [FROM <db_name>][.<schema_name>] [WITH COMMENT];
-    ```
-
-- 查看当前或指定数据库下指定表的建表语句。如未指定，则默认使用当前数据库。
-
-    ```sql
-    SHOW CREATE [<db_name>.]<table_name>;
-    ```
+```sql
+SHOW TABLES [FROM <db_name>][.<schema_name>] [WITH COMMENT];
+```
 
 ### 参数说明
 
@@ -178,24 +172,72 @@ PRIMARY [TAGS|ATTRIBUTES] (<primary_tag_list>)
     (5 rows)
     ```
 
-- 查看当前数据库中指定表的建表语句。
+- 查看带有注释信息的表。
 
-    以下示例查看当前数据库中 `water` 表的建表语句。
+    以下示例查看带有注释信息的表。
 
     ```sql
-    SHOW CREATE water;
+    -- 1. 为 power 表添加注释。
+
+    COMMENT ON TABLE power IS 'power for all devices';
+    COMMENT ON TABLE
+
+    -- 2. 查看带有注释信息的表。
+
+    SHOW TABLES WITH COMMENT;
+      table_name  |    table_type     |      comment
+    --------------+-------------------+--------------------
+      power       | TIME SERIES TABLE | power for all devices
+    (1 row)
     ```
 
-    执行成功后，控制台输出以下信息：
+## 查看表的建表语句
+
+`SHOW CREATE [TABLE] <table_name>` 语句用于查看当前或指定数据库下指定表的建表语句。如未指定数据库，则默认为当前数据库。创建时序表时，如果指定 `activetime`、`retentions` 和 `partition interval` 参数的取值，则显示指定的取值。如未指定，`activetime` 参数显示默认值，而 `retentions` 和 `partition interval` 参数继承库级别的参数取值。如果库级别也未指定参数取值，则显示该参数的默认值。
+
+默认情况下，`activetime`、`retentions` 和 `partition interval` 参数的取值分别为 `1d`、`0s`、`10d`。
+
+### 前提条件
+
+用户拥有指定表的任何权限。
+
+### 语法格式
+
+```sql
+SHOW CREATE [TABLE] [<database_name>.] <table_name>;
+```
+
+### 参数说明
+
+| 参数            | 说明                                                      |
+|-----------------|---------------------------------------------------------|
+| `database_name` | 待查看表所在的数据库的名称。如未指定，则默认使用当前数据库。 |
+| `table_name`    | 待查看表的名称。                                           |
+
+### 语法示例
+
+- 查看当前数据库中指定表的建表语句。
+
+    以下示例查看当前数据库中 `t3` 表的建表语句。
 
     ```sql
-      table_name |                   create_statement
-    -------------+--------------------------------------------------------
-      water      | CREATE TABLE water (
+    -- 1. 创建 t3 时序表，指定 activetime 参数的取值。
+
+    CREATE TABLE t3(ts timestamp NOT NULL, a int) TAGS(ptag int NOT NULL) PRIMARY TAGS(ptag) ACTIVETIME 10s;
+
+    -- 2. 查看已创建的 t1 时序表。
+
+    SHOW CREATE TABLE t3;
+      table_name |              create_statement
+    -------------+----------------------------------------------
+      t3         | CREATE TABLE t3 (
                 |     ts TIMESTAMPTZ NOT NULL,
-                |     value FLOAT8 NULL
+                |     a INT4 NULL
                 | ) TAGS (
-                |     sensor_id INT4 NOT NULL ) PRIMARY TAGS(sensor_id)
+                |     ptag INT4 NOT NULL ) PRIMARY TAGS(ptag)
+                |     retentions 0s
+                |     activetime 10s
+                |     partition interval 10d
     (1 row)
     ```
 
@@ -217,25 +259,9 @@ PRIMARY [TAGS|ATTRIBUTES] (<primary_tag_list>)
                     |     c1 INT4 NULL
                     | ) TAGS (
                     |     site INT4 NOT NULL ) PRIMARY TAGS(site)
-    (1 row)
-    ```
-
-- 查看带有注释信息的表。
-
-    以下示例查看带有注释信息的表。
-
-    ```sql
-    -- 1. 为 power 表添加注释。
-
-    COMMENT ON TABLE power IS 'power for all devices';
-    COMMENT ON TABLE
-
-    -- 2. 查看带有注释信息的表。
-
-    SHOW TABLES WITH COMMENT;
-      table_name  |    table_type     |      comment
-    --------------+-------------------+--------------------
-      power       | TIME SERIES TABLE | power for all devices
+                    |     retentions 0s
+                    |     activetime 0s
+                    |     partition interval 10d
     (1 row)
     ```
 

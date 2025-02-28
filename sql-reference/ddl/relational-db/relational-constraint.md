@@ -59,7 +59,7 @@ id: relational-constraint
     以下示例创建 `office_dogs` 和 `address` 表，且 `office_dogs.address_id` 列的每个值与 `address.id` 列中的唯一值匹配。以下示例还为 `office_dogs` 表的 `address_id` 列创建外键约束。
 
     ```sql
-    -- 1. 创建 office_dogs 表。
+    -- 1. 查看已创建的 office_dogs 表。
 
     SHOW CREATE TABLE office_dogs;
       table_name  |                                            create_statement                                              
@@ -82,7 +82,7 @@ id: relational-constraint
                   | )                                                                                                        
     (1 row)
 
-    -- 2. 创建 address 表。
+    -- 2. 查看已创建的 address 表。
 
     SHOW CREATE TABLE address;
       table_name |                create_statement                 

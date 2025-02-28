@@ -5,7 +5,6 @@ id: relational-table
 
 # 关系表
 
-
 ## 创建表
 
 `CREATE TABLE` 语句用于在数据库中创建新表。
@@ -605,6 +604,61 @@ id: relational-table
       testblob      | BASE TABLE |
       users         | BASE TABLE | This table contains information about users.
     (5 rows)
+    ```
+
+## 查看表的建表语句
+
+`SHOW CREATE [TABLE] <table_name>` 语句用于查看当前或指定数据库下指定表的建表语句。如未指定数据库，则默认为当前数据库。
+
+### 所需权限
+
+用户拥有指定表的任何权限。
+
+### 语法格式
+
+![](../../../static/sql-reference/showcreatetable.png)
+
+### 参数说明
+
+| 参数            | 说明                                                      |
+|-----------------|---------------------------------------------------------|
+| `database_name` | 待查看表所在的数据库的名称。如未指定，则默认使用当前数据库。 |
+| `table_name`    | 待查看表的名称。                                           |
+
+### 语法示例
+
+- 查看当前数据库中指定表的建表语句。
+
+    以下示例查看当前数据库中 `accounts` 表的建表语句。
+
+    ```sql
+    SHOW CREATE TABLE accounts;
+      table_name|                 create_statement
+    ------------+----------------------------------------------------
+      accounts  | CREATE TABLE accounts (
+                |     id INT8 NOT NULL DEFAULT unique_rowid(),
+                |     name STRING NULL,
+                |     balance DECIMAL NULL,
+                |     enabled BOOL NULL,
+                |     CONSTRAINT "primary" PRIMARY KEY (id ASC),
+                |     FAMILY "primary" (id, name, balance, enabled)
+                | )
+    (1 row)
+    ```
+
+- 查看其它数据库中指定表的建表语句。
+
+    以下示例查看 `r` 数据库中 `t6` 表的建表语句。
+
+    ```sql
+    SHOW CREATE TABLE r.t6;
+      table_name  |         create_statement
+    --------------+-----------------------------------
+      r.public.t6 | CREATE TABLE t6 (
+                  |     c1 NCHAR NULL,
+                  |     FAMILY "primary" (c1, rowid)
+                  | )
+    (1 row)
     ```
 
 ## 修改表

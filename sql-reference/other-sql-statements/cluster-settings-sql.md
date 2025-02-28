@@ -60,6 +60,7 @@ id: cluster-settings-sql
 `SHOW CLUSTER SETTING` 语句与以下 `SHOW` 语句无关：
 
 - `SHOW`
+- `SHOW CREATE DATABASE`
 - `SHOW CREATE TABLE`
 - `SHOW CREATE VIEW`
 - `SHOW USERS`

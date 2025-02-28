@@ -138,6 +138,46 @@ SHOW DATABASES [WITH COMMENT];
     (4 rows)
     ```
 
+## 查看数据库的建库语句
+
+`SHOW CREATE DATABASE` 语句用于查看创建数据库的 SQL 语句以及创建数据库时指定的相关参数。时序数据库支持查看创建数据库时使用的数据库名称、以及 `retentions` 和 `partition interval` 参数的取值。创建数据库时，如果指定 `retentions` 和 `partition interval` 参数的取值，则显示指定的取值。如未指定，则显示该参数的默认值。默认情况下，`retentions` 参数的取值为 `0s`，`partition interval` 参数的取值为 `10d`。
+
+### 前提条件
+
+无
+
+### 语法格式
+
+```sql
+SHOW CREATE DATABASE <database_name>;
+```
+
+### 参数说明
+
+| 参数 | 说明 |
+| --- | --- |
+| `database_name` | 待查看数据库的名称。|
+
+### 语法示例
+
+以下示例查看 `tsdb1` 数据库的建库语句和相关参数取值。
+
+```sql
+-- 1. 创建数据库 tsdb1，并将 `retentions` 和 `partition interval` 参数的取值均设置为 `10d`。
+
+CREATE TS DATABASE tsdb1 RETENTIONS 10d PARTITION INTERVAL 10d;
+
+--2. 查看已创建的 tsdb1 数据库。
+
+SHOW CREATE DATABASE tsdb1;
+  database_name |          create_statement
+----------------+-------------------------------------
+  tsdb1         | CREATE TS DATABASE tsdb1
+                |      retentions 864000s
+                |      partition interval 10d
+(1 row)
+```
+
 ## 切换数据库
 
 ### 前提条件
