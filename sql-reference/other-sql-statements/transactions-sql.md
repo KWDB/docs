@@ -6,36 +6,157 @@ id: transactions-sql
 
 # 事务
 
-事务是指以全有或全无的方式执行的一系列数据库操作。所有操作必须全部成功完成，否则在每个操作中所作的所有更改都会被撤消。
-
 ::: warning 说明
-目前，时序数据不支持该语句。
+
+- KWDB 支持显式事务内执行时序数据的查询以及写入，但不保证时序引擎的事务性，也不保证跨模查询结果的一致性。
+- KWDB 不支持显式事务内执行时序数据的 DDL 操作。
+
 :::
 
-## 启动事务
+在执行 SQL 语句的时候，某些业务要求一系列操作必须全部执行，而不能仅执行一部分。这种以全有或全无的方式执行的一系列数据库操作的功能，被称为事务。事务可以确保该事务范围内的所有操作都可以全部成功或者全部失败。如果事务失败，那么效果就和没有执行这些 SQL 语句一样，不会对数据库数据有任何改动。
+
+因此，事务具有 ACID 这四个特性：
+
+- A（Atomicity，原子性）：将所有 SQL 语句作为原子工作单元执行，要么全部执行，要么全部不执行。
+- C（Consistency，一致性）：事务完成后，所有数据的状态保持一致。
+- I（Isolation，隔离性）：如果并发执行多个事务，每个事务作出的修改必须与其他事务隔离。
+- D（Durability，持久性）：事务完成后，对数据库数据的修改被持久化存储。
+
+事务分为隐式事务和显式事务，都可以保证数据的一致性和完整性。
+
+- 隐式事务是指在不使用 `BEGIN`、`COMMIT` 等语句的情况下，KWDB 自动为每个操作创建一个事务，并在操作完成后自动提交或回滚事务。隐式事务可以提供更简洁的代码和更高的开发效率，适用于单个操作，如果操作成功，则自动提交事务，如果操作失败，则自动回滚事务。
+- 显式事务是指在应用程序中明确指定事务的开始和结束，使用 `BEGIN`、`COMMIT` 等语句来控制事务的执行。显式事务可以提供更精细的控制，适用于需要进行一组操作，并在操作完成后手动提交或回滚事务的场景。
+
+## 隔离级别
+
+对于两个并发执行的事务，如果涉及到操作同一条记录的时候，可能会发生问题。因为并发操作会带来数据的不一致性，包括脏读、不可重复读、幻读等。隔离是 ACID 事务的一个要素，它决定了如何控制并发性，并最终保证一致性。KWDB 提供三种事务隔离级别：
+
+- 串行化（Serializable）：Serializable 隔离是最高的隔离级别，保证了即使事务是并行执行的，其结果也与它们一次执行一个事务时的结果相同，没有任何并发性。这可以防止较弱隔离级别所允许的所有异常，从而确保数据的正确性。默认情况下，KWDB 提供 Serializable 隔离。
+- 提交读（Read Committed，RC）：在 RC 隔离级别下，事务会读取到其他事务已提交的数据，但不完全保证事务操作的可序列化。事务并发时允许潜在的事务异象发生，包括不可重复读、幻读、丢失更新、写偏序，从而换取最小化事务中止、重试和阻塞，并且不会返回需要客户端处理的序列化错误。RC 隔离级别适用于以下场景：
+  - 应用程序需要在保持高工作负载并发性的同时，尽量减少事务重试，并且可以容忍潜在的并发异常。在高并发情况下，可预测的查询性能比保证事务的可序列化性更有价值。
+  - 将一个基于 RC 隔离级别构建的应用程序迁移到 KWDB，并且无法将应用程序修改为使用 Serializable 隔离级别。
+- 可重复读（Repeatable Read，RR）：RR 隔离保证了在同一事务内多次读取同一数据时，结果是一致的。为了实现这一点，当事务执行查询时，会锁定查询的列或行，确保其他事务在此期间不能修改这些数据。RR 隔离解决了脏读 、不可重复读的问题。
+
+默认情况下，KWDB 采用 Serializable 隔离级别。
+
+### 配置隔离级别
+
+KWDB 支持配置集群级、会话级、以及事务级的隔离级别，其中事务级的隔离级别优先级最高，集群级的隔离级别优先级最低。
+
+#### 配置集群级隔离级别
+
+集群级的隔离级别设置仅对后续启动的连接生效。有关详细信息，参见[集群配置](../../db-operation/cluster-settings-config.md)。设置完成后，用户可以使用 `SHOW cluster setting sql.txn.cluster_transaction_isolation` 语句查看集群的隔离级别设置。
+
+```sql
+SET CLUSTER SETTING sql.txn.cluster_transaction_isolation = <level>;
+```
+
+`level` 参数取值：
+
+- `serializable`：默认值，串行化隔离级别。
+- `read committed`：提交读隔离级别
+- `repeatable read`：可重复读隔离级别
+
+#### 配置会话级隔离级别
+
+会话级隔离级别设置只对当前连接生效。如果启动会话时未指定隔离级别，则继承集群级隔离级别。用户可以使用以下命令更改会话的隔离级别。更新完成后，用户可以使用 `SHOW default_transaction_isolation` 语句查看当前会话的隔离级别设置。
+
+```sql
+SET default_transaction_isolation = <level>;
+```
+
+`level` 参数取值：
+
+- `serializable`：默认值，串行化隔离级别。
+- `read committed`：提交读隔离级别
+- `repeatable read`：可重复读隔离级别
+
+#### 配置事务级隔离级别
+
+如果启动事务时未指定隔离级别，则继承会话级隔离级别设置。用户可以使用以下命令更改事务的隔离级别。更新完成后，用户可以使用 SHOW transaction isolation level 语句查看显式事务内的隔离级别。
+
+::: warning 说明
+显式事务中只能在没有进行 kv 操作时（即读写操作）更改事务的隔离级别。
+:::
+
+- 使用 `BEGIN TRANSACTION ISOLATION LEVEL` 语句
+
+  ```sql
+  BEGIN TRANSACTION ISOLATION LEVEL <iso_level>;
+  ```
+
+  `iso_level` 参数取值：
+
+  - `SERIALIZABLE`：默认值，串行化隔离级别。
+  - `READ COMMITTED`：提交读隔离级别
+  - `REPEATABLE READ`：可重复读隔离级别
+
+- 使用 `SET TRANSACTION ISOLATION LEVEL` 语句
+
+  ```sql
+  BEGIN; ---开启事务
+  SET TRANSACTION ISOLATION LEVEL <iso_level>; ---在显式事务内执行
+  ```
+
+  `iso_level` 参数取值：
+
+  - `SERIALIZABLE`：默认值，串行化隔离级别。
+  - `READ COMMITTED`：提交读隔离级别
+  - `REPEATABLE READ`：可重复读隔离级别
+
+- 使用 `transaction_isolation` 会话变量
+
+  ```sql
+  BEGIN; ---开启事务
+  SET transaction_isolation = <level>;  ---在显式事务内执行
+  ```
+
+  `level` 参数取值：
+
+  - `serializable`：默认值，串行化隔离级别。
+  - `read committed`：提交读隔离级别
+  - `repeatable read`：可重复读隔离级别
+
+- 使用 `SET SESSION TRANSACTION ISOLATION LEVEL` 语句
+
+  ```sql
+  BEGIN; ---开启事务
+  SET SESSION TRANSACTION ISOLATION LEVEL <iso_level>; ---在显式事务内执行
+  ```
+
+  `level` 参数取值：
+
+  - `serializable`：默认值，串行化隔离级别。
+  - `read committed`：提交读隔离级别
+  - `repeatable read`：可重复读隔离级别
+
+## SQL 语句
+
+### 启动事务
 
 `BEGIN` 语句用于启动事务，该事务将以全有或全无的方式执行包含的所有语句。在 KWDB 中，`BEGIN` 语句的别名包括：
 
 - `BEGIN TRANSACTION`
 - `START TRANSACTION`
 
-### 所需权限
+#### 所需权限
 
 启动事务不需要任何权限。但是，事务中的每个语句都需要相应的权限。
 
-### 语法格式
+#### 语法格式
 
-![](../../static/sql-reference/Cd8xb49cmo7YgxxtLztcHBQpnHg.png)
+![](../../static/sql-reference/begintransaction.png)
 
-### 参数说明
+#### 参数说明
 
 | 参数 | 说明 |
 | --- | --- |
+| `ISOLATION LEVEL` | 事务的隔离级别，支持以下取值：<br >- 串行化（Serializable）：Serializable 隔离是最高的隔离级别，保证了即使事务是并行执行的，其结果也与它们一次执行一个事务时的结果相同，没有任何并发性。<br >- 提交读（Read Committed，RC）：在 RC 隔离级别下，事务会读取到其他事务已提交的数据，但不完全保证事务操作的可序列化。<br >- 可重复读（Repeatable Read，RR）：RR 隔离保证了在同一事务内多次读取同一数据时，结果是一致的。<br >默认情况下，事务的隔离级别为 Serializable。|
 | `PRIORITY` | 事务的优先级。默认情况下，事务的优先级为 `NORMAL`。用户可以根据需要将事务的优先级设置为 `LOW` 或 `HIGH`。优先级越高的事务，重试的几率越低。|
 | `READ` | 事务访问模式，支持 `READ ONLY` 或 `READ WRITE` 访问模式。默认模式为 `READ WRITE`。用户可以通过修改会话变量 `transaction_read_only` 设置访问模式。|
 | `AS OF SYSTEM TIME` |  对截至指定时间的数据库内容执行事务。事务访问模式设置为 `READ ONLY` 时才能使用 `AS OF SYSTEM TIME` 子句。如果事务包含任何写操作，或者事务访问模式为 `READ WRITE`，系统将返回错误。|
 
-### 语法示例
+#### 语法示例
 
 以下示例假设已经创建 `accounts`、`orders`、`customers` 表并写入相关数据。
 
@@ -64,6 +185,21 @@ id: transactions-sql
     INSERT INTO accounts (id, balance) VALUES (9, DEFAULT);
 
     -- 5. 提交事务。
+    COMMIT;
+    COMMIT
+    ```
+
+- 启动事务，并将事务的隔离级别设置为 `read committed`。
+
+    ::: warning 说明
+    用户也可以使用 `SET TRANSACTION` 语句设置事务的隔离级别。有关详细信息，参见 [设置事务](#设置事务)。
+    :::
+
+    ```sql
+    -- 1. 启动事务。
+    BEGIN TRANSACTION ISOLATION LEVEL read committed;
+
+    -- 2. 提交事务。
     COMMIT;
     COMMIT
     ```
@@ -146,27 +282,48 @@ id: transactions-sql
     )
     ```
 
-## 设置事务
+### 设置事务
 
 用户执行 `BEGIN` 语句后，但未执行其他数据库语句之前，可以使用 `SET TRANSACTION` 语句设置事务优先级、访问模式以及截止时间戳。
 
-### 所需权限
+#### 所需权限
 
 设置事务不需要任何权限。但是事务中的每个语句都需要相应的权限。
 
-### 语法格式
+#### 语法格式
 
-![](../../static/sql-reference/VdulbRozyowBmqxwz0rcU4fNnXc.png)
+![](../../static/sql-reference/settransaction.png)
 
-### 参数说明
+#### 参数说明
 
 | 参数 | 说明 |
 | --- | --- |
+| `ISOLATION LEVEL` | 配置事务隔离级别，支持以下取值：<br >- 串行化（Serializable）：Serializable 隔离是最高的隔离级别，保证了即使事务是并行执行的，其结果也与它们一次执行一个事务时的结果相同，没有任何并发性。<br >- 提交读（Read Committed，RC）：在 RC 隔离级别下，事务会读取到其他事务已提交的数据，但不完全保证事务操作的可序列化。<br >- 可重复读（Repeatable Read，RR）：RR 隔离保证了在同一事务内多次读取同一数据时，结果是一致的。<br >默认情况下，事务的隔离级别为 Serializable。|
 | `PRIORITY` | 事务的优先级。默认情况下，事务的优先级为 `NORMAL`。用户可以根据需要将事务的优先级设置为 `LOW` 或 `HIGH`。优先级越高的事务，重试的几率越低。|
 | `READ` | 事务访问模式，支持 `READ ONLY` 或 `READ WRITE` 访问模式。默认模式为 `READ WRITE`。用户可以通过修改会话变量 `transaction_read_only` 设置访问模式。|
 | `AS OF SYSTEM TIME` |  对截至指定时间的数据库内容执行事务。事务访问模式设置为 `READ ONLY` 时才能使用 `AS OF SYSTEM TIME` 子句。如果事务包含任何写操作，或者事务访问模式为 `READ WRITE`，系统将返回错误。|
 
-### 语法示例
+#### 语法示例
+
+- 设置事务隔离级别。
+
+    ```sql
+    -- 1. 启动事务。
+
+    BEGIN;
+    Now adding input for a multi-line SQL transaction client-side (smart_prompt enabled).
+    Press Enter two times to send the SQL text collected so far to the server, or Ctrl+C to cancel.
+    You can also use \show to display the statements entered so far.
+
+    -- 2. 设置事务隔离级别为 READ COMMITTED。
+
+    SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
+
+    -- 3. 提交事务。
+
+    COMMIT;
+    COMMIT
+    ```
 
 - 设置事务优先级。
 
@@ -208,25 +365,25 @@ id: transactions-sql
     COMMIT
     ```
 
-## 回滚事务
+### 回滚事务
 
 `ROLLBACK` 语句用于中止当前事务及其嵌套事务，丢弃事务语句产生的所有更新。
 
-### 所需权限
+#### 所需权限
 
 回滚事务不需要任何权限。但是事务中的每个语句都需要权限。
 
-### 语法格式
+#### 语法格式
 
 ![](../../static/sql-reference/IqaRbHTgro1RLtxcZOzcRauPn4d.png)
 
-### 参数说明
+#### 参数说明
 
 | 参数 | 说明 |
 | --- | --- |
 | `savepoint_name` | 保存点的名称，KWDB 支持以下两类事务的保存点：<br >- 嵌套事务：保存点名称可以是任意名称。<br >- 自动重试事务：默认情况下，自动重试事务的保存点名称是 `kwbase_restart`，用户可以根据需要自定义保存点的名称。要使自定义保存点的名称生效，用户需要将 `force_savepoint_restart` 会话变量设置为 `true`。设置生效后，自动重试事务的保存点名称可以是任意名称。|
 
-### 语法示例
+#### 语法示例
 
 - 回滚事务。
 
@@ -397,7 +554,7 @@ id: transactions-sql
     (6 rows)
     ```
 
-## 提交事务
+### 提交事务
 
 `COMMIT` 语句用于提交当前事务，或者在 KWDB 开启事务自动重试机制时，清除连接并开始新事务。
 
@@ -406,19 +563,19 @@ id: transactions-sql
 
 在 KWDB 中，`COMMIT` 语句的别名是 `END`。
 
-### 所需权限
+#### 所需权限
 
 提交事务不需要任何权限。但是，事务中的每个语句都需要权限。
 
-### 语法格式
+#### 语法格式
 
 ![](../../static/sql-reference/HQdubWwXqoqy6ixxEJucNaPynSd.png)
 
-### 参数说明
+#### 参数说明
 
 无
 
-### 语法示例
+#### 语法示例
 
 ```sql
 -- 1. 启动事务。
@@ -430,25 +587,25 @@ BEGIN;
 COMMIT;
 ```
 
-## 创建保存点
+### 创建保存点
 
 SavePoint（保存点）是定义嵌套事务开始的标记。用户可以使用此标记来提交或回滚嵌套事务，而不会影响整个事务的进度。
 
-### 所需权限
+#### 所需权限
 
 创建保存点不需要任何权限。但是，事务中的每个语句都需要相应的权限。
 
-### 语法格式
+#### 语法格式
 
 ![](../../static/sql-reference/BwsBbkFAkodWOVxVKRVcjYPgnje.png)
 
-### 参数说明
+#### 参数说明
 
 | 参数 | 说明 |
 | --- | --- |
 | `savepoint_name` | 保存点的名称，KWDB 支持以下两类事务的保存点：<br >- 嵌套事务：保存点名称可以是任意名称。<br >- 自动重试事务：默认情况下，自动重试事务的保存点名称是 `kwbase_restart`，用户可以根据需要自定义保存点的名称。要使自定义保存点的名称生效，用户需要将 `force_savepoint_restart` 会话变量设置为 `true`。设置生效后，自动重试事务的保存点名称可以是任意名称。|
 
-### 语法示例
+#### 语法示例
 
 以下示例假设已经创建 `kv` 关系表。
 
@@ -540,25 +697,25 @@ CREATE TABLE
     COMMIT;
     ```
 
-## 释放保存点
+### 释放保存点
 
 `RELEASE SAVEPOINT` 语句使用相同的保存点名称从相应的 `SAVEPOINT` 语句开始提交嵌套事务（包括其嵌套子事务）。`RELEASE SAVEPOINT` 语句进一步支持重试保存点。
 
-### 所需权限
+#### 所需权限
 
 释放保存点不需要任何权限。但是，事务中的每个语句都需要相应的权限。
 
-### 语法格式
+#### 语法格式
 
 ![](../../static/sql-reference/XgghbhVzEoSNhxx39gzcXJHMnod.png)
 
-### 参数说明
+#### 参数说明
 
 | 参数 | 说明 |
 | --- | --- |
 | `savepoint_name` | 保存点的名称，KWDB 支持以下两类事务的保存点：<br >- 嵌套事务：保存点名称可以是任意名称。<br >- 自动重试事务：默认情况下，自动重试事务的保存点名称是 `kwbase_restart`，用户可以根据需要自定义保存点的名称。要使自定义保存点的名称生效，用户需要将 `force_savepoint_restart` 会话变量设置为 `true`。设置生效后，自动重试事务的保存点名称可以是任意名称。|
 
-### 处理错误
+#### 处理错误
 
 嵌套事务出现错误后，用户无法使用 `RELEASE SAVEPOINT` 语句消除错误。在这种情况下，用户可以采取以下操作：
 
@@ -570,7 +727,7 @@ CREATE TABLE
 
 当嵌套事务出现错误后，如需完全删除其标记并在外部事务中开始其他操作，请立即使用 `ROLLBACK TO SAVEPOINT` 语句，然后再释放保存点。
 
-### 语法示例
+#### 语法示例
 
 - 确认保存点名称是否存在。
 
