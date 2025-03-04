@@ -258,15 +258,15 @@ KWDB 支持基于特定条件（如时间间隔、数据行数或状态信息等
 | --- | --- |
 | `primary_tag_list` | 可选参数，指定时序表的主标签。|
 | `row_limit` | 计数窗口中，指定分组的数据行数。 |
-| `sliding_rows` | 计数窗口中，指定相邻窗口起始点间的差距，以控制窗口的重叠程度，值必须小于或等于`row_limit`。|
+| `sliding_rows` | 计数窗口中，指定相邻窗口起始点间的差距，以控制窗口的重叠程度，值必须小于或等于 `row_limit`。|
 | `start_condition` | 事件窗口中，指定窗口开始的条件，可以是任意表达式，也可以涉及不同的列。 |
 | `end_condition` | 事件窗口中，指定窗口结束的条件，可以是任意表达式，也可以涉及不同的列。  |
 | `ts_column` | 会话窗口和时间窗口中，指定第一列时间戳列。|
 | `session_threshold` | 会话窗口中，指定最大连续时间间隔。如果两条相邻数据的时间间隔超过会话允许的最大时间间隔时，则数据分属于不同窗口。支持的单位包括 `s`（秒）、`m` (分)、`h` (时)、`d` (天)和 `w` (周) ，不支持复合时间格式，例如 `1m2s`。 |
-| `column_name` | 状态窗口中，指定表的数据列或标签列，数据类型必须是整数、布尔值、CHAR 或 VARCHAR。|
-| `case_when_expr` | 状态窗口中，表示满足指定条件后状态开始或结束的表达式，例如 `STATE WINDOW (CASE WHEN CASE WHEN voltage >= 225 and voltage <= 235 THEN 1 ELSE 0 END)` 表示 |
+| `column_name` | 状态窗口中，指定表的数据列或标签列。<br>- 当指定列为数据列时，其数据类型必须为整数、布尔值或除 GEOMETRY 之外的字符类型。<br>- 当指定列为标签列时，其数据类型必须为整数、布尔值或除 GEOMETRY 和 NVARCHAR 之外的字符类型。|
+| `case_when_expr` | 状态窗口中，表示满足指定条件后状态开始或结束的表达式，例如，`STATE_WINDOW (CASE WHEN voltage >= 225 AND voltage <= 235 THEN 1 ELSE 0 END)` 表示当电压在 225 至 235 之间时，状态为 1，否则为 0。|
 | `interval` | 时间窗口中，指定时间间隔, 单位包括毫秒、秒、分、小时、天、周、月、年，不支持复合时间格式，如 `1d1h`。时间间隔必须不小于 10 毫秒。<br> 各时间单位支持的输入格式如下所示：<br>- 毫秒：`ms`、`msec`、`msecs`、`millisecond`、`milliseconds` <br> - 秒：`s`、`sec`、`secs`、`second`、`seconds` <br> - 分：`m`、`min`、`mins`、`minute`、`minutes` <br> - 小时：`h`、`hr`、`hrs`、`hour`、`hours`<br> - 天：`d`、`day`、`days` <br> - 周：`w`、`week`、`weeks` <br> - 月：`mon`、`mons`、`month`、`months` <br> - 年：`y`、`yr`、`yrs`、`year`、`years` |
-| `sliding_interval` |  时间窗口函数中，指定滑动偏移间隔。支持的单位包括毫秒、秒、分、小时、天、周，不支持复合时间格式，如 `1d1h`。  <br> 各时间单位支持的输入格式如下所示：<br>- 毫秒：`ms`、`msec`、`msecs`、`millisecond`、`milliseconds` <br> - 秒：`s`、`sec`、`secs`、`second`、`seconds` <br> - 分：`m`、`min`、`mins`、`minute`、`minutes` <br> - 小时：`h`、`hr`、`hrs`、`hour`、`hours`<br> - 天：`d`、`day`、`days` <br> - 周：`w`、`week`、`weeks` <br> **注意**：时间间隔与滑动偏移间隔不宜相差太大，否则可能会影响查询性能，如果窗口过多，还会导致内存不足。|
+| `sliding_interval` | 时间窗口函数中，指定滑动偏移间隔。支持的单位包括毫秒、秒、分、小时、天、周，不支持复合时间格式，如 `1d1h`。  <br> 各时间单位支持的输入格式如下所示：<br>- 毫秒：`ms`、`msec`、`msecs`、`millisecond`、`milliseconds` <br> - 秒：`s`、`sec`、`secs`、`second`、`seconds` <br> - 分：`m`、`min`、`mins`、`minute`、`minutes` <br> - 小时：`h`、`hr`、`hrs`、`hour`、`hours`<br> - 天：`d`、`day`、`days` <br> - 周：`w`、`week`、`weeks` <br> **注意**：时间间隔与滑动偏移间隔不宜相差太大，否则可能会影响查询性能，如果窗口过多，还会导致内存不足。|
 
 ### 语法示例
 
