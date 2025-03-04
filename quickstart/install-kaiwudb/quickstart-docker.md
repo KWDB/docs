@@ -50,7 +50,7 @@ KWDB 容器镜像支持在以下已安装 Docker 的操作系统中进行安装�
 | KylinOS      | V10 SP3 2403<br>V10 SP3 2303 | ARM_64   |
 |              | V10 SP3 2403<br>V10 SP3 2303 | x86_64   |
 | openEuler    | 22.03                        | x86_64   |
-| Ubuntu       | V18.04                       | ARM_64   |
+| Ubuntu       | V18.04                       | x86_64   |
 |              | V20.04                       | ARM_64   |
 |              | V20.04                       | x86_64   |
 |              | V22.04                       | ARM_64   |
@@ -218,14 +218,14 @@ tar -zxvf <install_package_name>
     - `global`：全局配置
       - `secure_mode`：是否开启安全模式，支持以下两种取值：
         - `insecure`：使用非安全模式。
-        - `tls`：（默认选项）开启 TLS 安全模式。开启安全模式后，KaiwuDB 生成 TLS 证书，作为客户端或应用程序连接数据库的凭证。生成的客户端相关证书存放在 `/etc/kaiwudb/certs` 目录。
-      - `management_user`：KaiwuDB 的管理用户，默认为 `kaiwudb`。安装部署后，KaiwuDB 创建相应的管理用户以及和管理用户同名的用户组。
-      - `rest_port`：KaiwuDB Web 服务端口，默认为 `8080`。
-      - `kaiwudb_port`：KaiwuDB 服务端口，默认为 `26257`。
+        - `tls`：（默认选项）开启 TLS 安全模式。开启安全模式后，KWDB 生成 TLS 证书，作为客户端或应用程序连接数据库的凭证。生成的客户端相关证书存放在 `/etc/kaiwudb/certs` 目录。
+      - `management_user`：KWDB 的管理用户，默认为 `kaiwudb`。安装部署后，KWDB 创建相应的管理用户以及和管理用户同名的用户组。
+      - `rest_port`：KWDB Web 服务端口，默认为 `8080`。
+      - `kaiwudb_port`：KWDB 服务端口，默认为 `26257`。
       - `data_root`：数据目录，默认为 `/var/lib/kaiwudb`。
-      - `cpu`: 可选参数，用于指定 KaiwuDB 服务占用当前节点服务器 CPU 资源的比例，默认无限制。取值范围为 `[0,1]`，最大精度为小数点后两位。
+      - `cpu`: 可选参数，用于指定 KWDB 服务占用当前节点服务器 CPU 资源的比例，默认无限制。取值范围为 `[0,1]`，最大精度为小数点后两位。
     - `local`：本地节点配置
-      - `node_addr`：本地节点对外提供服务的 IP 地址，监听地址为 `0.0.0.0`，端口为 KaiwuDB 服务端口。
+      - `node_addr`：本地节点对外提供服务的 IP 地址，监听地址为 `0.0.0.0`，端口为 KWDB 服务端口。
 
 2. 为 `deploy.sh` 脚本添加运行权限。
 
