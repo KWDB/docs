@@ -20,3 +20,4 @@ id: log-mgmt
   - [KWDB 专有错误码](./error-code/error-code-kaiwudb.md)
   - [PostgreSQL 错误码](./error-code/error-code-postgresql.md)
   - [KaiwuDB JDBC Driver 错误码](./error-code/error-code-jdbc-driver.md)
+  - [时序函数错误码](./error-code/error-code-ts-functions.md)
