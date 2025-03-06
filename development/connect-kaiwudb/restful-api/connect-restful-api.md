@@ -18,7 +18,7 @@ https://<hostname>:<port>/<endpoint>?[tz=<timezone>][db=<db_name>]
 - `hostname`：KWDB 服务器的 IP 地址或者 FQDN（Fully Qualified Domain Name，完全限定域名）。
 - `port`：KWDB 服务器的 HTTP 访问端口，默认是 `8080`。
 - `tz`：可选参数，用于指定 RESTful API 请求的时区。如果 RESTful API 请求中存在时区设置，则使用该时区取值。否则使用 `server.restful_service.default_request_timezone` 集群参数的取值。如果写入的数据里带有时区信息，那么以写入数据的时区信息为准。
-- `db_name`：可选参数, 用于指定目标数据库。如未指定，则使用系统默认创建的 `defaultdb` 数据库。[Login 接口](#login-接口)不支持设置该参数。
+- `db_name`：可选参数, 用于指定目标数据库。解析时，KWDB 使用英文双引号（`""`）将数据库名包裹起来，从而解决大小写敏感或以特殊字符、数字开头的库名等问题。如未指定，则使用系统默认创建的 `defaultdb` 数据库。[Login 接口](#login-接口)不支持设置该参数。
 
 ## RESTful API 接口
 
@@ -36,6 +36,8 @@ KWDB 提供以下 RESTful API 接口进行数据操作：
 | Query           | 用于数据查询操作请求。                                       | `POST/restapi/query`                               |
 | Telegraf | 用于将来自 Telegraf 的数据插入表中。                         | `POST/restapi/telegraf`                            |
 | InfluxDB | 用于将来自 InfluxDB 的数据写入数据库中。                         | `POST/restapi/influxdb`                            |
+| OpenTSDB JSON | 用于将来自 OpenTSDB JSON 格式的数据写入数据库中。                         | `POST/restapi/opentsdbjson`                            |
+| OpenTSDB Telnet | 用于将来自 OpenTSDB Telnet 格式的数据写入数据库中。                         | `POST/restapi/opentsdbtelnet`                            |
 | Session         | 用于查询本节点会话信息或删除指定会话信息。管理员用户可以查看所有会话信息或删除指定会话信息。普通用户可以查看或删除自己的会话信息。 | `GET/restapi/session` <br>`DELETE/restapi/session` |
 
 ## Login 接口
@@ -579,10 +581,10 @@ Telegraf 接口使用的 InfluxDB Line 格式的数据如下所示：
 
 参数说明：
 
-- `measurement`：必填参数，指定 KWDB 的时序表名， KWDB 根据该字段确定向时序数据库中的哪个表写入数据。用户需要根据 `measurement` 字段在 KWDB 时序库中提前创建时序表。时序表名需要与 `measurement` 字段保持一致。`measurement` 和 `tag_set` 之间使用英文逗号（`,`）分隔。
-- `tag_set`: 格式为 `<tag_key>=<tag_value>,<tag_key>=<tag_value>, ...`, 对应时序表的标签列和标签值，多个标签之间使用英文逗号（`,`）分隔。创建时序表时，用户根据 `tag_key=tag_value` 字段定义标签名和数据类型。
-- `field_set`：格式为 `<field_key>=<field_value>,<field_key>=<field_value>, ...`, 对应时序表的数据列及列数据，多列之间使用英文逗号（`,`）分隔。KWDB 根据 `field_key` 字段确定向表的哪个列插入对应的数据。创建时序表时，用户需要根据 `field_key` 字段名及字段顺序创建对应的列。
-- `timestamp`：本行数据对应的主键时间戳。
+- `measurement`：必填参数，用于指定 KWDB 的时序表名。KWDB 根据该字段确定是否需要创建新表或向现有时序表中写入数据。解析时，KWDB 使用英文双引号（`""`）将时序表名包裹起来，从而解决大小写敏感或以特殊字符、数字开头的表名等问题。如果指定的时序表名不存在，KWDB 先创建该表，然后写入数据。`measurement` 和 `tag_set` 之间使用英文逗号（`,`）隔开。
+- `tag_set`：可选参数，格式为 `<tag_key>=<tag_value>,<tag_key>=<tag_value>, ...`，用于指定时序表的标签名和标签值。多个标签之间使用英文逗号（`,`）隔开。KWDB 根据 `tag_key` 确定向表的哪个标签写入对应数据以及是否需要新增标签。解析时，KWDB 使用英文双引号（`""`）将标签名包裹起来，从而解决大小写敏感或以特殊字符、数字开头的标签名等问题。如果指定的标签名不存在，KWDB 会先添加标签，然后写入数据。未指定的标签列会自动填充为 NULL 值。KWDB 会根据标签列值和名字自动添加主标签列，命名为 `primary_tag`, 并生成对应的主标签值。主标签列的类型为 VARCHAR。`tag_set` 和 `field_set` 之间使用半角空格隔开。
+- `field_set`：必填参数，格式为 `<field_key>=<field_value>,<field_key>=<field_value>, ...`，用于指定时序表的数据列及列数据，多列之间使用英文逗号（`,`）隔开。KWDB 根据 `field_key` 确定向表的哪个列写入对应数据以及是否需要新增列。解析时，KWDB 使用英文双引号（`""`）将列名包裹起来，从而解决大小写敏感或以特殊字符、数字开头的列名等问题。如果指定的列名不存在，KWDB 会先添加列，然后写入数据，未指定的列会自动填充为 NULL 值。`field_set` 和 `timestamp` 之间使用半角空格分隔。
+- `timestamp`：可选参数，指定本行数据对应的时间戳。未指定时，KWDB 将使用所在主机的系统时间（UTC 时区）作为时间戳。目前，KWDB 支持毫秒、微秒和纳秒的时间精度。默认情况下，KWDB 采用毫秒时间精度。
 
 以下示例说明如何根据 InfluxDB Line 格式的数据，在 KWDB 数据库中创建对应的时序表：
 
@@ -673,7 +675,7 @@ Authorization: Basic "token" 或 Basic "base64(user:password)"</code></pre></td>
         "rows": "rows",
         "time": "time"
       }</code></pre></td>
-      <td><br>- <code>code（int）</code>：SQL 语句执行状态码。所有语句执行成功，返回 <code>0</code>。如有执行失败的语句，返回 <code>-1</code>。<br>- <code>desc（string）</code>：SQL 语句执行失败对应的错误码描述。只有失败时，才会出现并返回该字段。<br />- <code>rows（int）</code>：查询的数据行数。<br >- <code>time（float）</code>：SQL 语句的执行时间（单位：秒）。</td>
+      <td><br>- <code>code（int）</code>：SQL 语句执行状态码。所有语句执行成功，返回 <code>0</code>。如有执行失败的语句，返回 <code>-1</code>。<br>- <code>desc（string）</code>：SQL 语句执行失败对应的错误码描述。只有失败时，才会出现并返回该字段。<br />- <code>rows（int）</code>：写入的数据行数。<br >- <code>time（float）</code>：SQL 语句的执行时间（单位：秒）。</td>
     </tr>
   </tbody>
 </table>
@@ -723,61 +725,7 @@ Content-Type: application/json
 
 InfluxDB 接口是 KWDB 开发的特殊 RESTful API 接口，用于将 InfluxDB 的数据通过 HTTP 请求写入 KWDB 数据库。InfluxDB 接口的请求体不是 SQL 语句而是 InfluxDB Line 协议格式的数据。
 
-使用 InfluxDB API 向 KWDB 写入数据前，用户只需要创建好时序库， KWDB 会将 InfluxDB Line 协议格式的数据转为数据库可执行的建表、添加列、添加标签或数据写入 SQL 语句，然后执行相应操作。发送请求的用户需要拥有执行相关 SQL 语句的权限。
-
-InfluxDB Line 格式的数据如下所示：
-
-```json
-<measurement>,<tag_set> <field_set> <timestamp>
-```
-
-参数说明：
-
-- `measurement`：必填参数，指定 KWDB 的时序表名， KWDB 根据该字段确定是否需要创建新表或向现有时序表中写入数据。如果指定的时序表名不存在， KWDB 会先创建该表，然后写入数据。`measurement` 和 `tag_set` 之间使用英文逗号（`,`）分隔。
-- `tag_set`: 可选参数，格式为 `<tag_key>=<tag_value>,<tag_key>=<tag_value>, ...`, 用于指定时序表的标签名和标签值，多个标签之间使用英文逗号（`,`）分隔。KWDB 根据 `tag_key` 确定向表的哪个标签写入对应数据以及是否需要新增标签。如果指定的标签名不存在， KWDB 会先添加标签，然后写入数据，未指定的标签列会自动填充为 NULL 值。KWDB 会自动添加主标签列，命名为 `primary_tag`, 并生成对应的主标签值。`tag_set` 和 `field_set` 之间使用半角空格分隔。
-- `field_set`：必填参数，格式为 `<field_key>=<field_value>,<field_key>=<field_value>, ...`, 用于指定时序表的数据列及列数据，多列之间使用英文逗号（`,`）分隔。KWDB 根据 `field_key` 确定向表的哪个列写入对应数据以及是否需要新增列。如果指定的列名不存在， KWDB 会先添加列，然后写入数据，未指定的列会自动填充为 NULL 值。 `field_set` 和 `timestamp` 之间使用半角空格分隔。
-- `timestamp`：可选参数，指定本行数据对应的时间戳。未指定时， KWDB 将使用所在主机的系统时间( UTC 时区)作为时间戳。
-
-数据类型转换：
-
-| InfluxDB       | KWDB     |
-| -------------- | ----------- |
-| Float          | FLOAT8      |
-| Integer        | INT8        |
-| UInteger       | INT8        |
-| String         | VARCHAR     |
-| Boolean        | BOOL        |
-| Unix timestamp | TIMESTAMPTZ |
-
-有关 InfluxDB Line 协议、参数、支持的数据类型和符号，参见 [InfluxDB 官方文档](https://docs.influxdata.com/influxdb/v2.0/reference/syntax/line-protocol/)。
-
-以下示例说明 KWDB 如何将 InfluxDB Line 协议格式的数据转换为 SQL 语句，在数据库中创建对应的时序表，并写入数据：
-
-- InfluxDB Line 协议格式的数据
-
-  ```json
-  meters,location=Beijing current=17.01,voltage=220,phase=0.29
-  ```
-
-- 转换后的 SQL 语句
-
-  ```sql
-  -- 创建时序表 meters
-  CREATE TABLE meters (k_timestamp TIMESTAMPTZ NOT NULL, current FLOAT8, voltage FLOAT8, phase FLOAT8) TAGS (primary_tag VARCHAR(64) NOT NULL, location VARCHAR) PRIMARY TAGS (primary_tag);
-  
-  -- 写入数据
-  INSERT INTO meters VALUES (NOW(), 17.01, 220, 0.29, 'c15cf362f37e0acc7ecc2db55ec1cc57fc9579ccba9e72c273abb140f568472d', 'Beijing');
-  ```
-  
-- 对应的时序表数据
-  
-  ```sql
-  > SELECT * FROM meters;
-            k_timestamp           | current | voltage | phase |                           primary_tag                               | location
-  --------------------------------+---------+---------+-------+---------------------------------------------------------------------+-----------
-    2024-10-08 07:16:30.404+00:00 |   17.01 |     220 |  0.29 | c15cf362f37e0acc7ecc2db55ec1cc57fc9579ccba9e72c273abb140f568472d    | Beijing
-  (1 row)
-  ```
+使用 InfluxDB API 向 KWDB 写入数据前，用户只需要创建好时序库，KWDB 会将 InfluxDB Line 协议格式的数据转为数据库可执行的建表、添加列、添加标签或数据写入 SQL 语句，然后执行相应操作。发送请求的用户需要拥有执行相关 SQL 语句的权限。
 
 ### 请求信息
 
@@ -794,7 +742,7 @@ InfluxDB Line 格式的数据如下所示：
   <tbody>
     <tr>
       <td>Endpoint</td>
-      <td><code>/restapi/influxdb</code></td>
+      <td><br>- 不带时区设置：<code>/restapi/influxdb</code><br>- 带时区设置：<code>/restapi/influxdb?tz="timezone"</code></td>
       <td>-</td>
     </tr>
     <tr>
@@ -816,7 +764,6 @@ Authorization: Basic "token" 或 Basic "base64(user:password)"</code></pre></td>
     </tr>
   </tbody>
 </table>
-
 
 ### 响应信息
 
@@ -850,11 +797,10 @@ Accept: text/plain</code></pre></td>
   "rows": "rows",
   "time": "time"
 }</code></pre></td>
-      <td><br>- <code>code（int）</code>：SQL 语句执行状态码。所有语句执行成功，返回 <code>0</code>。如有执行失败的语句，返回 <code>-1</code>。<br>- <code>desc（string）</code>：成功时返回null，失败时返回对应的错误码描述。<br />- <code>rows（int）</code>：查询的数据行数。<br >- <code>time（float）</code>：SQL 语句的执行时间（单位：秒）。</td>
+      <td><br>- <code>code（int）</code>：SQL 语句执行状态码。所有语句执行成功，返回 <code>0</code>。如有执行失败的语句，返回 <code>-1</code>。<br>- <code>desc（string）</code>：成功时返回null，失败时返回对应的错误码描述。<br />- <code>rows（int）</code>：写入的数据行数。<br >- <code>time（float）</code>：SQL 语句的执行时间（单位：秒）。</td>
     </tr>
   </tbody>
 </table>
-
 
 ### 配置示例
 
@@ -890,7 +836,255 @@ HTTP/1.1 401 Unauthorized
 Content-Type: application/json
 
 {
-  "code": 500,
+  "code": -1,
+  "desc": "Incorrect authentication token",
+  "rows": null,
+  "time": null
+}
+```
+
+## OpenTSDB JSON 接口
+
+OpenTSDB JSON 接口是 KWDB 开发的特殊 RESTful API 接口，用于将 OpenTSDB JSON 格式的数据通过 HTTP 请求写入 KWDB 数据库。OpenTSDB JSON 接口的请求体不是 SQL 语句而是 OpenTSDB JSON 格式的数据。
+
+使用 OpenTSDB JSON API 向 KWDB 写入数据前，用户只需要创建好时序库，KWDB 会将 OpenTSDB JSON 格式的数据转为数据库可执行的建表、添加列、添加标签或写入数据等 SQL 语句，然后执行相应操作。发送请求的用户需要拥有执行相关 SQL 语句的权限。
+
+### 请求信息
+
+下表列出 OpenTSDB JSON 接口的请求信息：
+
+<table>
+  <thead>
+    <tr>
+      <th>信息</th>
+      <th>内容</th>
+      <th>说明</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Endpoint</td>
+      <td><br>- 不带时区设置：<code>/restapi/opentsdbjson</code><br>- 带时区设置：<code>/restapi/opentsdbjson?tz="timezone"</code></td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>Method</td>
+      <td><code>POST</code></td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>请求头部</td>
+      <td><pre><code>Content-Type: text/plain
+Accept: application/json
+Authorization: Basic "token" 或 Basic "base64(user:password)"</code></pre></td>
+      <td> - <code>token（string）</code>：Login 接口生成的认证令牌。<br> - <code>base64(user:password)</code>：Base64 编码后的用户名和密码信息。</td>
+    </tr>
+    <tr>
+      <td>请求体</td>
+      <td><code>"line_format"</code></td>
+      <td> <code>line_format（string）</code>：待插入一行或多行的 OpenTSDB JSON 格式的数据。KWDB 会将该格式的数据转为数据库可执行的 SQL 语句。</td>
+    </tr>
+  </tbody>
+</table>
+
+### 响应信息
+
+下表列出 OpenTSDB JSON 接口的响应信息：
+
+<table>
+  <thead>
+    <tr>
+      <th>信息</th>
+      <th>内容</th>
+      <th>说明</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>HTTP 状态码</td>
+      <td><code>HTTP/1.1 "code" "desc"</code></td>
+      <td><br>- <code>code（int）</code>：HTTP 状态码。<br>- <code>desc（string）</code>：状态码描述。有关 HTTP 状态码详细信息，参见 <a href="#http-状态码">HTTP 状态码</a>。</td>
+    </tr>
+    <tr>
+      <td>响应头部</td>
+      <td><pre><code>Content-Type: application/json
+Accept: text/plain</code></pre></td>
+      <td> - </td>
+    </tr>
+    <tr>
+      <td>响应体</td>
+      <td><pre><code>{
+  "code": "code",
+  "desc": "desc",
+  "rows": "rows",
+  "time": "time"
+}</code></pre></td>
+      <td><br>- <code>code（int）</code>：SQL 语句执行状态码。所有语句执行成功，返回 <code>0</code>。如有执行失败的语句，返回 <code>-1</code>。<br>- <code>desc（string）</code>：SQL 语句执行结果的描述。执行成功，返回 <code>success</code>。执行错误，返回错误描述。<br />- <code>rows（int）</code>：写入的数据行数。<br >- <code>time（float）</code>：SQL 语句的执行时间（单位：秒）。</td>
+    </tr>
+  </tbody>
+</table>
+
+
+### 配置示例
+
+以下示例发送 HTTP 请求，创建 `sys.cpu.usage` 表或向 `sys.cpu.usage` 表中写入数据。
+
+```shell
+POST /restapi/opentsdbjson HTTP/1.1
+Host: localhost:8081
+Content-Type: text/plain
+Authorization: Basic *******
+
+
+[{"metric": "sys.cpu.usage","timestamp": 1654567205,"value": 0.5,"tags": {"host": "server1","dc": "1"}},{"metric": "sys.cpu.usage","timestamp": 1654567205,"value": 0.7,"tags": {"host": "server1","dc2": "us-west"}}]
+```
+
+如果请求成功，返回以下信息：
+
+```shell
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "code":0,
+  "desc":"success;success;",
+  "time":0.088146837,
+  "rows":2
+}
+```
+
+如果请求失败，返回以下信息：
+
+```shell
+HTTP/1.1 401 Unauthorized
+Content-Type: application/json
+
+{
+  "code": -1,
+  "desc": "Incorrect authentication token",
+  "rows": null,
+  "time": null
+}
+```
+
+## OpenTSDB Telnet 接口
+
+OpenTSDB Telnet 接口是 KWDB 开发的特殊 RESTful API 接口，用于将 OpenTSDB Telnet 格式的数据通过 HTTP 请求写入 KWDB 数据库。OpenTSDB Telnet 接口的请求体不是 SQL 语句而是 OpenTSDB Telnet 格式的数据。
+
+使用 OpenTSDB Telnet API 向 KWDB 写入数据前，用户只需要创建好时序库，KWDB 会将 OpenTSDB Telnet 格式的数据转为数据库可执行的建表、添加列、添加标签或写入数据等 SQL 语句，然后执行相应操作。发送请求的用户需要拥有执行相关 SQL 语句的权限。
+
+### 请求信息
+
+下表列出 OpenTSDB Telnet 接口的请求信息：
+
+<table>
+  <thead>
+    <tr>
+      <th>信息</th>
+      <th>内容</th>
+      <th>说明</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Endpoint</td>
+      <td><br>- 不带时区设置：<code>/restapi/opentsdbtelnet</code><br>- 带时区设置：<code>/restapi/opentsdbtelnet?tz="timezone"</code></td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>Method</td>
+      <td><code>POST</code></td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>请求头部</td>
+      <td><pre><code>Content-Type: text/plain
+Accept: application/json
+Authorization: Basic "token" 或 Basic "base64(user:password)"</code></pre></td>
+      <td> - <code>token（string）</code>：Login 接口生成的认证令牌。<br> - <code>base64(user:password)</code>：Base64 编码后的用户名和密码信息。</td>
+    </tr>
+    <tr>
+      <td>请求体</td>
+      <td><code>"line_format"</code></td>
+      <td> <code>line_format（string）</code>：待插入一行或多行的 OpenTSDB Telnet 格式的数据。KWDB 会将该格式的数据转为数据库可执行的 SQL 语句。</td>
+    </tr>
+  </tbody>
+</table>
+
+### 响应信息
+
+下表列出 OpenTSDB Telnet 接口的响应信息：
+
+<table>
+  <thead>
+    <tr>
+      <th>信息</th>
+      <th>内容</th>
+      <th>说明</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>HTTP 状态码</td>
+      <td><code>HTTP/1.1 "code" "desc"</code></td>
+      <td><br>- <code>code（int）</code>：HTTP 状态码。<br>- <code>desc（string）</code>：状态码描述。有关 HTTP 状态码详细信息，参见 <a href="#http-状态码">HTTP 状态码</a>。</td>
+    </tr>
+    <tr>
+      <td>响应头部</td>
+      <td><pre><code>Content-Type: application/json
+Accept: text/plain</code></pre></td>
+      <td> - </td>
+    </tr>
+    <tr>
+      <td>响应体</td>
+      <td><pre><code>{
+  "code": "code",
+  "desc": "desc",
+  "rows": "rows",
+  "time": "time"
+}</code></pre></td>
+      <td><br>- <code>code（int）</code>：SQL 语句执行状态码。所有语句执行成功，返回 <code>0</code>。如有执行失败的语句，返回 <code>-1</code>。<br>- <code>desc（string）</code>：SQL 语句执行结果的描述。执行成功，返回 <code>success</code>。执行错误，返回错误描述。<br />- <code>rows（int）</code>：写入的数据行数。<br >- <code>time（float）</code>：SQL 语句的执行时间（单位：秒）。</td>
+    </tr>
+  </tbody>
+</table>
+
+
+### 配置示例
+
+以下示例发送 HTTP 请求，创建 `meters` 表或向 `meters` 表中写入数据。
+
+```shell
+POST /restapi/opentsdbtelnet HTTP/1.1
+Host: localhost:8081
+Content-Type: text/plain
+Authorization: Basic *******
+
+
+meters.current 1648432611250 11.3 location=California.LosAngeles groupid=3 extraTag=value
+```
+
+如果请求成功，返回以下信息：
+
+```shell
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "code":0,
+  "desc":"success;",
+  "time":1.279927072,
+  "rows":1
+}
+```
+
+如果请求失败，返回以下信息：
+
+```shell
+HTTP/1.1 401 Unauthorized
+Content-Type: application/json
+
+{
+  "code": -1,
   "desc": "Incorrect authentication token",
   "rows": null,
   "time": null
