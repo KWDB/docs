@@ -304,7 +304,7 @@ KWDB JSON 格式协议采用 JSON 字符串表示一行或多行数据。
 | `table`   | 必填参数，数据表名称。如果用户已经在 KWDB 数据库中创建时序表，表名需要与 `table` 名称保持一致。                                                         |
 | `columns` | 必填参数，用于指定数据表的列名、类型、长度以及是否为空。如果用户已经在 KWDB 数据库中创建时序表，列名及相关配置需要与 `columns` 下的配置和顺序保持一致。 |
 | `tags`    | 必填参数，用于指定数据表的标签名称、类型、长度、是否为主标签以及是否为空。每张表必须有一个及以上主标签，且主标签不能为空。                                 |
-| `data`    | 要写入的数据集数据，对应列和标签字段。目前，timestamp 类型数据仅支持毫秒级精度。                                                                           |
+| `data`    | 要写入的数据集数据，对应列和标签字段。目前，timestamp 数据类型支持毫秒、微秒和纳秒的时间精度。默认情况下，采用毫秒时间精度。                                                                           |
 
 #### OpenTSDB JSON 格式数据
 
@@ -435,7 +435,7 @@ ts_line_influxdb_tb,tag_name=tag_value c1=14i16,c2=24i32,c3=34i64,c4=14.8f32,c5=
 | `retry.backoff.ms`                 | int    | 发生错误后，重试之前的等待时间（单位：毫秒）。                                                                                                                                                                                                               | 3                                    |
 | `batch.size`                       | int    | 批量插入目标表的记录数量。                                                                                                                                                                                                                                         | 1000                                 |
 | `protocol.type`                    | string | 写入 KWDB 的数据格式，支持 `json_kaiwudb`、`json_opentsdb`、`line_opentsdb`、`line_influxdb`。更多信息，参见[支持的数据格式](#支持的数据格式)。                                                                                                                 | -                                    |
-| `timestamp.precision`              | string | 写入 KWDB 的数据时间精度，支持秒（s）、毫秒（ms）、微妙（us）、纳秒（ns）。其中 <br >- `json_kaiwudb`：支持毫秒（ms）。 <br >- `line_influxdb`：支持毫秒（ms）、微妙（us）、纳秒（ns）。<br >-`json_opentsdb` 和 `line_opentsdb`：支持秒（s）、毫秒（ms）。 | -                                    |
+| `timestamp.precision`              | string | 写入 KWDB 的数据时间精度，支持秒（s）、毫秒（ms）、微妙（us）、纳秒（ns）。其中 <br >- `json_kaiwudb`：支持毫秒（ms）、微妙（us）、纳秒（ns）。 <br >- `line_influxdb`：支持毫秒（ms）、微妙（us）、纳秒（ns）。<br >-`json_opentsdb` 和 `line_opentsdb`：支持秒（s）、毫秒（ms）。 | -                                    |
 | `key.converter`                    | string | 在 Kafka Connect 格式和从 Kafka 读取的序列化格式之间进行转换的转换类。                                                                                                                                                                                             | -                                    |
 | `value.converter`                  | string | 在 Kafka Connect 格式和从 Kafka 读取的序列化格式之间进行转换的转换类。                                                                                                                                                                                             | -                                    |
 
