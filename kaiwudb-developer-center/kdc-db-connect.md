@@ -35,6 +35,8 @@ id: kdc-db-connect
 
 3. （可选）单击**测试链接**，检查连接是否成功。
 
+    <img src="../static/kdc/connection-succeed.png" style="zoom:67%;" />
+
 4. 单击**完成**。
 
 ## SSH 登录
@@ -56,6 +58,8 @@ id: kdc-db-connect
 
 5. （可选）单击**测试链接**，检查连接是否成功。
 
+    <img src="../static/kdc/connection-succeed.png" style="zoom:67%;" />
+
 6. 单击**完成**。
 
 ## Proxy 设置
@@ -76,6 +80,8 @@ id: kdc-db-connect
     <img src="../static/kdc/proxy-login.png" style="zoom:67%;" />
 
 5. （可选）单击**测试链接**，检查连接是否成功。
+
+    <img src="../static/kdc/connection-succeed.png" style="zoom:67%;" />
 
 6. 单击**完成**。
 
@@ -121,5 +127,7 @@ id: kdc-db-connect
     <img src="../static/kdc/ssl-login-01.png" style="zoom:67%;" />
 
 5. （可选）单击**测试链接**，检查连接是否成功。
+
+    <img src="../static/kdc/connection-succeed.png" style="zoom:67%;" />
 
 6. 单击**完成**。
