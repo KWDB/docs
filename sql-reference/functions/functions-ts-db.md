@@ -357,6 +357,26 @@ id: functions-ts-db
 | sum(arg1: INT4) → DECIMAL                 | 计算选定值的总和。                                        |
 | sum(arg1: INT8) → DECIMAL                 | 计算选定值的总和。                                        |
 
+## 分组窗口函数
+
+| 函数                                            | 描述                                        |
+| --------------------------------------------------------| ------------------------------------------- |
+| COUNT_WINDOW (val1: int8)          | 根据固定数据行数划分窗口。数据按时间戳排序后，划分为指定行数的窗口。如果总数据行数不能整除指定行数，最后一个窗口的行数会少于指定行数。具体操作说明，参见[分组窗口查询](../dml/ts-db/ts-select.md#分组窗口查询)。 |
+| COUNT_WINDOW (val1: int8, val2: int8)          | 根据固定数据行数和滑动偏移行数划分窗口。数据按时间戳排序后，按指定的行数和偏移量划分窗口。如果总数据行数不能整除指定行数，最后一个窗口的行数会少于指定行数。具体操作说明，参见[分组窗口查询](../dml/ts-db/ts-select.md#分组窗口查询)。 |
+| EVENT_WINDOW (val1: expr, val2: expr)          | 根据开始和结束条件划分窗口。数据满足开始条件时窗口开始，满足结束条件时窗口关闭。开始和结束条件可以是任意表达式，并可涉及不同的列。具体操作说明，参见[分组窗口查询](../dml/ts-db/ts-select.md#分组窗口查询)。 |
+| STATE_WINDOW (val: int2)           | 按设备状态划分窗口，相同状态的数据归于同一窗口，状态变化时窗口关闭。具体操作说明，参见[分组窗口查询](../dml/ts-db/ts-select.md#分组窗口查询)。|
+| STATE_WINDOW (val: int4)           | 按按设备状态划分窗口，相同状态的数据归于同一窗口，状态变化时窗口关闭。具体操作说明，参见[分组窗口查询](../dml/ts-db/ts-select.md#分组窗口查询)。  |
+| STATE_WINDOW (val: int8)           | 按设备状态划分窗口，相同状态的数据归于同一窗口，状态变化时窗口关闭。具体操作说明，参见[分组窗口查询](../dml/ts-db/ts-select.md#分组窗口查询)。   |
+| STATE_WINDOW (val: bool)           | 按设备状态划分窗口，相同状态的数据归于同一窗口，状态变化时窗口关闭。具体操作说明，参见[分组窗口查询](../dml/ts-db/ts-select.md#分组窗口查询)。 |
+| STATE_WINDOW (val: char)           | 按设备状态划分窗口，相同状态的数据归于同一窗口，状态变化时窗口关闭。具体操作说明，参见[分组窗口查询](../dml/ts-db/ts-select.md#分组窗口查询)。  |
+| STATE_WINDOW (val: varchar)        | 按设备状态划分窗口，相同状态的数据归于同一窗口，状态变化时窗口关闭。具体操作说明，参见[分组窗口查询](../dml/ts-db/ts-select.md#分组窗口查询)。    |
+| SESSION_WINDOW (val1: timestamptz, val2: interval)          | 根据时间戳列和最大连续时间间隔判断数据是否属于同一窗口。数据按时间戳排序，如果相邻数据的时间间隔超过最大允许间隔，则分属不同窗口。具体操作说明，参见[分组窗口查询](../dml/ts-db/ts-select.md#分组窗口查询)。 |
+| SESSION_WINDOW (val1: timestamp, val2: interval)          | 根据时间戳列和最大连续时间间隔判断数据是否属于同一窗口。数据按时间戳排序，如果相邻数据的时间间隔超过最大间隔，则分属不同窗口。具体操作说明，参见[分组窗口查询](../dml/ts-db/ts-select.md#分组窗口查询)。 |
+| TIME_WINDOW (val1: timestamp, val2: interval)          | 基于时间戳列和指定时间间隔划分窗口。数据按时间戳排序后，系统按指定时间间隔划分窗口。具体操作说明，参见[分组窗口查询](../dml/ts-db/ts-select.md#分组窗口查询)。 |
+| TIME_WINDOW (val1: timestamptz, val2: interval)          | 基于时间戳列和指定时间间隔划分窗口。数据按时间戳排序后，系统按指定时间间隔划分窗口。具体操作说明，参见[分组窗口查询](../dml/ts-db/ts-select.md#分组窗口查询)。 |
+| TIME_WINDOW (val1: timestamp, val2: interval, val3: interval)          | 基于时间戳列、指定时间间隔和滑动偏移划分窗口。数据按时间戳排序后，系统根据指定时间间隔和滑动偏移划分窗口。具体操作说明，参见[分组窗口查询](../dml/ts-db/ts-select.md#分组窗口查询)。              |
+| TIME_WINDOW (val1: timestamptz, val2: interval, val3: interval)          | 基于时间戳列、指定时间间隔和滑动偏移划分窗口。数据按时间戳排序后，系统根据指定时间间隔和滑动偏移划分窗口。具体操作说明，参见[分组窗口查询](../dml/ts-db/ts-select.md#分组窗口查询)。 |
+
 ## 地理函数
 
 | 函数 → 返回值                                            | 描述                                        |
