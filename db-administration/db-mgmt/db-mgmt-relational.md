@@ -5,7 +5,6 @@ id: db-mgmt-relational
 
 # 关系数据库管理
 
-
 ## 创建数据库
 
 ### 前提条件
@@ -77,6 +76,44 @@ SHOW DATABASES;
   system        | RELATIONAL
   iot           | TIME SERIES 
  (6 rows)
+```
+
+## 查看数据库的建库语句
+
+`SHOW CREATE DATABASE` 语句用于查看创建数据库的 SQL 语句。目前，关系数据库只支持查看创建数据库时使用的数据库名称。
+
+### 前提条件
+
+无
+
+### 语法格式
+
+```sql
+SHOW CREATE DATABASE <database_name>;
+```
+
+### 参数说明
+
+| 参数 | 说明 |
+| --- | --- |
+| `database_name` | 待查看数据库的名称。|
+
+### 语法示例
+
+以下示例查看 `reldb1` 数据库的建库语句。
+
+```sql
+-- 1. 创建数据库 reldb1。
+
+CREATE DATABASE reldb1 WITH ENCODING = 'UTF8';
+
+--2. 查看已创建的 reldb1 数据库。
+
+SHOW CREATE DATABASE reldb1;
+  database_name |    create_statement
+----------------+-------------------------
+  reldb1        | CREATE DATABASE reldb1
+(1 row)
 ```
 
 ## 切换数据库

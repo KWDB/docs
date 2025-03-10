@@ -5,7 +5,6 @@ id: relational-database
 
 # 数据库
 
-
 ## 创建数据库
 
 `CREATE DATABASE` 语句用于创建关系数据库对象（Relational Database）。每条语句支持创建一个关系数据库。
@@ -114,6 +113,42 @@ id: relational-database
       iot           | TIME SERIES | NULL
     (6 rows)
     ```
+
+## 查看数据库的建库语句
+
+`SHOW CREATE DATABASE` 语句用于查看创建数据库的 SQL 语句。目前，关系数据库只支持查看创建数据库时使用的数据库名称。
+
+### 所需权限
+
+无
+
+### 语法格式
+
+![](../../../static/sql-reference/showcreatedb.png)
+
+### 参数说明
+
+| 参数 | 说明 |
+| --- | --- |
+| `database_name` | 待查看数据库的名称。|
+
+### 语法示例
+
+以下示例查看 `reldb1` 数据库的建库语句。
+
+```sql
+-- 1. 创建数据库 reldb1。
+
+CREATE DATABASE reldb1 WITH ENCODING = 'UTF8';
+
+--2. 查看已创建的 reldb1 数据库。
+
+SHOW CREATE DATABASE reldb1;
+  database_name |    create_statement
+----------------+-------------------------
+  reldb1        | CREATE DATABASE reldb1
+(1 row)
+```
 
 ## 修改数据库
 
