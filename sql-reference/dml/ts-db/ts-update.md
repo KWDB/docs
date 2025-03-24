@@ -26,7 +26,7 @@ id: ts-update
 
 ## 语法示例
 
-以下示例创建 `ts` 时序数据库和 `table1` 时序表，向表中写入数据，并更新 `table1` 时序表中 `tag1` 和 `tag2` 主标签的标签值。
+以下示例创建 `ts` 时序数据库和 `table1` 时序表，向表中写入数据，并更新 `table1` 时序表中 `tag3` 的标签值。
 
 ```sql
 -- 1. 创建 ts 时序数据库。
@@ -64,7 +64,7 @@ INSERT 6
   2023-05-31 11:00:00+00:00 | 2000 | 2e+06 | true |    3 |    1 | false
 (6 rows)
 
--- 6. 更新 tag1 和 tag2 主标签的标签值。
+-- 6. 指定表的主标签和主标签值，以更新 tag3 的标签值。
 
 UPDATE table1 SET tag3 = true WHERE tag1 = 1 AND tag2 =1;
 UPDATE 1
