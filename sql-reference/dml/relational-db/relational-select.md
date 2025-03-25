@@ -96,7 +96,7 @@ KWDB 支持在查询中对列类型为时间戳、时间戳常量以及结果类
 | `target_elem` | 可以是标量表达式，也可以是星号（`*`）。当其为标量表达式时，用来计算每个结果行中的一列。当其为星号（`*`）时，自动从 `FROM` 子句中检索所有列。如果 `target_elem` 包含聚合函数，则可以使用 `GROUP BY` 子句进一步控制聚合。|
 | `table_ref` | 检索数据的表的表达式。在 `FROM` 子句中使用两个或多个表的表达式（使用逗号（`,`）隔开）等效于使用一个交叉连接（CROSS JOIN）表达式。有关交叉连接的详细信息，参见[跨模查询](../data-query.md)。|
 | `AS OF SYSTEM TIME` | 检索时间戳中存在的数据。注意，由于系统时间返回历史数据，读取的结果可能会过时。|
-| `WHERE a_expr` | `SELECT` 操作的筛选语句。`a_expr` 必须使用列（例如 `<column> = <value>`），只检索表达式返回值为 `TRUE` 的行。`ROWNUM` 为从 `1` 开始的序列，逐行进行条件筛选。若不满足条件，则不自增。若满足条件，则自增 `1`，不存在序号跳跃。<br>**提示**：当 WHERE 条件中包含多个嵌套子查询和逻辑运算符（AND、OR），且某些子查询存在语义错误时，执行可能会报错 `internal error: invalid index`。|
+| `WHERE a_expr` | `SELECT` 操作的筛选语句。`a_expr` 必须使用列（例如 `<column> = <value>`），只检索表达式返回值为 `TRUE` 的行。`ROWNUM` 为从 `1` 开始的序列，逐行进行条件筛选。若不满足条件，则不自增。若满足条件，则自增 `1`，不存在序号跳跃。|
 | `GROUP BY + a_expr` | `GROUP BY` 子句，用于使用一定的规则（在 `a_expr` 中指定）将一个数据集划分成若干个小的区域，然后针对若干个小区域进行数据处理。在 `target_elem` 或 `HAVING` 中使用聚合函数时，请在 `GROUP BY` 之后列出列分组。聚合查询与 `GROUP BY` 连用时，应避免 `GROUP BY` 后的结果集行数过大。|
 |  `HAVING + a_expr`  | 当 `WHERE` 关键字无法与聚合函数一起使用时，`HAVING` 子句可以用来筛选分组后的各组数据。通常情况下，`HAVING` 子句与 `GROUP BY` 子句联用，只检索 `a_expr` 表达式返回值为 `TRUE` 的聚合函数组。`a_expr` 必须是使用聚合函数返回布尔值的标量表达式（例如 `<聚合函数> = <value>`）。`HAVING` 子句的作用类似于 `WHERE` 子句，但适用于聚合函数。|
 | `WINDOW window_definition_list` | 由 `window_definition` 组成的窗口定义列表，支持的参数：<br >- `window_name`：新窗口框架的名称。<br >- `opt_existing_window_name`：现有窗口框架的可选名称，在不同的窗口定义中定义。<br >- `opt_sort_clause`：可选 `ORDER BY` 子句。<br >- `opt_frame_clause`：可选的框架子句，包含框架边界和/或 `EXCLUDE` 子句。|

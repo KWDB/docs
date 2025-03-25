@@ -7,6 +7,13 @@ id: schemaless-writing
 
 无模式写入（Schemaless Writing） 是一种灵活的数据库写入方式，允许用户在未预定义数据结构或模式的情况下，直接将数据写入数据库。数据库会根据写入数据的格式和内容自动解析数据，在没有表的情况下自动建表并写入数据。此外，当列数变多，数据库也会自动使用 `ALTER TABLE ... ADD COLUMN` 或者 `ALTER TABLE ... ADD TAG` SQL 语句添加数据列或标签列，然后再写入数据。这种方式使得数据库能够更灵活地处理数据。
 
+::: warning 注意
+
+在分布式集群中执行无模式写入时，有极小概率会出现节点宕机。
+
+:::
+
+
 ## 无模式写入的处理逻辑
 
 KWDB 支持通过 RESTful API 接口无模式写入 InfluxDB Line 格式的数据、OpenTSDB Telnet 格式的数据以及 OpenTSDB JSON 格式的数据。
