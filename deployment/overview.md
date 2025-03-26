@@ -8,8 +8,9 @@ id: overview
 KWDB 支持使用容器或二进制安装包部署以下集群：
 
 ::: warning 说明
-- 目前，KWDB 未提供可供下载的 KWDB 容器镜像。如需使用容器方式部署 KWDB，[联系](https://www.kaiwudb.com/support/) KWDB 技术支持人员获取 KWDB 容器镜像。
-- 在单副本或多副本集群运行过程中，极低概率会出现节点故障后无法恢复的情况。
+
+目前，KWDB 未提供可供下载的 KWDB 容器镜像。如需使用容器方式部署 KWDB，[联系](https://www.kaiwudb.com/support/) KWDB 技术支持人员获取 KWDB 容器镜像。
+
 :::
 
 |    类别       | 多副本集群                                                   | 单副本集群                                                   |
