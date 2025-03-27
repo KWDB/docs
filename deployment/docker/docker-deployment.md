@@ -49,7 +49,7 @@ id: docker-deployment
         - `rest_port`：KWDB Web 服务端口，默认为 `8080`。
         - `kaiwudb_port`：KWDB 服务端口，默认为 `26257`。
         - `data_root`：数据目录，默认为 `/var/lib/kaiwudb`。
-        - `cpu`: 可选参数，用于指定 KWDB 服务占用当前节点服务器 CPU 资源的比例，默认无限制。取值范围为 `[0,1]`，最大精度为小数点后两位。KWDB 支持调整 CPU 资源占用率。更多信息，参见[配置集群](./cluster-config-bare-metal.md)。
+        - `cpu`: 可选参数，用于指定 KWDB 服务占用当前节点服务器 CPU 资源的比例，默认无限制。取值范围为 `[0,1]`，最大精度为小数点后两位。KWDB 支持调整 CPU 资源占用率。更多信息，参见[配置集群](./cluster-config-docker.md)。
     - `local`：本地节点配置
         - `local_node_ip`：本地节点对外提供服务的 IP 地址，监听地址为 `0.0.0.0`，端口为 KWDB 服务端口。
     - `cluster`：集群内其他节点的配置

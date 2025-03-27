@@ -15,4 +15,4 @@ id: docker-overview
 
 如需停止或重启集群中的单个节点，参见[启动与停止 KWDB 服务](./local-start-stop-docker.md)。
 
-如需卸载集群，参见[卸载集群](./uninstall-cluster-bare-metal.md)。
+如需卸载集群，参见[卸载集群](./uninstall-cluster-docker.md)。
