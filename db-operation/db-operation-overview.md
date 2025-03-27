@@ -12,7 +12,7 @@ id: log-mgmt
 - [集群参数配置](./cluster-settings-config.md)
 - [日志管理](./log-mgmt.md)
 - [时区管理](./timezone-mgmt.md)
-- [集群高可用](./cluster-ha.md)
+- [高可用](./cluster-ha.md)
 - [容灾和备份](./backup-and-restore.md)
 - [数据库升级](./db-upgrade.md)
 - 错误码
