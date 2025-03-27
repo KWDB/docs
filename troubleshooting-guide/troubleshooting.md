@@ -33,7 +33,7 @@ KWDB 提供日志、监控方案、核心转储功能，用于收集问题诊断
 
 2. 进入用户数据目录下的 `log` 子目录，查看已有日志信息，汇总问题发生的时间、背景信息及错误信息。
 
-3. 通过[Grafana](../db-monitor/os-monitor-component/view-metrics-grafana.md) 查看 KWDB 集群及各个节点的监控指标。
+3. 通过[Grafana](../db-monitor/view-metrics-grafana.md) 查看 KWDB 集群及各个节点的监控指标。
 
 4. 如果仍无法定位或解决问题，[联系](https://www.kaiwudb.com/support/) KWDB 技术支持人员并提供详细的错误日志和问题报告来定位和解决问题。
 
@@ -41,9 +41,9 @@ KWDB 提供日志、监控方案、核心转储功能，用于收集问题诊断
 
 如果 KWDB 系统响应时间变慢，性能下降，可以通过Grafana 监控系统、日志找出性能瓶颈。
 
-1. 通过 [Grafana 概览指标模板](../db-monitor/os-monitor-component/view-metrics-grafana.md#概览)确认网络是否存在问题。
+1. 通过 [Grafana 概览指标模板](../db-monitor/view-metrics-grafana.md#概览)确认网络是否存在问题。
 
-2. 通过 [Grafana 硬件指标模板](../db-monitor/os-monitor-component/view-metrics-grafana.md#硬件)查看 CPU 使用率、内存使用率以及已用空间和可用空间有无告警。
+2. 通过 [Grafana 硬件指标模板](../db-monitor/view-metrics-grafana.md#硬件)查看 CPU 使用率、内存使用率以及已用空间和可用空间有无告警。
 
 3. 如果仍无法定位或解决问题，[联系](https://www.kaiwudb.com/support/) KWDB 技术支持人员并提供详细的性能报告来定位和解决问题。
 
@@ -51,7 +51,7 @@ KWDB 提供日志、监控方案、核心转储功能，用于收集问题诊断
 
 如果 KWDB 系统出现系统崩溃、服务中断等稳定性问题，可以通过 Grafana 监控系统、日志、core 文件来定位和分析问题。
 
-1. 通过 [Grafana](../db-monitor/os-monitor-component/view-metrics-grafana.md) 查看 CPU、内存、磁盘 I/O、网络流量等，定位可能导致系统不稳定的因素。
+1. 通过 [Grafana](../db-monitor/view-metrics-grafana.md) 查看 CPU、内存、磁盘 I/O、网络流量等，定位可能导致系统不稳定的因素。
 
 2. 查看故障日志中的 `call stack` 信息和 `core` 文件，收集系统崩溃的时间、范围、持续时间等信息。
 
