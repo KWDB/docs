@@ -624,7 +624,7 @@ EXPORT CLUSTER SETTING TO SQL "<file_path>";
 ### 语法示例
 
 ```sql
-IMPORT CLUSTER SETTING TO SQL "nodelocal://1/settings";
+EXPORT CLUSTER SETTING TO SQL "nodelocal://1/settings";
 ```
 
 执行成功后，控制台输出以下信息：
