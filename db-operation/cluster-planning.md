@@ -18,51 +18,56 @@ id: cluster-planning
 
 每个节点需要配备必要的 CPU、内存、网络和存储等资源。在部署集群前需要检查各个硬件设备。
 
-下表列出安装部署 KWDB 所需的硬件规格要求。在实际部署时，用户需要根据实际的业务规模和性能要求，进行硬件资源的规划。下表列出部署 KWDB 所需的硬件规格要求。在实际部署时，用户需要根据实际的业务规模和性能要求，规划硬件资源。
+下表列出部署 KWDB 所需的硬件规格要求。在实际部署时，用户需要根据实际的业务规模和性能要求，规划硬件资源。
 
 | 项目 | 要求 |
 | --- | ---- |
 | CPU 和内存 | 单节点配置建议不低于 4 核 8G。对于数据量大、复杂的工作负载、高并发和高性能场景，建议配置更高的 CPU 和内存资源以确保系统的高效运行。  |
-| 磁盘 | - 推荐使用 SSD 或者 NVMe 设备，尽量避免使用 NFS、CIFS、CEPH 等共享存储。<br> - 磁盘至少能够实现 500 IOPS 和 30 MB/s 处理效率。<br> - KWDB 系统自身启动不会占用过多磁盘容量（低于 1G）。实际所需磁盘大小主要取决于用户的业务量以及是否开启 KWDB 压缩等可以减少原始数据磁盘占用的功能。|
+| 磁盘 | - 推荐使用 SSD 或者 NVMe 设备，尽量避免使用 NFS、CIFS、CEPH 等共享存储。<br>- 使用 HDD 硬盘部署单机版本时，避免设备数过多或每秒写入测点数过高，否则数据写入性能将显著下降；不建议使用 HDD 部署分布式集群版本。<br> - 磁盘至少能够实现 500 IOPS 和 30 MB/s 处理效率。<br> - KWDB 系统自身启动不会占用过多磁盘容量（低于 1G）。实际所需磁盘大小主要取决于用户的业务量以及是否开启 KWDB 压缩等可以减少原始数据磁盘占用的功能。|
 | 文件系统  | 建议使用 ext4 文件系统。|
 
 ### 磁盘管理
 
 #### 查看磁盘分区空间
 
-用户可以使用 `df.sh` 命令查看磁盘分区的空间以及使用和剩余的空间信息。`df` 命令不显示 squashfs 挂载的循环设备。
+用户可以使用 `df.sh` 脚本查看磁盘分区的空间以及使用和剩余的空间信息。
 
-- 语法格式
+**默认路径**
 
-    ```shell
-    df.sh [OPTION]
-    ```
+- 裸机部署：`/usr/local/kaiwudb/bin`
+- 容器部署：`/kaiwudb/bin`
 
-- 常用选项
+**语法格式**
 
-    | 选项 | 说明 |
-    | --- | --- |
-    | `--squashfs` | 查看 squashfs 挂载的循环设备。 |
-    | `--help` | 查看帮助信息。 |
+```shell
+<path-to-df.sh>df.sh [OPTION]
+```
 
-- 使用举例
+**常用选项**
 
-    ```shell
-    ./df.sh
-    File systems information(excluding squashfs):
-    文件系统       类型      容量  已用  可用 已用% 挂载点
-    udev           devtmpfs   31G     0   31G    0% /dev
-    tmpfs          tmpfs     6.2G  1.4M  6.2G    1% /run
-    /dev/nvme0n1p5 ext4      916G  209G  661G   25% /
-    tmpfs          tmpfs      31G     0   31G    0% /dev/shm
-    tmpfs          tmpfs     5.0M  4.0K  5.0M    1% /run/lock
-    tmpfs          tmpfs      31G     0   31G    0% /sys/fs/cgroup
-    /dev/nvme0n1p1 vfat      511M  6.2M  505M    2% /boot/efi
-    tmpfs          tmpfs     6.2G  8.0K  6.2G    1% /run/user/114
-    tmpfs          tmpfs     6.2G  8.0K  6.2G    1% /run/user/1000
+| 选项 | 说明 |
+| --- | --- |
+| `--squashfs` | 查看 squashfs 挂载的循环设备。不指定时默认不显示 squashfs 挂载的循环设备。 |
+| `--help` | 查看帮助信息。 |
 
-    Number of squashfs mounted: 1
-    ```
+**使用举例**
+
+```shell
+./df.sh
+File systems information(excluding squashfs):
+文件系统       类型      容量  已用  可用 已用% 挂载点
+udev           devtmpfs   31G     0   31G    0% /dev
+tmpfs          tmpfs     6.2G  1.4M  6.2G    1% /run
+/dev/nvme0n1p5 ext4      916G  209G  661G   25% /
+tmpfs          tmpfs      31G     0   31G    0% /dev/shm
+tmpfs          tmpfs     5.0M  4.0K  5.0M    1% /run/lock
+tmpfs          tmpfs      31G     0   31G    0% /sys/fs/cgroup
+/dev/nvme0n1p1 vfat      511M  6.2M  505M    2% /boot/efi
+tmpfs          tmpfs     6.2G  8.0K  6.2G    1% /run/user/114
+tmpfs          tmpfs     6.2G  8.0K  6.2G    1% /run/user/1000
+
+Number of squashfs mounted: 1
+```
 
 #### 预估磁盘使用量
 
@@ -94,9 +99,9 @@ id: cluster-planning
     | VARCHAR、VARBYTES       | 8 字节偏移宽度 + 平均内容宽度 |
 
 - 分片可存储的最大数据行数：`ts.blocks_per_shard.max_limit` 和 `ts.rows_per_block.max_limit` 实时参数的乘积。默认值为 `1000000`。
-- 压缩比：取决于用户数据的重复度。重复度越高，压缩比越高，反之亦然。KWDB 支持时序数据 3-50 倍压缩比。
+- 压缩比：取决于用户数据的重复度。重复度越高，压缩比越高，反之亦然。KWDB 支持时序数据 5-30 倍压缩比。
 
-假设某项目有 `1000` 台设备，每台设备每天写入 `1000` 行，分区天数采用默认值 `10`，表的生命周期设置为 `30` 天，每行数据占用的总字节数为 `913`，分片可存储的最大数据行数为 `5000`，压缩比为 `58`，则压缩前占用的磁盘空间预计为 1000 x 1000 x 10 x 3 x (913/1024/1024+15/64/1000/10)/1024 ≈ 26 GB。压缩后占用的磁盘空间预计为 1000 x 1000 x 10 x 3 x (913/1024/1024/58+15/64/1000/10)/1024 ≈ 1.1 GB。
+假设某项目有 `1000` 台设备，每台设备每天写入 `1000` 行，分区天数采用默认值 `10`，表的生命周期设置为 `30` 天，每行数据占用的总字节数为 `913`，分片可存储的最大数据行数为 `5000`，压缩比为 `30`，则压缩前占用的磁盘空间预计为 1000 x 1000 x 10 x 3 x (913/1024/1024+15/64/1000/10)/1024 ≈ 26 GB。压缩后占用的磁盘空间预计为 1000 x 1000 x 10 x 3 x (913/1024/1024/30+15/64/1000/10)/1024 ≈ 1.5 GB。
 
 #### 推荐配置
 
@@ -108,13 +113,13 @@ id: cluster-planning
 - 采用单节点部署方式。如果采用集群部署，预估空间时应乘以集群副本数。
 - 压缩比为 10:1。
 
-| 设备数 | 数据写入速率 | 数据量 | 推荐配置                                                                                                                                                                                                          | 预估空间合计 |
-| ---------- | ---------------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
-| 100        | 1 条/分钟        | 14.4 万/天 | 集群实时参数：<br >- `ts.entities_per_subgroup.max_limit`：100  <br >- `ts.blocks_per_shard.max_limit`: 1500 <br >- `ts.rows_per_block.max_limit`: 1000 <br >时序表设置：<br >- `PARTITION INTERVAL`：10d <br >- `ACTIVETIME`：200d                           | 20 GB            |
-| 1000       | 1 条/10 秒       | 864 万/天  | 集群实时参数：<br >- `ts.entities_per_subgroup.max_limit`: 500  <br >- `ts.blocks_per_shard.max_limit`: 25000 <br >- `ts.rows_per_block.max_limit`: 1000 <br >- `ts.mount.max_limit`：2000 <br >时序表设置：<br >- `PARTITION INTERVAL`：5d <br >- `ACTIVETIME`：10d | 551 GB           |
-| 1 万       | 1 条/10 秒       | 8640 万/天 | 集群实时参数：<br >- `ts.entities_per_subgroup.max_limit`: 500  <br >- `ts.blocks_per_shard.max_limit`: 230000 <br >- `ts.rows_per_block.max_limit`: 1000 <br >- `ts.mount.max_limit`：5000 <br >时序表设置：<br >- `PARTITION INTERVAL`：1d <br >- `ACTIVETIME`：2d | 5.3 TB           |
-| 10 万      | 1 条/秒          | 86.4 亿/天 | 集群实时参数：<br >- `ts.entities_per_subgroup.max_limit`: 500  <br >- `ts.blocks_per_shard.max_limit`: 230000 <br >- `ts.rows_per_block.max_limit`: 1000 <br >- `ts.mount.max_limit`：5000 <br >时序表设置：<br >- `PARTITION INTERVAL`：1d <br >- `ACTIVETIME`：2d | 502 TB           |
-| 100 万     | 1 条/秒          | 864 亿/天  | 集群实时参数：<br >- `ts.entities_per_subgroup.max_limit`: 500  <br >- `ts.blocks_per_shard.max_limit`: 230000 <br >- `ts.rows_per_block.max_limit`: 1000 <br >- `ts.mount.max_limit`：5000 <br >时序表设置：<br >- `PARTITION INTERVAL`：1d <br >- `ACTIVETIME`：2d | 5020 TB          |
+| 设备数 | 数据写入速率 | 数据量 | 集群配置    | 时序表配置                                                                                                                                                                                                      | 预估空间合计 |
+| ---------- | ---------------- | ---------- | -----------------------| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
+| 100        | 1 条/分钟        | 14.4 万/天 | - `ts.entities_per_subgroup.max_limit`：`100`  <br >- `ts.blocks_per_segment.max_limit`: `1500` <br >- `ts.rows_per_block.max_limit`: `1000` <br >|- `PARTITION INTERVAL`：`10d` <br >- `ACTIVETIME`：`200d`                           | 20 GB            |
+| 1000       | 1 条/10 秒       | 864 万/天  | - `ts.entities_per_subgroup.max_limit`: `500`  <br >- `ts.blocks_per_segment.max_limit`: `25000` <br >- `ts.rows_per_block.max_limit`: `1000` <br >- `ts.mount.max_limit`：`2000` <br >|- `PARTITION INTERVAL`：`5d` <br >- `ACTIVETIME`：`10d` | 551 GB           |
+| 1 万       | 1 条/10 秒       | 8640 万/天 | - `ts.entities_per_subgroup.max_limit`: `500`  <br >- `ts.blocks_per_segment.max_limit`: `230000` <br >- `ts.rows_per_block.max_limit`: `1000` <br >- `ts.mount.max_limit`：`5000` <br >|- `PARTITION INTERVAL`：`1d` <br >- `ACTIVETIME`：`2d` | 5.3 TB           |
+| 10 万      | 1 条/秒          | 86.4 亿/天 | - `ts.entities_per_subgroup.max_limit`: `500`  <br >- `ts.blocks_per_segment.max_limit`: `230000` <br >- `ts.rows_per_block.max_limit`: `1000` <br >- `ts.mount.max_limit`：`5000` <br >|- `PARTITION INTERVAL`：`1d` <br >- `ACTIVETIME`：`2d` | 502 TB           |
+| 100 万     | 1 条/秒          | 864 亿/天  | - `ts.entities_per_subgroup.max_limit`: `500`  <br >- `ts.blocks_per_segment.max_limit`: `230000` <br >- `ts.rows_per_block.max_limit`: `1000` <br >- `ts.mount.max_limit`：`5000` <br >|- `PARTITION INTERVAL`：`1d` <br >- `ACTIVETIME`：`2d` | 5020 TB          |
 
 ## 安全性
 
