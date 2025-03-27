@@ -302,28 +302,28 @@ id: functions-ts-db
 | first_row(val: varbytes) →varbytes        | 获取条件范围内时间戳最小的一条数据（可以是空值 NULL）。   |
 | first_row(val: varchar) →varchar          | 获取条件范围内时间戳最小的一条数据（可以是空值 NULL）。   |
 | first_row(*) →any element                 | 获取条件范围内时间戳最小的一条数据（可以是空值 NULL）。   |
-| last(val: float4) → float4                | 获取条件范围内时间戳最大的一条数据（不包含空值 NULL）。   |
-| last(val:  float8) →  float8              | 获取条件范围内时间戳最大的一条数据（不包含空值 NULL）。   |
-| last(val: INT2) → INT2                    | 获取条件范围内时间戳最大的一条数据（不包含空值 NULL）。   |
-| last(val: INT4) → INT4                    | 获取条件范围内时间戳最大的一条数据（不包含空值 NULL）。   |
-| last(val: INT8) → INT8                    | 获取条件范围内时间戳最大的一条数据（不包含空值 NULL）。   |
-| last(val: STRING) → STRING                | 获取条件范围内时间戳最大的一条数据（不包含空值 NULL）。   |
-| last(val: timestamp) → timestamp          | 获取条件范围内时间戳最大的一条数据（不包含空值 NULL）。   |
-| last(val: timestamptz) → timestamptz      | 获取条件范围内时间戳最大的一条数据（不包含空值 NULL）。   |
-| last(val: varbytes) →varbytes             | 获取条件范围内时间戳最大的一条数据（不包含空值 NULL）。   |
-| last(val: varchar) →varchar               | 获取条件范围内时间戳最大的一条数据（不包含空值 NULL）。   |
-| last(*)→any element                       | 获取条件范围内时间戳最大的一条数据（不包含空值 NULL）。   |
-| last_row (val: varchar) →varchar          | 获取条件范围内时间戳最大的一条数据（可以是空值 NULL）。   |
-| last_row(val: float4) → float4            | 获取条件范围内时间戳最大的一条数据（可以是空值 NULL）。   |
-| last_row(val:  float8) →  float8          | 获取条件范围内时间戳最大的一条数据（可以是空值 NULL）。   |
-| last_row(val: INT2) → INT2                | 获取条件范围内时间戳最大的一条数据（可以是空值 NULL）。   |
-| last_row(val: INT4) → INT4                | 获取条件范围内时间戳最大的一条数据（可以是空值 NULL）。   |
-| last_row(val: INT8) → INT8                | 获取条件范围内时间戳最大的一条数据（可以是空值 NULL）。   |
-| last_row(val: STRING) → STRING            | 获取条件范围内时间戳最大的一条数据（可以是空值 NULL）。   |
-| last_row(val: timestamp) → timestamp      | 获取条件范围内时间戳最大的一条数据（可以是空值 NULL）。   |
-| last_row(val: timestamptz) → timestamptz  | 获取条件范围内时间戳最大的一条数据（可以是空值 NULL）。   |
-| last_row(val: varbytes) →varbytes         | 获取条件范围内时间戳最大的一条数据（可以是空值 NULL）。   |
-| last_row(*) →any element                  | 获取条件范围内时间戳最大的一条数据（可以是空值 NULL）。   |
+| last(val: float4) → float4                | 获取条件范围内时间戳最大的一条数据（不包含空值 NULL）。<br> 支持在子查询、关联查询（JOIN）、嵌套查询（FROM 子查询）、WHERE、GROUP BY、HAVING、ORDER BY 等多种查询场景中使用，支持与 KWDB 现有的聚合函数联合使用。 <br> **当前限制**：<br>- 仅支持在 SELECT 列表中使用，不可作为普通列进行计算；<br>- 仅支持单列作为参数，传入数值常量、操作符、表达式或函数将触发语法错误；<br>- 仅限于时序表数据处理，不适用于临时表或关系型查询场景。   |
+| last(val:  float8) →  float8              | 获取条件范围内时间戳最大的一条数据（不包含空值 NULL）。<br> 支持在子查询、关联查询（JOIN）、嵌套查询（FROM 子查询）、WHERE、GROUP BY、HAVING、ORDER BY 等多种查询场景中使用，支持与 KWDB 现有的聚合函数联合使用。 <br> **当前限制**：<br>- 仅支持在 SELECT 列表中使用，不可作为普通列进行计算；<br>- 仅支持单列作为参数，传入数值常量、操作符、表达式或函数将触发语法错误；<br>- 仅限于时序表数据处理，不适用于临时表或关系型查询场景。   |
+| last(val: INT2) → INT2                    | 获取条件范围内时间戳最大的一条数据（不包含空值 NULL）。<br> 支持在子查询、关联查询（JOIN）、嵌套查询（FROM 子查询）、WHERE、GROUP BY、HAVING、ORDER BY 等多种查询场景中使用，支持与 KWDB 现有的聚合函数联合使用。 <br> **当前限制**：<br>- 仅支持在 SELECT 列表中使用，不可作为普通列进行计算；<br>- 仅支持单列作为参数，传入数值常量、操作符、表达式或函数将触发语法错误；<br>- 仅限于时序表数据处理，不适用于临时表或关系型查询场景。   |
+| last(val: INT4) → INT4                    | 获取条件范围内时间戳最大的一条数据（不包含空值 NULL）。<br> 支持在子查询、关联查询（JOIN）、嵌套查询（FROM 子查询）、WHERE、GROUP BY、HAVING、ORDER BY 等多种查询场景中使用，支持与 KWDB 现有的聚合函数联合使用。 <br> **当前限制**：<br>- 仅支持在 SELECT 列表中使用，不可作为普通列进行计算；<br>- 仅支持单列作为参数，传入数值常量、操作符、表达式或函数将触发语法错误；<br>- 仅限于时序表数据处理，不适用于临时表或关系型查询场景。   |
+| last(val: INT8) → INT8                    | 获取条件范围内时间戳最大的一条数据（不包含空值 NULL）。<br> 支持在子查询、关联查询（JOIN）、嵌套查询（FROM 子查询）、WHERE、GROUP BY、HAVING、ORDER BY 等多种查询场景中使用，支持与 KWDB 现有的聚合函数联合使用。 <br> **当前限制**：<br>- 仅支持在 SELECT 列表中使用，不可作为普通列进行计算；<br>- 仅支持单列作为参数，传入数值常量、操作符、表达式或函数将触发语法错误；<br>- 仅限于时序表数据处理，不适用于临时表或关系型查询场景。   |
+| last(val: STRING) → STRING                | 获取条件范围内时间戳最大的一条数据（不包含空值 NULL）。<br> 支持在子查询、关联查询（JOIN）、嵌套查询（FROM 子查询）、WHERE、GROUP BY、HAVING、ORDER BY 等多种查询场景中使用，支持与 KWDB 现有的聚合函数联合使用。 <br> **当前限制**：<br>- 仅支持在 SELECT 列表中使用，不可作为普通列进行计算；<br>- 仅支持单列作为参数，传入数值常量、操作符、表达式或函数将触发语法错误；<br>- 仅限于时序表数据处理，不适用于临时表或关系型查询场景。   |
+| last(val: timestamp) → timestamp          | 获取条件范围内时间戳最大的一条数据（不包含空值 NULL）。<br> 支持在子查询、关联查询（JOIN）、嵌套查询（FROM 子查询）、WHERE、GROUP BY、HAVING、ORDER BY 等多种查询场景中使用，支持与 KWDB 现有的聚合函数联合使用。 <br> **当前限制**：<br>- 仅支持在 SELECT 列表中使用，不可作为普通列进行计算；<br>- 仅支持单列作为参数，传入数值常量、操作符、表达式或函数将触发语法错误；<br>- 仅限于时序表数据处理，不适用于临时表或关系型查询场景。   |
+| last(val: timestamptz) → timestamptz      | 获取条件范围内时间戳最大的一条数据（不包含空值 NULL）。<br> 支持在子查询、关联查询（JOIN）、嵌套查询（FROM 子查询）、WHERE、GROUP BY、HAVING、ORDER BY 等多种查询场景中使用，支持与 KWDB 现有的聚合函数联合使用。 <br> **当前限制**：<br>- 仅支持在 SELECT 列表中使用，不可作为普通列进行计算；<br>- 仅支持单列作为参数，传入数值常量、操作符、表达式或函数将触发语法错误；<br>- 仅限于时序表数据处理，不适用于临时表或关系型查询场景。   |
+| last(val: varbytes) →varbytes             | 获取条件范围内时间戳最大的一条数据（不包含空值 NULL）。<br> 支持在子查询、关联查询（JOIN）、嵌套查询（FROM 子查询）、WHERE、GROUP BY、HAVING、ORDER BY 等多种查询场景中使用，支持与 KWDB 现有的聚合函数联合使用。 <br> **当前限制**：<br>- 仅支持在 SELECT 列表中使用，不可作为普通列进行计算；<br>- 仅支持单列作为参数，传入数值常量、操作符、表达式或函数将触发语法错误；<br>- 仅限于时序表数据处理，不适用于临时表或关系型查询场景。   |
+| last(val: varchar) →varchar               | 获取条件范围内时间戳最大的一条数据（不包含空值 NULL）。<br> 支持在子查询、关联查询（JOIN）、嵌套查询（FROM 子查询）、WHERE、GROUP BY、HAVING、ORDER BY 等多种查询场景中使用，支持与 KWDB 现有的聚合函数联合使用。 <br> **当前限制**：<br>- 仅支持在 SELECT 列表中使用，不可作为普通列进行计算；<br>- 仅支持单列作为参数，传入数值常量、操作符、表达式或函数将触发语法错误；<br>- 仅限于时序表数据处理，不适用于临时表或关系型查询场景。   |
+| last(*)→any element                       | 获取条件范围内时间戳最大的一条数据（不包含空值 NULL）。<br> 支持在子查询、关联查询（JOIN）、嵌套查询（FROM 子查询）、WHERE、GROUP BY、HAVING、ORDER BY 等多种查询场景中使用，支持与 KWDB 现有的聚合函数联合使用。 <br> **当前限制**：<br>- 仅支持在 SELECT 列表中使用，不可作为普通列进行计算；<br>- 仅支持单列作为参数，传入数值常量、操作符、表达式或函数将触发语法错误；<br>- 仅限于时序表数据处理，不适用于临时表或关系型查询场景。   |
+| last_row (val: varchar) →varchar          | 获取条件范围内时间戳最大的一条数据（可以是空值 NULL）。<br> 支持在子查询、关联查询（JOIN）、嵌套查询（FROM 子查询）、WHERE、GROUP BY、HAVING、ORDER BY 等多种查询场景中使用，支持与 KWDB 现有的聚合函数联合使用。 <br> **当前限制**：<br>- 仅支持在 SELECT 列表中使用，不可作为普通列进行计算；<br>- 仅支持单列作为参数，传入数值常量、操作符、表达式或函数将触发语法错误；<br>- 仅限于时序表数据处理，不适用于临时表或关系型查询场景。   |
+| last_row(val: float4) → float4            | 获取条件范围内时间戳最大的一条数据（可以是空值 NULL）。<br> 支持在子查询、关联查询（JOIN）、嵌套查询（FROM 子查询）、WHERE、GROUP BY、HAVING、ORDER BY 等多种查询场景中使用，支持与 KWDB 现有的聚合函数联合使用。 <br> **当前限制**：<br>- 仅支持在 SELECT 列表中使用，不可作为普通列进行计算；<br>- 仅支持单列作为参数，传入数值常量、操作符、表达式或函数将触发语法错误；<br>- 仅限于时序表数据处理，不适用于临时表或关系型查询场景。   |
+| last_row(val:  float8) →  float8          | 获取条件范围内时间戳最大的一条数据（可以是空值 NULL）。<br> 支持在子查询、关联查询（JOIN）、嵌套查询（FROM 子查询）、WHERE、GROUP BY、HAVING、ORDER BY 等多种查询场景中使用，支持与 KWDB 现有的聚合函数联合使用。 <br> **当前限制**：<br>- 仅支持在 SELECT 列表中使用，不可作为普通列进行计算；<br>- 仅支持单列作为参数，传入数值常量、操作符、表达式或函数将触发语法错误；<br>- 仅限于时序表数据处理，不适用于临时表或关系型查询场景。   |
+| last_row(val: INT2) → INT2                | 获取条件范围内时间戳最大的一条数据（可以是空值 NULL）。<br> 支持在子查询、关联查询（JOIN）、嵌套查询（FROM 子查询）、WHERE、GROUP BY、HAVING、ORDER BY 等多种查询场景中使用，支持与 KWDB 现有的聚合函数联合使用。 <br> **当前限制**：<br>- 仅支持在 SELECT 列表中使用，不可作为普通列进行计算；<br>- 仅支持单列作为参数，传入数值常量、操作符、表达式或函数将触发语法错误；<br>- 仅限于时序表数据处理，不适用于临时表或关系型查询场景。   |
+| last_row(val: INT4) → INT4                | 获取条件范围内时间戳最大的一条数据（可以是空值 NULL）。<br> 支持在子查询、关联查询（JOIN）、嵌套查询（FROM 子查询）、WHERE、GROUP BY、HAVING、ORDER BY 等多种查询场景中使用，支持与 KWDB 现有的聚合函数联合使用。 <br> **当前限制**：<br>- 仅支持在 SELECT 列表中使用，不可作为普通列进行计算；<br>- 仅支持单列作为参数，传入数值常量、操作符、表达式或函数将触发语法错误；<br>- 仅限于时序表数据处理，不适用于临时表或关系型查询场景。   |
+| last_row(val: INT8) → INT8                | 获取条件范围内时间戳最大的一条数据（可以是空值 NULL）。<br> 支持在子查询、关联查询（JOIN）、嵌套查询（FROM 子查询）、WHERE、GROUP BY、HAVING、ORDER BY 等多种查询场景中使用，支持与 KWDB 现有的聚合函数联合使用。 <br> **当前限制**：<br>- 仅支持在 SELECT 列表中使用，不可作为普通列进行计算；<br>- 仅支持单列作为参数，传入数值常量、操作符、表达式或函数将触发语法错误；<br>- 仅限于时序表数据处理，不适用于临时表或关系型查询场景。   |
+| last_row(val: STRING) → STRING            | 获取条件范围内时间戳最大的一条数据（可以是空值 NULL）。<br> 支持在子查询、关联查询（JOIN）、嵌套查询（FROM 子查询）、WHERE、GROUP BY、HAVING、ORDER BY 等多种查询场景中使用，支持与 KWDB 现有的聚合函数联合使用。 <br> **当前限制**：<br>- 仅支持在 SELECT 列表中使用，不可作为普通列进行计算；<br>- 仅支持单列作为参数，传入数值常量、操作符、表达式或函数将触发语法错误；<br>- 仅限于时序表数据处理，不适用于临时表或关系型查询场景。   |
+| last_row(val: timestamp) → timestamp      | 获取条件范围内时间戳最大的一条数据（可以是空值 NULL）。<br> 支持在子查询、关联查询（JOIN）、嵌套查询（FROM 子查询）、WHERE、GROUP BY、HAVING、ORDER BY 等多种查询场景中使用，支持与 KWDB 现有的聚合函数联合使用。 <br> **当前限制**：<br>- 仅支持在 SELECT 列表中使用，不可作为普通列进行计算；<br>- 仅支持单列作为参数，传入数值常量、操作符、表达式或函数将触发语法错误；<br>- 仅限于时序表数据处理，不适用于临时表或关系型查询场景。   |
+| last_row(val: timestamptz) → timestamptz  | 获取条件范围内时间戳最大的一条数据（可以是空值 NULL）。<br> 支持在子查询、关联查询（JOIN）、嵌套查询（FROM 子查询）、WHERE、GROUP BY、HAVING、ORDER BY 等多种查询场景中使用，支持与 KWDB 现有的聚合函数联合使用。 <br> **当前限制**：<br>- 仅支持在 SELECT 列表中使用，不可作为普通列进行计算；<br>- 仅支持单列作为参数，传入数值常量、操作符、表达式或函数将触发语法错误；<br>- 仅限于时序表数据处理，不适用于临时表或关系型查询场景。   |
+| last_row(val: varbytes) →varbytes         | 获取条件范围内时间戳最大的一条数据（可以是空值 NULL）。<br> 支持在子查询、关联查询（JOIN）、嵌套查询（FROM 子查询）、WHERE、GROUP BY、HAVING、ORDER BY 等多种查询场景中使用，支持与 KWDB 现有的聚合函数联合使用。 <br> **当前限制**：<br>- 仅支持在 SELECT 列表中使用，不可作为普通列进行计算；<br>- 仅支持单列作为参数，传入数值常量、操作符、表达式或函数将触发语法错误；<br>- 仅限于时序表数据处理，不适用于临时表或关系型查询场景。   |
+| last_row(*) →any element                  | 获取条件范围内时间戳最大的一条数据（可以是空值 NULL）。<br> 支持在子查询、关联查询（JOIN）、嵌套查询（FROM 子查询）、WHERE、GROUP BY、HAVING、ORDER BY 等多种查询场景中使用，支持与 KWDB 现有的聚合函数联合使用。 <br> **当前限制**：<br>- 仅支持在 SELECT 列表中使用，不可作为普通列进行计算；<br>- 仅支持单列作为参数，传入数值常量、操作符、表达式或函数将触发语法错误；<br>- 仅限于时序表数据处理，不适用于临时表或关系型查询场景。   |
 | max(arg1: float4) → float4                | 标识选定的最大值。                                        |
 | max(arg1:  float8) →  float8              | 标识选定的最大值。                                        |
 | max(arg1: INT2) → INT2                    | 标识选定的最大值。                                        |
