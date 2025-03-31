@@ -158,7 +158,7 @@ CREATE TABLE
     8 |700    
     (1 row)
 
-    --使用 ON CONFLICT DO NOTHING 阻止冲突行更新，允许写入非冲突行
+    -- 使用 ON CONFLICT DO NOTHING 阻止冲突行更新，允许写入非冲突行
     INSERT INTO accounts (id, balance) VALUES (8, 125.50), (10, 450) ON CONFLICT (id) DO NOTHING;
     INSERT 1
 
