@@ -1173,7 +1173,7 @@ d
 UPDATE c SET d = d || 50 WHERE d[4] = 40;
 UPDATE 1
 
--- 7. 查看表的内容。
+-- 8. 查看表的内容。
 
 SELECT * FROM c;
 d

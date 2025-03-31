@@ -28,7 +28,7 @@ id: relational-truncate
 以下示例假设用户已经创建 `t1`、`customer`、`orders` 表并写入数据。
 
 ```sql
--- 创建 t1 表。
+-- 1. 创建 t1 表。
 
 CREATE TABLE t1(id INT8 DEFAULT unique_rowid() PRIMARY KEY, name STRING);
 CREATE TABLE 
