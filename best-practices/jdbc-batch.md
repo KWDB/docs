@@ -30,24 +30,11 @@ KaiwuDB JDBC 提供了传统的批量执行 SQL 接口，用户可以通过手�
 
 ## 配置数据库
 
-1. 启用时序写入短接功能，该功能默认关闭，，启用后可以直接将数据写入存储，减少中间处理环节，提高性能。
-   - 为当前会话启用时序写入短接功能。
+默认情况下，数据库开启时序写入短接功能。开启后，系统直接将数据写入存储，减少中间处理环节。此外，用户可以设置允许写入时跳过错误数据，正常写入其他数据，从而提高写入性能。
 
-      ```SQL
-      SET SESSION tsinsert_direct=true;
-      ```
-
-   - 为 KWDB 集群启用时序写入短接功能：
-
-      ```SQL
-      SET CLUSTER SETTING server.tsinsert_direct.enabled = TRUE;
-      ```
-
-2. 允许写入时跳过错误数据，正常写入其他数据：
-
-      ```SQL
-      SET SESSION ts_ignore_batcherror=true;
-      ```
+```SQL
+SET SESSION ts_ignore_batcherror=true;
+```
 
 ## 配置连接
 
