@@ -30,14 +30,14 @@ KaiwuDB JDBC 是 KWDB 的官方 Java 语言连接器。它基于 PgJDBC 扩展�
    <dependency>
      <groupId>com.kaiwudb</groupId>
      <artifactId>kaiwudb-jdbc</artifactId>
-     <version>2.1.0</version>
+     <version>2.2.0</version>
    </dependency>
    ```
 
 2. 如上述依赖无法正常加载使用，运行以下命令，将 KaiwuDB JDBC 驱动安装到本地 Maven 仓库中。
 
    ```shell
-   mvn install:install-file "-Dfile=../kaiwudb-jdbc-2.1.0.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=2.1.0" "-Dpackaging=jar"
+   mvn install:install-file "-Dfile=../kaiwudb-jdbc-2.2.0.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=2.2.0" "-Dpackaging=jar"
    ```
 
 ## 连接数据库

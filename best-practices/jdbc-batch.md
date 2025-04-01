@@ -57,14 +57,14 @@ KaiwuDB JDBC 提供了传统的批量执行 SQL 接口，用户可以通过手�
    <dependency>
      <groupId>com.kaiwudb</groupId>
      <artifactId>kaiwudb-jdbc</artifactId>
-     <version>2.1.0</version>
+     <version>2.2.0</version>
    </dependency>
    ```
 
 2. 如果 KaiwuDB JDBC 无法正常加载使用，执行以下命令，将驱动安装到本地 Maven 仓库中：
 
    ```shell
-   mvn install:install-file "-Dfile=../kaiwudb-jdbc-2.1.0.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=2.1.0" "-Dpackaging=jar"
+   mvn install:install-file "-Dfile=../kaiwudb-jdbc-2.2.0.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=2.2.0" "-Dpackaging=jar"
    ```
 
 ## 配置示例
