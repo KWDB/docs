@@ -105,11 +105,11 @@ MyBatis 使用时的常见问题可参见 [Mybatis 和 Mybatis-Plus](../../../fa
 2. 在项目的 `pom.xml` 文件，引入 KaiwuDB JDBC 依赖。
 
     ```XML
-    <!-- KaiwuDB JDBC 2.1.0 -->
+    <!-- KaiwuDB JDBC 2.2.0 -->
     <dependency>
       <groupId>com.kaiwudb</groupId>
       <artifactId>kaiwudb-jdbc</artifactId>
-      <version>2.1.0</version>
+      <version>2.2.0</version>
     </dependency>
     ```
 
