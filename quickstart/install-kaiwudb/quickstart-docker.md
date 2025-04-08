@@ -8,8 +8,7 @@ id: quickstart-docker
 本文介绍如何使用 KWDB 容器镜像在单个节点上部署 KWDB。
 
 ::: warning 说明
-- 目前，KWDB 未提供可供下载的 KWDB 容器镜像。如需使用容器镜像部署 KWDB，[联系](https://www.kaiwudb.com/support/) KWDB 技术支持人员获取 KWDB 容器镜像。
-- KWDB 支持基于 DRBD 块设备复制的开源软件方案，实现主备节点间的数据复制，如需实现单机高可用性，请先参阅[单机高可用性方案](../../best-practices/single-ha.md)。
+KWDB 支持基于 DRBD 块设备复制的开源软件方案，实现主备节点间的数据复制，如需实现单机高可用性，请先参阅[单机高可用性方案](../../best-practices/single-ha.md)。
 :::
 
 ## 部署准备
@@ -84,7 +83,7 @@ sudo apt-get install docker-compose
 
 ### 安装包
 
-获取系统环境对应的安装包，将安装包复制到待安装 KWDB 的目标机器上，然后解压缩安装包：
+获取系统环境对应的[安装包](https://gitee.com/kwdb/kwdb/releases)，将安装包复制到待安装 KWDB 的目标机器上，然后解压缩安装包：
 
 ```shell
 tar -zxvf <install_package_name>
@@ -114,7 +113,7 @@ tar -zxvf <install_package_name>
 
 ### 前提条件
 
-- [联系](https://www.kaiwudb.com/support/) KWDB 技术支持人员，获取 KWDB 容器镜像。
+- 已获取 [KWDB 容器安装包](https://gitee.com/kwdb/kwdb/releases)。
 - 待部署节点的硬件、操作系统、软件依赖和端口满足安装部署要求。
 - 安装用户为 root 用户或者拥有 `sudo` 权限的普通用户。
   - root 用户和配置 `sudo` 免密的普通用户在执行部署脚本时无需输入密码。
