@@ -7,7 +7,7 @@ id: docker-deployment
 
 ## 前提条件
 
-- [联系](https://www.kaiwudb.com/support/) KWDB 技术支持人员，获取 KWDB 容器镜像。
+- 已获取 [KWDB 容器安装包](https://gitee.com/kwdb/kwdb/releases)。
 - 待部署节点的硬件、操作系统、软件依赖和端口满足安装部署要求。
 - 各节点间网络联通，节点所在机器位于同一机房内。物理机器间网络延迟不高于 50 ms，时钟相差不大于 500 ms。
 - 已配置当前节点与集群内其他节点的 SSH 免密。
