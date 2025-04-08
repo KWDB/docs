@@ -276,25 +276,19 @@ id: faqs
         SET CLUSTER SETTING sql.stats.ts_automatic_collection.enabled = FALSE;
         ```
 
-  5. 启用时序写入短接功能，提高时序数据写入速度。注意：该设置不适用于 `prepare insert` 语句。
-
-        ```SQL
-        SET CLUSTER SETTING server.tsinsert_direct.enabled = TRUE;
-        ```
-
-  6. 关闭数据压缩功能，减少写入时的计算开销，适用于对空间占用不敏感的场景。
+  5. 关闭数据压缩功能，减少写入时的计算开销，适用于对空间占用不敏感的场景。
 
         ```SQL
         ALTER SCHEDULE scheduled_table_compress F Recurring '0 0 1 1 ？2099';
         ```
 
-  7. 关闭生命周期管理功能，避免定期的表清理操作，适用于数据持久性要求较高且对写入性能要求较高的场景。
+  6. 关闭生命周期管理功能，避免定期的表清理操作，适用于数据持久性要求较高且对写入性能要求较高的场景。
 
         ```SQL
         ALTER SCHEDULE scheduled_table_retention Recurring '0 0 1 1 ? 2099';
         ```
 
-  8. 关闭 WAL 日志功能。注意：关闭 WAL 日志功能会影响宕机后的数据恢复，适用于对数据一致性要求较低的场景。
+  7. 关闭 WAL 日志功能。注意：关闭 WAL 日志功能会影响宕机后的数据恢复，适用于对数据一致性要求较低的场景。
 
      1. 关闭 WAL 日志功能。
 
@@ -417,13 +411,7 @@ id: faqs
 
     数据的实际写入速率与数据特性、硬件规格相关。用户可以采取以下步骤，调整相关参数配置，提升写入速率。
 
-    1. 启用时序写入短接功能，提高时序数据写入速度。
-
-        ```SQL
-        SET CLUSTER SETTING server.tsinsert_direct.enabled = 'TRUE';
-        ```
-
-    2. （可选）关闭 WAL 日志实时写入功能。
+    1. （可选）关闭 WAL 日志实时写入功能。
 
         1. 关闭 WAL 日志写入功能
 
@@ -437,7 +425,7 @@ id: faqs
             systemctl restart kaiwudb
             ```
 
-    3. 调整 KaiwuDB DataX Utils 配置文件中的相关参数。
+    2. 调整 KaiwuDB DataX Utils 配置文件中的相关参数。
 
         - `splitIntervalS`：数据读取时间间隔。建议根据时间间隔内的数据量大小进行调整，默认值为 60，即 60 秒。该参数只适用于 InfluxDB。
         - `batchsize`：批量写入数据的条数。建议根据业务实际数据量进行调整。
@@ -477,7 +465,7 @@ id: faqs
             percentage: 0.02
         ```
 
-    4. 在 KaiwuDB DataX Utils 所在目录，执行数据迁移命令时，设置 JVM 参数，增加内存。
+    3. 在 KaiwuDB DataX Utils 所在目录，执行数据迁移命令时，设置 JVM 参数，增加内存。
 
         ```shell
         java -jar -Dtype=data -DyamlPath=<yml_path> -DdataxPath=<datax_path> -Dpython=<python>  -Darguments="--jvm=\"-Xms2G -Xmx4G\"" kaiwudb-datax-utils-1.2.3.jar
