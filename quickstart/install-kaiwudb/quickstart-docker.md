@@ -5,7 +5,10 @@ id: quickstart-docker
 
 # 单节点容器部署
 
-本文介绍如何使用 KWDB 容器镜像在单个节点上部署 KWDB。
+本文介绍如何使用 KWDB 容器镜像或容器安装包在单个节点上部署 KWDB。
+
+- 使用容器镜像部署：仅支持非安全模式，登录 KWDB 数据库时需使用非安全连接模式，具体操作说明，参见[使用 YAML 文件部署 KWDB](#使用-yaml-文件部署-kwdb)。
+- 使用容器安装包部署：同时支持安全模式和非安全模式，登录 KWDB 数据库时应选择相应的连接模式，具体操作说明，参见[使用安装脚本部署 KWDB](#使用安装脚本部署-kwdb)。
 
 ::: warning 说明
 KWDB 支持基于 DRBD 块设备复制的开源软件方案，实现主备节点间的数据复制，如需实现单机高可用性，请先参阅[单机高可用性方案](../../best-practices/single-ha.md)。
@@ -35,7 +38,7 @@ KWDB 支持基于 DRBD 块设备复制的开源软件方案，实现主备节点
 
 :::
 
-KWDB 容器镜像支持在以下已安装 Docker 的操作系统中进行安装部署。
+KWDB 支持在以下已安装 Docker 的操作系统中进行容器部署。
 
 | **操作系统** | **版本**                     | **架构** |
 | :----------- | :--------------------------- | :------- |
@@ -81,7 +84,9 @@ sudo apt-get install docker-compose
 | `8080`                                | 数据库 Web 服务端口                        |
 | `26257`                               | 数据库服务端口、节点监听端口和对外连接端口 |
 
-### 安装包
+### 安装包和镜像
+
+#### 获取容器安装包
 
 获取系统环境对应的[安装包](https://gitee.com/kwdb/kwdb/releases)，将安装包复制到待安装 KWDB 的目标机器上，然后解压缩安装包：
 
@@ -99,6 +104,13 @@ tar -zxvf <install_package_name>
 | `packages` 目录   | 存放 DEB、RPM 和镜像包。                                      |
 | `utils` 目录      | 存放工具类脚本。                                             |
 
+#### 获取容器镜像
+
+KWDB 支持通过以下方式获取容器镜像：
+
+- [安装包](https://gitee.com/kwdb/kwdb/releases)：下载系统环境对应的安装包，解压后在 `kwdb_install/packages` 目录下获取 `KaiwuDB.tar` 文件。
+- Docker 命令：执行 `docker pull kwdb/kwdb:2.2.0` 获取镜像。
+
 ## 部署 KWDB
 
 部署 KWDB 时，系统将对配置文件、运行环境、硬件配置和软件依赖进行检查。如果相应硬件未能满足要求，系统将继续安装，并提示硬件规格不满足要求。如果软件依赖未能满足要求，系统将中止安装，并提供相应的提示信息。
@@ -107,28 +119,26 @@ tar -zxvf <install_package_name>
 
 部署完成后，系统生成 `/etc/kaiwudb/` 目录。Docker Compose 配置文件 `docker-compose.yml` 位于 `/etc/kaiwudb/script` 目录下。部署完成后，用户可以修改 Docker Compose 配置文件 `docker-compose.yml`，配置 KWDB 的启动参数和 CPU 资源占用率。有关定制化部署配置的详细信息，参见[配置集群](../../deployment/docker/cluster-config-docker.md)。
 
-::: warning 说明
-支持使用 YAML（`.yml`）文件和安装脚本两种方式部署 KWDB。使用 YAML（`.yml`）文件进行部署时，仅支持非安全模式，登录 KWDB 数据库时需使用非安全连接模式。安装脚本部署支持安全模式和非安全模式。
-:::
+### 使用 YAML 文件部署 KWDB
 
-### 前提条件
+**前提条件**：
 
-- 已获取 [KWDB 容器安装包](https://gitee.com/kwdb/kwdb/releases)。
+- 已获取 [KWDB 容器镜像](#获取容器镜像)。
 - 待部署节点的硬件、操作系统、软件依赖和端口满足安装部署要求。
 - 安装用户为 root 用户或者拥有 `sudo` 权限的普通用户。
   - root 用户和配置 `sudo` 免密的普通用户在执行部署脚本时无需输入密码。
   - 未配置 `sudo` 免密的普通用户在执行部署脚本时，需要输入密码进行提权。
 - 安装用户为非 root 用户时，需要通过 `sudo usermod -aG docker $USER` 命令将用户添加到 `docker` 组。
 
-### 使用 YAML 文件部署 KWDB
+**步骤**：
 
 如需使用 YAML 文件部署 KWDB，遵循以下步骤。
 
-1. 在 `kwdb_install/packages` 目录下导入 `KaiwuDB.tar` 文件，获取镜像名称。
+1. 导入 `KaiwuDB.tar` 文件。
 
-    ```yaml
-    # docker load < KaiwuDB.tar
-    Loaded image: "path-to-your-docker-image"
+    ```bash
+    docker load < KaiwuDB.tar
+    Loaded image: "image-name"
     ```
 
 2. 创建 `docker-compose.yml` 配置文件。
@@ -143,7 +153,7 @@ tar -zxvf <install_package_name>
     version: '3.3'
     services:
       kaiwudb-container:
-        image: "path-to-your-docker-image"
+        image: "kwdb/kwdb:2.2.0"
         container_name: kaiwudb-experience
         hostname: kaiwudb-experience
         ports:
@@ -184,6 +194,17 @@ tar -zxvf <install_package_name>
     ```
 
 ### 使用安装脚本部署 KWDB
+
+**前提条件**：
+
+- 已获取 [KWDB 容器安装包](#获取容器安装包)。
+- 待部署节点的硬件、操作系统、软件依赖和端口满足安装部署要求。
+- 安装用户为 root 用户或者拥有 `sudo` 权限的普通用户。
+  - root 用户和配置 `sudo` 免密的普通用户在执行部署脚本时无需输入密码。
+  - 未配置 `sudo` 免密的普通用户在执行部署脚本时，需要输入密码进行提权。
+- 安装用户为非 root 用户时，需要通过 `sudo usermod -aG docker $USER` 命令将用户添加到 `docker` 组。
+
+**步骤**：
 
 如需使用安装脚本部署 KWDB，遵循以下步骤。
 
