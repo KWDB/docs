@@ -108,7 +108,13 @@ tar -zxvf <install_package_name>
 
 KWDB 支持通过以下方式获取容器镜像：
 
-- [安装包](https://gitee.com/kwdb/kwdb/releases)：下载系统环境对应的安装包，解压后在 `kwdb_install/packages` 目录下获取 `KaiwuDB.tar` 文件。
+- [安装包](https://gitee.com/kwdb/kwdb/releases)：下载系统环境对应的安装包，解压后在 `kwdb_install/packages` 目录下导入 `KaiwuDB.tar` 文件。
+
+    ```bash
+    docker load < KaiwuDB.tar
+    Loaded image: "image-name"
+    ```
+
 - Docker 命令：执行 `docker pull kwdb/kwdb:2.2.0` 获取镜像。
 
 ## 部署 KWDB
@@ -134,17 +140,10 @@ KWDB 支持通过以下方式获取容器镜像：
 
 如需使用 YAML 文件部署 KWDB，遵循以下步骤。
 
-1. 导入 `KaiwuDB.tar` 文件。
-
-    ```bash
-    docker load < KaiwuDB.tar
-    Loaded image: "image-name"
-    ```
-
-2. 创建 `docker-compose.yml` 配置文件。
+1. 创建 `docker-compose.yml` 配置文件。
 
     ::: warning 说明
-    `image` 参数的取值必须是导入 `KaiwuDB.tar` 文件后获取的镜像名称。
+    `image` 参数的取值必须是导入 `KaiwuDB.tar` 文件后获取的镜像名称或拉取的镜像名。
     :::
 
     配置文件示例：
@@ -179,13 +178,13 @@ KWDB 支持通过以下方式获取容器镜像：
             /kaiwudb/bin/kwbase start-single-node --insecure --listen-addr=0.0.0.0:26257 --advertise-addr=127.0.0.1:26257 --http-addr=0.0.0.0:8080 --store=/kaiwudb/deploy/kaiwudb
     ```
 
-3. 运行以下命令，快速启动 KWDB。
+2. 运行以下命令，快速启动 KWDB。
 
     ```shell
     docker-compose up -d
     ```
 
-4. （可选）配置 KWDB 开机自启动。
+3. （可选）配置 KWDB 开机自启动。
 
     配置 KWDB 开机自启动后，如果系统重启，则自动启动 KWDB。
 
