@@ -301,3 +301,18 @@ KWDB 支持通过以下方式获取容器镜像：
     ```shell
     systemctl enable kaiwudb
     ```
+
+8. （可选）执行 `add_user.sh` 脚本创建数据库用户。如果跳过该步骤，系统将默认使用 `root` 用户，且无需密码访问数据库。
+
+    ```shell
+    ./add_user.sh
+    KaiwuDB deployment mode is secure!
+    Please enter the username:
+    Please enter the password:
+    ```
+
+    执行成功后，控制台输出以下信息：
+
+    ```shell
+    User creation completed successfully！
+    ```
