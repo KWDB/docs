@@ -214,13 +214,12 @@ tar -zxvf <package_name>
 
     ```shell
     ./add_user.sh
-    KaiwuDB deployment mode is secure!
-    Please enter the username:
+    Please enter the username: 
     Please enter the password:
     ```
 
     执行成功后，控制台输出以下信息：
 
     ```shell
-    User creation completed successfully！
+    [ADD USER COMPLETED]:User creation completed.
     ```
