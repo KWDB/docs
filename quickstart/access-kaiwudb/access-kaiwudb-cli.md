@@ -14,16 +14,32 @@ kwbase 是 KWDB 提供的在命令行下运行的数据库连接工具。用户�
 
 ## 非安全模式连接
 
-以下示例说明如何以非安全模式登录 KWDB 集群。
+以下示例说明如何以非安全模式登录 KWDB。
 
-```shell
-./kwbase sql --insecure --host=<your-host-ip>
-```
+- 使用默认 `root` 用户：
+
+    ```shell
+    ./kwbase sql --insecure --host=<your-host-ip>
+    ```
+
+- 使用自定义用户：
+
+    ```shell
+    ./kwbase sql --insecure --host=<your-host-ip> -u <user-name>
+    ```
 
 ## 安全模式连接
 
-以下示例说明如何以 TLS 安全模式登录 KWDB 集群。
+以下示例说明如何以 TLS 安全模式登录 KWDB。
 
-```shell
-./kwbase sql --certs-dir=etc/kwdb/certs --host=<your-host-ip>
-```
+- 使用默认 `root` 用户：
+
+    ```shell
+    ./kwbase sql --certs-dir=etc/kwdb/certs --host=<your-host-ip>
+    ```
+
+- 使用自定义用户：
+
+    ```shell
+    ./kwbase sql --certs-dir=etc/kwdb/certs --host=<your-host-ip> -u <user-name>
+    ```
