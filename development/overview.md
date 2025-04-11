@@ -29,6 +29,7 @@ id: overview
   - [Golang](./connect-kaiwudb/golang/connect-pgx.md)
   - [Node.js](./connect-kaiwudb/node-js/connect-knex.md)
   - [Rust](./connect-kaiwudb/rust/connect-rust.md)
+  - [KWDB MCP Server](./connect-kaiwudb/kwdb-mcp-server/connect-kwdb-mcp-server.md)
 - **读写数据**：介绍如何使用 [Kafka](https://kafka.apache.org/)、[DataX](https://github.com/alibaba/DataX)、[EMQX](https://www.emqx.io/)、[Telegraf](https://www.influxdata.com/time-series-platform/telegraf/) 将数据写入到 KWDB 数据库，或者从 KWDB 数据库读取数据。
   - [Kafka](./read-write-data/kafka.md)
   - [DataX](./read-write-data/datax.md)
