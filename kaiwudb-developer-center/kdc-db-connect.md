@@ -29,7 +29,7 @@ id: kdc-db-connect
 
     <img src="../static/kdc/create-connect-01.png" style="zoom: 50%;" />
 
-2. 在**常规**页签，设置主机、端口、数据库、用户和密码。
+2. 在**常规**页签，设置主机、端口、数据库、用户和密码（如果采用非安全部署模式，则无需设置密码）。
 
     <img src="../static/kdc/create-connect-02.png" style="zoom:67%;" />
 
