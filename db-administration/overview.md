@@ -14,6 +14,7 @@ id: overview
   - [时序表管理](./db-object-mgmt/ts-db/table-mgmt-ts.md)
   - [列管理](./db-object-mgmt/ts-db/column-mgmt-ts.md)
   - [标签管理](./db-object-mgmt/ts-db/label-mgmt-ts.md)
+  - [索引管理](./db-object-mgmt/ts-db/index-mgmt-ts.md)
   - [区域配置管理](./db-object-mgmt/ts-db/zone-mgmt-ts.md)
   - [注释管理](./db-object-mgmt/ts-db/comment-mgmt-ts.md)
 - 关系数据库对象管理

@@ -321,7 +321,7 @@ ALTER TABLE <table_name>
   - `DROP COLUMN`: 删除列，需指定列名。
     - `COLUMN`：可选关键字，如未使用，默认添加列。
     - `IF EXISTS`：可选关键字。当使用 `IF EXISTS` 关键字时，如果列名存在，系统删除列。如果列名不存在，系统删除列失败，但不会报错。当未使用 `IF EXISTS` 关键字时，如果列名存在，系统删除列。如果列名不存在，系统报错，提示列名不存在。
-  - `DROP TAG/ATTRITBUTE`：删除标签，需指定标签名称。不支持删除主标签。
+  - `DROP TAG/ATTRITBUTE`：删除标签，需指定标签名称。不支持删除主标签。如果待删除的标签列已创建索引，删除该标签时，标签列关联的索引将一并删除。
 - RENAME
   - `RENAME TO`: 修改表的名称。
   - `RENAME COLUMN`：修改列的名称。
