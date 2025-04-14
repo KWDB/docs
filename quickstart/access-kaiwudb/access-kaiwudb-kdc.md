@@ -72,7 +72,7 @@ KaiwuDB 开发者中心的安装需满足以下环境要求：
 
    ![](../../static/quickstart/FU8sbwC1yoqPchxh3ttcptgan4d.png)
 
-2. 在**常规**页签，设置主机、端口、数据库、用户和密码。
+2. 在**常规**页签，设置主机、端口、数据库、用户和密码（如果采用非安全部署模式，则无需设置密码）。
 
     <img src="../../static/kdc/create-connect-02.png" style="zoom:67%;" />
 

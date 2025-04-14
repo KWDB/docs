@@ -79,7 +79,12 @@ sudo apt-get install docker-compose
 
 ## 安装包
 
-获取系统环境对应的安装包，将安装包复制到待安装 KWDB 的目标机器上，然后解压缩安装包：
+获取系统环境对应的[安装包](https://gitee.com/kwdb/kwdb/releases)，将安装包复制到待安装 KWDB 的目标机器上，然后解压缩安装包：
+
+::: warning 说明
+
+目前 KWDB Gitee 仓库提供了 Ubuntu V22.04 ARM_64 和 x86_64 架构对应的[安装包](https://gitee.com/kwdb/kwdb/releases/) ，如需其它版本的容器安装包，请联系 [KWDB 技术支持](https://www.kaiwudb.com/support/)。
+:::
 
 ```shell
 tar -zxvf <install_package_name>
