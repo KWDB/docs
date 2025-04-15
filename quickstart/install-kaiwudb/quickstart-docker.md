@@ -73,7 +73,7 @@ KWDB 支持在以下已安装 Docker 的操作系统中进行容器部署。
 
 ### 软件依赖（可选）
 
-如采用安装脚本或 YAML 文件部署 kWDB, 目标机器需已安装 Docker Compose（1.20.0 及以上版本）。
+如采用安装脚本或 YAML 文件部署 KWDB, 目标机器需已安装 Docker Compose（1.20.0 及以上版本）。
 
 - 在线安装 Docker Compose，参见 [Docker 官方文档](https://docs.docker.com/compose/install/)。
 - 离线安装 Docker Compose，参见 [Docker 官方文档](https://docs.docker.com/compose/install/standalone/)。
@@ -418,7 +418,7 @@ KWDB 支持通过以下方式获取容器镜像：
     - `--ipc shareable`：允许其他容器共享此容器的IPC命名空间。
     - `-w /kaiwudb/bin`：将容器内的工作目录设置为 `/kaiwudb/bin`。
     - `$kwdb_image`：容器镜像变量，需替换为实际的镜像名称及标签, 例如 `kwdb:2.2.0`。
-    - `$kwbase_start_command`: 容器内运行的数据库启动命令, 根据安全模式和非安全模式有所不同:
+    - `./kwbase start`: 容器内运行的数据库启动命令, 根据安全模式和非安全模式有所不同:
       - `--insecure`：（仅非安全模式）指定以非安全模式运行。
       - `--certs-dir=/kaiwudb/certs`：（安全模式）指定证书目录位置。
       - `--listen-addr=0.0.0.0:26257`：指定数据库监听的地址和端口。

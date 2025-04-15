@@ -77,9 +77,7 @@ sudo apt-get install docker-compose
 | `8080`                                | 数据库 Web 服务端口                        |
 | `26257`                               | 数据库服务端口、节点监听端口和对外连接端口 |
 
-## 安装包和镜像
-
-#### 获取容器安装包
+## 安装包
 
 获取系统环境对应的[安装包](https://gitee.com/kwdb/kwdb/releases)，将安装包复制到待安装 KWDB 的目标机器上，然后解压缩安装包：
 
@@ -101,20 +99,6 @@ tar -zxvf <install_package_name>
 | `deploy.sh`       | 安装部署脚本，用于安装、卸载、启动、状态获取、关停和重启等操作。  |
 | `packages` 目录   | 存放 DEB、RPM 和镜像包。                                      |
 | `utils` 目录      | 存放工具类脚本。                                             |
-
-
-#### 获取容器镜像
-
-KWDB 支持通过以下方式获取容器镜像：
-
-- [安装包](https://gitee.com/kwdb/kwdb/releases)：下载系统环境对应的安装包，解压后在 `kwdb_install/packages` 目录下导入 `KaiwuDB.tar` 文件。
-
-    ```bash
-    docker load < KaiwuDB.tar
-    Loaded image: "image-name"
-    ```
-
-- Docker 命令：执行 `docker pull kwdb/kwdb:2.2.0` 获取镜像。
 
 ## 节点配置
 

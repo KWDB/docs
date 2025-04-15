@@ -7,7 +7,6 @@ id: quickstart-docker-cluster
 
 本节介绍如何通过 Docker Run 命令在单节点上快速体验 KWDB 集群。请注意，在实际生产环境中，建议每台机器仅部署一个节点，以提升可用性并降低数据丢失风险。
 
-
 ## 前提条件
 
 - 已获取 [KWDB 容器镜像](./quickstart-docker.md#获取容器镜像)。
@@ -84,7 +83,7 @@ id: quickstart-docker-cluster
 
     - 安全模式
 
-        ```bash
+      ```shell
       # 启动第一个容器
       docker run -d --name kwdb1 --privileged \
         --ulimit memlock=-1 --ulimit nofile=1048576 \
@@ -136,13 +135,13 @@ id: quickstart-docker-cluster
     - `-w /kaiwudb/bin`：将容器内的工作目录设置为 `/kaiwudb/bin`。
     - `$kwdb_image`：容器镜像变量，需替换为实际的镜像名称及标签, 例如 `kwdb:2.2.0`。
     - `./kwbase start`: 容器内运行的数据库启动命令, 根据安全模式和非安全模式有所不同:
-      - `--insecure`：（仅非安全模式）指定以非安全模式运行。
-      - `--certs-dir=/kaiwudb/certs`：（安全模式）指定证书目录位置。
-      - `--listen-addr=0.0.0.0:26257`：指定数据库监听的地址和端口。
-      - `--advertise-addr=${host}:2625X`：指定数据库向集群中其他节点通告的地址和端口。
-      - `--http-addr=0.0.0.0:8080`：指定HTTP接口监听的地址和端口。
+      - `--insecure`：（仅非安全模式）以非安全模式运行。
+      - `--certs-dir=/kaiwudb/certs`：（安全模式）证书目录位置。
+      - `--listen-addr=0.0.0.0:26257`：数据库监听的地址和端口。
+      - `--advertise-addr=${host}:2625X`：数据库向集群中其他节点通信的地址和端口。
+      - `--http-addr=0.0.0.0:8080`：HTTP 接口监听的地址和端口。
       - `--store=/kaiwudb/deploy/kaiwudb-container`：指定数据存储位置。
-      - `--join ${host}:26257`：指定集群节点地址，其他节点将尝试加入。
+      - `--join ${host}:26257`：节点连接集群的地址，可指定集群中的一个或多个节点。
 
 3. 初始化集群：
 
