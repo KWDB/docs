@@ -5,13 +5,20 @@ id: quickstart-docker
 
 # 单节点容器部署
 
-本文介绍如何使用 KWDB 容器镜像或容器安装包在单个节点上部署 KWDB。
+KWDB 支持两种单节点容器化部署方式：
 
-- 使用容器镜像部署：仅支持非安全模式，登录 KWDB 数据库时需使用非安全连接模式，具体操作说明，参见[使用 YAML 文件部署 KWDB](#使用-yaml-文件部署-kwdb)。
-- 使用容器安装包部署：同时支持安全模式和非安全模式，登录 KWDB 数据库时应选择相应的连接模式，具体操作说明，参见[使用安装脚本部署 KWDB](#使用安装脚本部署-kwdb)。
+- **使用容器安装包部署**：通过安装包内提供的部署脚本进行部署，支持配置数据库的部署模式、数据存储路径、端口等参数。更多信息，参见[使用安装脚本部署 KWDB](#使用安装脚本部署-kwdb)。
+
+- **使用容器镜像部署**：直接基于 Docker 容器镜像进行部署，提供以下两种方式：
+  - 使用 Docker Compose 和 YAML 配置文件部署，目前只支持非安全部署，更多信息，参见[使用 YAML 文件部署 KWDB](#使用-yaml-文件部署-kwdb)。
+  - 使用 `docker run` 命令行部署，支持安全和非安全部署，更多信息，参见[执行 Docker Run 命令部署 KWDB](#执行-docker-run-命令部署-kwdb)。
+
 
 ::: warning 说明
-KWDB 支持基于 DRBD 块设备复制的开源软件方案，实现主备节点间的数据复制，如需实现单机高可用性，请先参阅[单机高可用性方案](../../best-practices/single-ha.md)。
+
+- KWDB 支持基于 DRBD 块设备复制的开源软件方案，实现主备节点间的数据复制，如需实现单机高可用性，请先参阅[单机高可用性方案](../../best-practices/single-ha.md)。
+- KWDB 支持通过 Docker Run 命令在单节点上快速体验 KWDB 集群，更多信息，参见[执行 Docker Run 命令体验 KWDB 集群](./quickstart-docker-cluster.md)。
+
 :::
 
 ## 部署准备
@@ -64,9 +71,9 @@ KWDB 支持在以下已安装 Docker 的操作系统中进行容器部署。
 |              | 1060e                        | ARM_64   |
 |              | 1070e                        | x86_64   |
 
-### 软件依赖
+### 软件依赖（可选）
 
-目标机器已安装 Docker Compose（1.20.0 及以上版本）。
+如采用安装脚本或 YAML 文件部署 kWDB, 目标机器需已安装 Docker Compose（1.20.0 及以上版本）。
 
 - 在线安装 Docker Compose，参见 [Docker 官方文档](https://docs.docker.com/compose/install/)。
 - 离线安装 Docker Compose，参见 [Docker 官方文档](https://docs.docker.com/compose/install/standalone/)。
@@ -124,80 +131,13 @@ KWDB 支持通过以下方式获取容器镜像：
 
 ## 部署 KWDB
 
-部署 KWDB 时，系统将对配置文件、运行环境、硬件配置和软件依赖进行检查。如果相应硬件未能满足要求，系统将继续安装，并提示硬件规格不满足要求。如果软件依赖未能满足要求，系统将中止安装，并提供相应的提示信息。
+### 使用安装脚本部署 KWDB
+
+使用安装脚本部署 KWDB 时，系统将对配置文件、运行环境、硬件配置和软件依赖进行检查。如果相应硬件未能满足要求，系统将继续安装，并提示硬件规格不满足要求。如果软件依赖未能满足要求，系统将中止安装，并提供相应的提示信息。
 
 在部署过程中，系统会自动生成相关日志。如果部署时出现错误，用户可以通过查看终端输出或 KWDB 安装目录中 `log` 目录里的日志文件，获取详细的错误信息。
 
 部署完成后，系统生成 `/etc/kaiwudb/` 目录。Docker Compose 配置文件 `docker-compose.yml` 位于 `/etc/kaiwudb/script` 目录下。部署完成后，用户可以修改 Docker Compose 配置文件 `docker-compose.yml`，配置 KWDB 的启动参数和 CPU 资源占用率。有关定制化部署配置的详细信息，参见[配置集群](../../deployment/docker/cluster-config-docker.md)。
-
-### 使用 YAML 文件部署 KWDB
-
-**前提条件**：
-
-- 已获取 [KWDB 容器镜像](#获取容器镜像)。
-- 待部署节点的硬件、操作系统、软件依赖和端口满足安装部署要求。
-- 安装用户为 root 用户或者拥有 `sudo` 权限的普通用户。
-  - root 用户和配置 `sudo` 免密的普通用户在执行部署脚本时无需输入密码。
-  - 未配置 `sudo` 免密的普通用户在执行部署脚本时，需要输入密码进行提权。
-- 安装用户为非 root 用户时，需要通过 `sudo usermod -aG docker $USER` 命令将用户添加到 `docker` 组。
-
-**步骤**：
-
-如需使用 YAML 文件部署 KWDB，遵循以下步骤。
-
-1. 创建 `docker-compose.yml` 配置文件。
-
-    ::: warning 说明
-    `image` 参数的取值必须是导入 `KaiwuDB.tar` 文件后获取的镜像名或拉取的镜像名。
-    :::
-
-    配置文件示例：
-
-    ```yaml
-    version: '3.3'
-    services:
-      kaiwudb-container:
-        image: "kwdb/kwdb:2.2.0"
-        container_name: kaiwudb-experience
-        hostname: kaiwudb-experience
-        ports:
-          - 8080:8080
-          - 26257:26257
-        ulimits:
-          memlock: -1
-        volumes:
-          - /dev:/dev
-        networks: 
-          - default
-        restart: on-failure
-        ipc: shareable
-        privileged: true
-        environment:
-          - LD_LIBRARY_PATH=/kaiwudb/lib
-        tty: true
-        working_dir: /kaiwudb/bin
-        command: 
-          - /bin/bash
-          - -c
-          - |
-            /kaiwudb/bin/kwbase start-single-node --insecure --listen-addr=0.0.0.0:26257 --advertise-addr=127.0.0.1:26257 --http-addr=0.0.0.0:8080 --store=/kaiwudb/deploy/kaiwudb
-    ```
-
-2. 运行以下命令，快速启动 KWDB。
-
-    ```shell
-    docker-compose up -d
-    ```
-
-3. （可选）配置 KWDB 开机自启动。
-
-    配置 KWDB 开机自启动后，如果系统重启，则自动启动 KWDB。
-
-    ```shell
-    systemctl enable kaiwudb
-    ```
-
-### 使用安装脚本部署 KWDB
 
 **前提条件**：
 
@@ -307,7 +247,7 @@ KWDB 支持通过以下方式获取容器镜像：
     systemctl enable kaiwudb
     ```
 
-8. （可选）执行 `add_user.sh` 脚本创建数据库用户。如果跳过该步骤，系统将默认使用 `root` 用户，且无需密码访问数据库。
+8. （可选）执行 `add_user.sh` 脚本创建数据库用户。如果跳过该步骤，系统将默认使用部署数据库时使用的用户，无需密码即可访问数据库。
 
     ```shell
     ./add_user.sh
@@ -319,4 +259,176 @@ KWDB 支持通过以下方式获取容器镜像：
 
     ```shell
     [ADD USER COMPLETED]:User creation completed.
+    ```
+  
+### 使用 YAML 文件部署 KWDB
+
+**前提条件**：
+
+- 已获取 [KWDB 容器镜像](#获取容器镜像)。
+- 待部署节点的硬件、操作系统、软件依赖和端口满足安装部署要求。
+- 安装用户为 root 用户或者拥有 `sudo` 权限的普通用户。
+  - root 用户和配置 `sudo` 免密的普通用户在执行部署脚本时无需输入密码。
+  - 未配置 `sudo` 免密的普通用户在执行部署脚本时，需要输入密码进行提权。
+- 安装用户为非 root 用户时，需要通过 `sudo usermod -aG docker $USER` 命令将用户添加到 `docker` 组。
+
+**步骤**：
+
+如需使用 YAML 文件部署 KWDB，遵循以下步骤。
+
+1. 创建 `docker-compose.yml` 配置文件。
+
+    ::: warning 说明
+    `image` 参数的取值必须是导入 `KaiwuDB.tar` 文件后获取的镜像名或拉取的镜像名。
+    :::
+
+    配置文件示例：
+
+    ```yaml
+    version: '3.3'
+    services:
+      kaiwudb-container:
+        image: "kwdb/kwdb:2.2.0"
+        container_name: kaiwudb-experience
+        hostname: kaiwudb-experience
+        ports:
+          - 8080:8080
+          - 26257:26257
+        ulimits:
+          memlock: -1
+        volumes:
+          - /dev:/dev
+        networks: 
+          - default
+        restart: on-failure
+        ipc: shareable
+        privileged: true
+        environment:
+          - LD_LIBRARY_PATH=/kaiwudb/lib
+        tty: true
+        working_dir: /kaiwudb/bin
+        command: 
+          - /bin/bash
+          - -c
+          - |
+            /kaiwudb/bin/kwbase start-single-node --insecure --listen-addr=0.0.0.0:26257 --advertise-addr=127.0.0.1:26257 --http-addr=0.0.0.0:8080 --store=/kaiwudb/deploy/kaiwudb
+    ```
+
+2. 运行以下命令，快速启动 KWDB。
+
+    ```shell
+    docker-compose up -d
+    ```
+
+3. （可选）配置 KWDB 开机自启动。
+
+    配置 KWDB 开机自启动后，如果系统重启，则自动启动 KWDB。
+
+    ```shell
+    systemctl enable kaiwudb
+    ```
+
+### 执行 Docker Run 命令部署 KWDB
+
+**前提条件**：
+
+- 已获取 [KWDB 容器镜像](#获取容器镜像)。
+- 待部署节点的硬件、操作系统、软件依赖和端口满足安装部署要求。
+- 安装用户为 root 用户或者拥有 `sudo` 权限的普通用户。
+  - root 用户和配置 `sudo` 免密的普通用户在执行部署脚本时无需输入密码。
+  - 未配置 `sudo` 免密的普通用户在执行部署脚本时，需要输入密码进行提权。
+- 安装用户为非 root 用户时，需要通过 `sudo usermod -aG docker $USER` 命令将用户添加到 `docker` 组。
+
+**步骤**：
+
+1. （可选）如需以安全模式部署 KWDB, 使用以下命令创建数据库证书颁发机构、`root` 用户的客户端证书以及节点服务器证书。
+
+      ```shell
+      docker run --rm --privileged \
+        -v /etc/kaiwudb/certs:/kaiwudb/certs \
+        -w /kaiwudb/bin \
+        $kwdb_image \
+        bash -c './kwbase cert create-ca --certs-dir=/kaiwudb/certs --ca-key=/kaiwudb/certs/ca.key && \
+                  ./kwbase cert create-client root --certs-dir=/kaiwudb/certs --ca-key=/kaiwudb/certs/ca.key && \
+                  ./kwbase cert create-node 127.0.0.1 localhost 0.0.0.0 --certs-dir=/kaiwudb/certs --ca-key=/kaiwudb/certs/ca.key'
+      ```
+
+    参数说明：
+    - `--rm`：容器停止后自动删除。
+    - `--privileged`：给予容器扩展权限。
+    - `-v`：设置容器目录映射, 将主机的 `/etc/kaiwudb/certs` 目录挂载到容器内的 `/kaiwudb/certs` 目录，用于存放证书和密钥。
+    - `-w /kaiwudb/bin`：将容器内的工作目录设置为 `/kaiwudb/bin`。
+    - `$kwdb_image`：容器镜像，需填入实际的镜像名以及 tag, 例如 `kwdb:2.2.0`。
+    - `bash -c`：在容器中执行后面的证书创建命令, 其中：
+      - `./kwbase cert create-ca`: 创建证书颁发机构(CA)，生成 CA 证书和密钥。
+      - `./kwbase cert create-client root`: 为 `root` 用户创建客户端证书和密钥。
+      - `./kwbase cert create-node 127.0.0.1 localhost 0.0.0.0`: 创建节点服务器证书，支持通过三种网络标识符访问：本地回环地址 (`127.0.0.1`)、本地主机名 (`localhost`) 和所有网络接口 (0.0.0.0)。
+      - 所有命令均使用 `--certs-dir=/kaiwudb/certs` 指定证书存储目录，使用 `--ca-key=/kaiwudb/certs/ca.key` 指定 CA 密钥路径。
+
+2. 启动基于 Docker 的 KWDB 数据库节点。
+
+    - 非安全模式
+
+      ```shell
+      docker run -d --privileged --name kwdb \
+        --ulimit memlock=-1 \
+        --ulimit nofile=$max_files \
+        -p $db_port:26257 \
+        -p $http_port:8080 \
+        -v /var/lib/kaiwudb:/kaiwudb/deploy/kaiwudb-container \
+        --ipc shareable \
+        -w /kaiwudb/bin \
+        $kwdb_image \
+        ./kwbase start-single-node \
+          --insecure \
+          --listen-addr=0.0.0.0:26257 \
+          --http-addr=0.0.0.0:8080 \
+          --store=/kaiwudb/deploy/kaiwudb-container
+      ```
+
+    - TLS 安全模式
+
+        ```bash
+      docker run -d --privileged --name kwdb \
+        --ulimit memlock=-1 \
+        --ulimit nofile=$max_files \
+        -p $db_port:26257 \
+        -p $http_port:8080 \
+        -v /etc/kaiwudb/certs:/kaiwudb/certs \
+        -v /var/lib/kaiwudb:/kaiwudb/deploy/kaiwudb-container \
+        --ipc shareable \
+        -w /kaiwudb/bin \
+        $kwdb_image \
+        ./kwbase start-single-node \
+          --certs-dir=/kaiwudb/certs \
+          --listen-addr=0.0.0.0:26257 \
+          --http-addr=0.0.0.0:8080 \
+          --store=/kaiwudb/deploy/kaiwudb-container
+        ```
+
+    参数说明：
+    - `-d`：后台运行容器并返回容器 ID。
+    - `--name kwdb`：指定容器名称为 `kwdb`，便于后续管理。
+    - `--privileged`：给予容器扩展权限。
+    - `--ulimit memlock=-1`：取消容器内存大小限制。
+    - `--ulimit nofile=$max_files`：设置容器内进程可以打开的最大文件数。
+    - `-p $db_port:26257`：将容器的 26257 端口(数据库主端口)映射到主机的指定端口。
+    - `-p $http_port:8080`: 将容器的 8080 端口(HTTP 端口)映射到主机的指定端口。
+    - `-v /var/lib/kaiwudb:/kaiwudb/deploy/kaiwudb-container`：将主机的 `/var/lib/kaiwudb` 目录挂载到容器内的 `/kaiwudb/deploy/kaiwudb-container` 目录，用于持久化数据存储。
+    - `--ipc shareable`：允许其他容器共享此容器的IPC命名空间。
+    - `-w /kaiwudb/bin`：将容器内的工作目录设置为 `/kaiwudb/bin`。
+    - `$kwdb_image`：容器镜像变量，需替换为实际的镜像名称及标签, 例如 `kwdb:2.2.0`。
+    - `$kwbase_start_command`: 容器内运行的数据库启动命令, 根据安全模式和非安全模式有所不同:
+      - `--insecure`：（仅非安全模式）指定以非安全模式运行。
+      - `--certs-dir=/kaiwudb/certs`：（安全模式）指定证书目录位置。
+      - `--listen-addr=0.0.0.0:26257`：指定数据库监听的地址和端口。
+      - `--http-addr=0.0.0.0:8080`：指定HTTP接口监听的地址和端口。
+      - `--store=/kaiwudb/deploy/kaiwudb-container`：指定数据存储位置。
+
+3. （可选）配置 KWDB 开机自启动。
+
+    配置 KWDB 开机自启动后，如果系统重启，则自动启动 KWDB。
+
+    ```shell
+    systemctl enable kaiwudb
     ```
