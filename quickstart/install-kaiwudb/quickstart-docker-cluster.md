@@ -5,7 +5,7 @@ id: quickstart-docker-cluster
 
 # 执行 Docker Run 命令体验 KWDB 集群
 
-本节介绍如何通过 Docker Run 命令在单节点上快速体验 KWDB 集群。注意，在实际生产环境中，建议每台机器仅部署一个节点，以提升可用性并降低数据丢失风险。
+本节介绍如何通过 Docker Run 命令在单节点上快速体验 KWDB 集群。注意：在实际生产环境中，建议每台机器仅部署一个节点，以提升可用性并降低数据丢失风险。
 
 ## 前提条件
 
@@ -19,6 +19,12 @@ id: quickstart-docker-cluster
 ## 部署步骤
 
 1. （可选）如需以安全模式部署 KWDB 集群, 使用以下命令创建数据库证书颁发机构、`root` 用户的客户端证书以及节点服务器证书。
+
+    ::: warning 提示
+
+    如果采用跨机器安全模式部署，需要使用 `./kwbase cert create-node <node_ip>` 命令为所有节点创建证书和密钥，并将 CA 证书和密钥、节点证书和密钥传输至所有节点；如果需要在其它节点上运行 KaiwuDB 客户端命令，还需要将 `root` 用户的证书和密钥复制到该节点。只有拥有 `root` 用户证书和密钥的节点，才能够访问集群。
+
+    :::
 
       ```shell
       docker run --rm --privileged \
@@ -35,11 +41,11 @@ id: quickstart-docker-cluster
     - `--privileged`：给予容器扩展权限。
     - `-v`：设置容器目录映射, 将主机的 `/etc/kaiwudb/certs` 目录挂载到容器内的 `/kaiwudb/certs` 目录，用于存放证书和密钥。
     - `-w /kaiwudb/bin`：将容器内的工作目录设置为 `/kaiwudb/bin`。
-    - `$kwdb_image`：容器镜像，需填入实际的镜像名以及 tag, 例如 `kwdb:2.2.0`。
+    - `$kwdb_image`：容器镜像，需填入实际的镜像名以及标签, 例如 `kwdb:2.2.0`。
     - `bash -c`：在容器中执行后面的证书创建命令, 其中：
       - `./kwbase cert create-ca`: 创建证书颁发机构(CA)，生成 CA 证书和密钥。
       - `./kwbase cert create-client root`: 为 `root` 用户创建客户端证书和密钥。
-      - `./kwbase cert create-node 127.0.0.1 localhost 0.0.0.0`: 创建节点服务器证书，支持通过三种网络标识符访问：本地回环地址 (`127.0.0.1`)、本地主机名 (`localhost`) 和所有网络接口 (0.0.0.0)。
+      - `./kwbase cert create-node 127.0.0.1 localhost 0.0.0.0`: 创建节点服务器证书和密钥，支持通过三种网络标识符访问：本地回环地址 (`127.0.0.1`)、本地主机名 (`localhost`) 和所有网络接口 (`0.0.0.0`)。
       - 所有命令均使用 `--certs-dir=/kaiwudb/certs` 指定证书存储目录，使用 `--ca-key=/kaiwudb/certs/ca.key` 指定 CA 密钥路径。
 
 2. 启动三个及以上数据库实例。

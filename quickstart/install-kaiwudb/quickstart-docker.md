@@ -10,14 +10,14 @@ KWDB 支持两种单节点容器化部署方式：
 - **使用容器安装包部署**：通过安装包内提供的部署脚本进行部署，支持配置数据库的部署模式、数据存储路径、端口等参数。更多信息，参见[使用安装脚本部署 KWDB](#使用安装脚本部署-kwdb)。
 
 - **使用容器镜像部署**：直接基于 Docker 容器镜像进行部署，提供以下两种方式：
-  - 使用 Docker Compose 和 YAML 配置文件部署，目前只支持非安全部署，更多信息，参见[使用 YAML 文件部署 KWDB](#使用-yaml-文件部署-kwdb)。
-  - 使用 `docker run` 命令行部署，支持安全和非安全部署，更多信息，参见[执行 Docker Run 命令部署 KWDB](#执行-docker-run-命令部署-kwdb)。
+  - 使用 Docker Compose 和 YAML 配置文件部署，目前只支持非安全部署模式，更多信息，参见[使用 YAML 文件部署 KWDB](#使用-yaml-文件部署-kwdb)。
+  - 使用 `docker run` 命令行部署，支持安全和非安全部署模式，更多信息，参见[执行 Docker Run 命令部署 KWDB](#执行-docker-run-命令部署-kwdb)。
 
 
 ::: warning 说明
 
 - KWDB 支持基于 DRBD 块设备复制的开源软件方案，实现主备节点间的数据复制，如需实现单机高可用性，请先参阅[单机高可用性方案](../../best-practices/single-ha.md)。
-- KWDB 支持通过 Docker Run 命令在单节点上快速体验 KWDB 集群，更多信息，参见[执行 Docker Run 命令体验 KWDB 集群](./quickstart-docker-cluster.md)。
+- KWDB 支持通过 `docker run` 命令在单节点上快速体验 KWDB 集群，更多信息，参见[执行 Docker Run 命令体验 KWDB 集群](./quickstart-docker-cluster.md)。
 
 :::
 
@@ -358,12 +358,12 @@ KWDB 支持通过以下方式获取容器镜像：
     - `--privileged`：给予容器扩展权限。
     - `-v`：设置容器目录映射, 将主机的 `/etc/kaiwudb/certs` 目录挂载到容器内的 `/kaiwudb/certs` 目录，用于存放证书和密钥。
     - `-w /kaiwudb/bin`：将容器内的工作目录设置为 `/kaiwudb/bin`。
-    - `$kwdb_image`：容器镜像，需填入实际的镜像名以及 tag, 例如 `kwdb:2.2.0`。
+    - `$kwdb_image`：容器镜像，需填入实际的镜像名以及标签, 例如 `kwdb:2.2.0`。
     - `bash -c`：在容器中执行后面的证书创建命令, 其中：
       - `./kwbase cert create-ca`: 创建证书颁发机构(CA)，生成 CA 证书和密钥。
       - `./kwbase cert create-client root`: 为 `root` 用户创建客户端证书和密钥。
-      - `./kwbase cert create-node 127.0.0.1 localhost 0.0.0.0`: 创建节点服务器证书，支持通过三种网络标识符访问：本地回环地址 (`127.0.0.1`)、本地主机名 (`localhost`) 和所有网络接口 (0.0.0.0)。
-      - 所有命令均使用 `--certs-dir=/kaiwudb/certs` 指定证书存储目录，使用 `--ca-key=/kaiwudb/certs/ca.key` 指定 CA 密钥路径。
+      - `./kwbase cert create-node 127.0.0.1 localhost 0.0.0.0`: 创建节点证书和密钥，支持通过三种网络标识符访问：本地回环地址 (`127.0.0.1`)、本地主机名 (`localhost`) 和所有网络接口 (`0.0.0.0`)。
+      - 所有命令均使用 `--certs-dir=/kaiwudb/certs` 指定证书存储目录，使用 `--ca-key=/kaiwudb/certs/ca.key` 指定密钥路径。
 
 2. 启动基于 Docker 的 KWDB 数据库节点。
 
