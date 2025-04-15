@@ -199,7 +199,7 @@ KWDB MCP Server 可与任何支持 MCP 协议的 LLM Agent 配合使用。LLM Ag
         ```json
         "mcpServers": {
           "kwdb-server-sse": {
-            "url": "http://localhost:8080",
+            "url": "http://localhost:8080/sse",
             "disabled": false,
             "autoApprove": []
           }
@@ -207,7 +207,7 @@ KWDB MCP Server 可与任何支持 MCP 协议的 LLM Agent 配合使用。LLM Ag
         ```
 
         参数说明：
-        - `url`：KWDB MCP Server 的 IP 地址，默认为 `http://localhost:8080`。
+        - `url`：KWDB MCP Server 的 IP 地址，默认为 `http://localhost:8080/sse`。
 
 3. 选择 **Installed** 页签，单击 KWDB MCP Server 旁边的重启按钮，或者单击页面底部的 **Restart Server**。
 
