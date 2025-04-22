@@ -15,7 +15,7 @@ KaiwuDB 开发者中心支持创建、编辑、查看、重命名和删除关系
 
 ### 前提条件
 
-用户拥有 DATABASE CREATE 或 ALL 权限。
+用户为 Admin 用户或 Admin 角色成员。
 
 ### 步骤
 
@@ -37,7 +37,7 @@ KaiwuDB 开发者中心支持创建、编辑、查看、重命名和删除关系
 
 ### 前提条件
 
-用户拥有 DATABASE CREATE 或 ALL 权限。
+用户为 Admin 用户或 Admin 角色成员。
 
 ### 步骤
 
