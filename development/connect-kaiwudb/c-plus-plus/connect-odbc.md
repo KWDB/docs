@@ -62,6 +62,8 @@ id: connect-odbc
 
 ### 连接示例
 
+#### 关系库
+
 以下示例说明如何根据配置的数据源连接 KWDB 数据库并查询数据。
 
 ```cpp{21-29}
@@ -152,6 +154,228 @@ int main() {
     SQLDisconnect(hDbc);
     SQLFreeHandle(SQL_HANDLE_DBC, hDbc);
     SQLFreeHandle(SQL_HANDLE_ENV, hEnv);
+
+    return 0;
+}
+```
+
+#### 时序库
+
+时序引擎默认开启写入短接功能。PostgreSQL ODBC 也支持通过 `PREPARE INSERT` 语句提高时序数据写入速度。
+
+```cpp
+#include <windows.h>
+#include <sql.h>
+#include <sqlext.h>
+#include <iostream>
+#include <vector>
+#include <string>
+#include <iomanip>
+#include <ctime>
+
+// 检查ODBC返回码，如果有错误则抛出异常
+void checkReturn(SQLRETURN ret, SQLHANDLE handle, SQLSMALLINT handleType, const std::string& msg) {
+    if (ret != SQL_SUCCESS && ret != SQL_SUCCESS_WITH_INFO) {
+        SQLCHAR sqlState[6];
+        SQLCHAR message[SQL_MAX_MESSAGE_LENGTH];
+        SQLSMALLINT length;
+        SQLINTEGER nativeError;
+
+        SQLGetDiagRec(handleType, handle, 1, sqlState, &nativeError, message, sizeof(message), &length);
+        std::cerr << "Error: " << msg << "\nSQL State: " << sqlState << "\nMessage: " << message << std::endl;
+        throw std::runtime_error(msg);
+    }
+}
+
+int main() {
+    SQLHENV env = nullptr;
+    SQLHDBC dbc = nullptr;
+    SQLHSTMT stmt = nullptr;
+
+    try {
+        // 分配环境句柄
+        SQLAllocHandle(SQL_HANDLE_ENV, SQL_NULL_HANDLE, &env);
+        SQLSetEnvAttr(env, SQL_ATTR_ODBC_VERSION, (void*)SQL_OV_ODBC3, 0);
+
+        // 分配连接句柄
+        SQLAllocHandle(SQL_HANDLE_DBC, env, &dbc);
+
+        // 连接数据源
+        SQLCHAR* dsn = (SQLCHAR*)"kwdb";
+        SQLCHAR* user = (SQLCHAR*)"u1";
+        SQLCHAR* pass = (SQLCHAR*)"123";
+
+        SQLRETURN ret = SQLConnect(dbc, dsn, SQL_NTS, user, SQL_NTS, pass, SQL_NTS);
+        checkReturn(ret, dbc, SQL_HANDLE_DBC, "Failed to connect to data source");
+
+        std::cout << "Connected to data source successfully." << std::endl;
+
+        // 分配语句句柄
+        SQLAllocHandle(SQL_HANDLE_STMT, dbc, &stmt);
+
+        // 创建数据库
+        const char* createDatabaseSQL =
+                "CREATE TS DATABASE tsdb";
+
+        ret = SQLExecDirect(stmt, (SQLCHAR*)createDatabaseSQL, SQL_NTS);
+        checkReturn(ret, stmt, SQL_HANDLE_STMT, "Failed to create database");
+        std::cout << "Database created successfully." << std::endl;
+
+        // 创建表
+        const char* createTableSQL =
+                "CREATE TABLE tsdb.device_logs ("
+                "    ts TIMESTAMP NOT NULL,"
+                "    status_code SMALLINT,"
+                "    is_online BOOLEAN,"
+                "    error_count INTEGER,"
+                "    device_name VARCHAR(50))"
+                "TAGS ("
+                "    device_id INTEGER NOT NULL,"
+                "    location VARCHAR(100),"
+                "    device_type VARCHAR(30)"
+                ") PRIMARY TAGS (device_id)";
+
+        ret = SQLExecDirect(stmt, (SQLCHAR*)createTableSQL, SQL_NTS);
+        checkReturn(ret, stmt, SQL_HANDLE_STMT, "Failed to create table");
+        std::cout << "Table created successfully." << std::endl;
+
+        // 准备插入语句
+        const char* insertSQL =
+                "INSERT INTO tsdb.device_logs VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+        ret = SQLPrepare(stmt, (SQLCHAR*)insertSQL, SQL_NTS);
+        checkReturn(ret, stmt, SQL_HANDLE_STMT, "Failed to prepare insert statement");
+
+        // 定义要插入的数据
+        struct DeviceLog {
+            SQL_TIMESTAMP_STRUCT ts;
+            SQLSMALLINT status_code;
+            SQLCHAR is_online;
+            SQLINTEGER error_count;
+            SQLCHAR device_name[51];
+            SQLINTEGER device_id;
+            SQLCHAR location[101];
+            SQLCHAR device_type[31];
+        };
+
+        std::vector<DeviceLog> logs;
+
+        // 逐个添加记录
+        DeviceLog log1 = {{2023, 6, 1, 8, 0, 0, 0}, 200, 1, 0, "", 101, "", ""};
+        strncpy(reinterpret_cast<char *>(log1.device_name), "Main Server", sizeof(log1.device_name) - 1);
+        strncpy(reinterpret_cast<char *>(log1.location), "Server Room", sizeof(log1.location) - 1);
+        strncpy(reinterpret_cast<char *>(log1.device_type), "Server", sizeof(log1.device_type) - 1);
+        logs.push_back(log1);
+
+        DeviceLog log2 = {{2023, 6, 1, 8, 5, 0, 0}, 200, 1, 0, "", 101, "", ""};
+        strncpy(reinterpret_cast<char *>(log2.device_name), "Main Server", sizeof(log2.device_name) - 1);
+        strncpy(reinterpret_cast<char *>(log2.location), "Server Room", sizeof(log2.location) - 1);
+        strncpy(reinterpret_cast<char *>(log2.device_type), "Server", sizeof(log2.device_type) - 1);
+        logs.push_back(log2);
+
+        DeviceLog log3 = {{2023, 6, 1, 8, 0, 0, 0}, 404, 0, 3, "", 201, "", ""};
+        strncpy(reinterpret_cast<char *>(log3.device_name), "Sensor Node 1", sizeof(log3.device_name) - 1);
+        strncpy(reinterpret_cast<char *>(log3.location), "Hallway", sizeof(log3.location) - 1);
+        strncpy(reinterpret_cast<char *>(log3.device_type), "Sensor", sizeof(log3.device_type) - 1);
+        logs.push_back(log3);
+
+        DeviceLog log4 = {{2023, 6, 1, 8, 5, 0, 0}, 200, 1, 0, "", 201, "", ""};
+        strncpy(reinterpret_cast<char *>(log4.device_name), "Sensor Node 1", sizeof(log4.device_name) - 1);
+        strncpy(reinterpret_cast<char *>(log4.location), "Hallway", sizeof(log4.location) - 1);
+        strncpy(reinterpret_cast<char *>(log4.device_type), "Sensor", sizeof(log4.device_type) - 1);
+        logs.push_back(log4);
+
+        DeviceLog log5 = {{2023, 6, 1, 8, 0, 0, 0}, 500, 0, 5, "", 301, "", ""};
+        strncpy(reinterpret_cast<char *>(log5.device_name), "Gateway 1", sizeof(log5.device_name) - 1);
+        strncpy(reinterpret_cast<char *>(log5.location), "Entrance", sizeof(log5.location) - 1);
+        strncpy(reinterpret_cast<char *>(log5.device_type), "Gateway", sizeof(log5.device_type) - 1);
+        logs.push_back(log5);
+
+        // 绑定参数并执行插入
+        for (auto& log : logs) {
+            SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_TYPE_TIMESTAMP, SQL_TIMESTAMP, 0, 0, &log.ts, 0, nullptr);
+            SQLBindParameter(stmt, 2, SQL_PARAM_INPUT, SQL_C_SSHORT, SQL_SMALLINT, 0, 0, &log.status_code, 0, nullptr);
+            SQLBindParameter(stmt, 3, SQL_PARAM_INPUT, SQL_C_BIT, SQL_BIT, 0, 0, &log.is_online, 0, nullptr);
+            SQLBindParameter(stmt, 4, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, &log.error_count, 0, nullptr);
+            SQLBindParameter(stmt, 5, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, 50, 0, log.device_name, sizeof(log.device_name), nullptr);
+            SQLBindParameter(stmt, 6, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, &log.device_id, 0, nullptr);
+            SQLBindParameter(stmt, 7, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, 100, 0, log.location, sizeof(log.location), nullptr);
+            SQLBindParameter(stmt, 8, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, 30, 0, log.device_type, sizeof(log.device_type), nullptr);
+
+            ret = SQLExecute(stmt);
+            checkReturn(ret, stmt, SQL_HANDLE_STMT, "Failed to execute insert");
+
+            SQLFreeStmt(stmt, SQL_UNBIND);
+        }
+        std::cout << "Data inserted successfully." << std::endl;
+
+        //  准备查询语句
+        const char* querySQL = "SELECT * FROM tsdb.device_logs WHERE device_type = ?";
+        ret = SQLPrepare(stmt, (SQLCHAR*)querySQL, SQL_NTS);
+        checkReturn(ret, stmt, SQL_HANDLE_STMT, "Failed to prepare query statement");
+
+        // 绑定查询参数
+        SQLCHAR deviceType[] = "Sensor";
+        SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, sizeof(deviceType)-1, 0, deviceType, sizeof(deviceType), nullptr);
+
+        // 执行查询
+        ret = SQLExecute(stmt);
+        checkReturn(ret, stmt, SQL_HANDLE_STMT, "Failed to execute query");
+
+        // 绑定结果列
+        SQLCHAR ts[64];
+        SQLSMALLINT status_code;
+        SQLCHAR is_online;
+        SQLINTEGER error_count;
+        SQLCHAR device_name[51];
+        SQLINTEGER device_id;
+        SQLCHAR location[101];
+        SQLCHAR device_type[31];
+
+        SQLBindCol(stmt, 1, SQL_C_CHAR, &ts, sizeof(ts), nullptr);
+        SQLBindCol(stmt, 2, SQL_C_SSHORT, &status_code, 0, nullptr);
+        SQLBindCol(stmt, 3, SQL_C_BIT, &is_online, 0, nullptr);
+        SQLBindCol(stmt, 4, SQL_C_SLONG, &error_count, 0, nullptr);
+        SQLBindCol(stmt, 5, SQL_C_CHAR, device_name, sizeof(device_name), nullptr);
+        SQLBindCol(stmt, 6, SQL_C_SLONG, &device_id, 0, nullptr);
+        SQLBindCol(stmt, 7, SQL_C_CHAR, location, sizeof(location), nullptr);
+        SQLBindCol(stmt, 8, SQL_C_CHAR, device_type, sizeof(device_type), nullptr);
+
+        // 打印结果
+        std::cout << "\nQuery results for device_type = 'Sensor':" << std::endl;
+        std::cout << std::left << std::setw(20) << "Timestamp"
+                  << std::setw(10) << "Status"
+                  << std::setw(8) << "Online"
+                  << std::setw(10) << "Errors"
+                  << std::setw(15) << "Device Name"
+                  << std::setw(8) << "Dev ID"
+                  << std::setw(15) << "Location"
+                  << std::setw(10) << "Type" << std::endl;
+
+        while (SQLFetch(stmt) == SQL_SUCCESS) {
+            std::cout << std::setw(20) << ts
+                      << std::setw(10) << status_code
+                      << std::setw(8) << (int)is_online
+                      << std::setw(10) << error_count
+                      << std::setw(15) << device_name
+                      << std::setw(8) << device_id
+                      << std::setw(15) << location
+                      << std::setw(10) << device_type << std::endl;
+        }
+
+        std::cout << "\nAll operations completed successfully." << std::endl;
+    } catch (const std::exception& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+        return 1;
+    }
+
+    // 释放资源
+    if (stmt) SQLFreeHandle(SQL_HANDLE_STMT, stmt);
+    if (dbc) {
+        SQLDisconnect(dbc);
+        SQLFreeHandle(SQL_HANDLE_DBC, dbc);
+    }
+    if (env) SQLFreeHandle(SQL_HANDLE_ENV, env);
 
     return 0;
 }
@@ -260,6 +484,8 @@ int main() {
     ```
 
 ### 连接示例
+
+#### 关系库
 
 以下示例说明如何根据配置的数据源连接 KWDB 数据库并查询数据。
 
@@ -379,6 +605,254 @@ int main() {
 
     ```shell
     ./demo
+    ```
+
+#### 时序库
+
+时序引擎默认开启写入短接功能。PostgreSQL ODBC 也支持通过 `PREPARE INSERT` 语句提高时序数据写入速度。
+
+以下示例说明如何根据配置的数据源连接 KaiwuDB 数据库并查询数据。
+
+1. 创建示例程序文件。
+
+    以下示例创建一个名为 `demo1.cpp` 的示例文件。
+
+    ```shell
+    vim demo1.cpp
+    ```
+
+2. 将以下配置示例添加至 `demo1.cpp` 示例文件。
+
+    ```cpp
+    #include <sql.h>
+    #include <sqlext.h>
+    #include <iostream>
+    #include <vector>
+    #include <string>
+    #include <iomanip>
+    #include <ctime>
+    #include <cstring>
+
+    // 检查ODBC返回码，如果有错误则抛出异常
+    void checkReturn(SQLRETURN ret, SQLHANDLE handle, SQLSMALLINT handleType, const std::string& msg) {
+        if (ret != SQL_SUCCESS && ret != SQL_SUCCESS_WITH_INFO) {
+            SQLCHAR sqlState[6];
+            SQLCHAR message[SQL_MAX_MESSAGE_LENGTH];
+            SQLSMALLINT length;
+            SQLINTEGER nativeError;
+
+            SQLGetDiagRec(handleType, handle, 1, sqlState, &nativeError, message, sizeof(message), &length);
+            std::cerr << "Error: " << msg << "\nSQL State: " << sqlState << "\nMessage: " << message << std::endl;
+            throw std::runtime_error(msg);
+        }
+    }
+
+    int main() {
+        SQLHENV env = nullptr;
+        SQLHDBC dbc = nullptr;
+        SQLHSTMT stmt = nullptr;
+
+        try {
+            // 分配环境句柄
+            SQLAllocHandle(SQL_HANDLE_ENV, SQL_NULL_HANDLE, &env);
+            SQLSetEnvAttr(env, SQL_ATTR_ODBC_VERSION, (void*)SQL_OV_ODBC3, 0);
+
+            // 分配连接句柄
+            SQLAllocHandle(SQL_HANDLE_DBC, env, &dbc);
+
+            // 连接数据源
+            SQLCHAR* dsn = (SQLCHAR*)"kwdb";
+            SQLCHAR* user = (SQLCHAR*)"u1";
+            SQLCHAR* pass = (SQLCHAR*)"123";
+
+            SQLRETURN ret = SQLConnect(dbc, dsn, SQL_NTS, user, SQL_NTS, pass, SQL_NTS);
+            checkReturn(ret, dbc, SQL_HANDLE_DBC, "Failed to connect to data source");
+
+            std::cout << "Connected to data source successfully." << std::endl;
+
+            // 分配语句句柄
+            SQLAllocHandle(SQL_HANDLE_STMT, dbc, &stmt);
+
+            // 创建数据库
+            const char* createDatabaseSQL =
+                    "CREATE TS DATABASE tsdb";
+
+            ret = SQLExecDirect(stmt, (SQLCHAR*)createDatabaseSQL, SQL_NTS);
+            checkReturn(ret, stmt, SQL_HANDLE_STMT, "Failed to create database");
+            std::cout << "Database created successfully." << std::endl;
+
+            // 创建表
+            const char* createTableSQL =
+                    "CREATE TABLE tsdb.device_logs ("
+                    "    ts TIMESTAMP NOT NULL,"
+                    "    status_code SMALLINT,"
+                    "    is_online BOOLEAN,"
+                    "    error_count INTEGER,"
+                    "    device_name VARCHAR(50))"
+                    "TAGS ("
+                    "    device_id INTEGER NOT NULL,"
+                    "    location VARCHAR(100),"
+                    "    device_type VARCHAR(30)"
+                    ") PRIMARY TAGS (device_id)";
+
+            ret = SQLExecDirect(stmt, (SQLCHAR*)createTableSQL, SQL_NTS);
+            checkReturn(ret, stmt, SQL_HANDLE_STMT, "Failed to create table");
+            std::cout << "Table created successfully." << std::endl;
+
+            // 准备插入语句
+            const char* insertSQL =
+                    "INSERT INTO tsdb.device_logs VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+            ret = SQLPrepare(stmt, (SQLCHAR*)insertSQL, SQL_NTS);
+            checkReturn(ret, stmt, SQL_HANDLE_STMT, "Failed to prepare insert statement");
+
+            // 定义要插入的数据
+            struct DeviceLog {
+                SQL_TIMESTAMP_STRUCT ts;
+                SQLSMALLINT status_code;
+                SQLCHAR is_online;
+                SQLINTEGER error_count;
+                SQLCHAR device_name[51];
+                SQLINTEGER device_id;
+                SQLCHAR location[101];
+                SQLCHAR device_type[31];
+            };
+
+            std::vector<DeviceLog> logs;
+
+            // 逐个添加记录
+            DeviceLog log1 = {{2023, 6, 1, 8, 0, 0, 0}, 200, 1, 0, "", 101, "", ""};
+            strncpy(reinterpret_cast<char *>(log1.device_name), "Main Server", sizeof(log1.device_name) - 1);
+            strncpy(reinterpret_cast<char *>(log1.location), "Server Room", sizeof(log1.location) - 1);
+            strncpy(reinterpret_cast<char *>(log1.device_type), "Server", sizeof(log1.device_type) - 1);
+            logs.push_back(log1);
+
+            DeviceLog log2 = {{2023, 6, 1, 8, 5, 0, 0}, 200, 1, 0, "", 101, "", ""};
+            strncpy(reinterpret_cast<char *>(log2.device_name), "Main Server", sizeof(log2.device_name) - 1);
+            strncpy(reinterpret_cast<char *>(log2.location), "Server Room", sizeof(log2.location) - 1);
+            strncpy(reinterpret_cast<char *>(log2.device_type), "Server", sizeof(log2.device_type) - 1);
+            logs.push_back(log2);
+
+            DeviceLog log3 = {{2023, 6, 1, 8, 0, 0, 0}, 404, 0, 3, "", 201, "", ""};
+            strncpy(reinterpret_cast<char *>(log3.device_name), "Sensor Node 1", sizeof(log3.device_name) - 1);
+            strncpy(reinterpret_cast<char *>(log3.location), "Hallway", sizeof(log3.location) - 1);
+            strncpy(reinterpret_cast<char *>(log3.device_type), "Sensor", sizeof(log3.device_type) - 1);
+            logs.push_back(log3);
+
+            DeviceLog log4 = {{2023, 6, 1, 8, 5, 0, 0}, 200, 1, 0, "", 201, "", ""};
+            strncpy(reinterpret_cast<char *>(log4.device_name), "Sensor Node 1", sizeof(log4.device_name) - 1);
+            strncpy(reinterpret_cast<char *>(log4.location), "Hallway", sizeof(log4.location) - 1);
+            strncpy(reinterpret_cast<char *>(log4.device_type), "Sensor", sizeof(log4.device_type) - 1);
+            logs.push_back(log4);
+
+            DeviceLog log5 = {{2023, 6, 1, 8, 0, 0, 0}, 500, 0, 5, "", 301, "", ""};
+            strncpy(reinterpret_cast<char *>(log5.device_name), "Gateway 1", sizeof(log5.device_name) - 1);
+            strncpy(reinterpret_cast<char *>(log5.location), "Entrance", sizeof(log5.location) - 1);
+            strncpy(reinterpret_cast<char *>(log5.device_type), "Gateway", sizeof(log5.device_type) - 1);
+            logs.push_back(log5);
+
+            // 绑定参数并执行插入
+            for (auto& log : logs) {
+                SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_TYPE_TIMESTAMP, SQL_TIMESTAMP, 0, 0, &log.ts, 0, nullptr);
+                SQLBindParameter(stmt, 2, SQL_PARAM_INPUT, SQL_C_SSHORT, SQL_SMALLINT, 0, 0, &log.status_code, 0, nullptr);
+                SQLBindParameter(stmt, 3, SQL_PARAM_INPUT, SQL_C_BIT, SQL_BIT, 0, 0, &log.is_online, 0, nullptr);
+                SQLBindParameter(stmt, 4, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, &log.error_count, 0, nullptr);
+                SQLBindParameter(stmt, 5, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, 50, 0, log.device_name, sizeof(log.device_name), nullptr);
+                SQLBindParameter(stmt, 6, SQL_PARAM_INPUT, SQL_C_SLONG, SQL_INTEGER, 0, 0, &log.device_id, 0, nullptr);
+                SQLBindParameter(stmt, 7, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, 100, 0, log.location, sizeof(log.location), nullptr);
+                SQLBindParameter(stmt, 8, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, 30, 0, log.device_type, sizeof(log.device_type), nullptr);
+
+                ret = SQLExecute(stmt);
+                checkReturn(ret, stmt, SQL_HANDLE_STMT, "Failed to execute insert");
+
+                SQLFreeStmt(stmt, SQL_UNBIND);
+            }
+            std::cout << "Data inserted successfully." << std::endl;
+
+            //  准备查询语句
+            const char* querySQL = "SELECT * FROM tsdb.device_logs WHERE device_type = ?";
+            ret = SQLPrepare(stmt, (SQLCHAR*)querySQL, SQL_NTS);
+            checkReturn(ret, stmt, SQL_HANDLE_STMT, "Failed to prepare query statement");
+
+            // 绑定查询参数
+            SQLCHAR deviceType[] = "Sensor";
+            SQLBindParameter(stmt, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, sizeof(deviceType)-1, 0, deviceType, sizeof(deviceType), nullptr);
+
+            // 执行查询
+            ret = SQLExecute(stmt);
+            checkReturn(ret, stmt, SQL_HANDLE_STMT, "Failed to execute query");
+
+            // 绑定结果列
+            SQLCHAR ts[64];
+            SQLSMALLINT status_code;
+            SQLCHAR is_online;
+            SQLINTEGER error_count;
+            SQLCHAR device_name[51];
+            SQLINTEGER device_id;
+            SQLCHAR location[101];
+            SQLCHAR device_type[31];
+
+            SQLBindCol(stmt, 1, SQL_C_CHAR, &ts, sizeof(ts), nullptr);
+            SQLBindCol(stmt, 2, SQL_C_SSHORT, &status_code, 0, nullptr);
+            SQLBindCol(stmt, 3, SQL_C_BIT, &is_online, 0, nullptr);
+            SQLBindCol(stmt, 4, SQL_C_SLONG, &error_count, 0, nullptr);
+            SQLBindCol(stmt, 5, SQL_C_CHAR, device_name, sizeof(device_name), nullptr);
+            SQLBindCol(stmt, 6, SQL_C_SLONG, &device_id, 0, nullptr);
+            SQLBindCol(stmt, 7, SQL_C_CHAR, location, sizeof(location), nullptr);
+            SQLBindCol(stmt, 8, SQL_C_CHAR, device_type, sizeof(device_type), nullptr);
+
+            // 打印结果
+            std::cout << "\nQuery results for device_type = 'Sensor':" << std::endl;
+            std::cout << std::left << std::setw(20) << "Timestamp"
+                      << std::setw(10) << "Status"
+                      << std::setw(8) << "Online"
+                      << std::setw(10) << "Errors"
+                      << std::setw(15) << "Device Name"
+                      << std::setw(8) << "Dev ID"
+                      << std::setw(15) << "Location"
+                      << std::setw(10) << "Type" << std::endl;
+
+            while (SQLFetch(stmt) == SQL_SUCCESS) {
+                std::cout << std::setw(20) << ts
+                          << std::setw(10) << status_code
+                          << std::setw(8) << (int)is_online
+                          << std::setw(10) << error_count
+                          << std::setw(15) << device_name
+                          << std::setw(8) << device_id
+                          << std::setw(15) << location
+                          << std::setw(10) << device_type << std::endl;
+            }
+
+            std::cout << "\nAll operations completed successfully." << std::endl;
+        } catch (const std::exception& e) {
+            std::cerr << "Error: " << e.what() << std::endl;
+            return 1;
+        }
+
+        // 释放资源
+        if (stmt) SQLFreeHandle(SQL_HANDLE_STMT, stmt);
+        if (dbc) {
+            SQLDisconnect(dbc);
+            SQLFreeHandle(SQL_HANDLE_DBC, dbc);
+        }
+        if (env) SQLFreeHandle(SQL_HANDLE_ENV, env);
+
+        return 0;
+    }
+    ```
+
+3. 使用 g++ 编译器编译 `demo1.cpp` 示例文件。
+
+    ```shell
+    g++ demo1.cpp -lodbc -o demo1
+    ```
+
+    系统生成一个名为 `demo1` 的⼆进制⽂件。
+
+4. 运行示例程序。
+
+    ```shell
+    ./demo1
     ```
 
 ## 支持的 ODBC 接口
