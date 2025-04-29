@@ -19,6 +19,7 @@ Currently, we are maintaining the following versions of KWDB documentation in di
 | Branch | Documentation Version                  |
 | :----- | :------------------------------------- |
 | `master` | Latest |
+| `2.2.0` | KWDB 2.2.0 |
 | `2.1.0` | KWDB 2.1.0 |
 | `2.0.4` | KWDB 2.0.4 |
 | `2.0` | KWDB 2.0 |
