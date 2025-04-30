@@ -443,7 +443,7 @@ KWDB 支持以下嵌套查询：
 - 内连接（INNER JOIN）
 - 左连接（LEFT JOIN）
 - 右连接（RIGHT JOIN）
-- 全连接（ FULL JOIN）
+- 全连接（FULL JOIN）
 
 ::: warning 说明
 
