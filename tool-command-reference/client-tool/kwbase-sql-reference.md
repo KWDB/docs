@@ -45,18 +45,15 @@ id: kwbase-sql-reference
 | `--sql-audit-dir`         | 安全审计日志的位置。默认情况下，SQL 审核日志与 KWDB 生成的其他日志写入同一目录。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | `-s, --store`             | 存储设备路径，用于存储数据库数据。支持同时指定设备属性和空间大小。若使用多个设备存储数据，则使用 `--store=/mnt/ssd01 --store=/mnt/ssd02` 方式。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | `--thread-pool-size`      | AE executor 线程池大小。<br >默认值：10                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| `--tlcp`                  | 使用 TLCP 安全启动 KWDB 节点。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | `--upgrade-complete`      | 节点升级完成。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 
 ### 使用举例
 
 以下示例开启一个多节点 KWDB 集群。
 
-- 安全模式
+- TLS 安全模式
 
     以下示例假设已为 `root` 用户生成证书。有关生成证书的详细信息，参见 `kwbase cert` 命令的[使用举例](#使用举例-4)章节。
-  
-  - TLS 安全模式
 
     ```bash
     ./kwbase start \
@@ -69,19 +66,6 @@ id: kwbase-sql-reference
     --cache=.25 \
     --max-sql-memory=.25 \
     --background
-    ```
-
-  - TLCP 安全模式
-
-    ```bash
-    ./kwbase start \
-    --certs-dir=certs \
-    --store=/opt/store1 \
-    --advertise-addr=<node1_address>:26257 \
-    --listen-addr=<node1_address>:26257 \
-    --http-addr=<node1_address>:8080 \
-    --background \
-    --tlcp
     ```
 
 - 非安全模式
@@ -138,7 +122,6 @@ id: kwbase-sql-reference
 | `--sql-audit-dir`      | 安全审计日志的位置。默认情况下，SQL 审核日志与 KWDB 生成的其他日志写入同一目录。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | `-s, --store`          | 存储设备路径，用于存储数据库数据。支持同时指定设备属性和空间大小。若使用多个设备存储数据，则使用 `--store=/mnt/ssd01 --store=/mnt/ssd02` 方式。                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | `--thread-pool-size`   | AE executor 线程池大小。<br >默认值：10                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| `--tlcp`               | 使用 TLCP 安全启动 KWDB 节点。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | `--upgrade-complete`   | 节点升级完成。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 
 ### 使用举例
@@ -192,18 +175,15 @@ id: kwbase-sql-reference
 | `--sql-audit-dir`         | 安全审计日志的位置。默认情况下，SQL 审核日志与 KWDB 生成的其他日志写入同一目录。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | `-s, --store`             | 存储设备路径，用于存储数据库数据。支持同时指定设备属性和空间大小。若使用多个设备存储数据，则使用 `--store=/mnt/ssd01 --store=/mnt/ssd02` 方式。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | `--thread-pool-size`      | AE executor 线程池大小。<br >默认值：10                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| `--tlcp`                  | 使用 TLCP 安全启动 KWDB 节点。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | `--upgrade-complete`      | 节点升级完成。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 
 ### 使用举例
 
 以下示例开启一个单节点 KWDB 集群。
 
-- 安全模式
+- TLS 安全模式
 
     以下示例假设已为 `root` 用户生成证书。有关生成证书的详细信息，参见 `kwbase cert` 命令的[使用举例](#使用举例-4)章节。
-
-  - TLS 安全模式
 
       ```bash
       ./kwbase start-single-node \ 
@@ -212,18 +192,6 @@ id: kwbase-sql-reference
       --advertise-addr=127.0.0.1:26257 \
       --http-addr=0.0.0.0:8080 \
       --store=/kaiwudb/deploy/kaiwudb
-      ```
-
-  - TLCP 安全模式
-
-      ```bash
-      ./kwbase start-single-node \
-      --certs-dir=/root/certs \
-      --listen-addr=0.0.0.0:26257 \
-      --advertise-addr=127.0.0.1:26257 \
-      --http-addr=0.0.0.0:8080 \
-      --store=/kaiwudb/deploy/kaiwudb \
-      --tlcp
       ```
 
 - 非安全模式
@@ -257,7 +225,6 @@ id: kwbase-sql-reference
 | `-h`, `--help` | `kwbase init` 命令的帮助信息。                                                                                                                                                                                                                     |
 | `--host`       | 连接的 KWDB 节点。支持 IP 地址/主机名，采用 `<addr/host>[:<port>]` 格式。如果未指定端口号，默认使用 `26257`。对于 IPv6 地址，使用 `[...]` 表示法，例如：`[::1]:26257` 或 `[fe80::f6f2:::]:26257`。<br >环境变量：`KWBASE_HOST`                       |
 | `--insecure`   | 以非安全模式启动集群。如未指定，以安全模式启动集群。                                                                                                                                                                                               |
-| `--tlcp`       | 使用 TLCP 安全启动 KWDB 节点。                                                                                                                                                                                                                  |
 | `--url`        | 连接 URL，采用 `postgresql://[user[:passwd]@]host[:port]/[db][?parameters...]` 格式，例如 "postgresql://myuser@localhost:26257/mydb"。如未指定，使用 `host`、`port`、`user`、`databse`、`insecure`、`certs-dir` 等连接参数。<br >环境变量：`KWBASE_URL` |
 
 ### 使用举例
@@ -336,7 +303,6 @@ id: kwbase-sql-reference
 | `--key-size`           | CA、节点、客户端证书密钥的大小（单位：比特）。<br >默认值：2048 比特                                                                                                                                                                                                                                                                                                                                                                                                                                                  | - `kwbase cert create-ca` <br >- `kwbase cert create-client-ca` <br >- `kwbase cert create-node` <br >- `kwbase cert create-client`                                    |
 | `--lifetime`           | 证书的生命周期。<br >默认值：`43920h0m0s`                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | - `kwbase cert create-ca` <br >- `kwbase cert create-client-ca` <br >- `kwbase cert create-node` <br >- `kwbase cert create-client`                                    |
 | `--overwrite`          | 覆写存在的证书和密钥文件。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       | - `kwbase cert create-ca` <br >- `kwbase cert create-client-ca` <br >- `kwbase cert create-node` <br >- `kwbase cert create-client`                                    |
-| `--tlcp`               | 生成 TLCP 证书。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | `kwbase cert`                                                                                                                                        |
 
 ### 使用举例
 
@@ -441,28 +407,18 @@ id: kwbase-sql-reference
 | `--insecure`           | 以非安全模式启动集群。如未指定，以安全模式启动集群。                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | `--safe-updates`       | 禁用可能产生意外副作用的 SQL 语句。例如，未指定 `WHERE` 子句的 `DELETE` 或 `UPDATE` 语句。默认情况下，开启该配置（`true`）。用户可以用 `SET sql_safe_updates = FALSE` 来禁用此配置。                                                                                                                                                                                                                                                                                                                               |
 | `--set`                | 用于在运行 SQL Shell 之前，设置客户端配置参数。                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| `--ssl-version`        | 使用 TLCP 安全启动客户端。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| `--tlcp`               | 使用 TLCP 安全启动 KWDB 节点。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | `--url`                | 连接 URL，采用 `postgresql://[user[:passwd]@]host[:port]/[db][?parameters...]` 格式，例如 "postgresql://myuser@localhost:26257/mydb"。如未指定，使用 `host`、`port`、`user`、`databse`、`insecure`、`certs-dir` 等连接参数。<br >环境变量：`KWBASE_URL`                                                                                                                                                                                                                                                               |
 | `-u`, `--user`         | KWDB 数据库用户名。<br >环境变量：`KWBASE_USER`                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | `--watch`              | 按照指定的时间间隔重复执行 `--execute` 参数指定的 SQL 语句。如果某次 SQL 语句执行失败，客户端将停止监控。                                                                                                                                                                                                                                                                                                                                                                                                        |
 
 ### 使用举例
 
-- 安全模式
+- TLS 安全模式
 
   以下示例假设已为 `root` 用户生成证书。有关生成证书的详细信息，参见 `kwbase cert` 命令的[使用举例](#使用举例-4)章节。
 
-  - TLS 安全模式
-
     ```bash
     ./kwbase sql --certs-dir=certs --host=<address_of_any node>
-    ```
-
-  - TLCP 安全模式
-
-    ```bash
-    ./kwbase sql --certs-dir=certs --host=<address_of_any node> --ssl-version=TLCPv1.1
     ```
 
 - 非安全模式
@@ -525,7 +481,6 @@ id: kwbase-sql-reference
 | `-h`, `--help`         | 命令的帮助信息。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | - `kwbase auth-session` <br >- `kwbase auth-session login` <br >- `kwbase auth-session logout` <br >- `kwbase auth-session list` |
 | `--insecure`           | 以非安全模式启动集群。如未指定，以安全模式启动集群。                                                                                                                                                                                                                                                                                                                                                                                                                                                             | - `kwbase auth-session login` <br >- `kwbase auth-session logout` <br >- `kwbase auth-session list`                        |
 | `--only-cookie`        | 将命令行回显中只显示新创建的 HTTP 认证令牌（即 “cookie”），适用于向其他命令输出。                                                                                                                                                                                                                                                                                                                                                                                                                              | `kwbase auth-session login`                                                                                  |
-| `--tlcp`               | 使用 TLCP 安全启动 KWDB 节点。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | - `kwbase auth-session login` <br >- `kwbase auth-session logout` <br >- `kwbase auth-session list`                        |
 | `--url`                | 连接 URL，采用 `postgresql://[user[:passwd]@]host[:port]/[db][?parameters...]` 格式，例如 "postgresql://myuser@localhost:26257/mydb"。如未指定，使用 `host`、`port`、`user`、`databse`、`insecure`、`certs-dir` 等连接参数。<br >环境变量：`KWBASE_URL`                                                                                                                                                                                                                                                               | - `kwbase auth-session login` <br >- `kwbase auth-session logout` <br >- `kwbase auth-session list`                        |
 | `-u`, `--user`         | KWDB 数据库用户名。<br >环境变量：`KWBASE_USER`                                                                                                                                                                                                                                                                                                                                                                                                                                                                    | - `kwbase auth-session login` <br >- `kwbase auth-session logout` <br >- `kwbase auth-session list`                        |
 
@@ -635,7 +590,6 @@ id: kwbase-sql-reference
 | `--ranges`                            | 查看节点数据分片和副本的详细信息。                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | `kwbase node status`                                                                                                                                      |
 | `--stats`                             | 查看节点磁盘使用的详细信息。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | `kwbase node status`                                                                                                                                      |
 | `--timeout`                           | 设置子命令运行的超时时间。如果未在规定时间内完成操作，系统返回错误。超时时间以秒（s）、分钟（m）和小时（h）为单位。用户在数值后添加相应的时间单位即可，例如 `1h`。                                                                                                                                                                                                                                                                                                                                               | `kwbase node ls`                                                                                                                                          |
-| `--tlcp`                              | 使用 TLCP 安全启动 KWDB 节点。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | - `kwbase node ls` <br >- `kwbase node decommission` <br >- `kwbase node recommission` <br >- `kwbase node drain` <br >- `kwbase node upgrade`                                      |
 | `--url`                               | 连接 URL，采用 `postgresql://[user[:passwd]@]host[:port]/[db][?parameters...]` 格式，例如 "postgresql://myuser@localhost:26257/mydb"。如未指定，使用 `host`、`port`、`user`、`databse`、`insecure`、`certs-dir` 等连接参数。<br >环境变量：`KWBASE_URL`                                                                                                                                                                                                                                                               | - `kwbase node ls` <br >- `kwbase node decommission` <br >- `kwbase node recommission` <br >- `kwbase node drain` <br >- `kwbase node upgrade`                                      |
 | `--wait`                              | 指定在将目标节点标记为停用状态后要何时返回。该参数支持以下取值：<br >- `all`：直到所有目标节点的副本数量降至零。<br >- `none`：将目标节点标记为停用状态，但无需等待整个过程完成。当从外部系统手动轮询时，使用该参数取值。<br >默认值：`all`                                                                                                                                                                                                                                                                                     | - `kwbase node decommission` <br >- `kwbase node upgrade`                                                                                                         |
 
@@ -685,7 +639,6 @@ id: kwbase-sql-reference
 | `--out`                               | Haproxy 配置文件的生成路径。<br >默认值：`haproxy.cfg`                                                                                                                                                                                                                                                                                                                                                                                                                                                                | `kwbase gen haproxy`                                            |
 | `--overwrite`                         | 覆写已存在的密钥。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               | `kwbase gen encryption-key`                                     |
 | `-s`，`--size`                        | 静态加密时，AES 密钥的大小，支持以下取值：<br >- 128 <br >- 192 <br >- 256 <br >默认值：128                                                                                                                                                                                                                                                                                                                                                                                                                                            | `kwbase gen encryption-key`                                     |
-| `--tlcp`                              | 使用 TLCP 安全启动 KWDB 节点。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | `kwbase gen haproxy`                                            |
 | `--url`                               | 连接 URL，采用 `postgresql://[user[:passwd]@]host[:port]/[db][?parameters...]` 格式，例如 "postgresql://myuser@localhost:26257/mydb"。如未指定，使用 `host`、`port`、`user`、`databse`、`insecure`、`certs-dir` 等连接参数。<br >环境变量：`KWBASE_URL`                                                                                                                                                                                                                                                               | `kwbase gen haproxy`                                            |
 
 ## kwbase version

@@ -90,12 +90,9 @@ KaiwuDB JDBC 是 KWDB 的官方 Java 语言连接器。它基于 PgJDBC 扩展�
 | `password`            | null                | 身份验证时使用的密码。                    |
 | `ssl`                 | null                | 使用 SSL 连接，服务器必须使用 SSL 进行编译。                                         |
 | `sslmode`             | null                | SSL 模式，支持的取值包括 `disable`、`allow`、`prefer`、`require`、`verify-ca` 和 `verify-full`。有关 SSL 模式参数的详细信息，参见 [SSL 模式参数](#ssl-模式参数)。 |
-| `sslcert`             | null                | 客户端 TLS 或 TLCP 证书的存放位置。                                                              |
-| `sslkey`              | null                | 客户端 `pkcs#8` 格式的 TLS 或 TLCP 密钥的存放位置。                                                       |
-| `sslrootcert`         | null                | 用于验证服务器身份的 TLS 或 TLCP 根证书的存放位置。                                                   |
-| `sslsigncert`         | null                | TLCP 签名证书的存放位置。 |
-| `sslsignkey`          | null                | TLCP 签名私钥的存放位置。  |
-| `ssl_max_protocol_version`  | null          | TLCP 协议的版本号。 |
+| `sslcert`             | null                | 客户端 TLS 证书的存放位置。                                                              |
+| `sslkey`              | null                | 客户端 `pkcs#8` 格式的 TLS 密钥的存放位置。                                                       |
+| `sslrootcert`         | null                | 用于验证服务器身份的 TLS 根证书的存放位置。                                                   |
 | `ApplicationName`     | `KaiwuDB JDBC Driver` | 应用名称。                                                                           |
 | `tcpKeepAlive`        | `false`             | 开启或禁用 TCP 保持连接功能。                                                        |
 | `loginTimeout`        | `0`                 | 指定等待建立数据库连接的时间（单位：秒）。                                        |
