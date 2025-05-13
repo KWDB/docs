@@ -614,7 +614,7 @@ ALTER TABLE [IF EXISTS] <table_name>
 | ALTER [COLUMN] <column_name> [SET [DEFAULT <a_expr> | NOT NULL] 
 | ALTER [COLUMN] <column_name> DROP [DEFAULT | NOT NULL | STORED] 
 | ALTER [COLUMN] <column_name> [SET DATA] TYPE <type_name> [COLLATE <collation_name>]
-| ALTER PRIMARY KEY USING COLUMN (<index_params>) [interleave_clause]
+| ALTER PRIMARY KEY USING COLUMNS (<index_params>) [interleave_clause]
 | DROP [COLUMN] [IF EXISTS] <column_name> [CASCADE | RESTRICT] 
 | DROP CONSTRAINT [IF EXISTS] <constraint_name> [CASCADE | RESTRICT]
 | RENAME TO new_name
