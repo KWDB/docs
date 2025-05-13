@@ -173,7 +173,7 @@ kwdb-tsbs 提供数据导入工具（`tsbs_load_data`），将由 `tsbs_generate
 | `db-name`                     | 需要访问的 KWDB 数据库名称。                                                                                     | STRING | N/A                   | `benchmark`                                                 |
 | `case`                        | 测试场景类型。                                                                                                   | STRING | `cpu-only`            | `cpu-only`                                                  |
 | `workers`                     | 并发写入线程数。                                                                                                 | INT    | 正整数                | 建议与生成数据时使用的 `orderquantity` 参数的取值保持一致。 |
-| `partition`                   | 设置是否分区。- 单节点：`false`- 集群：`true`                                                                    | BOOL   | `true` 或 `false`     | `false`                                                     |
+| `partition`                   | 设置是否分区。<br > - 单节点：`false` <br > - 集群：`true`                                                                    | BOOL   | `true` 或 `false`     | `false`                                                     |
 
 ### 生成查询
 
