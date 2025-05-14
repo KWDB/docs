@@ -5,7 +5,7 @@ id: kwbase-cli-deployment
 
 # kwbase CLI 部署
 
-本节介绍如何通过 kwbase CLI  命令在单节点上部署 KWDB 集群。注意：在实际生产环境中，建议每台机器仅部署一个节点，以提升可用性并降低数据丢失风险。
+本节介绍如何通过 kwbase CLI  命令在单台机器上部署 KWDB 集群。注意：在实际生产环境中，建议每台机器仅部署一个节点，以提升可用性并降低数据丢失风险。
 
 **前提条件**
 
@@ -58,26 +58,26 @@ id: kwbase-cli-deployment
             # 启动第一个节点
             ./kwbase start-single-replica --insecure \
             --listen-addr=0.0.0.0:26257 \
-            --advertise-addr=${host}:26257 \
+            --advertise-addr=${host1}:26257 \
             --http-addr=0.0.0.0:8080 \
             --store=/var/lib/kaiwudb \
-            --join=${host}:26257
+            --join=${host1}:26257
 
             # 启动第二个节点
             ./kwbase start-single-replica --insecure \
             --listen-addr=0.0.0.0:26257 \
-            --advertise-addr=${host}:26258 \
+            --advertise-addr=${host2}:26258 \
             --http-addr=0.0.0.0:8080 \
             --store=/var/lib/kaiwudb \
-            --join=${host}:26257
+            --join=${host1}:26257
 
             # 启动第三个节点
             ./kwbase start-single-replica --insecure \
             --listen-addr=0.0.0.0:26257 \
-            --advertise-addr=${host}:26259 \
+            --advertise-addr=${host3}:26259 \
             --http-addr=0.0.0.0:8080 \
             --store=/var/lib/kaiwudb \
-            --join=${host}:26257
+            --join=${host1}:26257
             ```
 
         - 安全模式：
@@ -87,28 +87,28 @@ id: kwbase-cli-deployment
             ./kwbase start-single-replica \
             --certs-dir=/kaiwudb/certs \
             --listen-addr=0.0.0.0:26257 \
-            --advertise-addr=${host}:26257 \
+            --advertise-addr=${host1}:26257 \
             --http-addr=0.0.0.0:8080 \
             --store=/var/lib/kaiwudb \
-            --join=${host}:26257
+            --join=${host1}:26257
 
             # 启动第二个节点
             ./kwbase start-single-replica \
             --certs-dir=/kaiwudb/certs \
             --listen-addr=0.0.0.0:26257 \
-            --advertise-addr=${host}:26258 \
+            --advertise-addr=${host2}:26258 \
             --http-addr=0.0.0.0:8080 \
             --store=/var/lib/kaiwudb \
-            --join=${host}:26257
+            --join=${host1}:26257
 
             # 启动第三个节点
             ./kwbase start-single-replica \
             --certs-dir=/kaiwudb/certs \
             --listen-addr=0.0.0.0:26257 \
-            --advertise-addr=${host}:26259 \
+            --advertise-addr=${host3}:26259 \
             --http-addr=0.0.0.0:8080 \
             --store=/var/lib/kaiwudb \
-            --join=${host}:26257
+            --join=${host1}:26257
             ```
 
     - 多副本集群：
@@ -119,26 +119,26 @@ id: kwbase-cli-deployment
             # 启动第一个节点
             ./kwbase start --insecure \
             --listen-addr=0.0.0.0:26257 \
-            --advertise-addr=${host}:26257 \
+            --advertise-addr=${host1}:26257 \
             --http-addr=0.0.0.0:8080 \
             --store=/var/lib/kaiwudb \
-            --join=${host}:26257
+            --join=${host1}:26257
 
             # 启动第二个节点
             ./kwbase start --insecure \
             --listen-addr=0.0.0.0:26257 \
-            --advertise-addr=${host}:26258 \
+            --advertise-addr=${host2}:26258 \
             --http-addr=0.0.0.0:8080 \
             --store=/var/lib/kaiwudb \
-            --join=${host}:26257
+            --join=${host1}:26257
 
             # 启动第三个节点
             ./kwbase start --insecure \
             --listen-addr=0.0.0.0:26257 \
-            --advertise-addr=${host}:26259 \
+            --advertise-addr=${host3}:26259 \
             --http-addr=0.0.0.0:8080 \
             --store=/var/lib/kaiwudb \
-            --join=${host}:26257
+            --join=${host1}:26257
             ```
 
         - 安全模式：
@@ -148,28 +148,28 @@ id: kwbase-cli-deployment
             ./kwbase start \
             --certs-dir=/kaiwudb/certs \
             --listen-addr=0.0.0.0:26257 \
-            --advertise-addr=${host}:26257 \
+            --advertise-addr=${host1}:26257 \
             --http-addr=0.0.0.0:8080 \
             --store=/var/lib/kaiwudb \
-            --join=${host}:26257
+            --join=${host1}:26257
 
             # 启动第二个节点
             ./kwbase start \
             --certs-dir=/kaiwudb/certs \
             --listen-addr=0.0.0.0:26257 \
-            --advertise-addr=${host}:26258 \
+            --advertise-addr=${host2}:26258 \
             --http-addr=0.0.0.0:8080 \
             --store=/var/lib/kaiwudb \
-            --join=${host}:26257
+            --join=${host1}:26257
 
             # 启动第三个节点
             ./kwbase start \
             --certs-dir=/kaiwudb/certs \
             --listen-addr=0.0.0.0:26257 \
-            --advertise-addr=${host}:26259 \
+            --advertise-addr=${host3}:26259 \
             --http-addr=0.0.0.0:8080 \
             --store=/var/lib/kaiwudb \
-            --join=${host}:26257
+            --join=${host1}:26257
             ```
 
 4. 初始化集群

@@ -58,6 +58,7 @@ id: docker-deployment
         --ulimit memlock=-1 --ulimit nofile=1048576 \
         -p 26257:26257 -p 8080:8080 \
         -v /var/lib/kaiwudb1:/kaiwudb/deploy/kaiwudb-container \
+        -v /dev:/dev \
         --ipc shareable -w /kaiwudb/bin \
         ${kwdb_image} \
         ./kwbase start --insecure --listen-addr=0.0.0.0:26257 \
@@ -69,6 +70,7 @@ id: docker-deployment
         --ulimit memlock=-1 --ulimit nofile=1048576 \
         -p 26258:26257 -p 8081:8080 \
         -v /var/lib/kaiwudb2:/kaiwudb/deploy/kaiwudb-container \
+        -v /dev:/dev \        
         --ipc shareable -w /kaiwudb/bin \
         ${kwdb_image} \
         ./kwbase start --insecure --listen-addr=0.0.0.0:26257 \
@@ -80,6 +82,7 @@ id: docker-deployment
         --ulimit memlock=-1 --ulimit nofile=1048576 \
         -p 26259:26257 -p 8082:8080 \
         -v /var/lib/kaiwudb3:/kaiwudb/deploy/kaiwudb-container \
+        -v /dev:/dev \        
         --ipc shareable -w /kaiwudb/bin \
         ${kwdb_image} \
         ./kwbase start --insecure --listen-addr=0.0.0.0:26257 \
@@ -96,6 +99,7 @@ id: docker-deployment
         -p 26257:26257 -p 8080:8080 \
         -v /etc/kaiwudb/certs:/kaiwudb/certs \
         -v /var/lib/kaiwudb1:/kaiwudb/deploy/kaiwudb-container \
+        -v /dev:/dev \
         --ipc shareable -w /kaiwudb/bin \
         ${kwdb_image} \
         ./kwbase start --certs-dir=/kaiwudb/certs --listen-addr=0.0.0.0:26257 \
@@ -108,6 +112,7 @@ id: docker-deployment
         -p 26258:26257 -p 8081:8080 \
         -v /etc/kaiwudb/certs:/kaiwudb/certs \
         -v /var/lib/kaiwudb2:/kaiwudb/deploy/kaiwudb-container \
+        -v /dev:/dev \
         --ipc shareable -w /kaiwudb/bin \
         ${kwdb_image} \
         ./kwbase start --certs-dir=/kaiwudb/certs --listen-addr=0.0.0.0:26257 \
@@ -120,6 +125,7 @@ id: docker-deployment
         -p 26259:26257 -p 8082:8080 \
         -v /etc/kaiwudb/certs:/kaiwudb/certs \
         -v /var/lib/kaiwudb3:/kaiwudb/deploy/kaiwudb-container \
+        -v /dev:/dev \
         --ipc shareable -w /kaiwudb/bin \
         ${kwdb_image} \
         ./kwbase start --certs-dir=/kaiwudb/certs --listen-addr=0.0.0.0:26257 \
