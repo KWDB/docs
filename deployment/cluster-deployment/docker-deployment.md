@@ -1,16 +1,16 @@
 ---
-title: 体验 KWDB 集群
-id: quickstart-docker-cluster
+title: Docker Run 命令部署
+id: docker-deployment
 ---
 
-# 体验 KWDB 集群
+# Docker Run 命令部署
 
-本节介绍如何通过 Docker Run 命令在单节点上快速体验 KWDB 集群。注意：在实际生产环境中，建议每台机器仅部署一个节点，以提升可用性并降低数据丢失风险。
+本节介绍如何通过 Docker Run 命令在单节点上部署 KWDB 集群。注意：在实际生产环境中，建议每台机器仅部署一个节点，以提升可用性并降低数据丢失风险。
 
 ## 前提条件
 
-- 已获取 [KWDB 容器镜像](./quickstart-docker.md#获取容器镜像)。
-- 待部署节点的硬件、操作系统、软件依赖和端口满足[安装部署要求](./quickstart-docker.md#硬件)。
+- 已获取 [KWDB 容器镜像](../prepare/before-deploy-docker.md#获取容器镜像)。
+- 待部署节点的硬件、操作系统、软件依赖和端口满足[安装部署要求](../prepare/before-deploy-docker.md#硬件)。
 - 安装用户为 root 用户或者拥有 `sudo` 权限的普通用户。
   - root 用户和配置 `sudo` 免密的普通用户在执行部署脚本时无需输入密码。
   - 未配置 `sudo` 免密的普通用户在执行部署脚本时，需要输入密码进行提权。

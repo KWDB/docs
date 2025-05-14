@@ -1,11 +1,11 @@
 ---
-title: 配置集群
+title: 容器部署配置集群
 id: cluster-config-docker
 ---
 
-# 配置集群
+# 容器部署配置集群
 
-部署完 KWDB 集群后，用户可以修改 Docker Compose 配置文件 `docker-compose.yml`，配置 KWDB 的启动参数和 CPU 资源占用率。
+使用部署脚本部署完 KWDB 集群后，用户可以修改 Docker Compose 配置文件 `docker-compose.yml`，配置 KWDB 的启动参数和 CPU 资源占用率。
 
 ## 配置启动参数
 

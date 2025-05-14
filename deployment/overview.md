@@ -5,7 +5,7 @@ id: overview
 
 # 集群部署概述
 
-KWDB 支持使用[容器或二进制安装包](https://gitee.com/kwdb/kwdb/releases)部署以下集群：
+KWDB 支持使用部署以下集群：
 
 |    类别       | 多副本集群                                                   | 单副本集群                                                   |
 | ---------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
@@ -18,19 +18,19 @@ KWDB 支持使用[容器或二进制安装包](https://gitee.com/kwdb/kwdb/relea
 本节包含以下文档：
 
 - [部署流程](./deploy-workflow.md)
-- 裸机部署
-  - [概述](./bare-metal/bare-metal-overview.md)
-  - [部署准备](./bare-metal/before-deploy-bare-metal.md)
-  - [集群部署](./bare-metal/bare-metal-deployment.md)
-  - [配置集群](./bare-metal/cluster-config-bare-metal.md)
-  - [创建用户](./bare-metal/user-config-bare-metal.md)
-  - [启动与停止 KWDB 服务](./bare-metal/local-start-stop-bare-metal.md)
-  - [卸载集群](./bare-metal/uninstall-cluster-bare-metal.md)
-- 容器部署
-  - [概述](./docker/docker-overview.md)
-  - [部署准备](./docker/before-deploy-docker.md)
-  - [集群部署](./docker/docker-deployment.md)
-  - [配置集群](./docker/cluster-config-docker.md)
-  - [创建用户](./docker/user-config-docker.md)
-  - [启动与停止 KWDB 服务](./docker/local-start-stop-docker.md)
-  - [卸载集群](./docker/uninstall-cluster-docker.md)
+- 部署准备
+  - [裸机部署准备](./prepare/before-deploy-bare-metal.md)
+  - [容器部署准备](./prepare/before-deploy-docker.md)
+- 集群部署
+  - [使用部署脚本部署](./cluster-deployment/script-deployment.md)
+  - [使用 kwbase CLI 部署](./cluster-deployment/kwbase-cli-depployment.md)
+  - [使用 Docker Run 部署](./cluster-deployment/docker-deployment.md)
+- 集群配置
+  - [配置许可证](./configure-license.md)
+  - [创建用户](./user-config.md)
+  - 配置集群
+    - [裸机集群配置](./cluster-config/cluster-config-bare-metal.md)
+    - [容器集群配置](./cluster-config/cluster-config-docker.md)
+- 集群管理
+  - [启动与停止 KaiwuDB 服务](./local-start-stop.md)
+  - [卸载集群](./uninstall-cluster.md)
