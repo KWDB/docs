@@ -330,7 +330,7 @@ tar -zxvf <package_name>
     - 非安全模式（不带密码）：
 
         ```bash
-        ./kwbase sql --host=127.0.0.1:$(local_port) --insecure \
+        ./kwbase sql --certs-dir=/kaiwudb/certs --host=127.0.0.1:$(local_port) --insecure \
         -e "create user $user_name; \
             grant admin to $user_name with admin option;"
         ```

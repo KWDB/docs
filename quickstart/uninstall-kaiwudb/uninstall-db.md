@@ -41,9 +41,13 @@ id: uninstall-db
 
 对于通过源码编译部署的 KWDB，在待卸载节点上执行以下操作：
 
-注意：执行删除操作前，请确保已备份所有重要数据。以下操作将永久删除 KaiwuDB 的所有数据和配置。
+::: warning 注意
 
-1. 停止 KaiwuDB 服务。
+执行删除操作前，请确保已备份所有重要数据。以下操作将永久删除 KWDB 的所有数据和配置。
+
+:::
+
+1. 停止 KWDB 服务。
 
 2. 检查并取消 loop 设备挂载。
 
@@ -73,7 +77,13 @@ id: uninstall-db
 
 对于通过容器镜像部署的 KWDB，在待卸载节点上执行以下操作：
 
-1. 停止 KaiwuDB 容器。
+::: warning 注意
+
+执行删除操作前，请确保已备份所有重要数据。以下操作将永久删除 KWDB 的所有数据和配置。
+
+:::
+
+1. 停止 KWDB 容器。
 
    ::: warning 提示
 
@@ -81,20 +91,20 @@ id: uninstall-db
    :::
 
    ```bash
-   docker stop kaiwudb-container
+   docker stop kwdb-container
    ```
 
 2. 移除容器。
 
    ```bash
-   docker rm kaiwudb-container
+   docker rm kwdb-container
    ```
 
 3. 删除 Docker 镜像。
 
    ```bash
    # 获取镜像名称
-   docker ps -a --filter name=kaiwudb-container --format {{.Image}}
+   docker ps -a --filter name=kwdb-container --format {{.Image}}
    
    # 删除镜像
    docker rmi ${image_name}

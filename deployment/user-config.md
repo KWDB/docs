@@ -22,8 +22,8 @@ KWDB 在安装包中提供了 `add_user.sh` 脚本。在安装并运行 KWDB 后
 
 ### 前提条件
 
-- 已安装且成功启动 KaiwuDB 数据库。
-- 拥有 KaiwuDB 安装包目录的访问权限。
+- 已安装且成功启动 KWDB 数据库。
+- 拥有 KWDB 安装包目录的访问权限。
 
 ### 配置步骤
 
@@ -47,7 +47,7 @@ KWDB 在安装包中提供了 `add_user.sh` 脚本。在安装并运行 KWDB 后
 
 ### 前提条件
 
-- 已安装且成功启动 KaiwuDB 数据库。
+- 已安装且成功启动 KWDB 数据库。
 
 ### 配置步骤
 
@@ -58,7 +58,7 @@ KWDB 在安装包中提供了 `add_user.sh` 脚本。在安装并运行 KWDB 后
         - 非安全模式（不带密码）：
 
             ```bash
-            ./kwbase sql --host=127.0.0.1:$(local_port) --insecure \
+            ./kwbase sql --certs-dir=$cert_path --host=127.0.0.1:$(local_port) --insecure \
             -e "create user $user_name; \
                 grant admin to $user_name with admin option;"
             ```
