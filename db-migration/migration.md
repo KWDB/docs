@@ -1,29 +1,17 @@
 ---
-title: DataX 读写数据
-id: datax
+title: 数据库迁移
+id: migration
 ---
 
-# DataX 读写数据
-
-[DataX](https://github.com/alibaba/DataX) 是一款广泛使用的离线数据同步工具，能够实现 [MySQL](https://www.mysql.com/)、[SQL Server](https://www.microsoft.com/zh-cn/sql-server/)、[Oracle](https://www.oracle.com/)、[PostgreSQL](https://www.postgresql.org/)、[Hadoop HDFS](https://hadoop.apache.org/)、[Apache Hive](https://hive.apache.org/)、[Apache HBase](https://hbase.apache.org/)、[OTS](https://www.aliyun.com/product/ots) 等各种异构数据源之间的数据同步。
+# 数据库迁移
 
 ## 概述
 
-作为数据同步框架，DataX 能够将不同数据源的同步抽象为从源数据源读取数据的 Reader 插件，以及向目标数据源写入数据的 Writer 插件，从而实现不同数据源的数据同步工作。基于 DataX 框架，KWDB 提供了用于写入和读取数据的 KaiwuDBWriter 和 KaiwuDBReader 插件。
+[DataX](https://github.com/alibaba/DataX) 是一款广泛使用的离线数据同步工具，能够实现 [MySQL](https://www.mysql.com/)、[SQL Server](https://www.microsoft.com/zh-cn/sql-server/)、[Oracle](https://www.oracle.com/)、[PostgreSQL](https://www.postgresql.org/)、[Hadoop HDFS](https://hadoop.apache.org/)、[Apache Hive](https://hive.apache.org/)、[Apache HBase](https://hbase.apache.org/)、[OTS](https://www.aliyun.com/product/ots) 等各种异构数据源之间的数据同步。
 
-### 数据类型映射
+作为数据同步框架，DataX 将不同数据源的同步抽象为从源数据源读取数据的 Reader 插件，以及向目标数据源写入数据的 Writer 插件，从而实现不同数据源的数据同步工作。
 
-下表列出 DataX 数据类型与 KWDB 数据类型之间的映射关系。
-
-| DataX 数据类型 | KWDB 数据类型  |
-|----------------|---------------------------------------------------|
-| INT            | TINYINT、SMALLINT、INT                              |
-| LONG           | TINYINT、SMALLINT、INT、BIGINT、TIMESTAMP、TIMESTAMPTZ |
-| DOUBLE         | FLOAT、REAL、DOUBLE、DECIMAL                         |
-| BOOL           | BOOL、BIT                                          |
-| DATA           | DATE、TIME、TIMESTAMP、TIMESTAMPTZ                   |
-| BYTES          | BYTES、VARBYTES                                    |
-| STRING         | CHAR、NCHAR、VARCHAR、NVARCHAR、TIMESTAMP、TIMESTAMPTZ |
+基于 DataX 框架，KWDB 提供了用于写入和读取数据的 KaiwuDBWriter 和 KaiwuDBReader 插件，以实现 KWDB 与不同数据源之间的数据迁移。
 
 ### KaiwuDBWriter
 
@@ -38,10 +26,10 @@ KaiwuDBWriter 通过 DataX 获取 Reader 生成的协议数据，将目标表的
 | ClickHouse | ClickHouseReader                                                                   | 插件支持的版本        | - DataX 插件使用的 JDBC 驱动版本较低，不支持毫秒级精度的时间读取，可能导致错误删除数据。建议先升级 DataX 插件的 JDBC 驱动版本。解决升级导致的问题后，再进行数据迁移。<br> - 在 ClickHouse 中，NULL 值会显示为 `0`，导入 KWDB 后，NULL 值会被处理为 `false`。<br> - 二进制类型数据导入 KWDB 后，会以 `\x+` 空字符串的形式显示。                 |
 | InfluxDB   | InfluxDB10Reader                                                                   | 1.x 版本              | -                                                                                                                                                                                                                                                                                                                                 |
 |            | InfluxDB20Reader                                                                   | 2.x 版本              |                                                                                                                                                                                                                                                                                                                                   |
-| KWDB    | KaiwuDBReader                                                                      | 2.0.0 及以上版本      | -                                                                                                                                                                                                                                                                                                                                 |
+| KWDB    | KaiwuDBReader                                                                      | 2.0 及以上版本      | -                                                                                                                                                                                                                                                                                                                                 |
 | MongoDB    | DataX MongoDBReader                                                                | 插件支持的版本        | - DataX 自带的 Reader 插件不支持 MongoDB 7。 <br>- 不支持迁移 MongoDB 数据库的 `_id` 列。                                                                                                                                                                                                                                         |
 | MySQL      | DataX MysqlReader                                                                  | 插件支持的版本        | -                                                                                                                                                                                                                                                                                                                                 |
-| OpenTSDB   | DataX OpenTSDBReader                                                               | 2.3.X 版本            | - OpenTSDB 是键值对类型的数据库。在读取 OpenTSDB 数据时，数据以键值对的形式呈现。<br>- KaiwuDBWriter 会对读取的 OpenTSDB metric 进行修改，将 metric 中的英文句号（`.`）修改为下划线（`\`），然后将其作为 KWDB 数据库的表名。每张表中存储的数据包括 `k_timestamp` 和 `value` 两列。<br >- 当写入数据的表不存在时，支持自动创建表。 |
+| OpenTSDB   | DataX OpenTSDBReader                                                               | 2.3.X 版本            | - OpenTSDB 是键值对类型的数据库。在读取 OpenTSDB 数据时，数据以键值对的形式呈现。<br>- KaiwuDBWriter 会对读取的 OpenTSDB metric 进行修改，将 metric 中的英文句号（`.`）修改为下划线（`_`），然后将其作为 KWDB 数据库的表名。每张表中存储的数据包括 `k_timestamp` 和 `value` 两列。<br >- 当写入数据的表不存在时，支持自动创建表。<br>- 使用 `beginDateTime` 和 `endDateTime` 设置数据读取时间时，`beginDateTime` 和 `endDateTime` 的间隔需为 1 小时以上。 |
 | Oracle     | OracleReader                                                                       | 插件支持的版本        | -                                                                                                                                                                                                                                                                                                                                  |
 | PostgreSQL | DataX PostgresqlReader                                                             | 插件支持的版本        | -                                                                                                                                                                                                                                                                                                                                 |
 | TDengine   | [tdengine20reader](https://github.com/taosdata/DataX/tree/master/tdengine20reader) | 2.4.0.14 以下版本     | - TDengine 数据库中，如果 BOOL 类型的字段值为 null，导入 KWDB 后，会显示为 `false`。<br> - TDengine 数据库中，如果 NCHAR 类型的字段值为 null，导入 KWDB 后，会显示为空字符串。<br>- TDengineReader 不支持读取 JSON 类型数据。如果数据表的标签列采用 JSON 格式，需要转为其他类型，否则会导致迁移失败。                                  |
@@ -60,7 +48,7 @@ KaiwuDBReader 通过 DataX 将 KWDB 数据库的数据写出到其他数据库�
 | -------- | -------------------- | ---------------- | ------------------------------------------------------ |
 | MySQL    | DataX MysqlWriter    | 插件支持的版本   |  -                                                      |
 | TDengine | DataX TDengineReader | 2.x 和 3.x       | 大数据量场景下，建议将 `batchSize` 设置为 `1000`。 |
-| KWDB  | KaiwuDBWriter        | 2.0.0 及以上版本 |   -                                                     |
+| KWDB  | KaiwuDBWriter        | 2.0 及以上版本 |   -                                                     |
 
 ## 配置 KaiwuDBWriter
 
@@ -68,11 +56,11 @@ KaiwuDBReader 通过 DataX 将 KWDB 数据库的数据写出到其他数据库�
 
 - DataX 部署环境
   - Linux 系统环境。
-  - [安装 Java](https://docs.oracle.com/en/java/javase/22/install/overview-jdk-installation.html)（1.8 及以上版本）。
+  - [安装 openJDK](https://openjdk.org/install/)（1.8 及以上版本）。
   - [安装 Python](https://www.python.org/downloads/)（2.X 或 3.X）。
 - DataX 工具
   - [安装 DataX](https://gitee.com/mirrors/DataX/blob/master/userGuid.md)。
-  - 获取 KaiwuDBWriter 插件压缩包。
+  - 获取 KaiwuDB DataX 插件压缩包。
 - 数据库及权限设置
   - 获取源数据库的登录用户凭证。
   - 创建 KWDB 数据库。
@@ -80,7 +68,7 @@ KaiwuDBReader 通过 DataX 将 KWDB 数据库的数据写出到其他数据库�
 
 ### 配置步骤
 
-1. 将 KWDB 插件包上传到安装 DataX 的机器，解压缩插件包，然后将解压后的文件复制到 `datax/plugin/writer/` 目录下。
+1. 将 KaiwuDB DataX 插件包上传到安装 DataX 的机器，解压缩插件包，然后将解压后的`kaiwudbwriter` 文件夹复制到 `datax/plugin/writer/` 目录下。
 2. 进入 DataX 的 `datax/job/` 目录，创建 DataX 作业配置文件，定义源数据库和目标数据库的连接、读写的数据和相应的格式要求。
 
    ::: warning 说明
@@ -91,19 +79,18 @@ KaiwuDBReader 通过 DataX 将 KWDB 数据库的数据写出到其他数据库�
    - 将 MySQL 的原表数据同步到 KWDB 中的 DataX 作业配置文件示例，参见[从 MySQL 同步到 KWDB](#从-mysql-同步到-kwdb)。
    - 将 TDengine 的原表数据同步到 KWDB 中的 DataX 作业配置文件示例，参见[从 TDengine 同步到 KWDB](#从-tdengine-同步到-kwdb)。
 
-3. 执行创建的 JSON 配置文件，启动 DataX，开启数据同步。
+
+3. 在 `datax/datax/job/` 目录下执行创建的 DataX 作业配置文件，启动 DataX，开启数据同步。
 
    ::: warning 说明
-   
    在迁移大数据量数据时，建议在启动命令后加上参数 `--jvm`，增大 JVM 内存，例如 `python ../bin/datax.py mysql2kaiwudb.json --jvm="-Xms10G -Xmx10G"`。
-
    :::
 
+   示例：
+
    ```shell
-   cd datax/datax/job/
    python ../bin/datax.py mysql2kaiwudb.json
    ```
-
 
    如果同步正常结束，控制台将输出以下信息：
 
@@ -136,7 +123,7 @@ KaiwuDBReader 通过 DataX 将 KWDB 数据库的数据写出到其他数据库�
 
 KWDB 支持通过 DataX 将 MySQL 的数据同步到 KWDB 数据库的时序表和关系表中。不同类型的表对应的 DataX 作业配置（`job.json` 文件）有所不同。
 
-##### 时序表
+##### 关系表同步到时序表
 
 以下示例假设已经在 KWDB 数据库中创建时序数据库（`benchmark`）和时序表（`cpu`）。
 
@@ -149,9 +136,6 @@ CREATE TABLE benchmark.cpu (k_timestamp TIMESTAMPTZ NOT NULL, usage_user INT8 NO
 ```
 
 **全量数据同步配置示例**
-
-- 有关 MysqlWriter 配置参数的详细信息，参见 [Writer 参数说明](#writer-参数说明)。
-- 有关 KaiwuDBReader 配置参数的详细信息，参见 [Reader 参数说明](#reader-参数说明)。
 
 ```json
 {
@@ -191,6 +175,8 @@ CREATE TABLE benchmark.cpu (k_timestamp TIMESTAMPTZ NOT NULL, usage_user INT8 NO
           "parameter": {
             "username": "kaiwudb_user",
             "password": "kaiwudb@123",
+            "jdbcUrl": "jdbc:kaiwudb://127.0.0.1:26257/benchmark",
+            "table": "cpu",  
             "column": [
               "k_timestamp",
               "usage_user",
@@ -200,14 +186,6 @@ CREATE TABLE benchmark.cpu (k_timestamp TIMESTAMPTZ NOT NULL, usage_user INT8 NO
               "hostname",
               "region",
               "datacenter"
-            ],
-            "connection": [
-              {
-                "table": [
-                  "cpu"
-                ],
-                "jdbcUrl": "jdbc:kaiwudb://127.0.0.1:26257/benchmark"
-              }
             ],
             "preSql": [
               ""
@@ -231,10 +209,7 @@ CREATE TABLE benchmark.cpu (k_timestamp TIMESTAMPTZ NOT NULL, usage_user INT8 NO
 
 **增量数据同步配置示例**
 
-DataX 支持通过 reader 中的 `querySql` 或 `table` 和 `where` 参数限定数据读取范围，从而实现增量数据同步。
-
-- 有关 MysqlWriter 配置参数的详细信息，参见 [Writer 参数说明](#writer-参数说明)。
-- 有关 KaiwuDBReader 配置参数的详细信息，参见 [Reader 参数说明](#reader-参数说明)。
+DataX 支持通过 reader 插件中的 `querySql` 或  `where` 参数限定数据读取范围，从而实现增量数据同步。
 
 示例 1：通过 `querySql` 限定数据同步范围。
 
@@ -263,8 +238,10 @@ DataX 支持通过 reader 中的 `querySql` 或 `table` 和 `where` 参数限定
         "writer": {
           "name": "kaiwudbwriter",
           "parameter": {
-            "username": "root",
+            "username": "kaiwudb_user",
             "password": "kaiwudb@123",
+            "jdbcUrl": "jdbc:kaiwudb://127.0.0.1:26257/benchmark",
+            "table": "cpu",  
             "column": [
               "k_timestamp",
               "usage_user",
@@ -275,13 +252,11 @@ DataX 支持通过 reader 中的 `querySql` 或 `table` 和 `where` 参数限定
               "region",
               "datacenter"
             ],
-            "connection": [
-              {
-                "table": [
-                  "cpu"
-                ],
-                "jdbcUrl": "jdbc:kaiwudb://127.0.0.1:26257/ts_db"
-              }
+            "preSql": [
+              ""
+            ],
+            "postSql": [
+              ""
             ],
             "batchSize": 100
           }
@@ -294,10 +269,10 @@ DataX 支持通过 reader 中的 `querySql` 或 `table` 和 `where` 参数限定
       }
     }
   }
-}
+ }
 ```
 
-示例 2：通过 `table` 和 `where` 参数限定数据同步范围。
+示例 2：通过  `where` 参数限定数据同步范围。
 
 ```json
 {
@@ -335,8 +310,10 @@ DataX 支持通过 reader 中的 `querySql` 或 `table` 和 `where` 参数限定
         "writer": {
           "name": "kaiwudbwriter",
           "parameter": {
-            "username": "root",
+            "username": "kaiwudb_user",
             "password": "kaiwudb@123",
+            "jdbcUrl": "jdbc:kaiwudb://127.0.0.1:26257/benchmark",
+            "table": "cpu",  
             "column": [
               "k_timestamp",
               "usage_user",
@@ -347,13 +324,12 @@ DataX 支持通过 reader 中的 `querySql` 或 `table` 和 `where` 参数限定
               "region",
               "datacenter"
             ],
-            "connection": [
-              {
-                "table": [
-                  "cpu"
-                ],
-                "jdbcUrl": "jdbc:kaiwudb://127.0.0.1:26257/ts_db"
-              }
+            "writeMode": "INSERT",
+            "preSql": [
+              ""
+            ],
+            "postSql": [
+              ""
             ],
             "batchSize": 100
           }
@@ -366,21 +342,21 @@ DataX 支持通过 reader 中的 `querySql` 或 `table` 和 `where` 参数限定
       }
     }
   }
-}
+ }
 ```
 
-##### 关系表
+##### 关系表同步到关系表
 
-关系表与时序表的同步区别在于关系表在写入时支持通过 `writeMode` 指定选择 INSERT 或 UPDATE 模式。
+关系表与时序表的同步区别在于关系表数据写入支持通过 `writeMode` 指定 `INSERT` 或 `UPDATE` 模式 。
 
-以下示例假设已经在 KWDB 数据库中创建关系库（`relation_db`）和关系表（`base_tb`）。
+以下示例假设已经在 KWDB 数据库中创建关系库（`order_db`）和关系表（`orders`）。
 
 ```sql
-/*创建关系库：relation_db*/
-create database relation_db;
+/*创建关系库：order_db*/
+CREATE DATABASE order_db;
 
-/*创建关系表：base_tb */
-create table relation_db.base_tb (id serial primary key, ts timestamp, c1 smallint, c2 int, c3 bigint);
+/*创建关系表：orders */
+create table order_db.orders (order_id serial primary key, created_at timestamp, product_count int, total_amount float, customer_id int);
 ```
 
 DataX 作业配置示例如下：
@@ -396,20 +372,20 @@ DataX 作业配置示例如下：
             "username": "mysql_user",
             "password": "123456",
             "column": [
-              "id",
-              "ts",
-              "c1",
-              "c2",
-              "c3"
+              "order_id",
+              "created_at",
+              "product_count",
+              "total_amount",
+              "customer_id"
             ],
-            "splitPk": "id",
+            "splitPk": "order_id",
             "connection": [
               {
                 "table": [
-                  "mysql_tb"
+                  "orders"
                 ],
                 "jdbcUrl": [
-                  "jdbc:mysql://127.0.0.1:3306/mysql_db?useSSL=false&useUnicode=true&characterEncoding=utf8"
+                  "jdbc:mysql://127.0.0.1:3306/ecommerce_db?useSSL=false&useUnicode=true&characterEncoding=utf8"
                 ]
               }
             ]
@@ -420,27 +396,20 @@ DataX 作业配置示例如下：
           "parameter": {
             "username": "kaiwudb_user",
             "password": "kaiwudb@123",
+            "jdbcUrl": "jdbc:kaiwudb://127.0.0.1:26257/order_db",
+            "table": "orders",  
             "column": [
-              "id",
-              "ts",
-              "c1",
-              "c2",
-              "c3"
-            ],
-            "connection": [
-              {
-                "table": [
-                  "base_tb"
-                ],
-                "jdbcUrl": "jdbc:kaiwudb://127.0.0.1:26257/relation_db"
-              }
+              "order_id",
+              "created_at",
+              "product_count",
+              "total_amount",
+              "customer_id"
             ],
             "writeMode": "INSERT",
             "preSql": [
-              "update base_tb set c1=11 where c1=1"
+              "DELETE FROM orders WHERE total_amount = 0"
             ],
             "postSql": [
-              "update base_tb set c1=10 where c1=0"
             ],
             "batchSize": 100
           }
@@ -454,10 +423,8 @@ DataX 作业配置示例如下：
     }
   }
 }
-```
 
-- 有关 MysqlReader 配置参数的详细信息，参见 [Reader 参数说明](#reader-参数说明)。
-- 有关 KaiwuDBWriter 配置参数的详细信息，参见 [Writer 参数说明](#writer-参数说明)。
+```
 
 #### 从 TDengine 同步到 KWDB
 
@@ -480,7 +447,7 @@ CREATE TABLE benchmark.ct2 using st tags (2);
 CREATE TABLE benchmark.cpu (k_timestamp TIMESTAMPTZ NOT NULL, usage_user INT8 NOT NULL, usage_system INT8 NOT NULL, usage_idle INT8 NOT NULL, id INT8 NOT NULL, hostname VARCHAR NOT NULL, region VARCHAR NOT NULL, datacenter VARCHAR NOT NULL);
 ```
 
-##### 普通表或子表
+##### 普通表或子表同步到时序表
 
 以下示例假设已经在 KWDB 数据库中创建时序数据库（`benchmark`）和时序表（`cpu`），用于同步 TDengine 中的普通表 `cpu`。
 
@@ -530,6 +497,8 @@ DataX 作业配置示例如下：
           "parameter": {
             "username": "root",
             "password": "kaiwudb@123",
+            "jdbcUrl": "jdbc:kaiwudb://127.0.0.1:26257/tdengine_kwdb",
+            "table": "cpu", 
             "column": [
               "k_timestamp",
               "usage_user",
@@ -539,14 +508,6 @@ DataX 作业配置示例如下：
               "hostname",
               "region",
               "datacenter"
-            ],
-            "connection": [
-              {
-                "table": [
-                  "cpu"
-                ],
-                "jdbcUrl": "jdbc:kaiwudb://127.0.0.1:26257/tdengine_kwdb"
-              }
             ],
             "batchSize": 100
           }
@@ -562,13 +523,13 @@ DataX 作业配置示例如下：
 }
 ```
 
-##### 超表
+##### 超表同步到时序表
 
 以下示例假设已经在 KWDB 数据库中创建时序数据库（`benchmark`）和时序表（`st`），用于同步 TDengine 中的超表 `st`。
 
 ```sql
 /*创建时序数据库：benchmark */
-create ts database benchmark;
+CREATE TS DATABASE benchmark;
 /*创建时序表：st */
 CREATE TABLE benchmark.st (k_timestamp TIMESTAMPTZ NOT NULL, usage_user INT8 NOT NULL, usage_system INT8 NOT NULL, usage_idle INT8 NOT NULL) TAGS (id INT8 NOT NULL, hostname VARCHAR NOT NULL, region VARCHAR NOT NULL, datacenter VARCHAR NOT NULL) PRIMARY TAGS (id);
 ```
@@ -612,6 +573,8 @@ DataX 作业配置示例如下：
           "parameter": {
             "username": "root",
             "password": "kaiwudb@123",
+            "jdbcUrl": "jdbc:kaiwudb://127.0.0.1:26257/tdengine_kwdb",
+            "table": "st",  
             "column": [
               "k_timestamp",
               "usage_user",
@@ -621,14 +584,6 @@ DataX 作业配置示例如下：
               "hostname",
               "region",
               "datacenter"
-            ],
-            "connection": [
-              {
-                "table": [
-                  "st"
-                ],
-                "jdbcUrl": "jdbc:kaiwudb://127.0.0.1:26257/tdengine_kwdb"
-              }
             ],
             "batchSize": 100
           }
@@ -650,11 +605,11 @@ DataX 作业配置示例如下：
 
 - DataX 部署环境：
   - Linux 系统环境。
-  - [安装 Java](https://docs.oracle.com/en/java/javase/22/install/overview-jdk-installation.html)（1.8 及以上版本）。
+  - [安装 openJDK](https://openjdk.org/install/)（1.8 及以上版本）。
   - [安装 Python](https://www.python.org/downloads/)（2.X 或 3.X）。
 - DataX 工具：
   - [安装 DataX](https://gitee.com/mirrors/DataX/blob/master/userGuid.md)。
-  - 已获取 KaiwuDBReader 插件压缩包。
+  - 获取 KaiwuDB DataX 插件压缩包。
 - 数据库及权限设置：
   - 获取源数据库的登录用户凭证。
   - 创建 KWDB 数据库。
@@ -662,7 +617,8 @@ DataX 作业配置示例如下：
 
 ### 配置步骤
 
-1. 将 KWDB 插件包上传到安装 DataX 的机器，解压缩插件包，将解压后的文件复制到 `datax/plugin/reader/` 目录下。
+1. 将 KaiwuDB DataX 插件包上传到安装 DataX 的机器，解压缩插件包，将解压后的`kaiwudbreader` 文件夹复制到 `datax/plugin/reader/` 目录下。
+
 2. 进入 DataX 的 `datax/job/` 目录，创建 JSON 格式的 DataX 作业配置文件，定义源数据库和目标数据库的连接、读写的数据和相应的格式要求。
 
    ::: warning 说明
@@ -673,10 +629,11 @@ DataX 作业配置示例如下：
    - 将 KWDB 的原表数据同步到 MySQL 中的 DataX 作业配置文件示例，参见[从 KWDB 同步到 MySQL](#从-kwdb-同步到-mysql)。
    - 将 KWDB 的原表数据同步到 KWDB 中的 DataX 作业配置文件示例，参见[从 KWDB 同步到 KWDB](#从-kwdb-同步到-kwdb)。
 
-3. 执行创建的 JSON 配置文件，启动 DataX，开启数据同步。
+3. 在 `datax/datax/job/` 目录下执行创建的 DataX 作业配置文件，启动 DataX，开启数据同步。
+
+   示例：
 
    ```shell
-   cd datax/datax/job/
    python ../bin/datax.py kaiwudb2mysql.json
    ```
 
@@ -705,7 +662,9 @@ DataX 作业配置示例如下：
           "name": "kaiwudbreader",
           "parameter": {
             "username": "test",
-            "password": "Password@2024",
+            "password": "<password>",
+            "jdbcUrl": "jdbc:kaiwudb://127.0.0.1:26257/benchmark",
+            "table": "cpu",  
             "column": [
               "k_timestamp",
               "usage_user",
@@ -719,16 +678,6 @@ DataX 作业配置示例如下：
             "tsColumn": "k_timestamp",
             "beginTime": "2024-05-01 10:00:000",
             "endTime": "2024-05-02 10:00:000",
-            "connection": [
-              {
-                "table": [
-                  "cpu"
-                ],
-                "jdbcUrl": [
-                  "jdbc:kaiwudb://127.0.0.1:26257/benchmark"
-                ]
-              }
-            ]
           }
         },
         "writer": {
@@ -798,17 +747,10 @@ DataX 作业配置示例如下：
           "name": "kaiwudbreader",
           "parameter": {
             "username": "test",
-            "password": "Password@2024",
-            "mandatoryEncoding": "utf-8", 
-            "connection": [
-              {
-                "querySql": [
-                  "select k_timestamp, usage_user, usage_system, usage_idle, id, hostname, region, datacenter from cpu"
-                ],
-                "jdbcUrl": [
-                  "jdbc:kaiwudb://127.0.0.1:26257/source"
-                ]
-              }
+            "password": "<password>",
+            "jdbcUrl": "jdbc:kaiwudb://127.0.0.1:26257/source",
+            "querySql": [
+              "select k_timestamp, usage_user, usage_system, usage_idle, id, hostname, region, datacenter from cpu"
             ]
           }
         },
@@ -816,7 +758,9 @@ DataX 作业配置示例如下：
           "name": "kaiwudbwriter",
           "parameter": {
             "username": "test",
-            "password": "Password@2024",
+            "password": "<password>",
+            "jdbcUrl": "jdbc:kaiwudb://127.0.0.1:26257/target",
+            "table": "cpu",
             "column": [
               "k_timestamp",
               "usage_user",
@@ -826,14 +770,6 @@ DataX 作业配置示例如下：
               "hostname",
               "region",
               "datacenter"
-            ],
-            "connection": [
-              {
-                "table": [
-                  "cpu"
-                ],
-                "jdbcUrl": "jdbc:kaiwudb://127.0.0.1:26257/target"
-              }
             ],
             "preSql": [
               ""
@@ -854,33 +790,48 @@ DataX 作业配置示例如下：
 
 ## 参考信息
 
-### Writer 参数说明
+### KaiwuDBWriter 参数说明
 
 | 参数 | 说明 |
 | --- | --- |
-| `name` | 目标数据库插件的名称，例如 `kaiwudbwriter`。|
+| `name` | KaiwuDBWriter 插件的名称，即 `kaiwudbwriter`。 |
 | `username` | 连接 KWDB 数据库的用户名。|
 | `password` | 连接 KWDB 数据库的密码。|
-| `column` | 指定将源表的列数据写入到目标表对应的列中。列的顺序和数量需要与 Reader 中 `column` 或 `querySql select` 中定义的列顺序和数量一致。|
-| `connection` | 定义数据库的连接信息，包括两个参数：<br >- `table`：指定将数据写入的目标时序表和关系表。该表应该是 `column` 字段列对应的表。<br>- `jdbcUrl`：指定 KWDB 数据库的 JDBC 连接信息。|
-| `writeMode` | 可选参数，指定写入模式，包括 `INSERT` 和 `UPDATE` 模式。默认是 `INSERT` 模式，表示使用 `INSERT` 语句插入数据。如果设置为 `UPDATE` 模式，则使用 `UPSERT` 语句写入数据。|
-| `preSql` | 可选参数，配置在迁移同步数据之前在 KWDB 数据库执行的 SQL 语句。|
-| `postSql` | 可选参数，配置在迁移同步数据之后在 KWDB 数据库执行的 SQL 语句。|
-| `batchSize` | 定义批量写入数据的大小。|
+| `jdbcUrl` | KWDB 数据库的 JDBC 连接信息，更多详细信息，参见 [JDBC 连接参数](../development//connect-kaiwudb/java/connect-jdbc.md###连接参数)。|
+| `table` | 目标表名，目标表中必须包含所有待写入的列。 |
+| `column` | 目标表的列。列的顺序和数量需要与 Reader 中 `column` 或 `querySql` 中定义的列顺序和数量一致。|
+| `writeMode` | 可选参数，指定数据写入模式，支持 `INSERT` 和 `UPDATE`。默认值为 `INSERT`，表示使用 `INSERT` 语句插入数据。如果设置为 `UPDATE` ，则使用 `UPSERT` 语句写入数据。**注意：** 该参数仅在同步关系数据时生效。 |
+| `preSql` | 可选参数，数据同步前在 KWDB 数据库执行的 SQL 语句，可用于数据准备、数据校验、环境准备和其他预处理工作。 |
+| `postSql` | 可选参数，数据同步后在 KWDB 数据库执行的 SQL 语句，可用于数据清理、数据校验、环境恢复和其它后续处理工作。 |
+| `batchSize` | 可选参数，定义批量写入的数据条数。默认值为 `1`。 |
 
-### Reader 参数说明
+### KaiwuDBReader 参数说明
 
 | 参数         | 说明                                                                                                                                                                                                                                                                                                                |
 | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `name`       |目标数据库插件名称，例如 `kaiwudbwriter`。                                                                                                                                                                                                                                                      |
-| `username`   | 连接源数据库的用户名。                                                                                                                                                                                                                                                                                              |
-| `password`   | 连接源数据库的密码。                                                                                                                                                                                                                                                                                  |
-| `column`     | 指定读取源数据库目标表的列数据。 <br >- 如果数据库连接选择使用 `querySql` 来指定源表数据读取范围，则无需设置 `colunm` 参数。<br> - 由于时序表的第一列必须是 timestamp 或 timestamptz 列，此处定义的数据列也必须包含时间列。                                                                                         |
-| `tsColumn` | 只适用于 `kaiwudbreader` 插件。用于指定时序表的第一列时间戳列，与 `column` 参数同用。如果使用 `querySql` 参数指定源表数据读取范围，则无需设置 `tsColumn` 参数。 |
-| `beginDateTime` | 可选参数，指定表的起始数据读取时间，与 `column` 参数同用。适用支持时序的数据库系统，如 TDengine、InfluxDB 和 OpenTSDB。如果使用 `querySql` 参数指定源表数据读取范围，则无需设置 `beginDateTime` 参数。|
-| `endDateTime` | 可选参数，指定表的终止数据读取时间，与 `column` 参数同用。适用支持时序的数据库系统，如 TDengine、InfluxDB 和 OpenTSDB。如果使用 `querySql` 指定源表数据读取范围，则无需设置 `endDateTime` 参数。<br >**说明** <br > 如果 Reader 为 OpenTSDB Reader，`beginDateTime` 和 `endDateTime` 的间隔需为 `1` 小时以上。|
-| `mandatoryEncoding` | 可选参数，指定字符编码。对于 `kaiwudbreader` 插件，默认为 `UTF-8`。 |
-| `splitPk`    | 可选参数，用于表中有 ID 列时指定 ID 列。没有 ID 列时可不配置。只适用于 `mysqlreader` 插件，用于对 `splitPk` 代表的字段进行数据分片，启动并发任务。目前，`splitPk` 只支持整形数据切分。|
-| `splitIntervalS` | 可选参数，切分时间间隔，仅适用于 InfluxDB。|
-| `connection` | 数据库的连接信息，包括 `table` 和 `jdbcUrl` 参数或 `querySql` 和 `jdbcUrl` 参数。如果用户同时配置 `table` 和 `querySql` 参数，系统将自动忽略 `table` 参数配置。 <br >- `table`：指定读取数据的目标表。 <br >- `querySql`：指定源数据库表和列数据的读取范围。 <br >- `jdbcUrl`：指定源数据库的 JDBC 连接信息。 |
-| `where`      | 可选参数，与 `table` 参数共同使用时，限定同步数据的范围，适用于增量数据同步场景。更多详细信息，参见[时序表配置示例](#时序表)。                                                                                                                                                                                      |
+| `name`       |KaiwuDBReader 插件名称，即`kaiwudbreader`。 |
+| `username`   | 连接 KWDB 数据库的用户名。                                                                                                                                                                                                                                                                           |
+| `password`   | 连接 KWDB 数据库的密码。                                                                                                                                                                                                                                                                |
+| `jdbcUrl` | KWDB 数据库的 JDBC 连接信息。 更多详细信息，参见 [JDBC 连接参数](../development//connect-kaiwudb/java/connect-jdbc.md###连接参数)。|
+| `table` | 读取数据的目标表，目前只支持单表。如果已配置 `querySql` 参数，则无需设置此参数。 |
+| `column`     | 读取目标表的列。 如果已配置 `querySql` 参数，则无需设置此参数。 |
+| `where` | 可选参数，与 `table` 、`column`等参数共同使用，用于限定同步数据的范围。具体配置示例，可参见[关系表同步到时序表配置示例](#关系表同步到时序表)。如果已配置 `querySql` 参数，则无需设置此参数。 |
+| `beginDateTime` | 可选参数，指定起始数据读取时间，需与 `table`、`column` 等参数同用。如果已配置 `querySql` 参数，则无需设置此参数。 |
+| `endDateTime` | 可选参数，指定终止数据读取时间，需与 `table`、`column` 等参数同用，且 `endDateTime` 的值必须大于 `beginDateTime` 。如果已配置 `querySql` 参数，则无需设置此参数。 |
+| `splitIntervalS` | 可选参数，设置数据切分的时间间隔（单位：秒）。默认值为 60 秒。 建议根据待迁移的数据量设置，拆分后的单任务数据量在 10 万左右。如果已配置 `querySql` 参数，则无需设置此参数。|
+| `tsColumn` | 指定用于时间筛选的时间戳列，如果已配置 `querySql` 参数，则无需设置此参数。 |
+| `querySql`       | 可选参数，自定义 SQL 查询。在某些业务场景中，`where` 配置项可能不足以描述复杂的筛选条件。此时可通过配置 `querySql` 自定义查询 SQL。配置 `querySql` 后，KaiwuDBReader 会忽略以下配置项：`table`、`column`、`where`、`tsColumn`、`beginDateTime`、`endDateTime` 和 `splitIntervalS`，直接使用 `querySql` 的内容进行数据筛选。例如，需要通过多表 join 同步数据时，可以使用类似于 `SELECT a, b FROM table_a JOIN table_b ON table_a.id = table_b.id` 的 SQL 语句。|
+
+### 数据类型映射
+
+下表列出 DataX 数据类型与 KWDB 数据类型之间的映射关系。
+
+| DataX 数据类型 | KWDB 数据类型  |
+|----------------|---------------------------------------------------|
+| INT            | TINYINT、SMALLINT、INT                              |
+| LONG           | TINYINT、SMALLINT、INT、BIGINT、TIMESTAMP、TIMESTAMPTZ |
+| DOUBLE         | FLOAT、REAL、DOUBLE、DECIMAL                         |
+| BOOL           | BOOL、BIT                                          |
+| DATE           | DATE、TIME、TIMESTAMP、TIMESTAMPTZ                   |
+| BYTES          | BYTES、VARBYTES                                    |
+| STRING         | CHAR、NCHAR、VARCHAR、NVARCHAR、TIMESTAMP、TIMESTAMPTZ |
