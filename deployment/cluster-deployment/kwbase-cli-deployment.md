@@ -48,7 +48,7 @@ id: kwbase-cli-deployment
 
         :::
 
-3. 启动数据库:
+3. 启动数据库。
 
     - 单副本集群：
 
@@ -172,7 +172,7 @@ id: kwbase-cli-deployment
             --join=${host1}:26257
             ```
 
-4. 初始化集群
+4. 初始化集群。
 
     - 非安全模式：
 
@@ -186,7 +186,7 @@ id: kwbase-cli-deployment
         ./kwbase init --certs-dir=/kaiwudb/certs --host=<address_of_any_node>
         ```
 
-5. 查看数据库状态
+5. 查看数据库状态。
 
     - 非安全模式：
 
@@ -199,4 +199,3 @@ id: kwbase-cli-deployment
         ```bash
         ./kwbase node status --certs-dir=/kaiwudb/certs --host=<address_of_any_alive_node>
         ```
-

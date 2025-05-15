@@ -58,7 +58,7 @@ KWDB 在安装包中提供了 `add_user.sh` 脚本。在安装并运行 KWDB 后
         - 非安全模式（不带密码）：
 
             ```bash
-            ./kwbase sql --certs-dir=$cert_path --host=127.0.0.1:$(local_port) --insecure \
+            ./kwbase sql --host=127.0.0.1:$(local_port) --insecure \
             -e "create user $user_name; \
                 grant admin to $user_name with admin option;"
             ```
@@ -66,7 +66,7 @@ KWDB 在安装包中提供了 `add_user.sh` 脚本。在安装并运行 KWDB 后
         - 安全模式（带密码）：
 
             ```bash
-            ./kwbase sql --host=127.0.0.1:$(local_port) \
+            ./kwbase sql --certs-dir=$cert_path --host=127.0.0.1:$(local_port) \
             -e "create user $user_name with password \"$user_password\"; \
                 grant admin to $user_name with admin option;"
             ```

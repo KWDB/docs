@@ -16,7 +16,7 @@ id: deploy-workflow
 
 集群部署支持以下三种部署方式：
 
-- [使用部署脚本部署（推荐）](./cluster-deployment/script-deployment.md)：最简便的集群部署方式, 用户只需几个命令即可完成整个集群的部署，内置故障检测和节点恢复机制，适合快速搭建测试或生产环境。
+- [使用脚本部署（推荐）](./cluster-deployment/script-deployment.md)：最简便的集群部署方式，用户只需几个命令即可完成整个集群的部署，内置故障检测和节点恢复机制，适合快速搭建测试或生产环境。
 - [使用 kwbase CLI 部署](./cluster-deployment/kwbase-cli-deployment.md)：适用于使用源码自行编译部署的用户，适合有一定技术背景、希望深度定制部署过程的用户。
 - [使用 Docker Run 部署](./cluster-deployment/docker-deployment.md)：适用于偏好使用容器化技术进行部署的用户，适合容器化测试环境或轻量级的开发场景。
 

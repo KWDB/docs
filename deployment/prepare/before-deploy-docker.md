@@ -57,7 +57,7 @@ KWDB 容器镜像支持在以下已安装 Docker 的操作系统中进行安装�
 
 ## 软件依赖（可选）
 
-如采用部署脚本部署 KWDB, 目标机器需已安装 Docker Compose（1.20.0 及以上版本）。
+如采用脚本部署 KWDB, 目标机器需已安装 Docker Compose（1.20.0 及以上版本）。
 
 - 在线安装 Docker Compose，参见 [Docker 官方文档](https://docs.docker.com/compose/install/)。
 - 离线安装 Docker Compose，参见 [Docker 官方文档](https://docs.docker.com/compose/install/standalone/)。

@@ -22,7 +22,7 @@ KWDB 支持使用部署以下集群：
   - [裸机部署准备](./prepare/before-deploy-bare-metal.md)
   - [容器部署准备](./prepare/before-deploy-docker.md)
 - 集群部署
-  - [使用部署脚本部署](./cluster-deployment/script-deployment.md)
+  - [使用脚本部署](./cluster-deployment/script-deployment.md)
   - [使用 kwbase CLI 部署](./cluster-deployment/kwbase-cli-depployment.md)
   - [使用 Docker Run 部署](./cluster-deployment/docker-deployment.md)
 - 集群配置

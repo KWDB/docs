@@ -7,7 +7,7 @@ id: quickstart-bare-metal
 
 KWDB 支持两种单节点裸机部署方式：
 
-- **使用安装脚本部署**：通过安装包内提供的部署脚本进行部署，支持配置数据库的部署模式、数据存储路径、端口等参数。更多信息，参见[使用安装脚本部署 KWDB](#使用安装脚本部署-kwdb)。
+- **使用脚本部署**：通过安装包内提供的部署脚本进行部署，支持配置数据库的部署模式、数据存储路径、端口等参数。更多信息，参见[使用脚本部署 KWDB](#使用脚本部署-kwdb)。
 - **使用 kwbase CLI 部署**：适用于源码编译用户，同样支持配置数据库的部署模式、数据存储路径、端口等参数。更多信息，参见[使用 kwbase CLI 部署 KWDB](#使用-kwbase-cli-部署-kwdb)。
 
 ::: warning 提示
@@ -124,9 +124,9 @@ tar -zxvf <package_name>
 
 ## 部署 KWDB
 
-### 使用安装脚本部署 KWDB
+### 使用脚本部署 KWDB
 
-使用安装脚本部署 KWDB 时，系统将对配置文件、运行环境、硬件配置和软件依赖进行检查。如果相应硬件未能满足要求，系统将继续安装，并提示硬件规格不满足要求。如果软件依赖未能满足要求，系统将中止安装，并提供相应的提示信息。
+使用脚本部署 KWDB 时，系统将对配置文件、运行环境、硬件配置和软件依赖进行检查。如果相应硬件未能满足要求，系统将继续安装，并提示硬件规格不满足要求。如果软件依赖未能满足要求，系统将中止安装，并提供相应的提示信息。
 
 在部署过程中，系统会自动生成相关日志。如果部署时出现错误，用户可以通过查看终端输出或 KWDB 安装目录中 `log` 目录里的日志文件，获取详细的错误信息。
 
@@ -330,7 +330,7 @@ tar -zxvf <package_name>
     - 非安全模式（不带密码）：
 
         ```bash
-        ./kwbase sql --certs-dir=/kaiwudb/certs --host=127.0.0.1:$(local_port) --insecure \
+        ./kwbase sql --host=127.0.0.1:$(local_port) --insecure \
         -e "create user $user_name; \
             grant admin to $user_name with admin option;"
         ```
@@ -338,7 +338,7 @@ tar -zxvf <package_name>
     - 安全模式（带密码）：
 
         ```bash
-        ./kwbase sql --host=127.0.0.1:$(local_port) \
+        ./kwbase sql --certs-dir=/kaiwudb/certs --host=127.0.0.1:$(local_port) \
         -e "create user $user_name with password \"$user_password\"; \
             grant admin to $user_name with admin option;"
         ```
