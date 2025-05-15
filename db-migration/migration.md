@@ -1,29 +1,17 @@
 ---
-title: DataX 读写数据
-id: datax
+title: 数据库迁移
+id: migration
 ---
 
-# DataX 读写数据
-
-[DataX](https://github.com/alibaba/DataX) 是一款广泛使用的离线数据同步工具，能够实现 [MySQL](https://www.mysql.com/)、[SQL Server](https://www.microsoft.com/zh-cn/sql-server/)、[Oracle](https://www.oracle.com/)、[PostgreSQL](https://www.postgresql.org/)、[Hadoop HDFS](https://hadoop.apache.org/)、[Apache Hive](https://hive.apache.org/)、[Apache HBase](https://hbase.apache.org/)、[OTS](https://www.aliyun.com/product/ots) 等各种异构数据源之间的数据同步。
+# 数据库迁移
 
 ## 概述
 
-作为数据同步框架，DataX 能够将不同数据源的同步抽象为从源数据源读取数据的 Reader 插件，以及向目标数据源写入数据的 Writer 插件，从而实现不同数据源的数据同步工作。基于 DataX 框架，KWDB 提供了用于写入和读取数据的 KaiwuDBWriter 和 KaiwuDBReader 插件。
+[DataX](https://github.com/alibaba/DataX) 是一款广泛使用的离线数据同步工具，能够实现 [MySQL](https://www.mysql.com/)、[SQL Server](https://www.microsoft.com/zh-cn/sql-server/)、[Oracle](https://www.oracle.com/)、[PostgreSQL](https://www.postgresql.org/)、[Hadoop HDFS](https://hadoop.apache.org/)、[Apache Hive](https://hive.apache.org/)、[Apache HBase](https://hbase.apache.org/)、[OTS](https://www.aliyun.com/product/ots) 等各种异构数据源之间的数据同步。
 
-### 数据类型映射
+作为数据同步框架，DataX 将不同数据源的同步抽象为从源数据源读取数据的 Reader 插件，以及向目标数据源写入数据的 Writer 插件，从而实现不同数据源的数据同步工作。
 
-下表列出 DataX 数据类型与 KWDB 数据类型之间的映射关系。
-
-| DataX 数据类型 | KWDB 数据类型  |
-|----------------|---------------------------------------------------|
-| INT            | TINYINT、SMALLINT、INT                              |
-| LONG           | TINYINT、SMALLINT、INT、BIGINT、TIMESTAMP、TIMESTAMPTZ |
-| DOUBLE         | FLOAT、REAL、DOUBLE、DECIMAL                         |
-| BOOL           | BOOL、BIT                                          |
-| DATE           | DATE、TIME、TIMESTAMP、TIMESTAMPTZ                   |
-| BYTES          | BYTES、VARBYTES                                    |
-| STRING         | CHAR、NCHAR、VARCHAR、NVARCHAR、TIMESTAMP、TIMESTAMPTZ |
+基于 DataX 框架，KWDB 提供了用于写入和读取数据的 KaiwuDBWriter 和 KaiwuDBReader 插件，以实现 KWDB 与不同数据源之间的数据迁移。
 
 ### KaiwuDBWriter
 
@@ -809,7 +797,7 @@ DataX 作业配置示例如下：
 | `name` | KaiwuDBWriter 插件的名称，即 `kaiwudbwriter`。 |
 | `username` | 连接 KWDB 数据库的用户名。|
 | `password` | 连接 KWDB 数据库的密码。|
-| `jdbcUrl` | KWDB 数据库的 JDBC 连接信息，更多详细信息，参见 [JDBC 连接参数](../connect-kaiwudb/java/connect-jdbc.md###连接参数)。|
+| `jdbcUrl` | KWDB 数据库的 JDBC 连接信息，更多详细信息，参见 [JDBC 连接参数](../development//connect-kaiwudb/java/connect-jdbc.md###连接参数)。|
 | `table` | 目标表名，目标表中必须包含所有待写入的列。 |
 | `column` | 目标表的列。列的顺序和数量需要与 Reader 中 `column` 或 `querySql` 中定义的列顺序和数量一致。|
 | `writeMode` | 可选参数，指定数据写入模式，支持 `INSERT` 和 `UPDATE`。默认值为 `INSERT`，表示使用 `INSERT` 语句插入数据。如果设置为 `UPDATE` ，则使用 `UPSERT` 语句写入数据。**注意：** 该参数仅在同步关系数据时生效。 |
@@ -824,7 +812,7 @@ DataX 作业配置示例如下：
 | `name`       |KaiwuDBReader 插件名称，即`kaiwudbreader`。 |
 | `username`   | 连接 KWDB 数据库的用户名。                                                                                                                                                                                                                                                                           |
 | `password`   | 连接 KWDB 数据库的密码。                                                                                                                                                                                                                                                                |
-| `jdbcUrl` | KWDB 数据库的 JDBC 连接信息。 更多详细信息，参见 [JDBC 连接参数](../connect-kaiwudb/java/connect-jdbc.md###连接参数)。|
+| `jdbcUrl` | KWDB 数据库的 JDBC 连接信息。 更多详细信息，参见 [JDBC 连接参数](../development//connect-kaiwudb/java/connect-jdbc.md###连接参数)。|
 | `table` | 读取数据的目标表，目前只支持单表。如果已配置 `querySql` 参数，则无需设置此参数。 |
 | `column`     | 读取目标表的列。 如果已配置 `querySql` 参数，则无需设置此参数。 |
 | `where` | 可选参数，与 `table` 、`column`等参数共同使用，用于限定同步数据的范围。具体配置示例，可参见[关系表同步到时序表配置示例](#关系表同步到时序表)。如果已配置 `querySql` 参数，则无需设置此参数。 |
@@ -833,3 +821,17 @@ DataX 作业配置示例如下：
 | `splitIntervalS` | 可选参数，设置数据切分的时间间隔（单位：秒）。默认值为 60 秒。 建议根据待迁移的数据量设置，拆分后的单任务数据量在 10 万左右。如果已配置 `querySql` 参数，则无需设置此参数。|
 | `tsColumn` | 指定用于时间筛选的时间戳列，如果已配置 `querySql` 参数，则无需设置此参数。 |
 | `querySql`       | 可选参数，自定义 SQL 查询。在某些业务场景中，`where` 配置项可能不足以描述复杂的筛选条件。此时可通过配置 `querySql` 自定义查询 SQL。配置 `querySql` 后，KaiwuDBReader 会忽略以下配置项：`table`、`column`、`where`、`tsColumn`、`beginDateTime`、`endDateTime` 和 `splitIntervalS`，直接使用 `querySql` 的内容进行数据筛选。例如，需要通过多表 join 同步数据时，可以使用类似于 `SELECT a, b FROM table_a JOIN table_b ON table_a.id = table_b.id` 的 SQL 语句。|
+
+### 数据类型映射
+
+下表列出 DataX 数据类型与 KWDB 数据类型之间的映射关系。
+
+| DataX 数据类型 | KWDB 数据类型  |
+|----------------|---------------------------------------------------|
+| INT            | TINYINT、SMALLINT、INT                              |
+| LONG           | TINYINT、SMALLINT、INT、BIGINT、TIMESTAMP、TIMESTAMPTZ |
+| DOUBLE         | FLOAT、REAL、DOUBLE、DECIMAL                         |
+| BOOL           | BOOL、BIT                                          |
+| DATE           | DATE、TIME、TIMESTAMP、TIMESTAMPTZ                   |
+| BYTES          | BYTES、VARBYTES                                    |
+| STRING         | CHAR、NCHAR、VARCHAR、NVARCHAR、TIMESTAMP、TIMESTAMPTZ |
