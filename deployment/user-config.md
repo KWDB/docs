@@ -76,11 +76,11 @@ KWDB 在安装包中提供了 `add_user.sh` 脚本。在安装并运行 KWDB 后
         - 非安全模式（不带密码）：
 
             ```bash
-            docker exec kaiwudb-container bash -c "./kwbase sql --insecure -e \"create user $user_name;grant admin to $user_name with admin option;\""
+            docker exec kaiwudb-container bash -c "./kwbase sql --insecure --host=$host_ip -e \"create user $user_name;grant admin to $user_name with admin option;\""
             ```
 
         - 安全模式（带密码）：
 
             ```bash
-            docker exec kaiwudb-container bash -c "./kwbase sql -e \"create user $user_name with password \\\"$user_password\\\";grant admin to $user_name with admin option;\"
+            docker exec kaiwudb-container bash -c "./kwbase sql --host=$host_ip --certs-dir=$cert_path -e \"create user $user_name with password \\\"$user_password\\\";grant admin to $user_name with admin option;\""
             ```
