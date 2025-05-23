@@ -7,17 +7,15 @@ id: quickstart-docker
 
 KWDB 支持两种单节点容器化部署方式：
 
-- **使用容器安装包部署**：通过安装包内提供的部署脚本进行部署，支持配置数据库的部署模式、数据存储路径、端口等参数。更多信息，参见[使用安装脚本部署 KWDB](#使用安装脚本部署-kwdb)。
+- **使用容器安装包部署**：通过安装包内提供的部署脚本进行部署，支持配置数据库的部署模式、数据存储路径、端口等参数。更多信息，参见[使用脚本部署 KWDB](#使用脚本部署-kwdb)。
 
 - **使用容器镜像部署**：直接基于 Docker 容器镜像进行部署，提供以下两种方式：
   - 使用 Docker Compose 和 YAML 配置文件部署，目前只支持非安全部署模式，更多信息，参见[使用 YAML 文件部署 KWDB](#使用-yaml-文件部署-kwdb)。
   - 使用 `docker run` 命令行部署，支持安全和非安全部署模式，更多信息，参见[执行 Docker Run 命令部署 KWDB](#执行-docker-run-命令部署-kwdb)。
 
-
 ::: warning 说明
 
-- KWDB 支持基于 DRBD 块设备复制的开源软件方案，实现主备节点间的数据复制，如需实现单机高可用性，请先参阅[单机高可用性方案](../../best-practices/single-ha.md)。
-- KWDB 支持通过 `docker run` 命令在单节点上快速体验 KWDB 集群，更多信息，参见[执行 Docker Run 命令体验 KWDB 集群](./quickstart-docker-cluster.md)。
+KWDB 支持基于 DRBD 块设备复制的开源软件方案，实现主备节点间的数据复制，如需实现单机高可用性，请先参阅[单机高可用性方案](../../best-practices/single-ha.md)。
 
 :::
 
@@ -73,7 +71,7 @@ KWDB 支持在以下已安装 Docker 的操作系统中进行容器部署。
 
 ### 软件依赖（可选）
 
-如采用安装脚本或 YAML 文件部署 KWDB, 目标机器需已安装 Docker Compose（1.20.0 及以上版本）。
+如采用部署脚本或 YAML 文件部署 KWDB, 目标机器需已安装 Docker Compose（1.20.0 及以上版本）。
 
 - 在线安装 Docker Compose，参见 [Docker 官方文档](https://docs.docker.com/compose/install/)。
 - 离线安装 Docker Compose，参见 [Docker 官方文档](https://docs.docker.com/compose/install/standalone/)。
@@ -92,6 +90,8 @@ sudo apt-get install docker-compose
 | `26257`                               | 数据库服务端口、节点监听端口和对外连接端口 |
 
 ### 安装包和镜像
+
+根据需要使用预编译安装包或容器镜像。
 
 #### 获取容器安装包
 
@@ -127,13 +127,13 @@ KWDB 支持通过以下方式获取容器镜像：
     Loaded image: "image-name"
     ```
 
-- Docker 命令：执行 `docker pull kwdb/kwdb:2.2.0` 获取镜像。
+- Docker 命令：执行 `docker pull kwdb/kwdb:<version>` 获取镜像。
 
 ## 部署 KWDB
 
-### 使用安装脚本部署 KWDB
+### 使用脚本部署 KWDB
 
-使用安装脚本部署 KWDB 时，系统将对配置文件、运行环境、硬件配置和软件依赖进行检查。如果相应硬件未能满足要求，系统将继续安装，并提示硬件规格不满足要求。如果软件依赖未能满足要求，系统将中止安装，并提供相应的提示信息。
+使用脚本部署 KWDB 时，系统将对配置文件、运行环境、硬件配置和软件依赖进行检查。如果相应硬件未能满足要求，系统将继续安装，并提示硬件规格不满足要求。如果软件依赖未能满足要求，系统将中止安装，并提供相应的提示信息。
 
 在部署过程中，系统会自动生成相关日志。如果部署时出现错误，用户可以通过查看终端输出或 KWDB 安装目录中 `log` 目录里的日志文件，获取详细的错误信息。
 
@@ -150,7 +150,7 @@ KWDB 支持通过以下方式获取容器镜像：
 
 **步骤**：
 
-如需使用安装脚本部署 KWDB，遵循以下步骤。
+如需使用脚本部署 KWDB，遵循以下步骤。
 
 1. 登录待部署节点，编辑安装包目录下的 `deploy.cfg` 配置文件，设置安全模式、管理用户、服务端口等信息。
 
@@ -320,14 +320,6 @@ KWDB 支持通过以下方式获取容器镜像：
     docker-compose up -d
     ```
 
-3. （可选）配置 KWDB 开机自启动。
-
-    配置 KWDB 开机自启动后，如果系统重启，则自动启动 KWDB。
-
-    ```shell
-    systemctl enable kaiwudb
-    ```
-
 ### 执行 Docker Run 命令部署 KWDB
 
 **前提条件**：
@@ -376,6 +368,7 @@ KWDB 支持通过以下方式获取容器镜像：
         -p $db_port:26257 \
         -p $http_port:8080 \
         -v /var/lib/kaiwudb:/kaiwudb/deploy/kaiwudb-container \
+        -v /dev:/dev \
         --ipc shareable \
         -w /kaiwudb/bin \
         $kwdb_image \
@@ -396,6 +389,7 @@ KWDB 支持通过以下方式获取容器镜像：
         -p $http_port:8080 \
         -v /etc/kaiwudb/certs:/kaiwudb/certs \
         -v /var/lib/kaiwudb:/kaiwudb/deploy/kaiwudb-container \
+        -v /dev:/dev \
         --ipc shareable \
         -w /kaiwudb/bin \
         $kwdb_image \
@@ -425,10 +419,16 @@ KWDB 支持通过以下方式获取容器镜像：
       - `--http-addr=0.0.0.0:8080`：指定HTTP接口监听的地址和端口。
       - `--store=/kaiwudb/deploy/kaiwudb-container`：指定数据存储位置。
 
-3. （可选）配置 KWDB 开机自启动。
+3. （可选）创建数据库用户并授予用户管理员权限。如果跳过该步骤，系统将默认使用部署数据库时的用户，且无需密码访问数据库。
 
-    配置 KWDB 开机自启动后，如果系统重启，则自动启动 KWDB。
+    - 非安全模式（不带密码）：
 
-    ```shell
-    systemctl enable kaiwudb
-    ```
+        ```bash
+        docker exec kaiwudb-container bash -c "./kwbase sql --insecure --host=$host_ip -e \"create user $user_name;grant admin to $user_name with admin option;\""
+        ```
+
+    - 安全模式（带密码）：
+
+        ```bash
+        docker exec kaiwudb-container bash -c "./kwbase sql --host=$host_ip --certs-dir=$cert_path -e \"create user $user_name with password \\\"$user_password\\\";grant admin to $user_name with admin option;\""
+        ```

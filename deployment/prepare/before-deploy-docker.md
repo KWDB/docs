@@ -55,9 +55,9 @@ KWDB 容器镜像支持在以下已安装 Docker 的操作系统中进行安装�
 |              | 1060e                        | ARM_64   |
 |              | 1070e                        | x86_64   |
 
-## 软件依赖
+## 软件依赖（可选）
 
-目标机器已安装 Docker Compose（1.20.0 及以上版本）。
+如采用脚本部署 KWDB, 目标机器需已安装 Docker Compose（1.20.0 及以上版本）。
 
 - 在线安装 Docker Compose，参见 [Docker 官方文档](https://docs.docker.com/compose/install/)。
 - 离线安装 Docker Compose，参见 [Docker 官方文档](https://docs.docker.com/compose/install/standalone/)。
@@ -77,13 +77,17 @@ sudo apt-get install docker-compose
 | `8080`                                | 数据库 Web 服务端口                        |
 | `26257`                               | 数据库服务端口、节点监听端口和对外连接端口 |
 
-## 安装包
+### 安装包和镜像
+
+根据需要使用预编译安装包或容器镜像。
+
+#### 获取容器安装包
 
 获取系统环境对应的[安装包](https://gitee.com/kwdb/kwdb/releases)，将安装包复制到待安装 KWDB 的目标机器上，然后解压缩安装包：
 
 ::: warning 说明
 
-目前 KWDB Gitee 仓库提供了 Ubuntu V22.04 ARM_64 和 x86_64 架构对应的[安装包](https://gitee.com/kwdb/kwdb/releases/) ，如需其它版本的容器安装包，请联系 [KWDB 技术支持](https://www.kaiwudb.com/support/)。
+目前 KWDB 开源仓库提供了 Ubuntu V22.04 ARM_64 和 x86_64 架构对应的[安装包](https://gitee.com/kwdb/kwdb/releases/) ，如需其它版本的容器安装包，请联系 [KWDB 技术支持](https://www.kaiwudb.com/support/)。
 :::
 
 ```shell
@@ -99,6 +103,19 @@ tar -zxvf <install_package_name>
 | `deploy.sh`       | 安装部署脚本，用于安装、卸载、启动、状态获取、关停和重启等操作。  |
 | `packages` 目录   | 存放 DEB、RPM 和镜像包。                                      |
 | `utils` 目录      | 存放工具类脚本。                                             |
+
+#### 获取容器镜像
+
+KWDB 支持通过以下方式获取容器镜像：
+
+- [安装包](https://gitee.com/kwdb/kwdb/releases)：下载系统环境对应的安装包，解压后在 `kwdb_install/packages` 目录下导入 `KaiwuDB.tar` 文件。
+
+    ```bash
+    docker load < KaiwuDB.tar
+    Loaded image: "image-name"
+    ```
+
+- Docker 命令：执行 `docker pull kwdb/kwdb:<version>` 获取镜像。
 
 ## 节点配置
 

@@ -5,7 +5,10 @@ id: quickstart-bare-metal
 
 # 单节点裸机部署
 
-本文介绍如何使用 KWDB 二进制安装包在单个节点上安装部署 KWDB。
+KWDB 支持两种单节点裸机部署方式：
+
+- **使用脚本部署**：通过安装包内提供的部署脚本进行部署，支持配置数据库的部署模式、数据存储路径、端口等参数。更多信息，参见[使用脚本部署 KWDB](#使用脚本部署-kwdb)。
+- **使用 kwbase CLI 部署**：适用于源码编译用户，同样支持配置数据库的部署模式、数据存储路径、端口等参数。更多信息，参见[使用 kwbase CLI 部署 KWDB](#使用-kwbase-cli-部署-kwdb)。
 
 ::: warning 提示
 
@@ -82,9 +85,24 @@ KWDB 支持在以下服务器操作系统进行安装部署。
 | `8080`                                | 数据库 Web 服务端口                        |
 | `26257`                               | 数据库服务端口、节点监听端口和对外连接端口 |
 
-### 安装包
+### 安装包和编译版本
 
-获取系统环境对应的 DEB 或 RPM 安装包，将安装包复制到待安装 KWDB 的目标机器上，然后解压缩安装包：
+根据需要使用预编译安装包或从源码编译安装。
+
+#### 获取安装包
+
+获取系统环境对应的 DEB 或 RPM 安装包，将安装包复制到待安装 KWDB 的目标机器上，然后解压缩安装包。
+
+::: warning 说明
+
+目前 KWDB 开源仓库提供了以下系统与架构的 [DEB 或 RPM 安装包](https://gitee.com/kwdb/kwdb/releases/)，如需其它系统或架构的安装包，请联系 [KWDB 技术支持](https://www.kaiwudb.com/support/)：
+
+- Ubuntu V20.04 x86_64
+- Ubuntu V22.04 x86_64
+- Kylin V10_2403 x86_64
+- Kylin V10_2403 ARM_64
+
+:::
 
 ```shell
 tar -zxvf <package_name>
@@ -100,9 +118,15 @@ tar -zxvf <package_name>
 | `packages` 目录   | 存放 DEB、RPM 和镜像包。                                      |
 | `utils` 目录      | 存放工具类脚本。                                             |
 
+#### 源码编译和安装
+
+根据 [KWDB 编译和安装说明](https://gitee.com/kwdb/kwdb#%E7%BC%96%E8%AF%91%E5%92%8C%E5%AE%89%E8%A3%85)完成源码下载、编译和安装。
+
 ## 部署 KWDB
 
-部署 KWDB 时，系统将对配置文件、运行环境、硬件配置和软件依赖进行检查。如果相应硬件未能满足要求，系统将继续安装，并提示硬件规格不满足要求。如果软件依赖未能满足要求，系统将中止安装，并提供相应的提示信息。
+### 使用脚本部署 KWDB
+
+使用脚本部署 KWDB 时，系统将对配置文件、运行环境、硬件配置和软件依赖进行检查。如果相应硬件未能满足要求，系统将继续安装，并提示硬件规格不满足要求。如果软件依赖未能满足要求，系统将中止安装，并提供相应的提示信息。
 
 在部署过程中，系统会自动生成相关日志。如果部署时出现错误，用户可以通过查看终端输出或 KWDB 安装目录中 `log` 目录里的日志文件，获取详细的错误信息。
 
@@ -111,12 +135,12 @@ tar -zxvf <package_name>
 - `kaiwudb.service`：配置 KWDB 的 CPU 资源占用率。
 - `kaiwudb_env`：配置 KWDB 启动参数。
 
-### 前提条件
+**前提条件**
 
 - 待部署节点的硬件、操作系统、软件依赖和端口满足安装部署要求。
 - 安装用户为 root 用户或者拥有 `sudo` 权限的普通用户。
 
-### 部署步骤
+**步骤**
 
 如需部署 KWDB，遵循以下步骤。
 
@@ -228,3 +252,93 @@ tar -zxvf <package_name>
     ```shell
     [ADD USER COMPLETED]:User creation completed.
     ```
+
+### 使用 kwbase CLI 部署 KWDB
+
+**前提条件**
+
+- 待部署节点的硬件配置、操作系统、软件依赖和端口满足安装部署要求
+- 安装用户为 `root` 用户或拥有 `sudo` 权限的普通用户
+- 已完成[源码编译和安装](https://gitee.com/kwdb/kwdb#%E7%BC%96%E8%AF%91%E5%92%8C%E5%AE%89%E8%A3%85)
+
+**步骤**
+
+1. 进入 `kwbase` 脚本所在目录：
+
+   ```bash
+   cd /home/go/src/gitee.com/kwbasedb/install/bin
+   ```
+
+2. (可选）如需采用安全部署模式，执行以下步骤创建证书：
+
+    1. 创建证书存放目录：
+
+        ```bash
+        mkdir -p /kaiwudb/certs
+        ```
+
+    2. 生成证书和密钥：
+
+        ```bash
+        # 创建数据库证书颁发机构及密钥
+        ./kwbase cert create-ca --certs-dir=/kaiwudb/certs --ca-key=/kaiwudb/certs/ca.key
+        
+        # 创建 root 用户或安装数据库用户的客户端证书及密钥
+        ./kwbase cert create-client $USERNAME --certs-dir=/kaiwudb/certs --ca-key=/kaiwudb/certs/ca.key
+        
+        # 创建节点服务器证书及密钥
+        ./kwbase cert create-node 127.0.0.1 localhost 0.0.0.0 --certs-dir=/kaiwudb/certs --ca-key=/kaiwudb/certs/ca.key
+        ```
+
+3. 启动数据库:
+
+    - 非安全模式：
+
+        ```bash
+        ./kwbase start-single-node --insecure \
+        --listen-addr=0.0.0.0:26257 \
+        --http-addr=0.0.0.0:8080 \
+        --store=/var/lib/kaiwudb
+        ```
+
+    - 安全模式：
+
+        ```bash
+        ./kwbase start-single-node \
+        --certs-dir=/kaiwudb/certs \
+        --listen-addr=0.0.0.0:26257 \
+        --http-addr=0.0.0.0:8080 \
+        --store=/var/lib/kaiwudb
+        ```
+
+4. 查看数据库状态
+
+    - 非安全模式：
+
+        ```bash
+        ./kwbase node status --insecure --host=<address_of_any_alive_node>
+        ```
+
+    - 安全模式：
+
+        ```bash
+        ./kwbase node status --certs-dir=/kaiwudb/certs --host=<address_of_any_alive_node>
+        ```
+
+5. （可选）创建数据库用户并授予用户管理员权限。如果跳过该步骤，系统将默认使用部署数据库时的用户，且无需密码访问数据库。
+
+    - 非安全模式（不带密码）：
+
+        ```bash
+        ./kwbase sql --host=127.0.0.1:$(local_port) --insecure \
+        -e "create user $user_name; \
+            grant admin to $user_name with admin option;"
+        ```
+
+    - 安全模式（带密码）：
+
+        ```bash
+        ./kwbase sql --certs-dir=/kaiwudb/certs --host=127.0.0.1:$(local_port) \
+        -e "create user $user_name with password \"$user_password\"; \
+            grant admin to $user_name with admin option;"
+        ```

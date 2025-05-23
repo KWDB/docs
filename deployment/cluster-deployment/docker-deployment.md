@@ -1,16 +1,16 @@
 ---
-title: 体验 KWDB 集群
-id: quickstart-docker-cluster
+title: Docker Run 命令部署
+id: docker-deployment
 ---
 
-# 体验 KWDB 集群
+# Docker Run 命令部署
 
-本节介绍如何通过 Docker Run 命令在单节点上快速体验 KWDB 集群。注意：在实际生产环境中，建议每台机器仅部署一个节点，以提升可用性并降低数据丢失风险。
+本节介绍如何通过 Docker Run 命令在单节点上部署 KWDB 集群。注意：在实际生产环境中，建议每台机器仅部署一个节点，以提升可用性并降低数据丢失风险。
 
 ## 前提条件
 
-- 已获取 [KWDB 容器镜像](./quickstart-docker.md#获取容器镜像)。
-- 待部署节点的硬件、操作系统、软件依赖和端口满足[安装部署要求](./quickstart-docker.md#硬件)。
+- 已获取 [KWDB 容器镜像](../prepare/before-deploy-docker.md#获取容器镜像)。
+- 待部署节点的硬件、操作系统、软件依赖和端口满足[安装部署要求](../prepare/before-deploy-docker.md#硬件)。
 - 安装用户为 root 用户或者拥有 `sudo` 权限的普通用户。
   - root 用户和配置 `sudo` 免密的普通用户在执行部署脚本时无需输入密码。
   - 未配置 `sudo` 免密的普通用户在执行部署脚本时，需要输入密码进行提权。
@@ -58,6 +58,7 @@ id: quickstart-docker-cluster
         --ulimit memlock=-1 --ulimit nofile=1048576 \
         -p 26257:26257 -p 8080:8080 \
         -v /var/lib/kaiwudb1:/kaiwudb/deploy/kaiwudb-container \
+        -v /dev:/dev \
         --ipc shareable -w /kaiwudb/bin \
         ${kwdb_image} \
         ./kwbase start --insecure --listen-addr=0.0.0.0:26257 \
@@ -69,6 +70,7 @@ id: quickstart-docker-cluster
         --ulimit memlock=-1 --ulimit nofile=1048576 \
         -p 26258:26257 -p 8081:8080 \
         -v /var/lib/kaiwudb2:/kaiwudb/deploy/kaiwudb-container \
+        -v /dev:/dev \        
         --ipc shareable -w /kaiwudb/bin \
         ${kwdb_image} \
         ./kwbase start --insecure --listen-addr=0.0.0.0:26257 \
@@ -80,6 +82,7 @@ id: quickstart-docker-cluster
         --ulimit memlock=-1 --ulimit nofile=1048576 \
         -p 26259:26257 -p 8082:8080 \
         -v /var/lib/kaiwudb3:/kaiwudb/deploy/kaiwudb-container \
+        -v /dev:/dev \        
         --ipc shareable -w /kaiwudb/bin \
         ${kwdb_image} \
         ./kwbase start --insecure --listen-addr=0.0.0.0:26257 \
@@ -96,6 +99,7 @@ id: quickstart-docker-cluster
         -p 26257:26257 -p 8080:8080 \
         -v /etc/kaiwudb/certs:/kaiwudb/certs \
         -v /var/lib/kaiwudb1:/kaiwudb/deploy/kaiwudb-container \
+        -v /dev:/dev \
         --ipc shareable -w /kaiwudb/bin \
         ${kwdb_image} \
         ./kwbase start --certs-dir=/kaiwudb/certs --listen-addr=0.0.0.0:26257 \
@@ -108,6 +112,7 @@ id: quickstart-docker-cluster
         -p 26258:26257 -p 8081:8080 \
         -v /etc/kaiwudb/certs:/kaiwudb/certs \
         -v /var/lib/kaiwudb2:/kaiwudb/deploy/kaiwudb-container \
+        -v /dev:/dev \
         --ipc shareable -w /kaiwudb/bin \
         ${kwdb_image} \
         ./kwbase start --certs-dir=/kaiwudb/certs --listen-addr=0.0.0.0:26257 \
@@ -120,6 +125,7 @@ id: quickstart-docker-cluster
         -p 26259:26257 -p 8082:8080 \
         -v /etc/kaiwudb/certs:/kaiwudb/certs \
         -v /var/lib/kaiwudb3:/kaiwudb/deploy/kaiwudb-container \
+        -v /dev:/dev \
         --ipc shareable -w /kaiwudb/bin \
         ${kwdb_image} \
         ./kwbase start --certs-dir=/kaiwudb/certs --listen-addr=0.0.0.0:26257 \
@@ -166,27 +172,6 @@ id: quickstart-docker-cluster
     参数说明：
     - `docker exec kwdb1`：进入名为 `kwdb1` 的容器中执行命令。
     - `./kwbase init`：执行集群初始化命令。
-      - `--insecure`：（仅非安全模式）指定以非安全模式运行。
-      - `--certs-dir=/kaiwudb/certs`：（安全模式）指定证书目录位置。
-      - `--host=$host:26257`：指定连接的主机地址及端口。
-
-4. 访问集群：
-
-    - 非安全模式
-
-        ```shell
-        docker exec -it kwdb1 ./kwbase sql --insecure --host=$host:26257
-        ```
-
-    - 安全模式
-
-        ```shell
-        docker exec -it kwdb1 ./kwbase sql --certs-dir=/etc/kaiwudb/certs --host=$host:26257
-        ```
-
-    参数说明：
-    - `docker exec -it kwdb1`：进入容器 `kwdb1` 并以交互方式运行命令。
-    - `./kwbase sql`：启动 SQL 命令行工具。
       - `--insecure`：（仅非安全模式）指定以非安全模式运行。
       - `--certs-dir=/kaiwudb/certs`：（安全模式）指定证书目录位置。
       - `--host=$host:26257`：指定连接的主机地址及端口。

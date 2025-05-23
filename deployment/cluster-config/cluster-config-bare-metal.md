@@ -1,11 +1,11 @@
 ---
-title: 配置集群
+title: 裸机部署配置集群
 id: cluster-config-bare-metal
 ---
 
-# 配置集群
+# 裸机部署配置集群
 
-部署完 KWDB 集群以后，用户可以按需配置 KWDB 集群。本文介绍如何配置通过二进制安装包部署的 KWDB 集群。
+使用脚本部署完 KWDB 集群以后，用户可以按需配置 KWDB 集群。
 
 部署完成后，系统会将 KWDB 封装成系统服务，并生成 `kaiwudb.service` 和 `kaiwudb_env` 两个文件。用户可以按需配置 KWDB 集群。
 

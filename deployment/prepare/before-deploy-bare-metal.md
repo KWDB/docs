@@ -74,9 +74,24 @@ KWDB 支持多种操作系统并提供多种形式的安装包。不同操作系
 | `8080`                                | 数据库 Web 服务端口                        |
 | `26257`                               | 数据库服务端口、节点监听端口和对外连接端口 |
 
-## 安装包
+## 安装包和编译版本
+
+根据需要使用预编译安装包或从源码编译安装。
+
+### 获取安装包
 
 获取系统环境对应的 DEB 或 RPM 安装包，将安装包复制到待安装 KWDB 的目标机器上，然后解压缩安装包：
+
+::: warning 说明
+
+目前 KWDB 开源仓库提供了以下系统与架构的 [DEB 或 RPM 安装包](https://gitee.com/kwdb/kwdb/releases/)，如需其它系统或架构的安装包，请联系 [KWDB 技术支持](https://www.kaiwudb.com/support/)：
+
+- Ubuntu V20.04 x86_64
+- Ubuntu V22.04 x86_64
+- Kylin V10_2403 x86_64
+- Kylin V10_2403 ARM_64
+
+:::
 
 ```shell
 tar -zxvf <package_name>
@@ -91,6 +106,10 @@ tar -zxvf <package_name>
 | `deploy.sh`       | 安装部署脚本，用于安装、卸载、启动、状态获取、关停和重启等操作。  |
 | `packages` 目录   | 存放 DEB、RPM 和镜像包。                                      |
 | `utils` 目录      | 存放工具类脚本。                                             |
+
+#### 源码编译和安装
+
+根据 [KWDB 编译和安装说明](https://gitee.com/kwdb/kwdb#%E7%BC%96%E8%AF%91%E5%92%8C%E5%AE%89%E8%A3%85)完成源码下载、编译和安装。
 
 ## 节点配置
 
