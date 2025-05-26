@@ -21,14 +21,15 @@ CREATE TABLE <table_name> (<column_list>)
 PRIMARY [TAGS|ATTRIBUTES] (<primary_tag_list>) 
 [RETENTIONS <keep_duration>]
 [ACTIVETIME <active_duration>]
-[PARTITION INTERVAL <interval>]
-[DICT ENCODING];
+[DICT ENCODING]
+[PARTITION INTERVAL <interval>];
 ```
 
 ### 参数说明
 
 :::warning 说明
-目前，时序表名、列名和标签名称不支持中文字符。
+- 目前，时序表名、列名和标签名称不支持中文字符。
+- 配置可选参数时必须严格按照`[RETENTIONS <keep_duration>][ACTIVETIME <active_duration>] [DICT ENCODING] [PARTITION INTERVAL <interval>]`的顺序，否则系统将会报错。
 :::
 
 | 参数 | 说明 |
@@ -39,8 +40,8 @@ PRIMARY [TAGS|ATTRIBUTES] (<primary_tag_list>)
 | `primary_tag_list`| 主标签列表，支持添加一个或多个主标签名称，最多可指定 `4` 个。主标签必须包含在标签列表内且指定为 NOT NULL，不支持浮点类型和除 VARCHAR 之外的变长数据类型。VARCHAR 类型长度默认 `64` 字节，最大长度为 `128` 字节。|
 | `keep_duration`| 可选参数，指定表的生命周期。超过设置的生命周期后，系统自动从数据库中清除目标表中数据。默认值为 `0d`，即不会过期删除。支持配置的时间单位包括：秒（S 或 SECOND）、分钟（M 或 MINUTE）、小时（H 或 HOUR）、天（D 或 DAY）、周（W 或 WEEK）、月（MON 或 MONTH）、年（Y 或 YEAR）。取值必须是整数值，最大值不得超过 `1000` 年。<br > **说明** <br > - 当用户单独指定或者修改数据库内某一时序表的生命周期或分区时间范围时，该配置只适用于该时序表。<br > - 生命周期的配置不适用于当前分区。当生命周期的取值小于分区时间范围的取值时，即使表的生命周期已到期，由于数据存储在当前分区中，用户仍然可以查询数据。 <br > - 当时间分区的所有数据超过生命周期时间点（`now() - retention time`）时，系统尝试删除该分区的数据。如果此时用户正在读写该分区的数据，或者系统正在对该分区进行压缩或统计信息处理等操作，系统无法立即删除该分区的数据。系统会在下一次生命周期调度时再次尝试删除数据（默认情况下，每小时调度一次）。 <br > - 生命周期和分区时间范围设置与系统的存储空间密切相关。生命周期越长，分区时间范围越大，系统所需的存储空间也越大。有关存储空间的计算公式，参见[预估磁盘使用量](../../../db-operation/cluster-planning.md#预估磁盘使用量)。|
 | `active_duration`| 可选参数，指定数据的活跃时间。超过设置的时间后，系统自动压缩表数据。默认值为 `1d`，表示系统对表数据中 1 天前的分区进行压缩。支持配置的时间单位包括：秒（S 或 SECOND）、分钟（M 或 MINUTE）、小时（H 或 HOUR）、天（D 或 DAY）、周（W 或 WEEK）、月（MON 或 MONTH）、年（Y 或 YEAR）。默认时间单位为天（D 或 DAY）。取值必须是整数值，最大值不得超过 `1000` 年。如果设置为 `0`，表示不压缩表数据。 |
-| `interval`| 可选参数，指定表数据目录分区的时间范围。默认值为 `10d`，即每 10 天进行一次分区。支持配置的时间单位包括：天（D 或 DAY）、周（W 或 WEEK）、月（MON 或 MONTH）、年（Y 或 YEAR）。取值必须是整数值，最大值不得超过 `1000` 年。|
 | `DICT ENCODING`| 可选参数，启用字符串的字典编码功能，提升字符串数据的压缩能力。表中存储的字符串数据重复率越高，压缩优化效果越明显。该功能只适用于 CHAR 和 VARCHAR 长度小于等于 `1023` 的字符串，且只能在建表时开启。开启后不支持禁用。 |
+| `interval`| 可选参数，指定表数据目录分区的时间范围。默认值为 `10d`，即每 10 天进行一次分区。支持配置的时间单位包括：天（D 或 DAY）、周（W 或 WEEK）、月（MON 或 MONTH）、年（Y 或 YEAR）。取值必须是整数值，最大值不得超过 `1000` 年。|
 
 ### 语法示例
 
