@@ -35,7 +35,7 @@ data_root=/var/lib/kaiwudb
 node_addr=your-host-ip
 ```
 
-更多安装部署要求和配置参数信息，参见[裸机部署](../deployment/bare-metal/bare-metal-deployment.md)和[容器部署](../deployment/docker/docker-deployment.md)。
+更多安装部署要求和配置参数信息，参见[集群部署](../deployment/cluster-deployment/script-deployment.md)。
 
 ## 管理和存放证书
 

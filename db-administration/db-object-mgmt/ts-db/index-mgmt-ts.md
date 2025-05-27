@@ -92,7 +92,7 @@ ALTER INDEX <index_name> RENAME TO <new_name>;
 | 参数 | 说明 |
 | --- | --- |
 | `index_name` | 当前索引的名称。|
-| `new_name` | 索引的新名称。该名称在数据库中必须唯一，并且[遵循数据库标识符规则](../../sql-identifiers.md)。|
+| `new_name` | 索引的新名称。该名称在数据库中必须唯一，并且[遵循数据库标识符规则](../../../sql-reference/sql-identifiers.md)。|
 
 ### 语法示例
 

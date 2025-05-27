@@ -128,7 +128,7 @@ KWDB MCP Server 可与任何支持 MCP 协议的 LLM Agent 配合使用。LLM Ag
 - 已安装 Visual Studio Code。
 - 已在 Visual Studio Code 安装 Cline 插件。
 - 已[下载](https://gitee.com/kwdb/kwdb-mcp-server/releases)并解压缩 KWDB MCP Server 安装包。
-- 已安装和运行 KWDB 数据库、配置数据库认证方式、创建数据库。有关详细信息，参见 [KWDB 官方文档](../../../deployment/bare-metal/bare-metal-deployment.md)。
+- 已安装和运行 KWDB 数据库、配置数据库认证方式、创建数据库。有关详细信息，参见 [KWDB 官方文档](../../../deployment/overview.md)。
 - 已创建具有表级别及以上操作权限的用户。有关详细信息，参见[创建用户](../../../sql-reference/db-mgmt/user-mgmt-sql.md#创建用户)。
 
 ### 配置 Cline 连接 KWDB MCP Server

@@ -170,7 +170,7 @@ KWDB 单副本集群仅支持离线升级。
 
 ::: warning 注意
 
-升级后无法简单降级至之前版本。如果需要降级，必须先卸载当前版本，再使用原有版本安装 KWDB，然后使用卸载前创建的备份将数据还原到数据库。有关卸载集群的详细信息，参见[卸载裸机部署的集群](../deployment/bare-metal/uninstall-cluster-bare-metal.md)或[卸载容器部署的集群](../deployment/docker/uninstall-cluster-docker.md)。
+升级后无法简单降级至之前版本。如果需要降级，必须先卸载当前版本，再使用原有版本安装 KWDB，然后使用卸载前创建的备份将数据还原到数据库。有关卸载集群的详细信息，参见[卸载集群](../deployment/uninstall-cluster.md)。
 
 :::
 
