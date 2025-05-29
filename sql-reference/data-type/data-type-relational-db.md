@@ -739,13 +739,13 @@ SELECT 'A' COLLATE de < 'Ä' COLLATE de;
 t
 (1 row)
 
--- 5. 比较使用不同排序规则的字符串，系统报错。
+-- 6. 比较使用不同排序规则的字符串，系统报错。
 
 SELECT 'Ä' COLLATE sv < 'Ä' COLLATE de;
 ERROR: unsupported comparison operator: <collatedstring{sv}> < <collatedstring{de}>
 
 
--- 6. 通过强制转换将带有排序规则的字符串转换为普通的字符串类型。
+-- 7. 通过强制转换将带有排序规则的字符串转换为普通的字符串类型。
 
 SELECT CAST(c1 AS STRING) FROM collates ORDER BY c1;
 c1
