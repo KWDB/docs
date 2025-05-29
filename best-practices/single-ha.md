@@ -791,51 +791,51 @@ DRBD 镜像数据具有以下特点：
 
   - 创建集群：
 
-   ```Shell
-   pcs cluster setup <cluster_id> ...
-   ```
+      ```Shell
+      pcs cluster setup <cluster_id> ...
+      ```
 
   - 销毁集群：
 
-   ```Shell
-   pcs cluster destroy <cluster_id>
-   ```
+      ```Shell
+      pcs cluster destroy <cluster_id>
+      ```
 
 - 节点管理：
 
   - 将节点置为待机状态：
 
-   ```Shell
-   pcs node standby <node_id>
-   ```
+      ```Shell
+      pcs node standby <node_id>
+      ```
 
   - 解除节点的待机状态：
 
-   ```Shell
-   pcs node unstandby <node_id>
-   ```
+      ```Shell
+      pcs node unstandby <node_id>
+      ```
 
 - 资源管理：
 
   - 创建资源：
 
-   ```Shell
-   pcs resource create <resource_id> ...
-   ```
+      ```Shell
+      pcs resource create <resource_id> ...
+      ```
 
   - 移除资源：
 
-   ```Shell
-   pcs resource remove <resource_id>
-   ```
+      ```Shell
+      pcs resource remove <resource_id>
+      ```
 
 - 约束管理：
 
   - 配置资源相关性：
 
-   ```Shell
-   pcs constraint colocation ...
-   ```
+      ```Shell
+      pcs constraint colocation ...
+      ```
 
 ### 常用 DRBD 复制操作指令
 
@@ -843,15 +843,15 @@ DRBD 镜像数据具有以下特点：
 
   - 创建元数据和启动复制关系：
 
-   ```Shell
-   drbdadm --overwrite-data-of-peer primary <resource_id>
-   ```
+      ```Shell
+      drbdadm --overwrite-data-of-peer primary <resource_id>
+      ```
 
   - 查看 DRBD 状态和信息：
 
-   ```Shell
-   drbdadm status <resource_id>
-   ```
+      ```Shell
+      drbdadm status <resource_id>
+      ```
 
 - 使用 drbdmon 来监控 DRBD：
 
