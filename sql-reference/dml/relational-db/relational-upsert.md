@@ -96,7 +96,7 @@ id | balance
     (6 rows)
     ```
 
-    - 指定值违反主键唯一性约束时更新行。
+- 指定值违反主键唯一性约束时更新行。
 
     ```sql
     SELECT * FROM accounts;
@@ -110,10 +110,8 @@ id | balance
     6 |4473.0  
     (6 rows)
 
-
     UPSERT INTO accounts (id, balance) VALUES (3, 7500.83);
     INSERT 1
-
 
     SELECT * FROM accounts;
     id|balance 
@@ -156,7 +154,6 @@ id | balance
     ```sql
     INSERT INTO accounts VALUES (7, 1970.4) ON CONFLICT (balance) DO UPDATE SET id = excluded.id;
     INSERT 1
-
 
     SELECT * FROM accounts;
     id|balance 
