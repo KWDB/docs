@@ -72,7 +72,7 @@ While DataX theoretically supports data migration from various database types to
     <tr>
       <td>KWDB</td>
       <td>KaiwuDBReader</td>
-      <td>Version 2.0.0 and above</td>
+      <td>Version 2.0 and above</td>
       <td>-</td>
     </tr>
     <tr>
@@ -147,7 +147,7 @@ While DataX theoretically supports data migration from KWDB to other types of da
 |------------|-----------------------|--------------------|-------|
 | MySQL      | DataX MysqlWriter     | Plugin supported versions | - |
 | TDengine   | DataX TDengineWriter  | Versions 2.x and 3.x | For large data volumes, set `batchSize` to `1000` for optimal performance |
-| KWDB    | KaiwuDBWriter         | Version 2.0.0 and above | - |
+| KWDB    | KaiwuDBWriter         | Version 2.0 and above | - |
 
 ## Configure KaiwuDBWriter
 
@@ -179,7 +179,7 @@ While DataX theoretically supports data migration from KWDB to other types of da
       - Data to be read and written
       - Job specifications
 
-    ::: warning Tip
+    ::: tip
     Job configuration requirements vary depending on the data source. You can generate a template by running:
 
     ```shell
@@ -200,7 +200,7 @@ While DataX theoretically supports data migration from KWDB to other types of da
    python ../bin/datax.py mysql2kwdb.json
    ```
 
-  ::: warning Tip
+  ::: tip
 
   For large data volumes, increase JVM memory using the `--jvm` parameter. For example:
 
@@ -778,7 +778,7 @@ The following example demonstrates how to transfer data from a TDengine supertab
       - Data to be read and written
       - Job specifications
 
-    ::: warning Tip
+    ::: tip
     Job configuration requirements vary depending on the data source. You can generate a template by running:
 
     ```shell

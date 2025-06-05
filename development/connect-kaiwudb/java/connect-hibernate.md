@@ -141,7 +141,7 @@ KWDB 时序库和关系库在配置和使用上有所不同，以下章节分别
 
 ### 时序库
 
-1. 在`resources`目录下的`application.yml`文件中配置数据源，指定方言包并禁用事务管理。
+1. 在 `resources` 目录下的 `application.yml` 文件中配置数据源，指定方言包并禁用事务管理。
     ::: warning 提示
     KWDB 只支持显式事务内执行时序数据的查询以及写入，不支持显式事务内执行时序数据的 DDL 操作。如果未关闭事务管理就对时序数据引擎进行操作，数据库可能报不支持事务的错误。
     :::
@@ -167,11 +167,11 @@ KWDB 时序库和关系库在配置和使用上有所不同，以下章节分别
      port: 9001
    ```
 
-2. 在`entity`目录下定义映射表结构的实体类，例如`TsdbEntity.java`。
+2. 在 `entity` 目录下定义映射表结构的实体类，例如 `TsdbEntity.java`。
 
    示例：
 
-   示例中，@Table 标签中的 name 名称`tsdb_table`为对应的时序表名称，每列字段对应目前 KWDB 支持的各种数据类型；`t1` 列作为 KWDB 时序表的主标签列使用。
+   示例中，@Table 标签中的 name 名称 `tsdb_table` 为对应的时序表名称，每列字段对应目前 KWDB 支持的各种数据类型；`t1` 列作为 KWDB 时序表的主标签列使用。
 
    ```Java
    @Data
@@ -198,7 +198,7 @@ KWDB 时序库和关系库在配置和使用上有所不同，以下章节分别
    }
    ```
 
-3. 在`repository`目录下定义数据访问层。
+3. 在 `repository` 目录下定义数据访问层。
 
     示例：
 
@@ -233,7 +233,7 @@ KWDB 时序库和关系库在配置和使用上有所不同，以下章节分别
       }
       ```
 
-   2. 在`service/impl`目录下定义 Service 实现类。
+   2. 在 `service/impl` 目录下定义 Service 实现类。
 
       ::: warning 说明
       KWDB 只支持显式事务内执行时序数据的查询以及写入，但不保证时序引擎的事务性，也不保证跨模查询结果的一致性。而 JPA 要求对事务的管理，对于 DML 语法的 `INSERT` 和 `DELETE` 操作，需通过使用 JdbcTemplate 来实现。
@@ -275,7 +275,7 @@ KWDB 时序库和关系库在配置和使用上有所不同，以下章节分别
       }
       ```
 
-5. 在`controller`目录下定义 Controller 层。
+5. 在 `controller` 目录下定义 Controller 层。
 
     示例：
 
@@ -331,7 +331,7 @@ KWDB 时序库和关系库在配置和使用上有所不同，以下章节分别
     }
     ```
 
-6. 验证操作
+6. 验证操作。
    - 添加数据
       ![img](../../../static/development/ts-add.png)
    - 删除数据
@@ -343,7 +343,7 @@ KWDB 时序库和关系库在配置和使用上有所不同，以下章节分别
 
 ### 关系库
 
-1. 在`application.yml`文件配置数据源，指定使用的方言包。
+1. 在 `application.yml` 文件配置数据源，指定使用的方言包。
 
    示例：
 
@@ -364,11 +364,11 @@ KWDB 时序库和关系库在配置和使用上有所不同，以下章节分别
      port: 9002
    ```
 
-2. 在`entity`目录下定义映射表结构的实体类，例如`RdbEntity.java`。
+2. 在 `entity` 目录下定义映射表结构的实体类，例如 `RdbEntity.java`。
 
     示例：
   
-    示例中，@Table 标签中的`name`指定了对应的关系表名称`rdb_table`，表内字段对应了目前 KWDB 支持的大部分数据类型。其中 `id` 字段使用 SEQUENCE 自动生成，因此需要添加以下两个注解来指定使用的 SEQUENCE：
+    示例中，@Table 标签中的 `name` 指定了对应的关系表名称 `rdb_table`，表内字段对应了目前 KWDB 支持的大部分数据类型。其中 `id` 字段使用 SEQUENCE 自动生成，因此需要添加以下两个注解来指定使用的 SEQUENCE：
 
     ```Shell
     @SequenceGenerator(name = "sequence", sequenceName = "rdb_table_id", allocationSize = 1)
@@ -423,7 +423,7 @@ KWDB 时序库和关系库在配置和使用上有所不同，以下章节分别
     );
     ```
 
-3. 在`repository`目录下定义数据访问层。
+3. 在 `repository` 目录下定义数据访问层。
 
     示例：
 
@@ -446,7 +446,7 @@ KWDB 时序库和关系库在配置和使用上有所不同，以下章节分别
 
 4. 定义 Service 接口及实现。
 
-   1. 在`service`目录下定义 Service 层接口。
+   1. 在 `service` 目录下定义 Service 层接口。
 
       示例：
 
@@ -464,7 +464,7 @@ KWDB 时序库和关系库在配置和使用上有所不同，以下章节分别
       }
       ```
 
-   2. 在`service/impl`目录下定义 Service 实现类。
+   2. 在 `service/impl` 目录下定义 Service 实现类。
 
       示例：
 
@@ -498,7 +498,7 @@ KWDB 时序库和关系库在配置和使用上有所不同，以下章节分别
       }
          ```
 
-5. 在`controller`目录下定义 Controller 层。
+5. 在 `controller` 目录下定义 Controller 层。
 
     示例：
 
@@ -548,7 +548,7 @@ KWDB 时序库和关系库在配置和使用上有所不同，以下章节分别
     }
     ```
 
-6. 验证操作
+6. 验证操作。
    - 添加数据
     ![img](../../../static/development/rdb-add.png)
    - 删除数据

@@ -66,7 +66,7 @@ KaiwuDB Kafka Connector is currently supported only on Linux operating systems.
     []
     ```
 
-    ::: warning Tip:
+    ::: tip
 
     Here are some useful Kafka topic management commands:
 
@@ -163,7 +163,6 @@ When writing Kafka data to KWDB, the system can automatically create time-series
 3. Verify that the data has been written to KWDB:
 
     ```sql
-    
     -- Switch to the target database
     USE tsdb;
     

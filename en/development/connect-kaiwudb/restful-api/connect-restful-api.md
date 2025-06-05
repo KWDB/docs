@@ -9,7 +9,7 @@ The KWDB RESTful API enables interaction with KWDB databases through HTTP reques
 
 - Authenticate users and manage sessions
 - Execute DDL operations (create/drop tables, databases, etc.)
-- Insert time-series data
+- Insert data
 - Query data
 - Support for third-party data formats (Telegraf, InfluxDB, OpenTSDB)
 - Manage user sessions
@@ -255,7 +255,7 @@ Accept: text/plain</code></pre></td>
   "code": "code",
   "desc": "desc1", "desc2", ...,
 }</code></pre></td>
-      <td><br>- <code>code(int)</code>: Execution status (0 = all statements succeeded, -1 = at least one statement failed)<br>- <code>desc(string)</code>: Array of execution results, one per statement ("success" or error message)<br>- <code>time</code>: Execution time in seconds</td>
+      <td><br>- <code>code(int)</code>: Execution status (0 = all statements succeeded, -1 = at least one statement failed)<br>- <code>desc(string)</code>: Array of execution results, one per statement ("success" or error message)<br>- <code>time(float)</code>: Execution time in seconds</td>
     </tr>
   </tbody>
 </table>
@@ -603,7 +603,7 @@ Example of converting InfluxDB Line protocol data to KWDB SQL statements:
   create table meters (ts timestamp not null, current float, voltage int, phase float) tags (location varchar(20) not null) primary tags (location);
   ```
 
-For more information on InfluxDB Line protocol, see [InfluxDB Official Docs](https://docs.influxdata.com/influxdb/v2.0/reference/syntax/line-protocol/).
+For more information on InfluxDB Line protocol, see [InfluxDB Official Documentation](https://docs.influxdata.com/influxdb/v2.0/reference/syntax/line-protocol/).
 
 ### Request Information
 
@@ -1077,7 +1077,7 @@ Content-Type: application/json
 
 ## Session Endpoint
 
-The Session interface allows users to query session information and delete specified sessions. Administrators can view all session information and delete any session, while regular users can only view and delete their own sessions.
+The Session endpointallows users to query session information and delete specified sessions. Administrators can view all session information and delete any session, while regular users can only view and delete their own sessions.
 
 ### Request Information
 
@@ -1144,7 +1144,7 @@ Accept: text/plain</code></pre></td>
     "code": "code",
     "tokens": [{"session_info"}]
 }</code></pre></td>
-      <td><br>- <code>code(int)</code>: Status code. <code>0</code> indicates success, other values indicate failure. <br>- <code>conn_info</code>: Session connection-related information, such as connection ID, username, token, timeout, etc.</td>
+      <td><br>- <code>code(int)</code>: Status code. <code>0</code> indicates success, other values indicate failure. <br>- <code>conn_info</code>: Session connection-related information, such as connection ID, username, token and timeout.</td>
     </tr>
   </tbody>
 </table>
@@ -1241,7 +1241,9 @@ Successful response:
 
 ## Authentication Methods
 
-All KWDB RESTful API requests are sent using HTTPS and All KWDB RESTful API requests use HTTPS and are authenticated through the HTTP Header. The following authentication methods are supported:
+All KWDB RESTful API requests are sent using HTTPS and All KWDB RESTful API requests use HTTPS and are authenticated through the HTTP Header. 
+
+The following authentication methods are supported:
 
 **Username and Password Authentication**
 

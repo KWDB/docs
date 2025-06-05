@@ -61,4 +61,4 @@ public Connection getConnection() throws Exception{
 }
 ```
 
-有关 KaiwuDB JDBC 连接方式和连接参数的详细信息，参见[连接方式](#连接方式)和[连接参数](#连接参数)。
+有关 KaiwuDB JDBC 连接方式和连接参数的详细信息，参见[连接方式](../../development/connect-kaiwudb/java/connect-jdbc.md#连接方式)和[连接参数](../../development/connect-kaiwudb/java/connect-jdbc.md#连接参数)。

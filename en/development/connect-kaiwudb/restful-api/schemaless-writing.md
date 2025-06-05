@@ -42,7 +42,7 @@ Regardless of the protocol used, the processing flow follows these steps:
    - If the target table doesn't exist, it is created automatically
    - If the target table exists, the system verifies column and tag compatibility
    - Missing columns and tags are added through `ALTER TABLE ... ADD COLUMN` and `ALTER TABLE ... ADD TAG` operations
-   - Insufficient column and tag lengths are extended via `ALTER TABLE ... ALTER COLUMN` and `ALTER TABLE ... ALTER TAG` operations
+   - Insufficient column lengths and tag lengths are extended via `ALTER TABLE ... ALTER COLUMN` and `ALTER TABLE ... ALTER TAG` operations
    - Data is inserted into the table
 
 ## Supported Protocols
@@ -73,7 +73,7 @@ Type conversion between InfluxDB and KWDB:
 | Boolean        | BOOL        |
 | Unix timestamp | TIMESTAMPTZ |
 
-For more information on InfluxDB Line protocol, see [InfluxDB Official Docs](https://docs.influxdata.com/influxdb/v2.0/reference/syntax/line-protocol/).
+For more information on InfluxDB Line protocol, see [InfluxDB Official Documentation](https://docs.influxdata.com/influxdb/v2.0/reference/syntax/line-protocol/).
 
 Example of converting InfluxDB Line protocol data to KWDB SQL statements:
 

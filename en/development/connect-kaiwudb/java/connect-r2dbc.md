@@ -7,7 +7,7 @@ id: connect-r2dbc
 
 The Reactive Relational Database Connectivity (R2DBC) project provides a reactive programming API for relational databases. Unlike traditional JDBC, which relies on blocking calls, R2DBC offers a non-blocking service provider interface that simplifies development for both database driver and client library developers.
 
-KWDB fully supports R2DBC connections, aallowing you to interact with your database using reactive programming patterns. This section demonstrates how to connect to and use KWDB through R2DBC.
+KWDB fully supports R2DBC connections, allowing you to interact with your database using reactive programming patterns. This section demonstrates how to connect to and use KWDB through R2DBC.
 
 ## Prerequisites
 

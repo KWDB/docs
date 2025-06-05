@@ -229,7 +229,7 @@ In a SpringBoot + MyBatis application, when users invoke APIs to access and mani
 
 ![img](../../../static/development/mybatis.png)
 
-After integrating KaiwuDB JDBC and MyBatis with SpringBoot, you can define entity classes, Mapper interfaces, service interfaces and implementations, and controllers to enable interaction with KWDB data.
+After integrating KaiwuDB JDBC and MyBatis with SpringBoot, you can define entity classes, Mapper interfaces, service interfaces and implementations, and controllers to enable interaction with KWDB.
 
 ### Time-Series Data
 
@@ -550,7 +550,7 @@ Create a service interface `RelationalService` and its implementation `Relationa
 
 #### Creating the Controller
 
-Create the `RelationalController` controller class in the `src/main/java/com/kaiwudb/mybatis/controller` directory. This controller handles HTTP requests and delegates processing to the service layer, implementing operations for creating, deleting, and querying relational data.
+Create the `RelationalController` class in the `src/main/java/com/kaiwudb/mybatis/controller` directory. This controller handles HTTP requests and delegates processing to the service layer, implementing operations for creating, deleting, and querying relational data.
 
 ```Java
 @RestController
@@ -599,7 +599,7 @@ Result:
 
 ### Setting up the Main Application Class
 
-Create a `MyBatisApplication` class in the root package to serve as the application entry point. Include the standard `main` method to bootstrap the application, and apply the necessary Spring annotations to enable component scanning and auto-configuration."
+Create a `MyBatisApplication` class in the root package to serve as the application entry point. Include the standard `main` method to bootstrap the application, and apply the necessary Spring annotations to enable component scanning and auto-configuration.
 
 ```Java
 @SpringBootApplication(scanBasePackages = "com.kaiwudb.mybatis")

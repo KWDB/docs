@@ -29,7 +29,7 @@ KWDB 2.2.0 retains the core features of previous versions while introducing enha
 ### DML Operations
 
 - **Schema-Less Writing:**
-  - Supports data insertion using OpenTSDB's telnet and JSON format protocols.
+  - Supports data insertion using OpenTSDB's telnet interface and HTTP JSON API.
   - When creating databases and tables with schema-less writing, the system automatically distinguishes between uppercase and lowercase.
 
 ### Data Querying

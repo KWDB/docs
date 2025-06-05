@@ -44,7 +44,7 @@ This section explains how to connect to KWDB using the PostgreSQL ODBC interface
 
 5. Configure the data source with the following parameters:
 
-    ![](../../../static/development/odbc-connect-win-04.png)
+    ![](../../../../static/development/odbc-connect-win-04.png)
 
    - `Data Source`: Name of the data source.
    - `Description`: (Optional) description of the data source.

@@ -48,4 +48,4 @@ Parameters:
 | `headers` | Authentication headers using Base64-encoded credentials (username:password)|
 | `data_format` | Data format, must be set to `"influx"` |
 
-For more information on the Telegraf configuration options, see the [official Telegraf documentation](https://docs.influxdata.com/telegraf/v1/configuration/).
+For more information on the Telegraf configuration options, see the [Telegraf documentation](https://docs.influxdata.com/telegraf/v1/configuration/).

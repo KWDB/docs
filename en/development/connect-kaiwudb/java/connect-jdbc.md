@@ -5,7 +5,9 @@ id: connect-jdbc
 
 # Connect to KWDB using JDBC
 
-Java Database Connectivity (JDBC) is the standard API for accessing databases in Java applications. It provides a comprehensive set of interfaces that enable Java applications to interact with various database types. KWDB offers a JDBC driver that allows Java applications to connect to KWDB instances and perform operations such as querying, inserting, updating, and deleting data. The driver handles the conversion of Java data types to their corresponding JDBC types before sending them to the database. For more information on data type conversions, see [Supported Data Types](#supported-data-types).
+Java Database Connectivity (JDBC) is the standard API for accessing databases in Java applications. It provides a comprehensive set of interfaces that enable Java applications to interact with various database types.
+
+KWDB offers a JDBC driver that allows Java applications to connect to KWDB instances and perform operations such as querying, inserting, updating, and deleting data. The driver handles the conversion of Java data types to their corresponding JDBC types before sending them to the database. For more information on data type conversions, see [Supported Data Types](#supported-data-types).
 
 KaiwuDB JDBC driver is the official Java connector for KWDB. Built on the PgJDBC extension, it complies with JDBC 4.0, 4.1, and 4.2 specifications. Java developers can use this driver to communicate with KWDB and access tabular data. The operation process is as follows:
 
@@ -57,6 +59,7 @@ To connect to the database, your Java code needs to include the following compon
 - **Database Connection Interface**: Use `DriverManager.getConnection()` to establish a connection to KWDB. The supported connection methods are:
 
   - **Standard URL connection**
+
     `Connection conn = DriverManager.getConnection(url)`: Specifies all required connection details in the URL, including address, port, database name, username, and password. For supported URL parameters, see [URL Parameters](#url-parameters).
 
   - **Connection with username and password**
@@ -91,12 +94,9 @@ In addition to the standard connection parameters, the driver supports many addi
 | `password`                 | null                  | Password for connecting to the database                      |
 | `ssl`                      | null                  | Use SSL for connection; the server must support SSL          |
 | `sslmode`                  | null                  | SSL mode options: `disable`, `allow`, `prefer`, `require`, `verify-ca`, and `verify-full`. See [SSL Mode Parameters](#ssl-mode-parameters) for more information |
-| `sslcert`                  | null                  | Path to the client TLS or TLCP certificate                   |
-| `sslkey`                   | null                  | Path to the client `pkcs#8` format TLS or TLCP private key   |
-| `sslrootcert`              | null                  | Path to the TLS or TLCP root certificate                     |
-| `sslsigncert`              | null                  | Path to the TLCP signing certificate                         |
-| `sslsignkey`               | null                  | Path to the TLCP signing private key                         |
-| `ssl_max_protocol_version` | null                  | Version of the TLCP protocol                                 |
+| `sslcert`                  | null                  | Path to the client TLS certificate                   |
+| `sslkey`                   | null                  | Path to the client `pkcs#8` format TLS private key   |
+| `sslrootcert`              | null                  | Path to the TLS root certificate                     |
 | `ApplicationName`          | `KaiwuDB JDBC Driver` | Application name                                             |
 | `tcpKeepAlive`             | `false`               | Enable or disable TCP keep-alive                             |
 | `loginTimeout`             | `0`                   | Time (in seconds) to wait for the database connection        |
@@ -104,7 +104,7 @@ In addition to the standard connection parameters, the driver supports many addi
 | `socketTimeout`            | `0`                   | Socket read timeout (in seconds). A value of `0` disables it |
 | `cancelSignalTimeout`      | `10`                  | Timeout for sending `cancel` commands (in seconds)           |
 | `readOnly`                 | `false`               | Set connection mode to read-only                             |
-| `preferQueryMode`          | `extended`            | Query execution mode. Supported values include: `simple`, `extended`, `extendedForPrepared`, and `extendedCacheEverything`. **Note**: When using `setXXX()` methods in `PreparedStatement` objects (e.g., `setBytes(int i, byte[] value)`), `preferQueryMode` must use the default value `extended` and cannot be set to `simple` |
+| `preferQueryMode`          | `extended`            | Query execution mode. Supported values include: `simple`, `extended`, `extendedForPrepared`, and `extendedCacheEverything`.<br><br>**Note**: When using `setXXX()` methods in `PreparedStatement` objects (e.g., `setBytes(int i, byte[] value)`), `preferQueryMode` must use the default value `extended` and cannot be set to `simple` |
 
 #### SSL Mode Parameters
 
@@ -163,70 +163,6 @@ public Connection getConnection() throws Exception{
 }
 ```
 
-#### TLCP Secure Connection
-
-- **URL Connection**
-
-  The following example uses the `url` parameter with TLCP parameters:
-
-    ```java
-    public void testConnection() {
-        Connection connection = null;
-        try {
-            Class.forName("com.kaiwudb.Driver");
-            String url = "jdbc:kaiwudb://127.0.0.1:26257/defaultdb?user=test&password=Password@123#&sslmode=verify-ca&sslcert=/certs/client_enc.root.crt&sslkey=/certs/client_enc.root.key&sslsigncert=/certs/client_sign.root.crt&sslsignkey=/certs/client_sign.root.key&sslrootcert=/certs/tlcp_ca.crt&ssl_max_protocol_version=TLCPv1.1";
-            connection = DriverManager.getConnection(url);
-            System.out.println("create connection success.");
-        } catch (ClassNotFoundException | SQLException e) {
-            System.out.println(e.getMessage());
-        } finally {
-            try {
-                if (null != connection) {
-                    connection.close();
-                    System.out.println("close connection success.");
-                }
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-        }
-    }
-    ```
-
-- **Connection with Properties**
-
-  The following example uses properties for TLCP parameters:
-
-    ```java
-    public void testConnection() {
-        Connection connection = null;
-        try {
-            Class.forName("com.kaiwudb.Driver");
-            String url = "jdbc:kaiwudb://127.0.0.1:26257/defaultdb?user=test&password=Password@123#";
-            Properties props = new Properties();
-            props.setProperty("sslmode", "verify-ca");
-            props.setProperty("ssl_max_protocol_version", "TLCPv1.1");
-            props.setProperty("sslcert", "/certs/client_enc.root.crt");
-            props.setProperty("sslkey", "/certs/client_enc.root.key");
-            props.setProperty("sslsigncert", "/certs/client_sign.root.crt");
-            props.setProperty("sslsignkey", "/certs/client_sign.root.key");
-            props.setProperty("sslrootcert", "/certs/tlcp_ca.crt");
-            connection = DriverManager.getConnection(url, props);
-            System.out.println("create connection success.");
-        } catch (ClassNotFoundException | SQLException e) {
-            System.out.println(e.getMessage());
-        } finally {
-            try {
-                if (null != connection) {
-                    connection.close();
-                    System.out.println("close connection success.");
-                }
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-        }
-    }
-    ```
-
 ## Configuration Examples
 
 This section provides examples demonstrating how to perform SQL operations on a KWDB database using Java applications. For more information on SQL statements, see [SQL Reference](../../../sql-reference/overview.md).
@@ -237,7 +173,7 @@ Due to differences in JDBC interface support across various data engines, some i
 - The time series engine does not support transactions. When `autoCommit` is set to `false`, `INSERT` statements are not allowed.
 - The time series engine does not support savepoints, cursors, or batch update operations.
 - Both relational and time series engines do not support:
-  - User creation or SQLXML objects
+  - Creation or use of SQLXML objects
   - Setting the `Holdability` parameter
   - Stored procedures
   - Executing `EXPORT` and `IMPORT` statements

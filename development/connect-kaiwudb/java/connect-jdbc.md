@@ -64,7 +64,7 @@ KaiwuDB JDBC 是 KWDB 的官方 Java 语言连接器。它基于 PgJDBC 扩展�
 
   - 带属性的连接
 
-    `Connection conn = DriverManager.getConnection(url, props)`：通过 `url` 参数指定数据库地址、端口和名称。通过 `props` 参数单独指定其它需要必要信息。有关支持的属性参数，参见 [属性参数](#属性参数)。
+    `Connection conn = DriverManager.getConnection(url, props)`：通过 `url` 参数指定数据库地址、端口和名称。通过 `props` 参数单独指定其它需要必要信息。有关支持的属性参数，参见 [URL 参数](#url-参数)和[属性参数](#属性参数)。
 
 ### 连接参数
 

@@ -13,7 +13,7 @@ KWDB 支持用户通过 Npgsql 驱动连接数据库，并执行创建、插入�
 
 ## 前提条件
 
-- 安装 .NET 6.0 和 Visual Studio C# 2022。
+- 安装 [.NET 6.0](https://dotnet.microsoft.com/zh-cn/download/dotnet/6.0) 和 [Visual Studio 2022](https://visualstudio.microsoft.com/zh-hans/vs/)。
 - 安装和运行 KWDB 数据库、配置数据库认证方式、创建数据库。
 - 创建具有表级别及以上操作权限的用户。
 

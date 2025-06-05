@@ -33,20 +33,102 @@ KaiwuDBWriter 通过 DataX 获取 Reader 生成的协议数据，将目标表的
 理论上，支持使用 DataX 将其它类型的数据库数据同步到 KWDB，但未经测试。
 :::
 
-| 数据库     | 插件                                                                               | 版本                  | 说明                                                                                                                                                                                                                                                                                                                              |
-| ---------- | ---------------------------------------------------------------------------------- | --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ClickHouse | ClickHouseReader                                                                   | 插件支持的版本        | - DataX 插件使用的 JDBC 驱动版本较低，不支持毫秒级精度的时间读取，可能导致错误删除数据。建议先升级 DataX 插件的 JDBC 驱动版本。解决升级导致的问题后，再进行数据迁移。<br> - 在 ClickHouse 中，NULL 值会显示为 `0`，导入 KWDB 后，NULL 值会被处理为 `false`。<br> - 二进制类型数据导入 KWDB 后，会以 `\x+` 空字符串的形式显示。                 |
-| InfluxDB   | InfluxDB10Reader                                                                   | 1.x 版本              | -                                                                                                                                                                                                                                                                                                                                 |
-|            | InfluxDB20Reader                                                                   | 2.x 版本              |                                                                                                                                                                                                                                                                                                                                   |
-| KWDB    | KaiwuDBReader                                                                      | 2.0 及以上版本      | -                                                                                                                                                                                                                                                                                                                                 |
-| MongoDB    | DataX MongoDBReader                                                                | 插件支持的版本        | - DataX 自带的 Reader 插件不支持 MongoDB 7。 <br>- 不支持迁移 MongoDB 数据库的 `_id` 列。                                                                                                                                                                                                                                         |
-| MySQL      | DataX MysqlReader                                                                  | 插件支持的版本        | -                                                                                                                                                                                                                                                                                                                                 |
-| OpenTSDB   | DataX OpenTSDBReader                                                               | 2.3.X 版本            | - OpenTSDB 是键值对类型的数据库。在读取 OpenTSDB 数据时，数据以键值对的形式呈现。<br>- KaiwuDBWriter 会对读取的 OpenTSDB metric 进行修改，将 metric 中的英文句号（`.`）修改为下划线（`_`），然后将其作为 KWDB 数据库的表名。每张表中存储的数据包括 `k_timestamp` 和 `value` 两列。<br >- 当写入数据的表不存在时，支持自动创建表。<br>- 使用 `beginDateTime` 和 `endDateTime` 设置数据读取时间时，`beginDateTime` 和 `endDateTime` 的间隔需为 1 小时以上。 |
-| Oracle     | OracleReader                                                                       | 插件支持的版本        | -                                                                                                                                                                                                                                                                                                                                  |
-| PostgreSQL | DataX PostgresqlReader                                                             | 插件支持的版本        | -                                                                                                                                                                                                                                                                                                                                 |
-| TDengine   | [tdengine20reader](https://github.com/taosdata/DataX/tree/master/tdengine20reader) | 2.4.0.14 以下版本     | - TDengine 数据库中，如果 BOOL 类型的字段值为 null，导入 KWDB 后，会显示为 `false`。<br> - TDengine 数据库中，如果 NCHAR 类型的字段值为 null，导入 KWDB 后，会显示为空字符串。<br>- TDengineReader 不支持读取 JSON 类型数据。如果数据表的标签列采用 JSON 格式，需要转为其他类型，否则会导致迁移失败。                                  |
-|            | DataX TDengineReader                                                               | 2.4.0.14 - 3.0.0 版本 | -                                                                                                                                                                                                                                                                                                                                  |
-|            | [tdengine30reader](https://github.com/taosdata/DataX/tree/master/tdengine30reader) | 3.0.0 以上版本        | -                                                                                                                                                                                                                                                                                                                                  |
+<table>
+  <thead>
+    <tr>
+      <th>数据库</th>
+      <th>插件</th>
+      <th>版本</th>
+      <th>说明</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>ClickHouse</td>
+      <td>ClickHouseReader</td>
+      <td>插件支持的版本</td>
+      <td>
+        - DataX 插件使用的 JDBC 驱动版本较低，不支持毫秒级精度的时间读取，可能导致错误删除数据。建议先升级 DataX 插件的 JDBC 驱动版本。解决升级导致的问题后，再进行数据迁移。<br>
+        - 在 ClickHouse 中，NULL 值会显示为 <code>0</code>，导入 KWDB 后，NULL 值会被处理为 <code>false</code>。<br>
+        - 二进制类型数据导入 KWDB 后，会以 <code>\x+</code> 空字符串的形式显示。
+      </td>
+    </tr>
+    <tr>
+      <td rowspan="2">InfluxDB</td>
+      <td>InfluxDB10Reader</td>
+      <td>1.x 版本</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>InfluxDB20Reader</td>
+      <td>2.x 版本</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>KWDB</td>
+      <td>KaiwuDBReader</td>
+      <td>2.0 及以上版本</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>MongoDB</td>
+      <td>DataX MongoDBReader</td>
+      <td>插件支持的版本</td>
+      <td>
+        - DataX 自带的 Reader 插件不支持 MongoDB 7。<br>
+        - 不支持迁移 MongoDB 数据库的 <code>_id</code> 列。
+      </td>
+    </tr>
+    <tr>
+      <td>MySQL</td>
+      <td>DataX MysqlReader</td>
+      <td>插件支持的版本</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>OpenTSDB</td>
+      <td>DataX OpenTSDBReader</td>
+      <td>2.3.X 版本</td>
+      <td>
+        - OpenTSDB 是键值对类型的数据库。在读取 OpenTSDB 数据时，数据以键值对的形式呈现。<br>
+        - KaiwuDBWriter 会对读取的 OpenTSDB metric 进行修改，将 metric 中的英文句号（<code>.</code>）修改为下划线（<code>_</code>），然后将其作为 KWDB 数据库的表名。每张表中存储的数据包括 <code>k_timestamp</code> 和 <code>value</code> 两列。<br>
+        - 当写入数据的表不存在时，支持自动创建表。<br>
+        - 使用 <code>beginDateTime</code> 和 <code>endDateTime</code> 设置数据读取时间时，<code>beginDateTime</code> 和 <code>endDateTime</code> 的间隔需为 1 小时以上。
+      </td>
+    </tr>
+    <tr>
+      <td>Oracle</td>
+      <td>DataX OracleReader</td>
+      <td>插件支持的版本</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>PostgreSQL</td>
+      <td>DataX PostgresqlReader</td>
+      <td>插件支持的版本</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td rowspan="3">TDengine</td>
+      <td><a href="https://github.com/taosdata/DataX/tree/master/tdengine20reader">tdengine20reader</a></td>
+      <td>2.4.0.14 以下版本</td>
+      <td rowspan="3">
+        - TDengine 数据库中，如果 BOOL 类型的字段值为 null，导入 KWDB 后，会显示为 <code>false</code>。<br>
+        - TDengine 数据库中，如果 NCHAR 类型的字段值为 null，导入 KWDB 后，会显示为空字符串。<br>
+        - TDengineReader 不支持读取 JSON 类型数据。如果数据表的标签列采用 JSON 格式，需要转为其他类型，否则会导致迁移失败。
+      </td>
+    </tr>
+    <tr>
+      <td>DataX TDengineReader</td>
+      <td>2.4.0.14 - 3.0.0 版本</td>
+    </tr>
+    <tr>
+      <td><a href="https://github.com/taosdata/DataX/tree/master/tdengine30reader">tdengine30reader</a></td>
+      <td>3.0.0 以上版本</td>
+    </tr>
+  </tbody>
+</table>
+
 
 ### KaiwuDBReader
 
@@ -442,33 +524,27 @@ DataX 作业配置示例如下：
 
 KWDB 支持通过 DataX 将 TDengine 的数据同步到 KWDB 数据库的时序表。用户可以选择将 TDengine 的子表或普通表同步到 KWDB 的时序表，也可以选择将 TDengine 超表下所有子表的数据同步到 KWDB 的时序表。
 
-以下示例假设已经在 TDengine 数据库中创建一张超表 `st`，两张子表 `ct1` 和 `ct2` 和一张普通表 `cpu`。
-
-```sql
-/* 源数据库benchmark */
-CREATE DATABASE if not exists benchmark;
-
-/* 超表st  */
-CREATE TABLE benchmark.cpu (k_timestamp TIMESTAMPTZ NOT NULL, usage_user INT8 NOT NULL, usage_system INT8 NOT NULL, usage_idle INT8 NOT NULL, hostname VARCHAR NOT NULL, region VARCHAR NOT NULL, datacenter VARCHAR NOT NULL) tags (id INT8 NOT NULL);
-
-/* 子表 ct1和ct2*/
-CREATE TABLE benchmark.ct1 using st tags (1);
-CREATE TABLE benchmark.ct2 using st tags (2);
-
-/* 普通表 cpu*/
-CREATE TABLE benchmark.cpu (k_timestamp TIMESTAMPTZ NOT NULL, usage_user INT8 NOT NULL, usage_system INT8 NOT NULL, usage_idle INT8 NOT NULL, id INT8 NOT NULL, hostname VARCHAR NOT NULL, region VARCHAR NOT NULL, datacenter VARCHAR NOT NULL);
-```
-
 ##### 普通表或子表同步到时序表
 
-以下示例假设已经在 KWDB 数据库中创建时序数据库（`benchmark`）和时序表（`cpu`），用于同步 TDengine 中的普通表 `cpu`。
+以下示例假设已在 TDengine 数据库中创建一张普通表 `cpu`；在 KWDB 数据库中创建时序数据库（`benchmark`）和时序表（`cpu`），用于同步 TDengine 中的普通表 `cpu`。
 
-```sql
-/*创建时序数据库：benchmark */
-CREATE TS DATABASE benchmark;
-/*创建时序表：cpu */
-CREATE TABLE benchmark.cpu (k_timestamp TIMESTAMPTZ NOT NULL, usage_user INT8 NOT NULL, usage_system INT8 NOT NULL, usage_idle INT8 NOT NULL) TAGS (id INT8 NOT NULL, hostname VARCHAR NOT NULL, region VARCHAR NOT NULL, datacenter VARCHAR NOT NULL) PRIMARY TAGS (id);
-```
+- TDengine： 
+    ```sql
+    /* 源数据库benchmark */
+    CREATE DATABASE if not exists benchmark;
+    
+    /* 普通表 cpu*/
+    CREATE TABLE benchmark.cpu (k_timestamp TIMESTAMPTZ NOT NULL, usage_user INT8 NOT NULL, usage_system INT8 NOT NULL, usage_idle INT8 NOT NULL, id INT8 NOT NULL, hostname VARCHAR NOT NULL, region VARCHAR NOT NULL, datacenter VARCHAR NOT NULL);
+    ```
+
+- KWDB: 
+
+    ```sql
+    /*创建时序数据库：benchmark */
+    CREATE TS DATABASE benchmark;
+    /*创建时序表：cpu */
+    CREATE TABLE benchmark.cpu (k_timestamp TIMESTAMPTZ NOT NULL, usage_user INT8 NOT NULL, usage_system INT8 NOT NULL, usage_idle INT8 NOT NULL) TAGS (id INT8 NOT NULL, hostname VARCHAR NOT NULL, region VARCHAR NOT NULL, datacenter VARCHAR NOT NULL) PRIMARY TAGS (id);
+    ```
 
 DataX 作业配置示例如下：
 
@@ -537,14 +613,30 @@ DataX 作业配置示例如下：
 
 ##### 超表同步到时序表
 
-以下示例假设已经在 KWDB 数据库中创建时序数据库（`benchmark`）和时序表（`st`），用于同步 TDengine 中的超表 `st`。
+以下示例假设已经在 TDengine 数据库中创建一张超表 `st`，两张子表 `ct1` 和 `ct2` ；在 KWDB 数据库中创建时序数据库（`benchmark`）和时序表（`st`），用于同步 TDengine 中的超表 `st`。
 
-```sql
-/*创建时序数据库：benchmark */
-CREATE TS DATABASE benchmark;
-/*创建时序表：st */
-CREATE TABLE benchmark.st (k_timestamp TIMESTAMPTZ NOT NULL, usage_user INT8 NOT NULL, usage_system INT8 NOT NULL, usage_idle INT8 NOT NULL) TAGS (id INT8 NOT NULL, hostname VARCHAR NOT NULL, region VARCHAR NOT NULL, datacenter VARCHAR NOT NULL) PRIMARY TAGS (id);
-```
+- TDengine：
+
+    ```sql
+    /* 源数据库benchmark */
+    CREATE DATABASE if not exists benchmark;
+
+    /* 超表st  */
+    CREATE TABLE benchmark.st (k_timestamp TIMESTAMPTZ NOT NULL, usage_user INT8 NOT NULL, usage_system INT8 NOT NULL, usage_idle INT8 NOT NULL, hostname VARCHAR NOT NULL, region VARCHAR NOT NULL, datacenter VARCHAR NOT NULL) tags (id INT8 NOT NULL);
+
+    /* 子表 ct1和ct2*/
+    CREATE TABLE benchmark.ct1 using st tags (1);
+    CREATE TABLE benchmark.ct2 using st tags (2);
+    ```
+
+- KWDB：
+
+    ```sql
+    /*创建时序数据库：benchmark */
+    create ts database benchmark;
+    /*创建时序表：st */
+    CREATE TABLE benchmark.st (k_timestamp TIMESTAMPTZ NOT NULL, usage_user INT8 NOT NULL, usage_system INT8 NOT NULL, usage_idle INT8 NOT NULL) TAGS (id INT8 NOT NULL, hostname VARCHAR NOT NULL, region VARCHAR NOT NULL, datacenter VARCHAR NOT NULL) PRIMARY TAGS (id);
+    ```
 
 DataX 作业配置示例如下：
 

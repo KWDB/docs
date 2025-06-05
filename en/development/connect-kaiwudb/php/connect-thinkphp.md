@@ -7,7 +7,7 @@ id: connect-thinkphp
 
 ThinkPHP is an open-source, fast, simple, and object-oriented lightweight PHP development framework. It is designed to support agile web application development and simplify enterprise application development.
 
-This section demonstrates how to connect to KWDB using ThinkPHP and execute SQL statements for building PHP web applications.
+This section demonstrates how to connect to KWDB using ThinkPHP and execute SQL statements.
 
 ## Prerequisites
 

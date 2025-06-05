@@ -10,7 +10,7 @@ id: connect-mybatis-plus
 
 This section demonstrates how to integrate KWDB with a Maven-managed Spring Boot project using MyBatis-Plus for data access and management. For frequently asked questions about using MyBatis-Plus, see [Mybatis and Mybatis-Plus](../../../faqs/faqs.md#mybatis-and-mybatis-plus).
 
-This example uses the following technologies:
+This example uses the following tools and frameworks:
 
 - JDK: OpenJDK 1.8.0_402
 - Maven: Apache Maven 3.6.3
@@ -76,7 +76,7 @@ The following example assumes you have already created a relational database and
 
 1. Add the MyBatis-Plus dependency to the `pom.xml` file.
 
-   ::: warning Tip
+   ::: tip
 
    It is recommended to use MyBatis-Plus version 3.4.3 or higher.
 
@@ -134,11 +134,11 @@ The following example assumes you have already created a relational database and
 
 ## Implementing CRUD Operations
 
-The following example uses IoT sensor devices to demonstrate how to implement Create, Read, Update, and Delete (CRUD) operations.
+The following example uses IoT sensors to demonstrate how to implement Create, Read, Update, and Delete (CRUD) operations.
 
 ### Creating Entity Class
 
-1. In the `entity` directory, create an entity class `SensorData` to record sensor data. Add the `@Data` and `@TableName` annotations to automatically generate methods such as `getter`, `setter`, `equals`, `canEqual`, `hashCode`, and `toString`, and to specify the corresponding table name in the database:
+1. In the `entity` directory, create an entity class `SensorData` to record sensor data. Add the `@Data` and `@TableName` annotations to automatically generate methods such as `getter`, `setter`, `equals`, `canEqual`, `hashCode`, and `toString`, and specify the corresponding table name in the database:
 
    ```java
    package com.kaiwudb.app.entity;
@@ -427,7 +427,7 @@ The following example uses IoT sensor devices to demonstrate how to implement Cr
 
    ![img](../../../static/development/runappresult.png)
 
-### Testing the Application
+### Testing API Operations
 
 After starting the application, you can use tools like Postman to send HTTP requests and perform CRUD operations on the KWDB database:
 

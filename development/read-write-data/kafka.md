@@ -347,7 +347,7 @@ OpenTSDB 采用单列模型，因此一行只能包含一个普通数据列，�
 数据格式如下：
 
 ```json
-<metric> <timestamp> <value> <tagk_1>=<tagv_1>[ <tagk_n>=<tagv_n>]
+<metric> <timestamp> <value> <tagk_1>=<tagv_1>[<tagk_n>=<tagv_n>]
 ```
 
 参数说明：
@@ -377,7 +377,7 @@ ts_line_opentsdb_tb.c2 1648432611250 217 tag1=1
 InfluxDB Line 格式协议采用一行字符串来表示一行数据。
 
 ::: warning 说明
-对于 InfluxDB Line 格式数据，系统无法获取表中列和属性的类型和长度信息。因此，如果写入的数据表不存在，不支持自动创建表。
+对于 InfluxDB Line 格式数据，系统无法获取表中列和标签的类型和长度信息。因此，如果写入的数据表不存在，不支持自动创建表。
 :::
 
 数据格式如下:
@@ -393,7 +393,7 @@ InfluxDB Line 格式协议采用一行字符串来表示一行数据。
 | `measurement` | 表名。在 KWDB 数据库中创建时序表时，表名需要与此处的表名一致。                                                                                                                                                                            |
 | `tag_set`     | 标签集，格式为 `<tag_key>=<tag_value>,<tag_key>=<tag_value>`，多个标签之间使用逗号（`,`）隔开。                                                                                                                                                         |
 | `field_set`   | 普通列数据，格式为 `<field_key>=<field_value>,<field_key>=<field_value>`，多列之间之间使用逗号（`,`）隔开。`field_set` 中的每个数据项都需要对自身的数据类型进行描述，例如 `1.2f32` 代表 `FLOAT` 类型的数值 `1.2`、`3.63f64` 代表 `DOUBLE` 类型的数值 `3.63` 处理，更多详细信息，参见下表。 |
-| `timestamp`   | 本行数据对应的时间戳。timestamp 支持多种时间精度，写入数据的时候需要用参数指定时间精度，支持毫秒（ms）、微妙级（us）、纳秒（ns）3 种时间精度。                                                                                                       |
+| `timestamp`   | 本行数据对应的时间戳。timestamp 支持多种时间精度，写入数据的时候需要用参数指定时间精度，支持毫秒（`ms`）、微妙级（`us`）、纳秒（`ns`）3 种时间精度。                                                                                                       |
 
 数据类型描述：
 
@@ -453,7 +453,7 @@ ts_line_influxdb_tb,tag_name=tag_value c1=14i16,c2=24i32,c3=34i64,c4=14.8f32,c5=
 | `connection.attempts`              | int    | JDBC 连接的最大尝试次数，必须是正整数。                                                                          | 3                                    |
 | `connection.backoff.ms`            | int    | 连接尝试之间的退回时间（单位：毫秒）。                                                                     | 5000                                 |
 | `topic.prefix`                     | string | 主题名称的前缀，用于生成要发布到的 Kafka 主题名称。默认生成的主题名是前缀+库名+表名+输出格式。                   | -                                    |
-| `topic.delimiter`                  | string | 主题名称分隔符，默认为连字符（`-`）。                                                                                      | -                                    |
+| `topic.delimiter`                  | string | 主题名称分隔符，默认为连字符（`-`）。                                                                                      | `-`                                    |
 | `timestamp.initial`                | string | 用于查询的初始时间戳，格式为 `yyyy-MM-dd HH:MM:SS`。未指定时，将检索表中所有数据。                               | -                                    |
 | `poll.interval.ms`                 | int    | 轮询新表或删除表的频率（单位：毫秒）。                                                                     | 5000                                 |
 | `fetch.max.rows`                   | int    | 单次轮询获取新数据时最大检索行数。此设置用于限制连接器内部缓存的数据量。                                         | 100                                  |
@@ -462,8 +462,8 @@ ts_line_influxdb_tb,tag_name=tag_value c1=14i16,c2=24i32,c3=34i64,c4=14.8f32,c5=
 | `topic.ignore.db`                  | bool   | 命名主题时，忽略数据库名。建议保持默认值 `false`。                                                               | false                                |
 | `out.format`                       | string | 结果输出格式。支持`json_kaiwudb`、`json_opentsdb`、`line_opentsdb`、`line_influxdb` 格式。                       | -                                    |
 | `read.method`                      | string | 获取数据的方式，目前只支持 query。                                                                               | -                                    |
-| `key.converter`                    | string | 在 Kafka Connect 格式和从 Kafka 读取的序列化格式之间进行转换的转换类。                                           | -                                    |
-| `value.converter`                  | string | 在 Kafka Connect 格式和从 Kafka 读取的序列化格式之间进行转换的转换类。                                           | -                                    |
+| `key.converter`                    | string | 在 Kafka Connect 格式和向 Kafka 写入的序列化格式之间进行转换的转换类。                                           | -                                    |
+| `value.converter`                  | string | 在 Kafka Connect 格式和向 Kafka 写入的序列化格式之间进行转换的转换类。                                           | -                                    |
 
 ### 故障诊断与排查
 

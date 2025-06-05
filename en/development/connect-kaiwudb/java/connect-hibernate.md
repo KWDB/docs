@@ -345,7 +345,7 @@ For time-series data, KWDB supports explicit transactions for queries and writes
    }
    ```
 
-6. Verification
+6. Verify data operations.
 
    - Adding data
      ![img](../../../static/development/ts-add.png)
@@ -563,7 +563,7 @@ For time-series data, KWDB supports explicit transactions for queries and writes
    }
    ```
 
-6. Verification
+6. Verify data operations.
 
    - Adding data
      ![img](../../../static/development/rdb-add.png)

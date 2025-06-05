@@ -170,7 +170,7 @@ Content-Type: application/json
 
 ## DDL 接口
 
-DDL 接口用于发送包含 DDL 语句的 HTTP 请求。用户可以使用此接口创建数据库、表等 DDL 操作。发送 DDL API 请求的用户，需要有相应 DDL 的操作权限。例如创建数据库、表需要拥有相应数据库库、表的 CREATE 权限。删除数据库、表需要有相应数据库、表的 DROP 权限。KWDB 支持 CREATE、DROP、DELETE、USE、ALTER、UPDATE、GRANT、REVOKE 等 DDL 操作。
+DDL 接口用于发送包含 DDL 语句的 HTTP 请求。用户可以使用此接口创建数据库、表等 DDL 操作。发送 DDL API 请求的用户，需要有相应 DDL 的操作权限。KWDB 支持 CREATE、DROP、DELETE、USE、ALTER、UPDATE、GRANT、REVOKE 等 DDL 操作。
 
 ### 请求信息
 
@@ -490,7 +490,7 @@ Accept: text/plain</code></pre></td>
   "data": "data",
   "rows": "rows"
 }</code></pre></td>
-      <td><br>- <code>code（int）</code>：状态码。0 表示成功，其它值表示失败。<br>- <code>desc（string）</code>：SQL 语句执行失败对应的错误码描述。只有失败时，才会出现并返回该字段。<br >- <code>time（float）</code>：SQL 语句的执行时间（单位：秒）。<br />- <code>column_meta（array）</code>：列的元数据信息，每个列的元数据的信息形式为 <code>[column_name, column_type, type_length]</code>。其中，<code>column_name（string）</code>指列的名称，<code>column_type（string）</code>指列的数据类型，<code>type_length（int）</code> 指列的数据类型长度（单位：字节）。<br />- <code>data（array）</code>：查询的行数据。<br />- <code>rows（int）</code>：查询的数据行数。</td>
+      <td><br>- <code>code（int）</code>：状态码。0 表示成功，其它值表示失败。<br>- <code>desc（string）</code>：SQL 语句执行失败对应的错误码描述。执行成功时返回 null。<br >- <code>time（float）</code>：SQL 语句的执行时间（单位：秒）。<br />- <code>column_meta（array）</code>：列的元数据信息，每个列的元数据的信息形式为 <code>[column_name, column_type, type_length]</code>。其中，<code>column_name（string）</code>指列的名称，<code>column_type（string）</code>指列的数据类型，<code>type_length（int）</code> 指列的数据类型长度（单位：字节）。<br />- <code>data（array）</code>：查询的行数据。<br />- <code>rows（int）</code>：查询的数据行数。</td>
     </tr>
   </tbody>
 </table>
