@@ -5,9 +5,9 @@ id: emqx
 
 # EMQX 读写数据
 
-[EMQX](https://www.emqx.io/) 是一款开源的高可用分布式 MQTT 消息服务器。KWDB 支持通过 RESTful API 将 EMQX 管理的数据同步写入到 KWDB 数据库。KWDB RESTful API 提供了 Insert 接口，该接口通过发送包含 INSERT 语句的 HTTP 请求，将来自 EMQX 的数据插入 KWDB 数据库的表中。有关 Insert API 接口的请求信息，参见 [Insert 接口](../connect-kaiwudb/restful-api/connect-restful-api.md#insert-接口)。
+[EMQX](https://www.emqx.io/) 是一款开源的高可用分布式 MQTT 消息服务器。KWDB 提供了 RESTful API 功能，可以将 EMQX 管理的数据同步写入 KWDB 数据库。
 
-用户需要基于 Insert 接口请求信息，在 EMQX Dashboard 配置面向 KWDB 的连接和请求信息，以便 EMQX 在收到数据时，将数据同步写入到 KWDB 数据库。
+用户在 EMQX Dashboard 配置 KWDB 的连接和请求信息后，EMQX 即可自动将接收到的 MQTT 消息转化为包含 `INSERT` 语句的 HTTP 请求，通过 RESTful API 的 Insert 接口写入 KWDB 中的指定数据表。有关 Insert 接口的具体信息，参见 [Insert 接口](../connect-kaiwudb/restful-api/connect-restful-api.md#insert-接口)。
 
 ## 配置 EMQX
 
@@ -21,15 +21,16 @@ id: emqx
     ::: warning 说明
     默认情况下，系统生成的令牌有效期为 `60` 分钟。如果两次数据上报的间隔超过 `60` 分钟，用户需要在令牌过期前生成新的令牌，或者根据业务需求通过 `SET CLUSTER SETTING server.rest.timeout=<value>` SQL 语句设置令牌的有效期。可配置范围为 `[1, 2^63-1]`，单位为分钟。如果数据上报间隔总是小于 `60` 分钟，系统会自动对令牌进行延期。
     :::
+
     ```shell
     curl -L -k -H "Authorization: Basic <base64(user:password)>" -X GET <node_ip>:8080/restapi/login
     ```
-    
+
     参数说明：
-    
+
     - `base64(user:password)`： Base64 编码后的用户名和密码信息。
     - `node_ip`：节点的 IP 地址。
-    
+
 - 安装并启动 EMQX。具体安装和启动步骤，参见 [EMQX 官方文档](https://www.emqx.io/)。
 
 ### 配置步骤
@@ -46,7 +47,7 @@ id: emqx
 
     ![](../../static/development/QPANbrnE1okUKMxyYmWcrcZunjg.png)
 
-5. 在左侧导航栏，单击**数据集成** > **数据桥接**，然后单击**新建**。
+5. 在左侧导航栏，单击**数据集成** > **规则**，然后单击**新建**。
 
 6. 在**创建规则**页面，输入 SQL 语句，然后单击**添加动作**。
 

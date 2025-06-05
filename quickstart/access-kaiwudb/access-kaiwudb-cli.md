@@ -24,6 +24,10 @@ docker exec -it <container-name> ./kwbase sql [security-opions] --host=<your-hos
 
 ## 非安全模式连接
 
+::: warning 提示
+非安全模式应仅在测试环境中使用。
+:::
+
 以下示例说明如何以非安全模式连接 KWDB。
 
 - 使用部署数据库时所用的用户：

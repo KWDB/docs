@@ -72,7 +72,7 @@ PHP 是一种广泛使用的开源服务器端脚本语言，特别适合用于 
     $conn = $conn." sslkey=/home/inspur/src/gitee.com/kwbasedb/install/certs/client.root.key";
     $conn = $conn." sslrootcert=/home/inspur/src/gitee.com/kwbasedb/install/certs/ca.crt";
 
-    // 创建链接
+    // 创建连接
     $db = new PDO($conn) or die("创建连接失败");
     // 读取执行文件
     $fd = fopen("test.sql", "r") or die("打开文件失败");

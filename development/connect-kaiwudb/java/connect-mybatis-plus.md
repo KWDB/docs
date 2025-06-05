@@ -188,7 +188,7 @@ id: connect-mybatis-plus
     @Mapper
     @Repository
     public interface SensorDataMapper extends BaseMapper<SensorData> {
-      // 自定义SQL方法
+      // 自定义 SQL 方法
     }
     ```
 
@@ -236,98 +236,98 @@ id: connect-mybatis-plus
 
 1. 在 `service` 目录下创建 `SensorDataService` 接口服务类和对应的实现类 `SensorDataServiceImpl`，使用自定义的 `SensorDataMapper` 数据访问接口类进行数据的增改删查操作，其中数据查询接口扩展了多种查询方式，包括：按 ID 查询、按 sensorId 查询、按时间范围查询和查询全部数据；
 
-- `SensorDataService` 接口服务类
+    - `SensorDataService` 接口服务类
 
-  ```java
-  package com.kaiwudb.app.service;
+      ```java
+      package com.kaiwudb.app.service;
 
-  import com.kaiwudb.app.entity.SensorData;
+      import com.kaiwudb.app.entity.SensorData;
 
-  import java.util.List;
+      import java.util.List;
 
-  public interface SensorDataService {
-    int insertSensorData(SensorData data);
+      public interface SensorDataService {
+        int insertSensorData(SensorData data);
 
-    int updateSensorData(SensorData data);
+        int updateSensorData(SensorData data);
 
-    int deleteById(Long id);
+        int deleteById(Long id);
 
-    SensorData findById(Long id);
+        SensorData findById(Long id);
 
-    List<SensorData> findBySensorId(String sensorId);
+        List<SensorData> findBySensorId(String sensorId);
 
-    List<SensorData> findByRecordTime(String beginTime, String endTime);
+        List<SensorData> findByRecordTime(String beginTime, String endTime);
 
-    List<SensorData> findAll();
-  }
-  ```
+        List<SensorData> findAll();
+      }
+      ```
 
-  结果如下：
-  ![img](../../../static/development/sensordataservice.png)
+      结果如下：
+      ![img](../../../static/development/sensordataservice.png)
 
-- `SensorDataServiceImpl` 接口服务实现类
+    - `SensorDataServiceImpl` 接口服务实现类
 
-  ```java
-  package com.kaiwudb.app.service.impl;
+      ```java
+      package com.kaiwudb.app.service.impl;
 
-  import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-  import com.kaiwudb.app.entity.SensorData;
-  import com.kaiwudb.app.mapper.SensorDataMapper;
-  import com.kaiwudb.app.service.SensorDataService;
-  import org.springframework.beans.factory.annotation.Autowired;
-  import org.springframework.stereotype.Service;
+      import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+      import com.kaiwudb.app.entity.SensorData;
+      import com.kaiwudb.app.mapper.SensorDataMapper;
+      import com.kaiwudb.app.service.SensorDataService;
+      import org.springframework.beans.factory.annotation.Autowired;
+      import org.springframework.stereotype.Service;
 
-  import java.time.LocalDateTime;
-  import java.time.format.DateTimeFormatter;
-  import java.util.List;
+      import java.time.LocalDateTime;
+      import java.time.format.DateTimeFormatter;
+      import java.util.List;
 
-  @Service
-  public class SensorDataServiceImpl implements SensorDataService {
-    @Autowired
-    private SensorDataMapper sensorDataMapper;
+      @Service
+      public class SensorDataServiceImpl implements SensorDataService {
+        @Autowired
+        private SensorDataMapper sensorDataMapper;
 
-    @Override
-    public int insertSensorData(SensorData data) {
-      return sensorDataMapper.insert(data);
-    }
+        @Override
+        public int insertSensorData(SensorData data) {
+          return sensorDataMapper.insert(data);
+        }
 
-    @Override
-    public int updateSensorData(SensorData data) {
-      return sensorDataMapper.updateById(data);
-    }
+        @Override
+        public int updateSensorData(SensorData data) {
+          return sensorDataMapper.updateById(data);
+        }
 
-    @Override
-    public int deleteById(Long id) {
-      return sensorDataMapper.deleteById(id);
-    }
+        @Override
+        public int deleteById(Long id) {
+          return sensorDataMapper.deleteById(id);
+        }
 
-    @Override
-    public SensorData findById(Long id) {
-      return sensorDataMapper.selectById(id);
-    }
+        @Override
+        public SensorData findById(Long id) {
+          return sensorDataMapper.selectById(id);
+        }
 
-    @Override
-    public List<SensorData> findBySensorId(String sensorId) {
-      return sensorDataMapper.selectList(new QueryWrapper<SensorData>().eq("sensor_id", sensorId));
-    }
+        @Override
+        public List<SensorData> findBySensorId(String sensorId) {
+          return sensorDataMapper.selectList(new QueryWrapper<SensorData>().eq("sensor_id", sensorId));
+        }
 
-    @Override
-    public List<SensorData> findByRecordTime(String beginTime, String endTime) {
-      LocalDateTime beginDateTime = LocalDateTime.parse(beginTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
-      LocalDateTime endDateTime = LocalDateTime.parse(endTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
-      return sensorDataMapper.selectListBetweenTime(beginDateTime, endDateTime);
-    }
+        @Override
+        public List<SensorData> findByRecordTime(String beginTime, String endTime) {
+          LocalDateTime beginDateTime = LocalDateTime.parse(beginTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
+          LocalDateTime endDateTime = LocalDateTime.parse(endTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
+          return sensorDataMapper.selectListBetweenTime(beginDateTime, endDateTime);
+        }
 
-    @Override
-    public List<SensorData> findAll() {
-      return sensorDataMapper.selectList(null);
-    }
-  }
-  ```
+        @Override
+        public List<SensorData> findAll() {
+          return sensorDataMapper.selectList(null);
+        }
+      }
+      ```
 
-  结果如下：
+      结果如下：
 
-  ![img](../../../static/development/sensordataserviceimpl.png)
+      ![img](../../../static/development/sensordataserviceimpl.png)
 
 ### 创建控制器
 

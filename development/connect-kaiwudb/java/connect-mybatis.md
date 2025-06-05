@@ -295,7 +295,7 @@ public interface TimeSeriesMapper {
 
 ::: warning 说明
 
-- Mapper接口文件中的方法实现除了使用注解方式外，还可以通过使用XML映射文件的方式自定义SQL语句来实现对数据库中数据的操作。
+- Mapper 接口文件中的方法实现除了使用注解方式外，还可以通过使用 XML 映射文件的方式自定义 SQL 语句来实现对数据库中数据的操作。
 - KWDB 创建时序表的 SQL 语法与标准 SQL 语法不同，不支持使用 ORM 映射方式创建时序表。
 - KWDB 不支持自增 ID（AUTO_INCREMENT），因此 MyBatis 不支持使用 `@ID` 标签。
 
@@ -433,7 +433,7 @@ public class RelationalEntity {
 
 #### 创建 Mapper 接口
 
-在 `src/main/java/com/kaiwudb/mybatis/mapper/rdb`目录下创建 `RelationalMapper `接口类，用于定义关系数据库的操作接口，使用 `@Mapper` 和 `@Repository` 注解，以快速实现常见的数据插入、更新、删除和查询等操作。
+在 `src/main/java/com/kaiwudb/mybatis/mapper/rdb`目录下创建 `RelationalMapper` 接口类，用于定义关系数据库的操作接口，使用 `@Mapper` 和 `@Repository` 注解，以快速实现常见的数据插入、更新、删除和查询等操作。
 
 ```Java
 @Mapper
@@ -469,7 +469,7 @@ public interface RelationalMapper {
 
 ::: warning 说明
 
-- Mapper接口文件中的方法实现除了使用注解方式外，还可以通过使用XML映射文件的方式自定义SQL语句来实现对数据库中数据的操作。
+- Mapper 接口文件中的方法实现除了使用注解方式外，还可以通过使用 XML 映射文件的方式自定义 SQL 语句来实现对数据库中数据的操作。
 - KWDB 不支持自增 ID（AUTO_INCREMENT），因此 MyBatis 不支持使用 `@ID` 标签。
 
 :::
@@ -500,7 +500,7 @@ public interface RelationalMapper {
 
   ![img](../../../static/development/r-service.png)
 
-- `RelationalServiceImpl`接口服务实现类
+- `RelationalServiceImpl` 接口服务实现类
 
   ```Java
   @Service
@@ -597,7 +597,7 @@ public class RelationalController {
 
 ### 设置主程序类
 
-在根目录下创建名为 `MyBatisApplication` 的主程序类文件，设置通过 `public static void main(String[] args)` 方法启动应用程序, 添加运行时需加载的配置类注解等。
+在根目录下创建名为 `MyBatisApplication` 的主程序类文件，设置通过 `public static void main(String[] args)` 方法启动应用程序，添加运行时需加载的配置类注解等。
 
 ```Java
 @SpringBootApplication(scanBasePackages = "com.kaiwudb.mybatis")

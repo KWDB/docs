@@ -17,7 +17,7 @@ KaiwuDB 开发者中心窗口包含菜单栏、工具栏、导航区、对象窗
 
 **前提条件**：
 
-用户为 Admin 用户、Admin 角色成员或拥有 DATABASE CREATE 或 ALL 权限。
+用户为 `admin` 用户或 `admin` 角色成员。
 
 **步骤**：
 
@@ -37,7 +37,7 @@ KaiwuDB 开发者中心窗口包含菜单栏、工具栏、导航区、对象窗
 
 **前提条件**：
 
-用户为 Admin 用户、Admin 角色成员或拥有 TABLE CREATE 或 ALL 权限。
+用户为 `admin` 用户、`admin` 角色成员或拥有 `TABLE CREATE` 或 `ALL` 权限。
 
 **步骤**：
 
@@ -72,7 +72,7 @@ KaiwuDB 开发者中心窗口包含菜单栏、工具栏、导航区、对象窗
 
 **前提条件**：
 
-用户为 Admin 用户、Admin 角色成员或拥有目标表的 INSERT 权限。
+用户为 `admin` 用户、`admin` 角色成员或拥有目标表的 `INSERT` 权限。
 
 ::: warning 说明
 
@@ -113,7 +113,7 @@ KaiwuDB 开发者中心窗口包含菜单栏、工具栏、导航区、对象窗
 
 **前提条件**：
 
-用户为 Admin 用户、Admin 角色成员或拥有 DATABASE CREATE 或 ALL 权限。
+用户为 `admin` 用户或 `admin` 角色成员。
 
 **步骤**：
 
@@ -135,7 +135,7 @@ KaiwuDB 开发者中心窗口包含菜单栏、工具栏、导航区、对象窗
 
 **前提条件**：
 
-用户为 Admin 用户、Admin 角色成员或拥有 TABLE CREATE 或 ALL 权限。
+用户为 `admin` 用户、`admin` 角色成员或拥有 `TABLE CREATE` 或 `ALL` 权限。
 
 **步骤**：
 
@@ -159,9 +159,9 @@ KaiwuDB 开发者中心窗口包含菜单栏、工具栏、导航区、对象窗
 
 **前提条件**：
 
-用户为 Admin 用户、Admin 角色成员或拥有目标表的 INSERT 权限。
+用户为 `admin` 用户、`admin` 角色成员或拥有目标表的 `INSERT` 权限。
 
-**步骤**
+**步骤**:
 
 如需向关系表中写入数据或者修改表中数据，遵循以下步骤。
 
