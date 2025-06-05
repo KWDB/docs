@@ -18,7 +18,7 @@ KWDB MCP Server 的核心流程包括以下几个部分：
 - 查询预处理：自动添加 `LIMIT` 语法检查。
 - 结果封装：采用统一 JSON 响应格式。
 
-![](../../../static/development/kwdb_mcp_server_design.png)
+![](../../../../static/development/kwdb_mcp_server_design.png)
 
 ### 功能特性
 
@@ -45,7 +45,7 @@ KWDB MCP Server 实现以下安全性能。
 - 验证查询结果，确保与预期的操作类型匹配。
 - 输出未授权操作的错误消息。
 
-![](../../../static/development/mcp-server-security.png)
+![](../../../../static/development/mcp-server-security.png)
 
 ### MCP Resources
 
@@ -121,7 +121,7 @@ KWDB MCP Server 可与任何支持 MCP 协议的 LLM Agent 配合使用。LLM Ag
 本节示例使用 [Cline](https://cline.bot)，但类似步骤也适用于其他兼容 MCP 协议的 LLM Agent。有关支持 MCP 协议的 LLM Agent 的详细信息，参见 [MCP 官方文档](https://modelcontextprotocol.io/clients)。
 :::
 
-![](../../../static/development/integerate-with-llm-agent.png)
+![](../../../../static/development/integerate-with-llm-agent.png)
 
 ### 前提条件
 
@@ -139,7 +139,7 @@ KWDB MCP Server 可与任何支持 MCP 协议的 LLM Agent 配合使用。LLM Ag
 2. 在 Cline 插件的顶部导航栏中，单击 **MCP Servers** 图标。
 3. 选择 **Installed** 页签，然后单击页面底部的 **Configure MCP Servers**。
 
-    ![](../../../static/development/cline-mcp-server-config.png)
+    ![](../../../../static/development/cline-mcp-server-config.png)
 
 4. 在弹出的页面中，添加并保存 KWDB MCP Server 配置。
 
@@ -223,7 +223,7 @@ SELECT COUNT(DISTINCT vehicle_name) AS abnormal_vehicle_count FROM lkyv_shr_chel
 
 运行结果如下所示：
 
-![](../../../static/development/cline-verify.jpg)
+![](../../../../static/development/cline-verify.jpg)
 
 从上图中可以看出，Cline 调取 KWDB MCP Server 的 read-query 工具，统计表中 `status` 列值为 `warning` 和 `error` 的数据。最后再由 Cline 中配置的大模型来汇总数据。
 
