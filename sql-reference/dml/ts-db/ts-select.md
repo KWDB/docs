@@ -230,7 +230,7 @@ KWDB 支持基于特定条件（如时间间隔、数据行数或状态信息等
 
     以下示例中，以车道号作为状态字段进行窗口划分，根据车道号的变化将数据分为5个窗口，结果按时间戳排序输出。
 
-    <img src="../../../static/sql-reference/ts-status-window.png" style="zoom:60%;" />
+    <img src="../../../static/sql-reference/ts-status-window.png" style="zoom:35%;" />
 
 - **时间窗口**：基于时间戳列和指定的时间间隔划分窗口。
 
@@ -302,7 +302,7 @@ insert into vehicles values ('2025-1-10 12:01:00.000', 'A11111',35,1,1),('2025-1
 
     ```sql
     SELECT count(ts) as records, avg(speed) as avg_speed FROM vehicles GROUP BY COUNT_WINDOW (3);
-          records |     avg_speed
+      records |     avg_speed
     ----------+---------------------
             3 | 33.333333333333336
             3 | 33.333333333333336
@@ -315,7 +315,7 @@ insert into vehicles values ('2025-1-10 12:01:00.000', 'A11111',35,1,1),('2025-1
 
     ```sql
     SELECT count(ts) as records, avg(speed) as avg_speed FROM vehicles GROUP BY COUNT_WINDOW (3,2);
-          records |     avg_speed
+      records |     avg_speed
     ----------+---------------------
             3 | 33.333333333333336
             3 | 33.333333333333336
@@ -329,7 +329,7 @@ insert into vehicles values ('2025-1-10 12:01:00.000', 'A11111',35,1,1),('2025-1
 
     ```sql
     SELECT count(ts) as records, avg(speed) as avg_speed FROM vehicles GROUP BY EVENT_WINDOW (speed<40,lane_no=2);
-          records |     avg_speed
+      records |     avg_speed
     ----------+---------------------
             3 | 33.333333333333336
             1 |                 25
@@ -343,7 +343,7 @@ insert into vehicles values ('2025-1-10 12:01:00.000', 'A11111',35,1,1),('2025-1
 
     ```sql
     SELECT count(ts) as records, avg(speed) as avg_speed FROM vehicles GROUP BY SESSION_WINDOW (ts,'5m');
-          records |     avg_speed
+      records |     avg_speed
     ----------+---------------------
             2 |               32.5
             3 | 33.333333333333336
@@ -411,7 +411,6 @@ KWDB 支持以下嵌套查询：
 - 相关投影子查询（Correlated Scalar Subquery）：内部查询依赖于外部查询的结果，并且只返回一个单一的值作为外部查询的结果。
 - 非相关投影子查询（Non-Correlated Scalar Subquery）：内部查询独立于外部查询，并且只返回一个单一的值作为外部查询的结果。
 - `FROM` 子查询：将一个完整的 SQL 查询嵌套在另一个查询的 `FROM` 子句中，作为临时表格使用。
-
 
 ### 所需权限
 
