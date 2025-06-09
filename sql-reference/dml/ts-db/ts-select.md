@@ -212,13 +212,13 @@ KWDB 支持基于特定条件（如时间间隔、数据行数或状态信息等
 
     <img src="../../../static/sql-reference/ts-count-window-2.png" style="zoom:63%;" />
 
-- **事件窗口**：根据开始和结束条件划分窗口。窗口在数据满足开始条件时开启，在满足结束条件时关闭。开始和结束条件可以是任意表达式，并且可以涉及不同的列。
+- **事件窗口**：基于开始和结束条件动态划分数据窗口。当数据满足开始条件时窗口开启，满足结束条件时窗口关闭。开始和结束条件均支持任意表达式，并且可以涉及不同的列。
 
-    一条数据同时满足开始和结束条件，且当前不在任何窗口内时，这条数据将构成一个新窗口。如果数据满足开始条件后窗口打开，但后续数据无法满足结束条件，则该窗口无法关闭。这部分数据不构成完整窗口，且不会输出。
+    当某条数据同时满足开始和结束条件，且当前无活跃窗口时，该数据将独立构成一个完整窗口。数据流结束时，最后一个窗口即使未满足结束条件，也会被视为完整窗口。
 
-    以下示例中，开始条件为速度小于 40，结束条件为车道号为 2，符合条件的数据被划分为 2 个窗口。其中，第五行数据同时满足开始和结束条件，构成一个完整的窗口，最后一行数据只满足开始条件，未满足结束条件，因此不构成完整窗口，不会输出。
+    以下示例中，开始条件为速度小于 40，结束条件为车道号为 2，符合条件的数据被划分为 2 个窗口。其中，第五行数据同时满足开始和结束条件，构成一个完整的窗口，最后一行数据仅满足开始条件但未满足结束条件，因数据流结束也构成完整窗口。
 
-    <img src="../../../static/sql-reference/ts-event-window.png" style="zoom:60%;" />
+    <img src="../../../static/sql-reference/ts-event-window.png" style="zoom:50%;" />
 
 - **会话窗口**：根据时间戳列和指定的最大连续时间间隔判断数据是否属于同一窗口。如果相邻数据的时间间隔超过允许的最大时间间隔，将被分配到不同窗口。
 
@@ -226,9 +226,9 @@ KWDB 支持基于特定条件（如时间间隔、数据行数或状态信息等
 
     <img src="../../../static/sql-reference/ts-session-window.png" style="zoom:60%;" />
 
-- **状态窗口**：按设备状态划分窗口，状态相同的数据会分配到同一窗口中。状态变化时窗口结束。
+- **状态窗口**：基于设备状态变化划分数据窗口。具有相同状态的连续数据会归入同一窗口，当状态发生变化时，当前窗口结束并开启新窗口。
 
-    以下示例中，数据按车道号作为设备状态进行分组，1 号、2 号和 3 号车道上的车辆数据分属于 3 个窗口，并按时间戳进行排序。
+    以下示例中，以车道号作为状态字段进行窗口划分，根据车道号的变化将数据分为5个窗口，结果按时间戳排序输出。
 
     <img src="../../../static/sql-reference/ts-status-window.png" style="zoom:60%;" />
 
@@ -280,8 +280,7 @@ create table vehicles (ts timestamp not null, vehicle_id varchar, speed float, l
 
 
 -- 写入数据
-insert into vehicles values ('2025-1-10 12:01:00.000', 'A11111',35,1,1),('2025-1-10 12:02:00.000','A22222',30,1,1),('2025-1-10
-12:09:00.000','A33333',35,2,1),('2025-1-10 12:11:00.000','A44444',40,3,1),('2025-1-10 12:12:00.000','A55555',25,2,1),('2025-1-10 12:21:00.000','A66666',35,1,1);
+insert into vehicles values ('2025-1-10 12:01:00.000', 'A11111',35,1,1),('2025-1-10 12:02:00.000','A22222',30,1,1),('2025-1-10 12:09:00.000','A33333',35,2,1),('2025-1-10 12:11:00.000','A44444',40,3,1),('2025-1-10 12:12:00.000','A55555',25,2,1),('2025-1-10 12:21:00.000','A66666',35,1,1);
 
 -- 查询表数据
  select * from vehicles;
@@ -303,6 +302,11 @@ insert into vehicles values ('2025-1-10 12:01:00.000', 'A11111',35,1,1),('2025-1
 
     ```sql
     SELECT count(ts) as records, avg(speed) as avg_speed FROM vehicles GROUP BY COUNT_WINDOW (3);
+          records |     avg_speed
+    ----------+---------------------
+            3 | 33.333333333333336
+            3 | 33.333333333333336
+    (2 rows)
     ```
 
 - 使用计数窗口进行聚合查询，窗口间有重叠
@@ -311,6 +315,12 @@ insert into vehicles values ('2025-1-10 12:01:00.000', 'A11111',35,1,1),('2025-1
 
     ```sql
     SELECT count(ts) as records, avg(speed) as avg_speed FROM vehicles GROUP BY COUNT_WINDOW (3,2);
+          records |     avg_speed
+    ----------+---------------------
+            3 | 33.333333333333336
+            3 | 33.333333333333336
+            2 |                 30
+    (3 rows)
     ```
 
 - 使用事件窗口进行聚合查询
@@ -319,6 +329,12 @@ insert into vehicles values ('2025-1-10 12:01:00.000', 'A11111',35,1,1),('2025-1
 
     ```sql
     SELECT count(ts) as records, avg(speed) as avg_speed FROM vehicles GROUP BY EVENT_WINDOW (speed<40,lane_no=2);
+          records |     avg_speed
+    ----------+---------------------
+            3 | 33.333333333333336
+            1 |                 25
+            1 |                 35
+    (3 rows)
     ```
 
 - 使用会话窗口进行聚合查询
@@ -327,6 +343,12 @@ insert into vehicles values ('2025-1-10 12:01:00.000', 'A11111',35,1,1),('2025-1
 
     ```sql
     SELECT count(ts) as records, avg(speed) as avg_speed FROM vehicles GROUP BY SESSION_WINDOW (ts,'5m');
+          records |     avg_speed
+    ----------+---------------------
+            2 |               32.5
+            3 | 33.333333333333336
+            1 |                 35
+    (3 rows)
     ```
 
 - 使用状态窗口进行聚合查询
@@ -335,6 +357,15 @@ insert into vehicles values ('2025-1-10 12:01:00.000', 'A11111',35,1,1),('2025-1
 
     ```sql
     SELECT count(ts) as records, avg(speed) as avg_speed FROM vehicles GROUP BY STATE_WINDOW (lane_no);
+    SELECT count(ts) as records, avg(speed) as avg_speed FROM vehicles GROUP BY STATE_WINDOW (lane_no);    
+      records | avg_speed
+    ----------+------------
+            2 |      32.5
+            1 |        35
+            1 |        40
+            1 |        25
+            1 |        35
+    (5 rows)
     ```
 
 - 使用时间窗口进行聚合查询，各窗口间不重叠
@@ -343,6 +374,12 @@ insert into vehicles values ('2025-1-10 12:01:00.000', 'A11111',35,1,1),('2025-1
 
     ```sql
     SELECT count(ts) as records, avg(speed) as avg_speed FROM vehicles GROUP BY TIME_WINDOW (ts,'10m');
+          records |     avg_speed
+    ----------+---------------------
+            3 | 33.333333333333336
+            2 |               32.5
+            1 |                 35
+    (3 rows)
     ```
 
 - 使用时间窗口进行聚合查询，各窗口间有重叠
@@ -351,6 +388,16 @@ insert into vehicles values ('2025-1-10 12:01:00.000', 'A11111',35,1,1),('2025-1
 
     ```sql
     SELECT count(ts) as records, avg(speed) as avg_speed FROM vehicles GROUP BY TIME_WINDOW (ts,'10m','5m');
+    SELECT count(ts) as records, avg(speed) as avg_speed FROM vehicles GROUP BY TIME_WINDOW (ts,'10m','5m');    
+      records |     avg_speed
+    ----------+---------------------
+            2 |               32.5
+            3 | 33.333333333333336
+            3 | 33.333333333333336
+            2 |               32.5
+            1 |                 35
+            1 |                 35
+    (6 rows)
     ```
 
 ## 嵌套查询
