@@ -169,20 +169,81 @@ KWDB MCP Server 可与任何支持 MCP 协议的 LLM Agent 配合使用。LLM Ag
 
 5. 选择 **Installed** 页签，单击 KWDB MCP Server 旁边的重启按钮，或者单击页面底部的 **Restart Server**。
 
-#### SSE 模式
+#### HTTP 模式（推荐）
 
 1. 进入 KWDB MCP Server 安装目录，启动 KWDB MCP Server。
 
-    ```bash
-    </path/to/bin/kwdb-mcp-server> -t sse -addr ":8080" -base-url "http://localhost:8080" "postgresql://<username>:<password>@<host>:<port>/<database_name>?sslmode=disable"
-    ```
+    - 使用 Makefile 运行 HTTP 模式：
+
+        ```bash
+        CONNECTION_STRING="postgresql://<username>:<password>@<hostname>:<port>/<database_name>?sslmode=disable" PORT=8080 make run-http
+        ```
+
+    - 使用 HTTP 模式运行 KWDB MCP Server：
+
+        ```bash
+        kwdb-mcp-server -t http -p 8080 "postgresql://<username>:<password>@<hostname>:<port>/<database_name>?sslmode=disable"
+        ```
 
     参数说明：
-    - `-t` 或 `-transport`：传输类型，支持设置为 `stdio` 或 `sse`。
+
+    - `-t` 或 `--transport`：传输类型，支持 `stdio`、`sse`、`http`。
       - `stdio`：标准输入/输出模式
-      - `sse`：SSE 模式
-    - `-addr`：KWDB MCP Server 的监听端口，默认为 `:8080`。
-    - `-base-url`：KWDB MCP Server 的 IP 地址，默认为 `http://localhost:8080`。
+      - `sse`：SSE 模式（即将弃用）
+      - `http`：HTTP 模式（推荐）
+    - `-p` 或 `--port`：KWDB MCP Server 的监听端口，默认为 `8080`。
+    - `username`：连接 KWDB 数据库的用户名。
+    - `password`：身份验证时使用的密码。
+    - `hostname`：KWDB 数据库的 IP 地址。
+    - `port`：KWDB 数据库的连接端口。
+    - `database_name`：需要访问的 KWDB 数据库名称。
+    - `sslmode`：SSL 模式。支持的取值包括 `disable`、`allow`、`prefer`、`require`、`verify-ca` 和 `verify-full`。有关 SSL 模式相关的详细信息，参见 [SSL 模式参数](../java/connect-jdbc.md#ssl-模式参数)。
+
+2. 配置 Cline 连接 KWDB MCP Server。
+   1. 在 Visual Studio Code 右侧边栏，单击 Cline 图标。
+   2. 在 Cline 插件的顶部导航栏中，单击 **MCP Servers** 图标。
+   3. 选择 **Installed** 页签，然后单击页面底部的 **Configure MCP Servers**。
+   4. 在弹出的页面中，添加并保存 KWDB MCP Server 配置。
+
+        ```json
+        "mcpServers": {
+          "kwdb-server-sse": {
+            "url": "http://localhost:8080/mcp",
+            "disabled": false,
+            "autoApprove": []
+          }
+        }
+        ```
+
+        参数说明：
+        - `url`：KWDB MCP Server 的 IP 地址，需要拼接 `/mcp` 路径。默认为 `http://localhost:8080/mcp`。
+
+#### SSE 模式
+
+::: warning 说明
+SSE 模式即将在未来版本中弃用，建议优先使用 HTTP 模式。
+:::
+
+1. 进入 KWDB MCP Server 安装目录，启动 KWDB MCP Server。
+
+    - 使用 Makefile 运行 SSE 模式：
+
+        ```bash
+        CONNECTION_STRING="postgresql://<username>:<password>@<host>:<port>/<database_name>?sslmode=disable" PORT=8080 make run-sse
+        ```
+
+    - 使用 SSE 模式运行 KWDB MCP Server：
+
+        ```bash
+        kwdb-mcp-server -t sse -p 8080 "postgresql://<username>:<password>@<host>:<port>/<database_name>?sslmode=disable"
+        ```
+
+    参数说明：
+    - `-t` 或 `--transport`：传输类型，支持 `stdio`、`sse`、`http`。
+      - `stdio`：标准输入/输出模式
+      - `sse`：SSE 模式（即将弃用）
+      - `http`：HTTP 模式（推荐）
+    - `-p` 或 `--port`：KWDB MCP Server 的监听端口，默认为 `8080`。
     - `username`：连接 KWDB 数据库的用户名。
     - `password`：身份验证时使用的密码。
     - `hostname`：KWDB 数据库的 IP 地址。
@@ -207,7 +268,7 @@ KWDB MCP Server 可与任何支持 MCP 协议的 LLM Agent 配合使用。LLM Ag
         ```
 
         参数说明：
-        - `url`：KWDB MCP Server 的 IP 地址，默认为 `http://localhost:8080/sse`。
+        - `url`：KWDB MCP Server 的 IP 地址，需要拼接 `/sse` 路径。默认为 `http://localhost:8080/sse`。
 
 3. 选择 **Installed** 页签，单击 KWDB MCP Server 旁边的重启按钮，或者单击页面底部的 **Restart Server**。
 
@@ -247,14 +308,3 @@ SELECT COUNT(DISTINCT vehicle_name) AS abnormal_vehicle_count FROM lkyv_shr_chel
 | CORS 错误  | 如果通过 Web 浏览器访问 KWDB 数据库，确保 KWDB MCP Server 的基础 URL 与数据库的 URL 匹配。 |
 | 网络问题   | 检查防火墙规则或网络配置，确认是否阻止连接。                                               |
 | 数据库连接 | 确保 KWDB MCP Server 可以正常访问数据库。                                                 |
-
-### 错误码
-
-下表列出 KWDB MCP Server 相关的错误码。
-
-| 错误码    | 错误原因   | 处理策略            |
-|-----------|--------|-----------------|
-| KWDB-4001 | 语法错误   | 返回具体错误位置    |
-| KWDB-4002 | 权限不足   | 中断执行并告警      |
-| KWDB-4003 | 连接超时   | 重试机制（最多 3 次） |
-| KWDB-4004 | 资源不存在 | 返回 404 状态码     |
