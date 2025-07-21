@@ -5,7 +5,7 @@ id: access-kaiwudb-cli
 
 # Connect to KWDB Using the kwbase CLI Tool
 
-This section explains how to connect to KWDB using kwbase, the built-in command-line interface (CLI) client. You can connect in either non-secure mode for testing purposes or secure modes for production environments.
+This section explains how to connect to KWDB using kwbase, the built-in command-line interface (CLI) client. You can connect in either non-secure mode for testing purposes or secure mode for production environments.
 
 ## Prerequisites
 
@@ -17,7 +17,7 @@ This section explains how to connect to KWDB using kwbase, the built-in command-
 For containerized deployments, connect to the database using the following command format:
 
 ```bash
-docker exec -it <container-name> ./kwbase sql [security-opions] --host=<your-host-ip> [-u <user-name>]
+docker exec -it <container-name> ./kwbase sql [security-opions] --host=<your-host-ip> [-u <username>]
 ```
 
 :::
@@ -37,7 +37,7 @@ Insecure mode should only be used for testing purposes.
 - Connect as a regular user.
 
     ```shell
-    ./kwbase sql --insecure --host=<your-host-ip> -u <user-name>
+    ./kwbase sql --insecure --host=<your-host-ip> -u <username>
     ```
 
 ## Secure Mode
@@ -45,11 +45,11 @@ Insecure mode should only be used for testing purposes.
 - Connect as the database deployment user.
 
     ```shell
-    ./kwbase sql --certs-dir=certs --host=<your-host-ip> 
+    ./kwbase sql --certs-dir=/etc/kaiwudb/certs --host=<your-host-ip> 
     ```
 
 - Connect as a regular user.
 
     ```shell
-    ./kwbase sql --certs-dir=certs --host=<your-host-ip> -u <user-name>
+    ./kwbase sql --certs-dir=/etc/kaiwudb/certs --host=<your-host-ip> -u <username>
     ```

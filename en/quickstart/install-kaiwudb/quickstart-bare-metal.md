@@ -104,7 +104,7 @@ Currently, the KWDB repository provides [DEB or RPM installation packages](https
 tar -zxvf <install_package_name>
 ```
 
-The extracted `kaiwudb_install` directory contains the following files and folders:
+The extracted `kwdb_install` directory contains the following files and folders:
 
 | File/Folder         | Description                                               |
 |-------------------|-----------------------------------------------------------|
@@ -124,7 +124,7 @@ Complete source code download, compilation, and installation according to the [K
 
 When deploying KWDB using scripts, the system verifies configuration files, runtime environment, hardware setup, and software dependencies. The deployment will proceed with a warning if hardware requirements are not met, but will abort with error messages if required software dependencies are missing.
 
-Deployment logs are saved in the `log` directory within `kaiwudb_install`. Once the deployment is complete, KWDB will be packaged as a system service (`kaiwudb`) and the following files will be generated:
+Deployment logs are saved in the `log` directory within `kwdb_install`. Once the deployment is complete, KWDB will be packaged as a system service (`kaiwudb`) and the following files will be generated:
 
 - `kaiwudb.service`: Configures CPU resources for KWDB.
 - `kaiwudb_env`: Configures startup flags for KWDB.
@@ -138,7 +138,7 @@ Deployment logs are saved in the `log` directory within `kaiwudb_install`. Once 
 
 #### Steps
 
-1. Log in to the target node and edit the `deploy.cfg` file in the `kaiwudb_install` directory.
+1. Log in to the target node and edit the `deploy.cfg` file in the `kwdb_install` directory.
 
     ::: warning Note
 
@@ -175,7 +175,7 @@ Deployment logs are saved in the `log` directory within `kaiwudb_install`. Once 
         - `rest_port`: Port for web services (default: `8080`).
         - `kaiwudb_port`: Port for client and application connections (default: `26257`).
         - `data_root`: Data directory (default: `/var/lib/kaiwudb`).
-        - `cpu`: (Optional) Specifies CPU usage for KWDB on the node. The default is unlimited. The value range is [0,1], with a precision of up to two decimal places. **Note:** If the deployment environment is **Ubuntu 18.04**, you need to modify the `CPUQuota` value in the `kaiwudb.service` file after the deployment is complete. Specifically, change any decimal values to integers (e.g., change `180.0%` to `180%`) to ensure the setting takes effect. For instructions, see [CPU usage configuration](../../deployment/cluster-config/cluster-config-bare-metal.md#manage-cpu-resources).
+        - `cpu`: (Optional) Specifies CPU usage for KWDB on the node. The default is unlimited. The value range is [0,1], with a precision of up to two decimal places. **Note:** If the deployment environment is **Ubuntu 18.04**, you need to modify the `CPUQuota` value in the `kaiwudb.service` file after the deployment is complete. Specifically, change any decimal values to integers (e.g., change `180.0%` to `180%`) to ensure the setting takes effect. For instructions, see [Manage CPU Resources](../../deployment/cluster-config/cluster-config-bare-metal.md#manage-cpu-resources).
     - `local`: Local node configuration.
         - `node_addr`: The IP address for client and application connection. The default listening address is `0.0.0.0`, meaning the node will listen on `kaiwudb_port` across all IP addresses on the host.
 
@@ -268,20 +268,20 @@ Deployment logs are saved in the `log` directory within `kaiwudb_install`. Once 
    1. Create a directory to store the certificates and keys:
 
         ```bash
-        mkdir -p /kaiwudb/certs
+        mkdir -p <certs_dir>
         ```
 
    2. Generate certificates and keys:
 
         ```bash
         # Create database certificate authority and key
-        ./kwbase cert create-ca --certs-dir=/kaiwudb/certs --ca-key=/kaiwudb/certs/ca.key && \
+        ./kwbase cert create-ca --certs-dir=<certs_dir> --ca-key=<certs_dir>/ca.key && \
 
-        # Create client certificate and key for database installation user (replace USER_NAME with actual username)
-        ./kwbase cert create-client $USERNAME --certs-dir=/kaiwudb/certs --ca-key=/kaiwudb/certs/ca.key && \
+        # Create client certificate and key for database installation user (replace username with actual username)
+        ./kwbase cert create-client <username> --certs-dir=<certs_dir> --ca-key=<certs_dir>/ca.key && \
 
         # Create node certificate and key
-        ./kwbase cert create-node 127.0.0.1 localhost 0.0.0.0 --certs-dir=/kaiwudb/certs --ca-key=/kaiwudb/certs/ca.key
+        ./kwbase cert create-node 127.0.0.1 localhost 0.0.0.0 --certs-dir=<certs_dir> --ca-key=<certs_dir>/ca.key
         ```
 
 3. Start the database.
@@ -299,7 +299,7 @@ Deployment logs are saved in the `log` directory within `kaiwudb_install`. Once 
 
         ```bash
         ./kwbase start-single-node \
-            --certs-dir=/kaiwudb/certs \
+            --certs-dir=<certs_dir> \
             --listen-addr=0.0.0.0:26257 \
             --http-addr=0.0.0.0:8080 \
             --store=/var/lib/kaiwudb
@@ -316,7 +316,7 @@ Deployment logs are saved in the `log` directory within `kaiwudb_install`. Once 
     - Secure mode:
 
         ```bash
-        ./kwbase node status --certs-dir=/kaiwudb/certs --host=<address_of_any_alive_node>
+        ./kwbase node status --certs-dir=<certs_dir> --host=<address_of_any_alive_node>
         ```
 
 5. (Optional) Create a database user and grant administrator privileges to the user. If this step is skipped, the system will use database deployment user by default, and no password is required to access the database.
@@ -324,15 +324,15 @@ Deployment logs are saved in the `log` directory within `kaiwudb_install`. Once 
     - Non-secure mode (without password):
 
         ```bash
-        ./kwbase sql --host=127.0.0.1:$(local_port) --insecure \
-        -e "create user $user_name; \
-            grant admin to $user_name with admin option;"
+        ./kwbase sql --host=127.0.0.1:<local_port> --insecure \
+        -e "create user <username>; \
+            grant admin to <username> with admin option;"
         ```
 
     - Secure mode (with password):
 
         ```bash
-        ./kwbase sql --certs-dir=/kaiwudb/certs --host=127.0.0.1:$(local_port) \
-        -e "create user $user_name with password \"$user_password\"; \
-            grant admin to $user_name with admin option;"
+        ./kwbase sql --certs-dir=<certs_dir> --host=127.0.0.1:<local_port> \
+        -e "create user <username> with password \"<user_password>\"; \
+            grant admin to <username> with admin option;"
         ```

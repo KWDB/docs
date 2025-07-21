@@ -10,7 +10,7 @@ id: script-deployment
 - 如果硬件配置未满足要求，系统将继续安装，并提示硬件规格不满足要求。
 - 如果软件依赖未满足要求，系统会中止安装并提供相应的错误信息。
 
-在部署过程中，系统会自动生成相关日志。如果部署时出现错误，用户可以通过查看终端输出或 KaiwuDB 安装目录中 `log` 目录里的日志文件，获取详细的错误信息。
+在部署过程中，系统会自动生成相关日志。如果部署时出现错误，用户可以通过查看终端输出或 KWDB 安装目录中 `log` 目录里的日志文件，获取详细的错误信息。
 
 ## 前提条件
 
@@ -56,7 +56,7 @@ id: script-deployment
         - `rest_port`：KWDB Web 服务端口，默认为 `8080`。
         - `kaiwudb_port`：KWDB 服务端口，默认为 `26257`。
         - `data_root`：数据目录，默认为 `/var/lib/kaiwudb`。
-        - `cpu`: 可选参数，用于指定 KWDB 服务占用当前节点服务器 CPU 资源的比例，默认无限制。取值范围为 `[0,1]`，最大精度为小数点后两位。**注意**：如果部署环境为 Ubuntu 18.04 版本，在裸机部署集群完成后，需要将 `kaiwudb.service` 文件中的 `CPUQuota` 修改为整型值，例如，将 `180.0%` 修改为 `180%`，以确保设置生效。具体操作步骤，参见[配置 CPU 资源占用率](../cluster-config/cluster-config-bare-metal.md#配置-cpu-资源占用率)。
+        - `cpu`: 可选参数，用于指定 KWDB 服务占用当前节点服务器 CPU 资源的比例，默认无限制。取值范围为 `[0,1]`，最大精度为小数点后两位。KWDB 支持调整 CPU 资源占用率。更多信息，参见[配置裸机部署集群](../cluster-config/cluster-config-bare-metal.md)或[配置容器部署集群](../cluster-config/cluster-config-docker.md) 。**注意**：如果部署环境为 Ubuntu 18.04 版本，在裸机部署集群完成后，需要将 `kaiwudb.service` 文件中的 `CPUQuota` 修改为整型值，例如，将 `180.0%` 修改为 `180%`，以确保设置生效。具体操作步骤，参见[配置 CPU 资源占用率](../cluster-config/cluster-config-bare-metal.md#配置-cpu-资源占用率)。
     - `local`：本地节点配置
         - `local_node_ip`：本地节点对外提供服务的 IP 地址，监听地址为 `0.0.0.0`，端口为 KWDB 服务端口。
     - `cluster`：集群内其他节点的配置
@@ -82,12 +82,6 @@ id: script-deployment
 
         ```shell
         ./deploy.sh install --single-replica
-        ```
-
-        执行成功后，控制台输出以下信息：
-
-        ```shell
-        INSTALL COMPLETED: KaiwuDB has been installed successfuly! ...
         ```
 
 4. 根据系统提示重新加载 `systemd` 守护进程的配置文件。

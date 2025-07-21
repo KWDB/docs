@@ -31,5 +31,5 @@ KWDB 支持使用部署以下集群：
     - [裸机集群配置](./cluster-config/cluster-config-bare-metal.md)
     - [容器集群配置](./cluster-config/cluster-config-docker.md)
 - 集群管理
-  - [启动与停止 KaiwuDB 服务](./local-start-stop.md)
+  - [启动与停止 KWDB 服务](./local-start-stop.md)
   - [卸载集群](./uninstall-cluster.md)

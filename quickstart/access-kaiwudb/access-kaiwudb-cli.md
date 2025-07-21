@@ -17,7 +17,7 @@ kwbase 是 KWDB 提供的在命令行下运行的数据库连接工具。用户�
 如采用容器部署方式，需使用以下命令格式连接数据库:
 
 ```bash
-docker exec -it <container-name> ./kwbase sql [security-opions] --host=<your-host-ip> [-u <user-name>]
+docker exec -it <container-name> ./kwbase sql [security-opions] --host=<your-host-ip> [-u <username>]
 ```
 
 :::
@@ -39,7 +39,7 @@ docker exec -it <container-name> ./kwbase sql [security-opions] --host=<your-hos
 - 使用自定义用户：
 
     ```shell
-    ./kwbase sql --insecure --host=<your-host-ip> -u <user-name>
+    ./kwbase sql --insecure --host=<your-host-ip> -u <username>
     ```
 
 ## TLS 安全模式连接
@@ -49,11 +49,11 @@ docker exec -it <container-name> ./kwbase sql [security-opions] --host=<your-hos
 - 使用部署数据库时所用的用户：
 
     ```shell
-    ./kwbase sql --certs-dir=etc/kwdb/certs --host=<your-host-ip>
+    ./kwbase sql --certs-dir=/etc/kaiwudb/certs --host=<your-host-ip>
     ```
 
 - 使用自定义用户：
 
     ```shell
-    ./kwbase sql --certs-dir=etc/kwdb/certs --host=<your-host-ip> -u <user-name>
+    ./kwbase sql --certs-dir=/etc/kaiwudb/certs --host=<your-host-ip> -u <username>
     ```

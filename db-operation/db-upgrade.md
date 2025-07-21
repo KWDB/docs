@@ -284,16 +284,16 @@ KWDB 单副本集群仅支持离线升级。
 
 #### 步骤
 
-1. 停止 KaiwuDB 容器。容器名称为运行容器时通过 `--name` 参数指定的容器名称。
+1. 停止 KWDB 容器。容器名称为运行容器时通过 `--name` 参数指定的容器名称。
 
    ```bash
-   docker stop kaiwudb-container
+   docker stop kwdb-container
    ```
 
 2. 删除容器。
 
    ```bash
-   docker rm kaiwudb-container
+   docker rm kwdb-container
    ```
 
 3. 获取新版本镜像。
@@ -320,16 +320,16 @@ KWDB 单副本集群仅支持离线升级。
          --ulimit nofile=$max_files \
          -p $db_port:26257 \
          -p $http_port:8080 \
-         -v /var/lib/kaiwudb:/kaiwudb/deploy/kaiwudb-container \
+         -v /var/lib/kaiwudb:/kaiwudb/deploy/kwdb-container \
          -v /dev:/dev \
          --ipc shareable \
          -w /kaiwudb/bin \
-         $kwdb_image \
+         <kwdb_image> \
          ./kwbase start-single-node \
          --insecure \
          --listen-addr=0.0.0.0:26257 \
          --http-addr=0.0.0.0:8080 \
-         --store=/kaiwudb/deploy/kaiwudb-container
+         --store=/kaiwudb/deploy/kwdb-container
      ```
 
    - 安全模式:
@@ -340,14 +340,14 @@ KWDB 单副本集群仅支持离线升级。
          --ulimit nofile=$max_files \
          -p $db_port:26257 \
          -p $http_port:8080 \
-         -v /etc/kaiwudb/certs:/kaiwudb/certs \
-         -v /var/lib/kaiwudb:/kaiwudb/deploy/kaiwudb-container \
+         -v /etc/kaiwudb/certs:<certs_dir> \
+         -v /var/lib/kaiwudb:/kaiwudb/deploy/kwdb-container \
          -v /dev:/dev \
          --ipc shareable \
-         -w /kaiwudb/bin \$kwdb_image \
+         -w /kaiwudb/bin \<kwdb_image> \
          ./kwbase start-single-node \
-         --certs-dir=/kaiwudb/certs \
+         --certs-dir=<certs_dir> \
          --listen-addr=0.0.0.0:26257 \
          --http-addr=0.0.0.0:8080 \
-         --store=/kaiwudb/deploy/kaiwudb-container
+         --store=/kaiwudb/deploy/kwdb-container
      ```

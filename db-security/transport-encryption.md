@@ -44,7 +44,7 @@ node_addr=your-host-ip
 - 裸机部署 `kaiwudb_env` 文件配置示例：
 
     ```yaml
-    KAIWUDB_START_ARG="--certs-dir=/kaiwudb/certs"
+    KAIWUDB_START_ARG="--certs-dir=<certs_dir>"
     ```
 
 - 容器部署 `docker-compose.yml` 文件配置示例：
@@ -54,5 +54,5 @@ node_addr=your-host-ip
           - /bin/bash
           - -c
           - |
-            /kaiwudb/bin/kwbase  start-single-node --certs-dir=/kaiwudb/certs --listen-addr=0.0.0.0:26257 --advertise-addr=your-host-ip:port --store=/kaiwudb/deploy/kaiwudb-container
+            /kaiwudb/bin/kwbase  start-single-node --certs-dir=<certs_dir> --listen-addr=0.0.0.0:26257 --advertise-addr=your-host-ip:port --store=/kaiwudb/deploy/kwdb-container
     ```
