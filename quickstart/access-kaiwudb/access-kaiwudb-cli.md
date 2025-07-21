@@ -49,11 +49,11 @@ docker exec -it <container-name> ./kwbase sql [security-opions] --host=<your-hos
 - 使用部署数据库时所用的用户：
 
     ```shell
-    ./kwbase sql --certs-dir=etc/kwdb/certs --host=<your-host-ip>
+    ./kwbase sql --certs-dir=/etc/kaiwudb/certs --host=<your-host-ip>
     ```
 
 - 使用自定义用户：
 
     ```shell
-    ./kwbase sql --certs-dir=etc/kwdb/certs --host=<your-host-ip> -u <username>
+    ./kwbase sql --certs-dir=/etc/kaiwudb/certs --host=<your-host-ip> -u <username>
     ```

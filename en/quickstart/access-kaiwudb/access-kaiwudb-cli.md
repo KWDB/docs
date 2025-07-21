@@ -45,11 +45,11 @@ Insecure mode should only be used for testing purposes.
 - Connect as the database deployment user.
 
     ```shell
-    ./kwbase sql --certs-dir=certs --host=<your-host-ip> 
+    ./kwbase sql --certs-dir=/etc/kaiwudb/certs --host=<your-host-ip> 
     ```
 
 - Connect as a regular user.
 
     ```shell
-    ./kwbase sql --certs-dir=certs --host=<your-host-ip> -u <username>
+    ./kwbase sql --certs-dir=/etc/kaiwudb/certs --host=<your-host-ip> -u <username>
     ```
