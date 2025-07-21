@@ -273,20 +273,20 @@ tar -zxvf <package_name>
     1. 创建证书存放目录：
 
         ```bash
-        mkdir -p /kaiwudb/certs
+        mkdir -p <certs_dir>
         ```
 
     2. 生成证书和密钥：
 
         ```bash
         # 创建数据库证书颁发机构及密钥
-        ./kwbase cert create-ca --certs-dir=/kaiwudb/certs --ca-key=/kaiwudb/certs/ca.key
+        ./kwbase cert create-ca --certs-dir=<certs_dir> --ca-key=<certs_dir>/ca.key
         
         # 创建 root 用户或安装数据库用户的客户端证书及密钥
-        ./kwbase cert create-client $USERNAME --certs-dir=/kaiwudb/certs --ca-key=/kaiwudb/certs/ca.key
+        ./kwbase cert create-client <username> --certs-dir=<certs_dir> --ca-key=<certs_dir>/ca.key
         
         # 创建节点服务器证书及密钥
-        ./kwbase cert create-node 127.0.0.1 localhost 0.0.0.0 --certs-dir=/kaiwudb/certs --ca-key=/kaiwudb/certs/ca.key
+        ./kwbase cert create-node 127.0.0.1 localhost 0.0.0.0 --certs-dir=<certs_dir> --ca-key=<certs_dir>/ca.key
         ```
 
 3. 启动数据库:
@@ -304,7 +304,7 @@ tar -zxvf <package_name>
 
         ```bash
         ./kwbase start-single-node \
-            --certs-dir=/kaiwudb/certs \
+            --certs-dir=<certs_dir> \
             --listen-addr=0.0.0.0:26257 \
             --http-addr=0.0.0.0:8080 \
             --store=/var/lib/kaiwudb
@@ -321,7 +321,7 @@ tar -zxvf <package_name>
     - 安全模式：
 
         ```bash
-        ./kwbase node status --certs-dir=/kaiwudb/certs --host=<address_of_any_alive_node>
+        ./kwbase node status --certs-dir=<certs_dir> --host=<address_of_any_alive_node>
         ```
 
 5. （可选）创建数据库用户并授予用户管理员权限。如果跳过该步骤，系统将默认使用部署数据库时的用户，且无需密码访问数据库。
@@ -329,15 +329,15 @@ tar -zxvf <package_name>
     - 非安全模式（不带密码）：
 
         ```bash
-        ./kwbase sql --host=127.0.0.1:$(local_port) --insecure \
-        -e "create user $user_name; \
-            grant admin to $user_name with admin option;"
+        ./kwbase sql --host=127.0.0.1:<local_port> --insecure \
+        -e "create user <username>; \
+            grant admin to <username> with admin option;"
         ```
 
     - 安全模式（带密码）：
 
         ```bash
-        ./kwbase sql --certs-dir=/kaiwudb/certs --host=127.0.0.1:$(local_port) \
-        -e "create user $user_name with password \"$user_password\"; \
-            grant admin to $user_name with admin option;"
+        ./kwbase sql --certs-dir=<certs_dir> --host=127.0.0.1:<local_port> \
+        -e "create user <username> with password \"<user_password>\"; \
+            grant admin to <username> with admin option;"
         ```

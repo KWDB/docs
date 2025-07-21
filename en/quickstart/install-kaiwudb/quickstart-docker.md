@@ -105,7 +105,7 @@ Currently, the KWDB repository provides [installation packages](https://gitee.co
 tar -zxvf <install_package_name>
 ```
 
-The extracted `kaiwudb_install` directory contains the following files and folders:
+The extracted `kwdb_install` directory contains the following files and folders:
 
 | File/Folder          | Description                                               |
 |-------------------|-----------------------------------------------------------|
@@ -134,7 +134,7 @@ KWDB supports obtaining container images through the following methods:
 
 When deploying KWDB using scripts, the system verifies configuration files, runtime environment, hardware setup, and software dependencies. The deployment will proceed with a warning if hardware requirements are not met, but will abort with error messages if required software dependencies are missing.
 
-Deployment logs are saved in the `log` directory within `kaiwudb_install`. The system creates `/etc/kaiwudb/` and places the Docker Compose configuration file `docker-compose.yml` at `/etc/kaiwudb/script/`. For custom configurations of the startup flags and CPU resources, see [Cluster Configuration](../../deployment/cluster-config/cluster-config-docker.md).
+Deployment logs are saved in the `log` directory within `kwdb_install`. The system creates `/etc/kaiwudb/` and places the Docker Compose configuration file `docker-compose.yml` at `/etc/kaiwudb/script/`. For custom configurations of the startup flags and CPU resources, see [Cluster Configuration](../../deployment/cluster-config/cluster-config-docker.md).
 
 #### Prerequisites
 
@@ -147,7 +147,7 @@ Deployment logs are saved in the `log` directory within `kaiwudb_install`. The s
 
 #### Steps
 
-1. Log in to the target node and edit the `deploy.cfg` file in the `kaiwudb_install` directory.
+1. Log in to the target node and edit the `deploy.cfg` file in the `kwdb_install` directory.
 
     ::: warning Note
 
@@ -280,7 +280,7 @@ Deployment logs are saved in the `log` directory within `kaiwudb_install`. The s
     ```yaml
     version: '3.3'
     services:
-      kaiwudb-container:
+      kwdb-container:
         image: <image-name>
         container_name: kaiwudb-experience
         hostname: kaiwudb-experience
@@ -330,26 +330,26 @@ Deployment logs are saved in the `log` directory within `kaiwudb_install`. The s
 
       ```shell
       docker run --rm --privileged \
-        -v /etc/kaiwudb/certs:/kaiwudb/certs \
+        -v /etc/kaiwudb/certs:<certs_dir> \
         -w /kaiwudb/bin \
-        $kwdb_image \
-        bash -c './kwbase cert create-ca --certs-dir=/kaiwudb/certs --ca-key=/kaiwudb/certs/ca.key && \
-                  ./kwbase cert create-client root --certs-dir=/kaiwudb/certs --ca-key=/kaiwudb/certs/ca.key && \
-                  ./kwbase cert create-node 127.0.0.1 localhost 0.0.0.0 --certs-dir=/kaiwudb/certs --ca-key=/kaiwudb/certs/ca.key'
+        <kwdb_image> \
+        bash -c './kwbase cert create-ca --certs-dir=<certs_dir> --ca-key=<certs_dir>/ca.key && \
+                  ./kwbase cert create-client root --certs-dir=<certs_dir> --ca-key=<certs_dir>/ca.key && \
+                  ./kwbase cert create-node 127.0.0.1 localhost 0.0.0.0 --certs-dir=<certs_dir> --ca-key=<certs_dir>/ca.key'
       ```
 
     Parameters:
     - `--rm`: Automatically removes the container after it stops.
     - `--privileged`: Grants extended privileges to the container.
-    - `-v`: Mounts the host's `/etc/kaiwudb/certs` directory to the container's `/kaiwudb/certs` directory for certificate and key storage.
+    - `-v`: Mounts the host's `/etc/kaiwudb/certs` directory to the container's `<certs_dir>` directory for certificate and key storage.
     - `-w /kaiwudb/bin`: Sets the working directory inside the container to `/kaiwudb/bin`.
-    - `$kwdb_image`: Container image name and tag (e.g., `kaiwudb:2.2.0`)
+    - `kwdb_image`: Container image name and tag (e.g., `kwdb:2.2.0`)
     - `bash -c`: Executes the following certificate creation commands within the container:
       - `./kwbase cert create-ca`: Creates a certificate authority (CA), generating CA certificates and keys.
       - `./kwbase cert create-client root`: Creates client certificates and keys for the `root` user.
       - `./kwbase cert create-node 127.0.0.1 localhost 0.0.0.0`: Creates node server certificates and keys, supporting access through three network identifiers: local loopback address (`127.0.0.1`), local hostname (`localhost`), and all network interfaces (`0.0.0.0`).
-      - `--certs-dir=/kaiwudb/certs`: Specifies the certificate storage directory.
-      - `--ca-key=/kaiwudb/certs/ca.key`: Specifies the CA key path.
+      - `--certs-dir=<certs_dir>`: Specifies the certificate storage directory.
+      - `--ca-key=<certs_dir>/ca.key`: Specifies the CA key path.
 
 2. Start KWDB database.
 
@@ -361,15 +361,15 @@ Deployment logs are saved in the `log` directory within `kaiwudb_install`. The s
         --ulimit nofile=$max_files \
         -p $db_port:26257 \
         -p $http_port:8080 \
-        -v /var/lib/kaiwudb:/kaiwudb/deploy/kaiwudb-container \
+        -v /var/lib/kaiwudb:/kaiwudb/deploy/kwdb-container \
         --ipc shareable \
         -w /kaiwudb/bin \
-        $kwdb_image \
+        <kwdb_image> \
         ./kwbase start-single-node \
           --insecure \
           --listen-addr=0.0.0.0:26257 \
           --http-addr=0.0.0.0:8080 \
-          --store=/kaiwudb/deploy/kaiwudb-container
+          --store=/kaiwudb/deploy/kwdb-container
       ```
 
     - Secure mode
@@ -380,16 +380,16 @@ Deployment logs are saved in the `log` directory within `kaiwudb_install`. The s
         --ulimit nofile=$max_files \
         -p $db_port:26257 \
         -p $http_port:8080 \
-        -v /etc/kaiwudb/certs:/kaiwudb/certs \
-        -v /var/lib/kaiwudb:/kaiwudb/deploy/kaiwudb-container \
+        -v /etc/kaiwudb/certs:<certs_dir> \
+        -v /var/lib/kaiwudb:/kaiwudb/deploy/kwdb-container \
         --ipc shareable \
         -w /kaiwudb/bin \
-        $kwdb_image \
+        <kwdb_image> \
         ./kwbase start-single-node \
-          --certs-dir=/kaiwudb/certs \
+          --certs-dir=<certs_dir> \
           --listen-addr=0.0.0.0:26257 \
           --http-addr=0.0.0.0:8080 \
-          --store=/kaiwudb/deploy/kaiwudb-container
+          --store=/kaiwudb/deploy/kwdb-container
       ```
 
     Parameters:
@@ -400,28 +400,28 @@ Deployment logs are saved in the `log` directory within `kaiwudb_install`. The s
     - `--ulimit nofile=1048576`: Sets the maximum number of files that processes inside the container can open.
     - `-p`: Maps ports between host and container (database service port 26257 and HTTP port 8080).
     - `-v`: Sets up volume mounts:
-      - Mounts host's `/var/lib/kaiwudb` directory to container's `/kaiwudb/deploy/kaiwudb-container` directory for persistent data storage.
-      - In secure modes, mounts host's `/etc/kaiwudb/certs` directory to container's `/kaiwudb/certs` directory for certificate and key storage.
+      - Mounts host's `/var/lib/kaiwudb` directory to container's `/kaiwudb/deploy/kwdb-container` directory for persistent data storage.
+      - In secure mode, mounts host's `/etc/kaiwudb/certs` directory to container's `<certs_dir>` directory for certificate and key storage.
     - `--ipc shareable`: Allows other containers to share this container's IPC namespace.
     - `-w /kaiwudb/bin`: Sets the working directory inside the container to `/kaiwudb/bin`.
-    - `$kwdb_image`: Container image variable (replace with actual image name and tag, e.g., `kwdb:2.2.0`)
+    - `kwdb_image`: Container image variable (replace with actual image name and tag, e.g., `kwdb:2.2.0`)
     - `./kwbase start`: Database startup command with different parameters for different modes:
       - `--insecure`: (Non-secure mode only) Runs in non-secure mode.
-      - `--certs-dir=/kaiwudb/certs`: (Secure modes) Specifies certificate directory location.
+      - `--certs-dir=<certs_dir>`: (secure mode) Specifies certificate directory location.
       - `--listen-addr=0.0.0.0:26257`: Address and port the database listens on.
       - `--http-addr=0.0.0.0:8080`: Address and port the HTTP interface.
-      - `--store=/kaiwudb/deploy/kaiwudb-container`: Specifies data storage location.
+      - `--store=/kaiwudb/deploy/kwdb-container`: Specifies data storage location.
 
 3. (Optional) Create a database user and grant administrator privileges to the user. If this step is skipped, the system will use database deployment user by default, and no password is required to access the database.
 
       - Non-secure mode (without password):
 
           ```bash
-          docker exec kaiwudb-container bash -c "./kwbase sql --insecure --host=$host_ip -e \"create user $user_name;grant admin to $user_name with admin option;\""
+          docker exec kwdb-container bash -c "./kwbase sql --insecure --host=<host_ip> -e \"create user <username>;grant admin to <username> with admin option;\""
           ```
 
       - Secure mode (with password):
 
           ```bash
-          docker exec kaiwudb-container bash -c "./kwbase sql --host=$host_ip --certs-dir=$cert_path -e \"create user $user_name with password \\\"$user_password\\\";grant admin to $user_name with admin option;\""
+          docker exec kwdb-container bash -c "./kwbase sql --host=<host_ip> --certs-dir=<cert_dir> -e \"create user <username> with password \\\"<user_password>\\\";grant admin to <username> with admin option;\""
           ```

@@ -15,7 +15,7 @@ This section provides comprehensive uninstallation procedures for single-node KW
     systemctl stop kaiwudb
     ```
 
-2. Change to the `kaiwudb_install` directory.
+2. Change to the `kwdb_install` directory.
 
 3. Execute the uninstallation command.
 

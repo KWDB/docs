@@ -285,7 +285,7 @@ KWDB 支持通过以下方式获取容器镜像：
     ```yaml
     version: '3.3'
     services:
-      kaiwudb-container:
+      kwdb-container:
         image: "kwdb/kwdb:2.2.0"
         container_name: kaiwudb-experience
         hostname: kaiwudb-experience
@@ -335,25 +335,25 @@ KWDB 支持通过以下方式获取容器镜像：
 
       ```shell
       docker run --rm --privileged \
-        -v /etc/kaiwudb/certs:/kaiwudb/certs \
+        -v /etc/kaiwudb/certs:<certs_dir> \
         -w /kaiwudb/bin \
-        $kwdb_image \
-        bash -c './kwbase cert create-ca --certs-dir=/kaiwudb/certs --ca-key=/kaiwudb/certs/ca.key && \
-                  ./kwbase cert create-client root --certs-dir=/kaiwudb/certs --ca-key=/kaiwudb/certs/ca.key && \
-                  ./kwbase cert create-node 127.0.0.1 localhost 0.0.0.0 --certs-dir=/kaiwudb/certs --ca-key=/kaiwudb/certs/ca.key'
+        <kwdb_image> \
+        bash -c './kwbase cert create-ca --certs-dir=<certs_dir> --ca-key=<certs_dir>/ca.key && \
+                  ./kwbase cert create-client root --certs-dir=<certs_dir> --ca-key=<certs_dir>/ca.key && \
+                  ./kwbase cert create-node 127.0.0.1 localhost 0.0.0.0 --certs-dir=<certs_dir> --ca-key=<certs_dir>/ca.key'
       ```
 
     参数说明：
     - `--rm`：容器停止后自动删除。
     - `--privileged`：给予容器扩展权限。
-    - `-v`：设置容器目录映射, 将主机的 `/etc/kaiwudb/certs` 目录挂载到容器内的 `/kaiwudb/certs` 目录，用于存放证书和密钥。
+    - `-v`：设置容器目录映射, 将主机的 `/etc/kaiwudb/certs` 目录挂载到容器内的 `<certs_dir>` 目录，用于存放证书和密钥。
     - `-w /kaiwudb/bin`：将容器内的工作目录设置为 `/kaiwudb/bin`。
-    - `$kwdb_image`：容器镜像，需填入实际的镜像名以及标签, 例如 `kwdb:2.2.0`。
+    - `<kwdb_image>`：容器镜像，需填入实际的镜像名以及标签, 例如 `kwdb:2.2.0`。
     - `bash -c`：在容器中执行后面的证书创建命令, 其中：
       - `./kwbase cert create-ca`: 创建证书颁发机构(CA)，生成 CA 证书和密钥。
       - `./kwbase cert create-client root`: 为 `root` 用户创建客户端证书和密钥。
       - `./kwbase cert create-node 127.0.0.1 localhost 0.0.0.0`: 创建节点证书和密钥，支持通过三种网络标识符访问：本地回环地址 (`127.0.0.1`)、本地主机名 (`localhost`) 和所有网络接口 (`0.0.0.0`)。
-      - 所有命令均使用 `--certs-dir=/kaiwudb/certs` 指定证书存储目录，使用 `--ca-key=/kaiwudb/certs/ca.key` 指定密钥路径。
+      - 所有命令均使用 `--certs-dir=<certs_dir>` 指定证书存储目录，使用 `--ca-key=<certs_dir>/ca.key` 指定密钥路径。
 
 2. 启动基于 Docker 的 KWDB 数据库节点。
 
@@ -365,16 +365,16 @@ KWDB 支持通过以下方式获取容器镜像：
         --ulimit nofile=$max_files \
         -p $db_port:26257 \
         -p $http_port:8080 \
-        -v /var/lib/kaiwudb:/kaiwudb/deploy/kaiwudb-container \
+        -v /var/lib/kaiwudb:/kaiwudb/deploy/kwdb-container \
         -v /dev:/dev \
         --ipc shareable \
         -w /kaiwudb/bin \
-        $kwdb_image \
+        <kwdb_image> \
         ./kwbase start-single-node \
           --insecure \
           --listen-addr=0.0.0.0:26257 \
           --http-addr=0.0.0.0:8080 \
-          --store=/kaiwudb/deploy/kaiwudb-container
+          --store=/kaiwudb/deploy/kwdb-container
       ```
 
     - TLS 安全模式
@@ -385,17 +385,17 @@ KWDB 支持通过以下方式获取容器镜像：
         --ulimit nofile=$max_files \
         -p $db_port:26257 \
         -p $http_port:8080 \
-        -v /etc/kaiwudb/certs:/kaiwudb/certs \
-        -v /var/lib/kaiwudb:/kaiwudb/deploy/kaiwudb-container \
+        -v /etc/kaiwudb/certs:<certs_dir> \
+        -v /var/lib/kaiwudb:/kaiwudb/deploy/kwdb-container \
         -v /dev:/dev \
         --ipc shareable \
         -w /kaiwudb/bin \
-        $kwdb_image \
+        <kwdb_image> \
         ./kwbase start-single-node \
-          --certs-dir=/kaiwudb/certs \
+          --certs-dir=<certs_dir> \
           --listen-addr=0.0.0.0:26257 \
           --http-addr=0.0.0.0:8080 \
-          --store=/kaiwudb/deploy/kaiwudb-container
+          --store=/kaiwudb/deploy/kwdb-container
         ```
 
     参数说明：
@@ -406,27 +406,27 @@ KWDB 支持通过以下方式获取容器镜像：
     - `--ulimit nofile=$max_files`：设置容器内进程可以打开的最大文件数。
     - `-p $db_port:26257`：将容器的 26257 端口(数据库主端口)映射到主机的指定端口。
     - `-p $http_port:8080`: 将容器的 8080 端口(HTTP 端口)映射到主机的指定端口。
-    - `-v`：将主机的 `/var/lib/kaiwudb` 目录挂载到容器内的 `/kaiwudb/deploy/kaiwudb-container` 目录，用于持久化数据存储。安全模式下，将主机的 `/etc/kaiwudb/certs` 目录挂载到容器内的 `/kaiwudb/certs` 目录，用于存放证书和密钥。
+    - `-v`：将主机的 `/var/lib/kaiwudb` 目录挂载到容器内的 `/kaiwudb/deploy/kwdb-container` 目录，用于持久化数据存储。安全模式下，将主机的 `/etc/kaiwudb/certs` 目录挂载到容器内的 `<certs_dir>` 目录，用于存放证书和密钥。
     - `--ipc shareable`：允许其他容器共享此容器的IPC命名空间。
     - `-w /kaiwudb/bin`：将容器内的工作目录设置为 `/kaiwudb/bin`。
-    - `$kwdb_image`：容器镜像变量，需替换为实际的镜像名称及标签, 例如 `kwdb:2.2.0`。
+    - `<kwdb_image>`：容器镜像变量，需替换为实际的镜像名称及标签, 例如 `kwdb:2.2.0`。
     - `./kwbase start`: 容器内运行的数据库启动命令, 根据安全模式和非安全模式有所不同:
       - `--insecure`：（仅非安全模式）指定以非安全模式运行。
-      - `--certs-dir=/kaiwudb/certs`：（安全模式）指定证书目录位置。
+      - `--certs-dir=<certs_dir>`：（安全模式）指定证书目录位置。
       - `--listen-addr=0.0.0.0:26257`：指定数据库监听的地址和端口。
       - `--http-addr=0.0.0.0:8080`：指定HTTP接口监听的地址和端口。
-      - `--store=/kaiwudb/deploy/kaiwudb-container`：指定数据存储位置。
+      - `--store=/kaiwudb/deploy/kwdb-container`：指定数据存储位置。
 
 3. （可选）创建数据库用户并授予用户管理员权限。如果跳过该步骤，系统将默认使用部署数据库时的用户，且无需密码访问数据库。
 
     - 非安全模式（不带密码）：
 
         ```bash
-        docker exec kaiwudb-container bash -c "./kwbase sql --insecure --host=$host_ip -e \"create user $user_name;grant admin to $user_name with admin option;\""
+        docker exec kwdb-container bash -c "./kwbase sql --insecure --host=<host_ip> -e \"create user <username>;grant admin to <username> with admin option;\""
         ```
 
     - 安全模式（带密码）：
 
         ```bash
-        docker exec kaiwudb-container bash -c "./kwbase sql --host=$host_ip --certs-dir=$cert_path -e \"create user $user_name with password \\\"$user_password\\\";grant admin to $user_name with admin option;\""
+        docker exec kwdb-container bash -c "./kwbase sql --host=<host_ip> --certs-dir=<cert_dir> -e \"create user <username> with password \\\"<user_password>\\\";grant admin to <username> with admin option;\""
         ```

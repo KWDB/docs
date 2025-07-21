@@ -5,13 +5,15 @@ id: cluster-config-docker
 
 # 容器部署配置集群
 
-使用脚本部署完 KWDB 集群后，用户可以修改 Docker Compose 配置文件 `docker-compose.yml`，配置 KWDB 的启动参数和 CPU 资源占用率。
-
-## 配置启动参数
+使用脚本在容器中完成集群部署后，系统会将 KWDB 封装成系统服务，生成 Docker Compose 配置文件 `docker-compose.yml`，用于配置 KWDB 的启动参数和 CPU 资源占用率。
 
 :::warning 说明
-启动参数是节点级配置。如需修改整个集群的配置，用户需要登录集群中的每个节点并完成相应的配置。
+
+启动参数和 CPU 资源占用率配置为节点级配置。如需修改整个集群的配置，用户需要登录集群中的每个节点并完成相应的配置。
+
 :::
+
+## 配置启动参数
 
 通常情况下，如果用户没有配置启动参数，系统会使用参数默认值启动 KWDB。当用户配置了启动参数，KWDB 启动时会优先使用配置的启动参数。部署完 KWDB 后，用户可以按需修改 `docker-compose.yml` 文件中的启动参数。有关所有支持的启动参数，参见[集群参数配置](../../db-operation/cluster-settings-config.md)。
 
@@ -37,7 +39,7 @@ id: cluster-config-docker
           - /bin/bash
           - -c
           - |
-            /kaiwudb/bin/kwbase  start-single-node --certs-dir=/kaiwudb/certs --listen-addr=0.0.0.0:26257 --advertise-addr=your-host-ip:port --store=/kaiwudb/deploy/kaiwudb-container --cache=25%
+            /kaiwudb/bin/kwbase start-single-node --certs-dir=<certs_dir> --listen-addr=0.0.0.0:26257 --advertise-addr=your-host-ip:port --store=/kaiwudb/deploy/kwdb-container --cache=25%
     ```
 
 4. 保存配置, 重新创建并启动 KWDB 容器。
@@ -50,16 +52,12 @@ id: cluster-config-docker
 
 部署完 KWDB 后，用户可以使用 `docker update` 命令或者修改 `docker-compose.yml` 文件来配置 KWDB 的 CPU 资源占用率。
 
-:::warning 说明
-CPU 资源占用率是节点级配置。如需修改整个集群的配置，用户需要登录集群中的每个节点并完成相应的配置。
-:::
-
 - 使用 `docker update` 命令
 
     运行 `docker update` 命令，配置 KWDB 的 `cpus` 参数。
 
     ```dockerfile
-    docker update --cpus <value> kaiwudb-container
+    docker update --cpus <value> kwdb-container
     ```
 
     `cpus` 的计算公式为：CPU 占用率 x 服务器 CPU 核数。例如，假设节点所在服务器的 CPU 核数为 6，计划将 CPU 占用率调整为 0.3, 则对应的 `cpus` 的值应为 `0.3 x 6 = 1.8`。

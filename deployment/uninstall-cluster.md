@@ -9,7 +9,8 @@ id: uninstall-cluster
 
 ## 脚本部署
 
-1. 登录安装部署集群的初始节点，将 `kwdb_install` 目录传输到集群的所有其他节点。
+1. 登录安装部署集群的初始节点。
+2. 将 `kwdb_install` 目录传输到集群的所有其他节点。
     1. 登录远程节点。
 
         ```shell
@@ -26,7 +27,7 @@ id: uninstall-cluster
         ...    
         ```
 
-2. 在集群的每个节点执行以下操作：
+3. 在集群的每个节点执行以下操作：
     1. 停止 KWDB 服务。
 
         ```shell
@@ -43,12 +44,6 @@ id: uninstall-cluster
 
         ```shell
         When uninstalling KaiwuDB, you can either delete or keep all user data. Please confirm your choice: Do you want to delete the data? (y/n): 
-        ``` 
-
-        卸载完成后，控制台输出以下信息：
-
-        ```shell
-        [UNINSTALL COMPLETED]:KaiwuDB has been uninstalled successfully.
         ```
 
 ## 源码编译部署

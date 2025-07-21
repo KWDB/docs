@@ -9,7 +9,7 @@ id: kwbase-cli-deployment
 
 **前提条件**
 
-- 待部署节点的硬件配置、操作系统、软件依赖和端口满足安装部署要求
+- 待部署节点的硬件配置、操作系统、软件依赖和端口满足[安装部署要求](../prepare/before-deploy-bare-metal.md)
 - 安装用户为 `root` 用户或拥有 `sudo` 权限的普通用户
 - 已完成[源码编译和安装](https://gitee.com/kwdb/kwdb#%E7%BC%96%E8%AF%91%E5%92%8C%E5%AE%89%E8%A3%85)
 
@@ -26,20 +26,20 @@ id: kwbase-cli-deployment
     1. 创建证书存放目录：
 
         ```bash
-        mkdir -p /kaiwudb/certs
+        mkdir -p <certs_dir>
         ```
 
     2. 生成证书和密钥：
 
         ```bash
         # 创建数据库证书颁发机构及密钥
-        ./kwbase cert create-ca --certs-dir=/kaiwudb/certs --ca-key=/kaiwudb/certs/ca.key
+        ./kwbase cert create-ca --certs-dir=<certs_dir> --ca-key=<certs_dir>/ca.key
         
         # 创建安装数据库用户的客户端证书及密钥
-        ./kwbase cert create-client $USERNAME --certs-dir=/kaiwudb/certs --ca-key=/kaiwudb/certs/ca.key
+        ./kwbase cert create-client <username> --certs-dir=<certs_dir> --ca-key=<certs_dir>/ca.key
         
         # 创建节点服务器证书及密钥
-        ./kwbase cert create-node 127.0.0.1 localhost 0.0.0.0 --certs-dir=/kaiwudb/certs --ca-key=/kaiwudb/certs/ca.key
+        ./kwbase cert create-node 127.0.0.1 localhost 0.0.0.0 --certs-dir=<certs_dir> --ca-key=<certs_dir>/ca.key
         ```
 
         ::: warning 提示
@@ -58,26 +58,26 @@ id: kwbase-cli-deployment
             # 启动第一个节点
             ./kwbase start-single-replica --insecure \
             --listen-addr=0.0.0.0:26257 \
-            --advertise-addr=${host1}:26257 \
+            --advertise-addr=<host1>:26257 \
             --http-addr=0.0.0.0:8080 \
             --store=/var/lib/kaiwudb \
-            --join=${host1}:26257
+            --join=<host1>:26257
 
             # 启动第二个节点
             ./kwbase start-single-replica --insecure \
             --listen-addr=0.0.0.0:26257 \
-            --advertise-addr=${host2}:26258 \
+            --advertise-addr=<host2>:26258 \
             --http-addr=0.0.0.0:8080 \
             --store=/var/lib/kaiwudb \
-            --join=${host1}:26257
+            --join=<host1>:26257
 
             # 启动第三个节点
             ./kwbase start-single-replica --insecure \
             --listen-addr=0.0.0.0:26257 \
-            --advertise-addr=${host3}:26259 \
+            --advertise-addr=<host3>:26259 \
             --http-addr=0.0.0.0:8080 \
             --store=/var/lib/kaiwudb \
-            --join=${host1}:26257
+            --join=<host1>:26257
             ```
 
         - 安全模式：
@@ -85,30 +85,30 @@ id: kwbase-cli-deployment
             ```bash
             # 启动第一个节点
             ./kwbase start-single-replica \
-            --certs-dir=/kaiwudb/certs \
+            --certs-dir=<certs_dir> \
             --listen-addr=0.0.0.0:26257 \
-            --advertise-addr=${host1}:26257 \
+            --advertise-addr=<host1>:26257 \
             --http-addr=0.0.0.0:8080 \
             --store=/var/lib/kaiwudb \
-            --join=${host1}:26257
+            --join=<host1>:26257
 
             # 启动第二个节点
             ./kwbase start-single-replica \
-            --certs-dir=/kaiwudb/certs \
+            --certs-dir=<certs_dir> \
             --listen-addr=0.0.0.0:26257 \
-            --advertise-addr=${host2}:26258 \
+            --advertise-addr=<host2>:26258 \
             --http-addr=0.0.0.0:8080 \
             --store=/var/lib/kaiwudb \
-            --join=${host1}:26257
+            --join=<host1>:26257
 
             # 启动第三个节点
             ./kwbase start-single-replica \
-            --certs-dir=/kaiwudb/certs \
+            --certs-dir=<certs_dir> \
             --listen-addr=0.0.0.0:26257 \
-            --advertise-addr=${host3}:26259 \
+            --advertise-addr=<host3>:26259 \
             --http-addr=0.0.0.0:8080 \
             --store=/var/lib/kaiwudb \
-            --join=${host1}:26257
+            --join=<host1>:26257
             ```
 
     - 多副本集群：
@@ -119,26 +119,26 @@ id: kwbase-cli-deployment
             # 启动第一个节点
             ./kwbase start --insecure \
             --listen-addr=0.0.0.0:26257 \
-            --advertise-addr=${host1}:26257 \
+            --advertise-addr=<host1>:26257 \
             --http-addr=0.0.0.0:8080 \
             --store=/var/lib/kaiwudb \
-            --join=${host1}:26257
+            --join=<host1>:26257
 
             # 启动第二个节点
             ./kwbase start --insecure \
             --listen-addr=0.0.0.0:26257 \
-            --advertise-addr=${host2}:26258 \
+            --advertise-addr=<host2>:26258 \
             --http-addr=0.0.0.0:8080 \
             --store=/var/lib/kaiwudb \
-            --join=${host1}:26257
+            --join=<host1>:26257
 
             # 启动第三个节点
             ./kwbase start --insecure \
             --listen-addr=0.0.0.0:26257 \
-            --advertise-addr=${host3}:26259 \
+            --advertise-addr=<host3>:26259 \
             --http-addr=0.0.0.0:8080 \
             --store=/var/lib/kaiwudb \
-            --join=${host1}:26257
+            --join=<host1>:26257
             ```
 
         - 安全模式：
@@ -146,30 +146,30 @@ id: kwbase-cli-deployment
             ```bash
             # 启动第一个节点
             ./kwbase start \
-            --certs-dir=/kaiwudb/certs \
+            --certs-dir=<certs_dir> \
             --listen-addr=0.0.0.0:26257 \
-            --advertise-addr=${host1}:26257 \
+            --advertise-addr=<host1>:26257 \
             --http-addr=0.0.0.0:8080 \
             --store=/var/lib/kaiwudb \
-            --join=${host1}:26257
+            --join=<host1>:26257
 
             # 启动第二个节点
             ./kwbase start \
-            --certs-dir=/kaiwudb/certs \
+            --certs-dir=<certs_dir> \
             --listen-addr=0.0.0.0:26257 \
-            --advertise-addr=${host2}:26258 \
+            --advertise-addr=<host2>:26258 \
             --http-addr=0.0.0.0:8080 \
             --store=/var/lib/kaiwudb \
-            --join=${host1}:26257
+            --join=<host1>:26257
 
             # 启动第三个节点
             ./kwbase start \
-            --certs-dir=/kaiwudb/certs \
+            --certs-dir=<certs_dir> \
             --listen-addr=0.0.0.0:26257 \
-            --advertise-addr=${host3}:26259 \
+            --advertise-addr=<host3>:26259 \
             --http-addr=0.0.0.0:8080 \
             --store=/var/lib/kaiwudb \
-            --join=${host1}:26257
+            --join=<host1>:26257
             ```
 
 4. 初始化集群。
@@ -183,7 +183,7 @@ id: kwbase-cli-deployment
     - 安全模式：
 
         ```bash
-        ./kwbase init --certs-dir=/kaiwudb/certs --host=<address_of_any_node>
+        ./kwbase init --certs-dir=<certs_dir> --host=<address_of_any_node>
         ```
 
 5. 查看数据库状态。
@@ -197,5 +197,5 @@ id: kwbase-cli-deployment
     - 安全模式：
 
         ```bash
-        ./kwbase node status --certs-dir=/kaiwudb/certs --host=<address_of_any_alive_node>
+        ./kwbase node status --certs-dir=<certs_dir> --host=<address_of_any_alive_node>
         ```

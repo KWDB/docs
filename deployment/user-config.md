@@ -29,10 +29,15 @@ KWDB 在安装包中提供了 `add_user.sh` 脚本。在安装并运行 KWDB 后
 
 1. 在目标机器上，进入 KWDB 安装包目录。
 
-2. 执行 `add_user.sh` 脚本，根据系统提示创建用户名和密码。
+2. 执行 `add_user.sh` 脚本。
 
     ```shell
     ./add_user.sh
+    ```
+
+3. 根据系统提示创建用户名和密码。
+
+    ```shell
     Please enter the username:
     Please enter the password:
     ```
@@ -43,7 +48,7 @@ KWDB 在安装包中提供了 `add_user.sh` 脚本。在安装并运行 KWDB 后
     [ADD USER COMPLETED]:User creation completed.
     ```
 
-## 使用 kwbase CLI 
+## 使用 kwbase CLI
 
 ### 前提条件
 
@@ -58,17 +63,17 @@ KWDB 在安装包中提供了 `add_user.sh` 脚本。在安装并运行 KWDB 后
         - 非安全模式（不带密码）：
 
             ```bash
-            ./kwbase sql --host=127.0.0.1:$(local_port) --insecure \
-            -e "create user $user_name; \
-                grant admin to $user_name with admin option;"
+            ./kwbase sql --host=127.0.0.1:<local_port> --insecure \
+            -e "create user <username>; \
+                grant admin to <username> with admin option;"
             ```
 
         - 安全模式（带密码）：
 
             ```bash
-            ./kwbase sql --certs-dir=$cert_path --host=127.0.0.1:$(local_port) \
-            -e "create user $user_name with password \"$user_password\"; \
-                grant admin to $user_name with admin option;"
+            ./kwbase sql --certs-dir=<cert_dir> --host=127.0.0.1:<local_port> \
+            -e "create user <username> with password \"<user_password>\"; \
+                grant admin to <username> with admin option;"
             ```
 
     - Docker Run 部署：
@@ -76,11 +81,11 @@ KWDB 在安装包中提供了 `add_user.sh` 脚本。在安装并运行 KWDB 后
         - 非安全模式（不带密码）：
 
             ```bash
-            docker exec kaiwudb-container bash -c "./kwbase sql --insecure --host=$host_ip -e \"create user $user_name;grant admin to $user_name with admin option;\""
+            docker exec kwdb-container bash -c "./kwbase sql --insecure --host=<host_ip> -e \"create user <username>;grant admin to <username> with admin option;\""
             ```
 
         - 安全模式（带密码）：
 
             ```bash
-            docker exec kaiwudb-container bash -c "./kwbase sql --host=$host_ip --certs-dir=$cert_path -e \"create user $user_name with password \\\"$user_password\\\";grant admin to $user_name with admin option;\""
+            docker exec kwdb-container bash -c "./kwbase sql --host=<host_ip> --certs-dir=<cert_dir> -e \"create user <username> with password \\\"<user_password>\\\";grant admin to <username> with admin option;\""
             ```
