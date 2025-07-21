@@ -25,5 +25,5 @@ kwbase 是 KWDB 提供的在命令行下运行的数据库连接工具。用户�
 以下示例说明如何以 TLS 安全模式登录 KWDB 集群。
 
 ```shell
-./kwbase sql --certs-dir=etc/kwdb/certs --host=<your-host-ip>
+./kwbase sql --certs-dir=/etc/kaiwudb/certs --host=<your-host-ip>
 ```
