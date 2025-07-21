@@ -348,7 +348,7 @@ KWDB 支持通过以下方式获取容器镜像：
     - `--privileged`：给予容器扩展权限。
     - `-v`：设置容器目录映射, 将主机的 `/etc/kaiwudb/certs` 目录挂载到容器内的 `<certs_dir>` 目录，用于存放证书和密钥。
     - `-w /kaiwudb/bin`：将容器内的工作目录设置为 `/kaiwudb/bin`。
-    - `<kwdb_image>`：容器镜像，需填入实际的镜像名以及标签, 例如 `kwdb:2.2.0`。
+    - `kwdb_image`：容器镜像，需填入实际的镜像名以及标签, 例如 `kwdb:2.2.0`。
     - `bash -c`：在容器中执行后面的证书创建命令, 其中：
       - `./kwbase cert create-ca`: 创建证书颁发机构(CA)，生成 CA 证书和密钥。
       - `./kwbase cert create-client root`: 为 `root` 用户创建客户端证书和密钥。
@@ -409,7 +409,7 @@ KWDB 支持通过以下方式获取容器镜像：
     - `-v`：将主机的 `/var/lib/kaiwudb` 目录挂载到容器内的 `/kaiwudb/deploy/kwdb-container` 目录，用于持久化数据存储。安全模式下，将主机的 `/etc/kaiwudb/certs` 目录挂载到容器内的 `<certs_dir>` 目录，用于存放证书和密钥。
     - `--ipc shareable`：允许其他容器共享此容器的IPC命名空间。
     - `-w /kaiwudb/bin`：将容器内的工作目录设置为 `/kaiwudb/bin`。
-    - `<kwdb_image>`：容器镜像变量，需替换为实际的镜像名称及标签, 例如 `kwdb:2.2.0`。
+    - `kwdb_image`：容器镜像变量，需替换为实际的镜像名称及标签, 例如 `kwdb:2.2.0`。
     - `./kwbase start`: 容器内运行的数据库启动命令, 根据安全模式和非安全模式有所不同:
       - `--insecure`：（仅非安全模式）指定以非安全模式运行。
       - `--certs-dir=<certs_dir>`：（安全模式）指定证书目录位置。

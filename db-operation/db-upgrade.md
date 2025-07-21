@@ -284,7 +284,7 @@ KWDB 单副本集群仅支持离线升级。
 
 #### 步骤
 
-1. 停止 KaiwuDB 容器。容器名称为运行容器时通过 `--name` 参数指定的容器名称。
+1. 停止 KWDB 容器。容器名称为运行容器时通过 `--name` 参数指定的容器名称。
 
    ```bash
    docker stop kwdb-container
