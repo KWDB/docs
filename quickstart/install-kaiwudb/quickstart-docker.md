@@ -331,14 +331,6 @@ KWDB 支持通过以下方式获取容器镜像：
     docker-compose up -d
     ```
 
-3. （可选）配置 KWDB 开机自启动。
-
-    配置 KWDB 开机自启动后，如果系统重启，则自动启动 KWDB。
-
-    ```shell
-    systemctl enable kaiwudb
-    ```
-
 ### 执行 Docker Run 命令部署 KWDB
 
 **前提条件**：
@@ -435,11 +427,3 @@ KWDB 支持通过以下方式获取容器镜像：
       - `--listen-addr=0.0.0.0:26257`：指定数据库监听的地址和端口。
       - `--http-addr=0.0.0.0:8080`：指定HTTP接口监听的地址和端口。
       - `--store=/kaiwudb/deploy/kaiwudb-container`：指定数据存储位置。
-
-3. （可选）配置 KWDB 开机自启动。
-
-    配置 KWDB 开机自启动后，如果系统重启，则自动启动 KWDB。
-
-    ```shell
-    systemctl enable kaiwudb
-    ```
