@@ -176,13 +176,6 @@ tar -zxvf <install_package_name>
     docker-compose up -d
     ```
 
-4. （可选）配置 KWDB 开机自启动。
-
-    配置 KWDB 开机自启动后，如果系统重启，则自动启动 KWDB。
-
-    ```shell
-    systemctl enable kaiwudb
-    ```
 
 ### 使用安装脚本部署 KWDB
 
