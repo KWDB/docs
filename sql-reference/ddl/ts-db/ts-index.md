@@ -16,8 +16,7 @@ KWDB 支持为时序表的普通标签列创建索引。创建索引后，用户
 
 ### 所需权限
 
-- 非三权分立模式下，用户是 `admin` 角色的成员或拥有目标表的 CREATE 权限，默认情况下，`root` 用户属于 `admin` 角色。
-- 三权分立模式下，用户是 `sysadmin` 角色的成员或者是拥有目标表 CREATE 权限的普通用户。默认情况下，`sysroot` 用户属于 `sysadmin` 角色。
+用户是 `admin` 角色的成员或拥有目标表的 CREATE 权限，默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -72,8 +71,7 @@ SHOW INDEXES FROM temperature;
 
 ### 所需权限
 
-- 非三权分立模式下，用户是 `admin` 角色的成员或拥有索引所属表的 CREATE 权限，默认情况下，`root` 用户属于 `admin` 角色。
-- 三权分立模式下，用户是 `sysadmin` 角色的成员或者是拥有索引所属表 CREATE 权限的普通用户。默认情况下，`sysroot` 用户属于 `sysadmin` 角色。
+用户是 `admin` 角色的成员或拥有索引所属表的 CREATE 权限，默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -104,8 +102,7 @@ SHOW INDEXES FROM temperature;
 
 ### 所需权限
 
-- 非三权分立模式下，用户是 `admin` 角色的成员或拥有目标表的 CREATE 权限，默认情况下，`root` 用户属于 `admin` 角色。
-- 三权分立模式下，用户是 `sysadmin` 角色的成员或者是拥有目标表 CREATE 权限的普通用户。默认情况下，`sysroot` 用户属于 `sysadmin` 角色。
+用户是 `admin` 角色的成员或拥有目标表的 CREATE 权限，默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 

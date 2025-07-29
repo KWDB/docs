@@ -435,7 +435,7 @@ id: kwbase-sql-reference
 
 ### 所需权限
 
-- 非三权分立模式下，用户是 `admin` 角色的成员。默认情况下，`root` 用户属于 `admin` 角色。
+用户是 `admin` 角色的成员。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 命令格式
 
