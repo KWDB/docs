@@ -18,13 +18,13 @@ kwdb-tsbs 是一款基于 [Timescale](https://www.timescale.com/) [Time Series B
 
 ### 测试场景
 
-::: warning 说明
-目前，kwdb-tsbs 只支持 DevOps cpu-only 测试场景。
-:::
+目前，kwdb-tsbs 支持 DevOps cpu-only 和 IoT 测试场景。
+
+#### DevOps cpu-only
 
 DevOps cpu-only 测试场景只关注 CPU 指标。该测试场景模拟对服务器 CPU 监控生成的时序数据，针对每台设备（CPU）记录其 10 个 CPU 指标。
 
-下表列出 kwdb-tsbs 在 cpu-only 测试场景中支持的查询类型。
+下表列出 kwdb-tsbs 在 DevOps cpu-only 测试场景中支持的查询类型。
 
 | 查询类型              | 描述                                                                           |
 |-----------------------|------------------------------------------------------------------------------|
@@ -43,6 +43,27 @@ DevOps cpu-only 测试场景只关注 CPU 指标。该测试场景模拟对服�
 | high-cpu-1            | 特定主机的某个指标超过阈值的所有读数。                                          |
 | lastpoint             | 每台主机的最后读数。                                                            |
 | groupby-orderby-limit | 在随机选定的时间终点前，按时间维度汇总的最后 5 个读数。                          |
+
+#### IoT
+
+IoT 测试场景旨在模拟物联网环境中的数据负载。该测试场景模拟来自一家虚构卡车公司的一组卡车的数据流。它模拟每辆卡车的诊断数据和指标，并引入环境因素，如乱序数据和批量摄取（对于一段时间离线的卡车）。它还跟踪卡车元数据，并将其用于将指标和诊断作为查询集的一部分联系起来。在该测试场景中，一部分生成的查询将涵盖实时卡车状态和分析，这些分析将查看时序数据，以更好地预测卡车行为。该测试场景的规模因素将基于跟踪的卡车数量。
+
+下表列出 kwdb-tsbs 在 IoT 测试场景中支持的查询类型。
+
+| 查询类型                          | 描述                                                      |
+|-----------------------------------|---------------------------------------------------------|
+| last-loc                          | 获取每辆卡车的实时（最新）位置。                             |
+| low-fuel                          | 获取所有燃料不足（低于 10%）的卡车。                         |
+| high-load                         | 获取当前负载高（超过 90% 负载容量）的卡车。                  |
+| stationary-trucks                 | 获取所有静止不动的卡车（最近 10 分钟内平均最低速度）。       |
+| long-driving-sessions             | 获取在过去 4 小时内未休息至少 20 分钟的卡车。              |
+| long-daily-sessions               | 获取在过去 24 小时内驾驶超过 10 小时的卡车。               |
+| avg-vs-projected-fuel-consumption | 计算每个车队的平均燃料消耗量和预计燃料消耗量。             |
+| avg-daily-driving-duration        | 计算每位司机每天的平均驾驶时长。                           |
+| avg-daily-driving-session         | 计算每位司机每天的平均驾驶次数。                           |
+| avg-load                          | 计算每个车队每种卡车型号的平均负载。                       |
+| daily-activity                    | 获取每个车队每天卡车处于活跃状态（相对于停运状态）的小时数。 |
+| breakdown-frequency               | 按卡车型号计算故障频率。                                   |
 
 ## 源码编译
 
@@ -113,7 +134,7 @@ kwdb-tsbs 提供数据生成工具（`tsbs_generate_data`），为 KWDB 数据�
 | 参数          | 描述                                                                                                                              | 类型   | 可选值     | 默认值                                           |
 | ----------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ------ | -------------- | ---------------------------------------------------- |
 | `format`          | 目标数据库的格式。                                                                                                                     | STRING | `kwdb`         | N/A                                                  |
-| `use-case`        | 测试场景类型。                                                                                                                         | STRING | `cpu-only`     | `cpu-only`                                           |
+| `use-case`        | 测试场景类型。                                                                                                                         | STRING | `cpu-only`、`iot`     | `cpu-only`                                           |
 | `seed`            | 伪随机数生成器 PRNG 种子。                                                                                                             | INT    | 正整数         | `0`，表示使用当前时间戳。                            |
 | `scale`           | 生成数据的设备数量。                                                                                                                   | INT    | 正整数         | `1`                                                  |
 | `timestamp-start` | 数据生成的起始时间。遵循 RFC 3339 标准。                                                                                               | STRING | N/A            | `2016-01-01T00:00:00Z`                               |
@@ -168,10 +189,10 @@ kwdb-tsbs 提供数据导入工具（`tsbs_load_data`），将由 `tsbs_generate
 | `pass`                        | 身份验证时使用的密码。                                                                                           | STRING | N/A                   | 默认为空。                                                  |
 | `host`                      | KWDB 数据库的 IP 地址。                                                                                          | STRING | N/A                   | N/A                                                         |
 | `port`                      | KWDB 数据库的连接端口。                                                                                          | INT    | N/A                   | `26257`                                                     |
-| `insert-type`                 | 数据写入模式。<br >- `insert`：直接插入数据。 <br >- `prepare`：预编译数据。                                                | STRING | `insert` 或 `prepare` | `insert`                                                    |
+| `insert-type` | 数据写入模式。<br >- `insert`：直接插入数据，适用于 DevOps cpu-only 和 IoT 测试场景。 <br >- `prepare`：预编译数据，适用于 DevOps cpu-only 测试场景。 <br >- `prepareiot`：预编译数据，适用于 IoT 测试场景。| STRING | `insert`、`prepare`  或 `prepareiot` | `insert`                                                    |
 | `batch-size` 或 `preparesize` | 每批次写入的数据量。<br > **说明** <br >- `batch-size` 参数只适用于 INSERT 模式。<br >- `preparesize` 参数只适用于 PREPARE 模式。 | INT    | 正整数                | `1000`                                                      |
 | `db-name`                     | 需要访问的 KWDB 数据库名称。                                                                                     | STRING | N/A                   | `benchmark`                                                 |
-| `case`                        | 测试场景类型。                                                                                                   | STRING | `cpu-only`            | `cpu-only`                                                  |
+| `case`                        | 测试场景类型。                                                                                                   | STRING | `cpu-only`、`iot`            | `cpu-only`                                                  |
 | `workers`                     | 并发写入线程数。                                                                                                 | INT    | 正整数                | 建议与生成数据时使用的 `orderquantity` 参数的取值保持一致。 |
 | `partition`                   | 设置是否分区。<br > - 单节点：`false` <br > - 集群：`true`                                                                    | BOOL   | `true` 或 `false`     | `false`                                                     |
 
@@ -186,6 +207,7 @@ kwdb-tsbs 提供查询生成工具（`tsbs_generate_queries`），用以生成�
     --seed=123 \
     --scale=100 \
     --query-type=${QUERY_TYPE} \
+    --prepare=false \
     --queries=100 \
     --timestamp-start="2016-01-01T08:00:00Z" \
     --timestamp-end="2016-01-05T00:00:01Z" \
@@ -197,10 +219,11 @@ kwdb-tsbs 提供查询生成工具（`tsbs_generate_queries`），用以生成�
 | 参数          | 描述                                | 类型   | 可选值                                                                                                                                 | 默认值                |
 | ----------------- | ---------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------- |
 | `format`          | 目标数据库的格式。                       | STRING | `kwdb`                                                                                                                                     | N/A                       |
-| `use-case`        | 测试场景类型。                           | STRING | cpu-only                                                                                                                                   | cpu-only                  |
+| `use-case`        | 测试场景类型。                           | STRING | `cpu-only`、`iot`                                                                      | `cpu-only`                  |
 | `seed`            | 伪随机数生成器 PRNG 种子。               | INT    | 正整数                                                                                                                                     | `0`，表示使用当前时间戳。 |
 | `scale`           | 生成查询的设备数量。                     | INT    | 正整数                                                                                                                                     | `1`                       |
 | `query-type`      | 查询类型。                               | STRING | 有关 kwdb-tsbs 支持的查询类型，参见[测试场景](#测试场景)。 | N/A                       |
+| `prepare` | 设置是否使用查询模板。 | BOOL | `true` 或 `false` | `false` |
 | `queries`         | 产生的查询语句数量。                     | INT    | 正整数                                                                                                                                     | N/A                       |
 | `timestamp-start` | 查询生成的起始时间。遵循 RFC 3339 标准。 | STRING | N/A                                                                                                                                        | `2016-01-01T08:00:00Z`    |
 | `timestamp-end`   | 查询生成的结束时间。遵循 RFC 3339 标准。 | STRING | N/A                                                                                                                                        | `2016-01-05T00:00:01Z`    |
@@ -217,6 +240,8 @@ kwdb-tsbs 提供查询生成工具（`tsbs_generate_queries`），用以生成�
     --pass=1234 \
     --host=127.0.0.1 \
     --port=26257 \
+    --query-type=${QUERY_TYPE} \
+    --prepare=false \
     --workers=1 > query.log
 ```
 
@@ -229,6 +254,8 @@ kwdb-tsbs 提供查询生成工具（`tsbs_generate_queries`），用以生成�
 | `pass`    | 身份验证时使用的密码。     | STRING | N/A        | 默认为空。 |
 | `host`    | KWDB 数据库的 IP 地址。    | STRING | N/A        | N/A        |
 | `port`    | KWDB 数据库的连接端口。    | INT    | N/A        | `26257`    |
+| `query-type` | 查询类型。该参数取值必须与查询生成工具设置的参数取值保持一致。  | STRING | 有关 kwdb-tsbs 支持的查询类型，参见[测试场景](#测试场景)。 | N/A  |
+| `prepare` | 设置是否使用查询模板。该参数取值必须与查询生成工具设置的参数取值保持一致。 | BOOL | `true` 或 `false` | `false` |
 | `workers` | 并发查询线程数。           | INT    | 正整数     | N/A        |
 
 ### 自动化测试
