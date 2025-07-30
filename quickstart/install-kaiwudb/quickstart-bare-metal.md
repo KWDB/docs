@@ -44,7 +44,7 @@ KWDB 支持在以下服务器操作系统进行安装部署。
 | Ubuntu       | V18.04                       | x86_64   |
 |              | V20.04                       | ARM_64   |
 |              | V20.04                       | [x86_64](https://gitee.com/kwdb/kwdb/releases/)   |
-|              | V22.04                       | ARM_64   |
+|              | V22.04                       | [ARM_64]((https://gitee.com/kwdb/kwdb/releases/))   |
 |              | V22.04                       | [x86_64](https://gitee.com/kwdb/kwdb/releases/)   |
 |              | V24.04                       | ARM_64   |
 |              | V24.04                       | x86_64   |
