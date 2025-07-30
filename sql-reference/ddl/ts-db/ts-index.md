@@ -121,7 +121,7 @@ SHOW INDEXES FROM temperature;
 
 ```sql
 -- 1. 删除 temperature 表中的 sensor_index 索引。
-DROP INDEX temperature.sensor_index;
+DROP INDEX temperature@sensor_index;
 
 -- 2. 查看索引是否删除成功。
 SHOW INDEXES FROM temperature;
