@@ -9,7 +9,7 @@ KWDB takes a different approach from traditional databases by offering multi-mod
 
 The architecture of KWDB is illustrated below:
 
-![](../static/about-kaiwudb/kwdb-architecture.png)
+<img src="../static/about-kaiwudb/kwdb-architecture.png" alt="KWDB Architecture" style="max-width:80%; height:auto;" />
 
 - **Data Storage**: KWDB uses a hybrid storage system that combines the best of row and column storage, working with both SSDs and HDDs to give you flexibility in how your data is stored.
 
