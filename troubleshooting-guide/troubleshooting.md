@@ -10,7 +10,7 @@ id: troubleshooting
 KWDB 提供日志、监控方案、核心转储功能，用于收集问题诊断数据，定位和分析问题。
 
 - 日志：KWDB 支持通过日志记录各模块程序的运行状态，并将日志输出到日志文件。
-- 监控：KWDB 支持使用 Prometheus](https://prometheus.io/) 和 [Grafana](https://grafana.com/grafana) 查看集群节点状态、监控集群指标。更多详细信息，参见[使用 Grafana 查看指标数据](../db-monitor/view-metrics-grafana.md)。
+- 监控：KWDB 支持使用 [Prometheus](https://prometheus.io/) 和 [Grafana](https://grafana.com/grafana) 查看集群节点状态、监控集群指标。更多详细信息，参见[使用 Grafana 查看指标数据](../db-monitor/view-metrics-grafana.md)。
 - 核心转储功能：在某些情况下，KWDB 可能会因为严重的错误而崩溃或终止运行。如果开启核心转储功能，当进程发生严重错误时，系统生成 core 文件，用于诊断问题，找到解决方法。KWDB 支持在启动脚本、执行会话或者在系统层面配置 `ulimit`，开启核心转储功能。
 
     配置示例：
@@ -92,8 +92,8 @@ jdbc:kaiwudb://127.0.0.1:26257/defaultdb?loggerLevel=Trace&loggerFile=kaiwudb-jd
   | TRACE       | FINEST            | 非常详细的跟踪，包括调试问题所需的所有详细信息。 |
 
 - **loggerFile**：Logger 的输出文件名。
-  - 如果指定输出文件名，Logger 使用 `java.util.logging.Filehandler` 将日志写入指定的文件。
-  - 如未指定输出文件名，或者 `java.util.logging.Filehandler` 参数无法创建文件，则使用 `java.util.logging.Consolehandler` 输出日志。`java.util.logging.Consolehandler`参数需要与 `loggerLevel` 一起使用。
+  - 如果指定输出文件名，Logger 使用 `java.util.logging.FileHandler` 将日志写入指定的文件。
+  - 如未指定输出文件名，或者 `java.util.logging.FileHandler` 参数无法创建文件，则使用 `java.util.logging.Consolehandler` 输出日志。`java.util.logging.Consolehandler`参数需要与 `loggerLevel` 一起使用。
 
 #### 使用 logging.properties 文件开启日志
 
@@ -103,17 +103,17 @@ jdbc:kaiwudb://127.0.0.1:26257/defaultdb?loggerLevel=Trace&loggerFile=kaiwudb-jd
 
 ```java
 // 指定处理程序，处理程勋在 VM 启动时安装
-handlers= java.util.logging.Filehandler
+handlers= java.util.logging.FileHandler
 
 // 默认的全局日志级别
 .level = OFF
 
 // 默认文件输出在用户的主目录中
-java.util.logging.Filehandler.pattern = %h/kaiwudb-jdbc%u.log
-java.util.logging.Filehandler.limit = 5000000
-java.util.logging.Filehandler.count = 20
-java.util.logging.Filehandler.formatter = java.util.logging.SimpleFormatter
-java.util.logging.Filehandler.level =FINEST
+java.util.logging.FileHandler.pattern = %h/kaiwudb-jdbc%u.log
+java.util.logging.FileHandler.limit = 5000000
+java.util.logging.FileHandler.count = 20
+java.util.logging.FileHandler.formatter = java.util.logging.SimpleFormatter
+java.util.logging.FileHandler.level =FINEST
 java.util.logging.SimpleFormatter.format = %1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS %4$s %2$s %5$s%6$s%n
 
 // 特性属性
