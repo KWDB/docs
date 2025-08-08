@@ -126,7 +126,10 @@ kwdb-tsbs 提供数据生成工具（`tsbs_generate_data`），为 KWDB 数据�
   --timestamp-start="2016-01-01T00:00:00Z" \
   --timestamp-end="2016-01-02T00:00:00Z" \
   --log-interval="10s" \
-  --orderquantity=12 > data.dat
+  --orderquantity=12 \
+  --orderquantity=12 \
+  --outoforder="0.0" \
+  --outoforderwindow="0" > data.dat 
 ```
 
 参数说明：
@@ -141,6 +144,8 @@ kwdb-tsbs 提供数据生成工具（`tsbs_generate_data`），为 KWDB 数据�
 | `timestamp-end`   | 数据生成的结束时间。遵循 RFC 3339 标准。                                                                                               | STRING | N/A            | `2016-03-02T00:00:00Z`                               |
 | `log-interval`    | 数据生成的间隔时间。                                                                                                                   | STRING | 如 "10s"、"1m" | `10s`                                                |
 | `orderquantity`   | 初始生成设备数量。例如，对于 100 台 设备，首先生成从 `host_0` 到 `host_11` 的数据，然后生成从 `host_12` 到 `host_23` 的数据，依此类推。 | INT    | 正整数         | 建议与导入数据时使用的 `worker` 参数的取值保持一致。 |
+| `outoforder` | 设置乱序数据的比例，取值范围是 `0.0 - 1.0`。例如，`0.0` 表示完全按顺序生成数据。`0.1` 表示乱序生成 10% 的数据。`1.0` 表示完全随机乱序生成数据。<br > **说明** <br > 该参数只适用于 DevOps cpu-only 测试场景。 | FLOAT | N/A  | `0.0` |
+| `outoforderwindow` | 设置乱序数据的时间窗口范围，支持多种时间单位，例如，`0s`、`1m`、`1h`。其中，`0` 表示按时间顺序生成数据。`60s` 表示允许在 60s 时间范围内乱序生成数据。实际数据乱序程度还受 `outoforder` 参数的影响。<br > **说明** <br > 该参数只适用于 DevOps cpu-only 测试场景。 | DURATION | N/A  | `0` |
 
 ### 导入数据
 
