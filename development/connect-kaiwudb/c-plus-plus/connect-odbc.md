@@ -457,6 +457,7 @@ int main() {
     UserName = user1
     Password = 123456
     Port = pppp
+    SSLMode = require
     ```
 
     - `Description`：可选项，数据源描述信息。
@@ -468,6 +469,7 @@ int main() {
     - `UserName`：连接数据库的用户名。
     - `Password`：身份验证时使用的密码。
     - `Port`：KWDB 数据库的连接端口。
+    - `SSLMode`：指定客户端与数据库服务器通信时使用的 SSL/TLS 加密模式。
 
     有关 PostgreSQL ODBC 的更多配置信息，参见 [PostgreSQL ODBC 官方文档](https://odbc.postgresql.org/docs/config.html)。
 
