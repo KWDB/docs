@@ -323,7 +323,7 @@ tar -zxvf <package_name>
         ./kwbase node status --certs-dir=<certs_dir> --host=<address_of_any_alive_node>
         ```
 
-5. （可选）创建数据库用户并授予用户管理员权限。如果跳过该步骤，系统将默认使用 root 用户，且无需密码访问数据库。
+5. （可选）创建数据库用户并授予用户管理员权限。如果跳过该步骤，系统将默认使用源码编译安装时使用的用户，且无需密码访问数据库。
 
     - 非安全模式（不带密码）：
 
