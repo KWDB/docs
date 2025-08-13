@@ -5,11 +5,11 @@ id: kwbase-cli-deployment
 
 # kwbase CLI 部署
 
-本节介绍如何通过 kwbase CLI 命令在单台机器上部署 KWDB 集群。注意：在实际生产环境中，建议每台机器仅部署一个节点，以提升可用性并降低数据丢失风险。
+本节介绍如何通过 kwbase CLI 命令在单台机器上部署 KWDB 集群，包括启动多个节点并初始化集群的完整过程。注意：在实际生产环境中，建议每台机器仅部署一个节点，以提升可用性并降低数据丢失风险。
 
 **前提条件**
 
-- 待部署节点的硬件配置、操作系统、软件依赖和端口满足[安装部署要求](../prepare/before-deploy-bare-metal.md)
+- 节点的硬件配置、操作系统、软件依赖和端口满足[部署要求](../prepare/before-deploy-bare-metal.md#硬件)
 - 安装用户为 `root` 用户或拥有 `sudo` 权限的普通用户
 - 已完成[源码编译和安装](https://gitee.com/kwdb/kwdb#%E7%BC%96%E8%AF%91%E5%92%8C%E5%AE%89%E8%A3%85)
 
@@ -21,7 +21,7 @@ id: kwbase-cli-deployment
    cd /home/go/src/gitee.com/kwbasedb/install/bin
    ```
 
-2. (可选）如需采用安全部署模式，执行以下步骤创建证书：
+2. （可选）如需采用安全模式，执行以下步骤创建证书：
 
     1. 创建证书存放目录：
 
@@ -48,7 +48,7 @@ id: kwbase-cli-deployment
 
         :::
 
-3. 启动数据库。
+3. 启动集群节点。
 
     - 单副本集群：
 
@@ -186,7 +186,7 @@ id: kwbase-cli-deployment
         ./kwbase init --certs-dir=<certs_dir> --host=<address_of_any_node>
         ```
 
-5. 查看数据库状态。
+5. 查看集群状态。
 
     - 非安全模式：
 
