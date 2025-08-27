@@ -756,6 +756,93 @@ c1
 (3 rows)
 ```
 
+### BLOB
+
+#### 类型描述
+
+BLOB（Binary Large Object，二进制大型对象），用以存储非文本的字节流数据（如程序、图象、影音等）。KWDB 不限制 BLOB 数据类型的存储长度，但建议将存储对象的大小保持在 64M 以下以保证数据库性能。
+
+BLOB 值可以转换为以下任意一种数据类型。
+
+| BLOB | 字符类型 | UUID 类型 |
+| --- | --- | --- |
+| BLOB | - STRING <br >- NAME <br >- CHAR <br >- NCHAR <br >- VARCHAR <br >- NVARCHAR <br >- GEOMETRY <br >- BYTES <br > - VARBYTES | UUID |
+
+#### 示例
+
+以下示例创建具有 BLOB 列的表 `blobs` 并向表中写入数据。
+
+```sql
+-- 1. 创建表。
+CREATE TABLE blobs (e1 INT4, e2 BLOB);
+CREATE TABLE
+
+-- 2. 向表中写入数据。
+INSERT INTO blobs VALUES ('1','a')；
+INSERT 1
+
+-- 3. 查看表的内容。
+SELECT * FROM blobs;
+  e1 |  e2
+-----+-------
+  1  | \x61
+(1 row)
+
+-- 4. 查看建表语句。
+SHOW CREATE blobs;
+  table_name |           create_statement
+-------------+---------------------------------------
+  blobs      | CREATE TABLE blobs (
+             |     e1 INT4 NULL,
+             |     e2 BLOB NULL,
+             |     FAMILY "primary" (e1, e2, rowid)
+             | )
+(1 row)
+```
+
+### CLOB
+
+#### 类型描述
+
+CLOB（Character Large Object，字符型大型对象），与字符集相关，用以存储文本型的数据（如历史档案、大部头著作等）。KWDB 不限制 CLOB 的存储长度，但建议将存储对象的大小保持在 64M 以下以保证数据库性能。
+
+CLOB 值可以转换为以下任意一种数据类型。
+
+| CLOB | 数值类型 | 布尔类型 | 字符类型 | 日期和时间类型 | JSONB 类型 | INET 类型 | UUID 类型 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| CLOB | - INT2 <br >- INT4 <br >- INT8 <br >- FLOAT4 <br >- FLOAT8 <br >- DECIMAL | BOOL | - STRING <br >- NAME <br >- CHAR <br >- NCHAR <br >- VARCHAR <br >- NVARCHAR <br >- BIT <br >- VARBIT <br >- GEOMETRY <br >- BYTES <br > - VARBYTES | - TIME <br >- TIMEZ <br >- TIMESTAMP <br >- TIMESTAMPZ <br >- INTERVAL | JSONB | INET | UUID |
+
+#### 示例
+
+以下示例创建具有 CLOB 列的表 `clobs` 并向表中写入数据。
+
+```sql
+CREATE TABLE clobs (c1 INT, c2 CLOB);
+CREATE TABLE
+
+-- 2. 向表中写入数据。
+INSERT INTO clobs VALUES ('1','adh')；
+INSERT 1
+
+-- 3. 查看表的内容。
+SELECT * FROM clobs;
+  c1 |  c2
+-----+-------
+  1  | adh
+(1 row)
+
+-- 4. 查看建表语句。
+SHOW CREATE clobs;
+  table_name |           create_statement
+-------------+---------------------------------------
+  clobs      | CREATE TABLE clobs (
+             |     c1 INT  NULL,
+             |     c2 CLOB NULL,
+             |     FAMILY "primary" (c1, c2, rowid)
+             | )
+(1 row)
+```
+
 ## 日期和时间类型
 
 ### 时间戳
