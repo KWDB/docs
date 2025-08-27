@@ -64,6 +64,7 @@ id: overview
   - [审计策略管理](./db-mgmt/audit-mgmt-sql.md)
 - 其他语句
   - [自定义函数](./other-sql-statements/self-defined-functions-sql.md)
+  - [自定义变量](./other-sql-statements/user-defined-variables-sql.md)
   - [查询](./other-sql-statements/query-sql.md)
   - [事务](./other-sql-statements/transactions-sql.md)
   - [统计信息](./other-sql-statements/statistics-sql.md)
