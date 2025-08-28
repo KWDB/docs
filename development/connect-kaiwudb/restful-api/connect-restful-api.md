@@ -9,7 +9,7 @@ KWDB 支持用户通过发送 HTTP 请求与数据库进行交互。用户可以
 
 KWDB 支持同时使用多个 HTTP 请求连接数据库，最多支持 150 个 HTTP 连接。所有请求通过 HTTPS 发送，并在 HTTP 请求头部包含认证信息。HTTP 请求的 URL 格式为：
 
-```shell
+```HTTP
 https://<hostname>:<port>/<endpoint>?[tz=<timezone>][db=<db_name>]
 ```
 
@@ -17,7 +17,7 @@ https://<hostname>:<port>/<endpoint>?[tz=<timezone>][db=<db_name>]
 
 - `hostname`：KWDB 服务器的 IP 地址或者 FQDN（Fully Qualified Domain Name，完全限定域名）。
 - `port`：KWDB 服务器的 HTTP 访问端口，默认是 `8080`。
-- `tz`：可选参数，用于指定 RESTful API 请求的时区。如果 RESTful API 请求中存在时区设置，则使用该时区取值。否则使用 `server.restful_service.default_request_timezone` 集群参数的取值。如果写入的数据里带有时区信息，那么以写入数据的时区信息为准。
+- `timezone`：可选参数，用于指定 RESTful API 请求的时区。如果 RESTful API 请求中存在时区设置，则使用该时区取值。否则使用 `server.restful_service.default_request_timezone` 集群参数的取值。如果写入的数据里带有时区信息，那么以写入数据的时区信息为准。
 - `db_name`：可选参数, 用于指定目标数据库。解析时，KWDB 使用英文双引号（`""`）将数据库名包裹起来，从而解决大小写敏感或以特殊字符、数字开头的库名等问题。如未指定，则使用系统默认创建的 `defaultdb` 数据库。[Login 接口](#login-接口)不支持设置该参数。
 
 ## RESTful API 接口
@@ -370,7 +370,7 @@ Host: localhost:8080
 Authorization: Basic cm9vdDprd2RicGFzc3dvcmQ=
 Content-Type: plain/text
 
-insert into meters values("2023-07-30T06:44:40.32Z", "198352498", "beijing");insert into meters values("2023-07-30T06:45:40.32Z", "198352495", "beijing");
+insert into meters values("2023-07-30T06:44:40.32Z", 198352498, "beijing");insert into meters values("2023-07-30T06:45:40.32Z", 198352495, "beijing");
 ```
 
 如果请求成功，返回以下信息：
