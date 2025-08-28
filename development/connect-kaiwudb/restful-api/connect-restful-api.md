@@ -370,7 +370,7 @@ Host: localhost:8080
 Authorization: Basic cm9vdDprd2RicGFzc3dvcmQ=
 Content-Type: plain/text
 
-insert into meters values("2023-07-30T06:44:40.32Z", "198352498", "beijing");insert into meters values("2023-07-30T06:45:40.32Z", "198352495", "beijing");
+insert into meters values("2023-07-30T06:44:40.32Z", 198352498, "beijing");insert into meters values("2023-07-30T06:45:40.32Z", 198352495, "beijing");
 ```
 
 如果请求成功，返回以下信息：
