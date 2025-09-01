@@ -10,7 +10,10 @@ id: column-mgmt-ts
 KWDB 支持使用 `ALTER TABLE ... ADD COLUMN` 语句添加列。`ADD COLUMN` 为在线操作，不会阻塞表中的数据读写。每张表最多支持 4096 列。
 
 ::: warning 说明
-目前，KWDB 不支持一次添加多列。
+
+- 目前，KWDB 不支持一次添加多列。
+- 添加列时，系统检查当前时序表是否被流计算引用。如果是，则输出错误消息并列出所有引用此时序表的流计算名称。用户需要首先删除相关的流计算，然后再添加列。有关删除流计算的详细信息，参见[删除流计算](../../../sql-reference/other-sql-statements/stream-sql.md#删除流计算)。
+
 :::
 
 ### 前提条件
@@ -127,6 +130,10 @@ SHOW COLUMNS FROM <table_name> [WITH COMMENT];
 
 KWDB 支持使用 `ALTER TABLE ... ALTER COLUMN` 语句修改列的数据类型、宽度、设置或者删除列的默认值。`ALTER COLUMN` 为在线操作，不会阻塞表中的数据读写。修改数据类型时，如果已有数值与新数据类型不匹配，修改操作仍然可以执行成功，不符合新数据类型的数值在查询时将显示为 `NULL`。
 
+::: warning 说明
+修改列时，系统检查当前时序表是否被流计算引用。如果是，则输出错误消息并列出所有引用此时序表的流计算名称。用户需要首先删除相关的流计算，然后再修改列。有关删除流计算的详细信息，参见[删除流计算](../../../sql-reference/other-sql-statements/stream-sql.md#删除流计算)。
+:::
+
 ### 前提条件
 
 用户拥有目标表的 CREATE 权限。
@@ -173,6 +180,10 @@ ALTER TABLE <table_name> ALTER [COLUMN] <colunm_name> [SET DATA] TYPE <new_type>
 
 KWDB 支持使用 `ALTER TABLE ... RENAME COLUMN` 语句修改列名。
 
+::: warning 说明
+重命名列时，系统检查当前时序表是否被流计算引用。如果是，则输出错误消息并列出所有引用此时序表的流计算名称。用户需要首先删除相关的流计算，然后再重命名列。有关删除流计算的详细信息，参见[删除流计算](../../../sql-reference/other-sql-statements/stream-sql.md#删除流计算)。
+:::
+
 ### 前提条件
 
 用户拥有目标表的 CREATE 权限。
@@ -207,6 +218,7 @@ KWDB 支持使用 `ALTER TABLE ... DROP COLUMN` 语句删除列。`DROP COLUMN` 
 
 - 删除列时，原表至少保留两列数据列，且不支持删除第一列（时间戳列）。
 - 目前，KWDB 不支持一次删除多个列。
+- 删除列时，系统检查当前时序表是否被流计算引用。如果是，则输出错误消息并列出所有引用此时序表的流计算名称。用户需要首先删除相关的流计算，然后再删除列。有关删除流计算的详细信息，参见[删除流计算](../../../sql-reference/other-sql-statements/stream-sql.md#删除流计算)。
 
 :::
 
