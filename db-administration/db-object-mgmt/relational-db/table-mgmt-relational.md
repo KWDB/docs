@@ -805,6 +805,8 @@ ALTER TABLE [IF EXISTS] <table_name>
 
 ## 删除表
 
+`DROP TABLE` 语句用于从数据库中删除表及其所有索引和关联的触发器。
+
 ### 前提条件
 
 - 用户拥有目标表的 DROP 权限。
