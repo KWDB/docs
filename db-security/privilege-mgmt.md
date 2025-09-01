@@ -9,10 +9,10 @@ KWDB 支持对数据库和表在内的数据库对象的访问和操作权限进
 
 | 权限   | 说明                          | 操作对象                                                            |
 |--------|-----------------------------|---------------------------------------------------------------------|
-| ALL    | 对指定数据库对象执行所有操作。 | - DATABASE <br >- TABLE <br >- SCHEMA（只适用于关系数据的自定义模式） |
-| CREATE | 创建新对象。                   | - DATABASE <br >- TABLE <br >- SCHEMA（只适用于关系数据的自定义模式） |
-| DROP   | 删除指定对象。                 | - DATABASE <br >- TABLE <br >- SCHEMA（只适用于关系数据的自定义模式） |
-| GRANT  | 授予指定用户特定权限。         | - DATABASE <br >- TABLE <br >- SCHEMA（只适用于关系数据的自定义模式） |
+| ALL    | 对指定数据库对象执行所有操作。 | - DATABASE <br >- TABLE <br >- SCHEMA（只适用于关系数据的自定义模式） <br>- PROCEDURE|
+| CREATE | 创建新对象。                   | - DATABASE <br >- TABLE <br >- SCHEMA（只适用于关系数据的自定义模式）<br>- PROCEDURE |
+| DROP   | 删除指定对象。                 | - DATABASE <br >- TABLE <br >- SCHEMA（只适用于关系数据的自定义模式）<br>- PROCEDURE |
+| GRANT  | 授予指定用户特定权限。         | - DATABASE <br >- TABLE <br >- SCHEMA（只适用于关系数据的自定义模式）<br>- PROCEDURE |
 | SELECT | 对指定数据表执行查询操作。     | TABLE                                                               |
 | INSERT | 对指定数据表执行数据插入操作。 | TABLE                                                               |
 | DELETE | 删除指定数据表。               | TABLE                                                               |

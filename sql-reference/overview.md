@@ -40,6 +40,7 @@ id: overview
     - [数据分片](./ddl/relational-db/relational-range.md)
     - [区域配置](./ddl/relational-db/relational-zone.md)
     - [注释](./ddl/relational-db/relational-comment.md)
+    - [存储过程](./ddl/relational-db/relational-procedure.md)
 - DML 语句
   - 时序数据
     - [SELECT](./dml/ts-db/ts-select.md)
@@ -71,6 +72,9 @@ id: overview
   - [定时任务](./other-sql-statements/schedules-sql.md)
   - [会话](./other-sql-statements/sessions-sql.md)
   - [集群设置](./other-sql-statements/cluster-settings-sql.md)
+  - [声明](./other-sql-statements/declare-sql.md)
+  - [游标](./other-sql-statements/cursor-sql.md)
+  - [分隔符](./other-sql-statements/delimiter-sql.md)
 - [系统视图](./system-view-sql.md)
 - [NULL 值管理](./null-value-mgmt.md)
 - [查看 SQL 语句](./sql-help.md)
