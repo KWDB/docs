@@ -69,4 +69,4 @@ KWDB 兼容多种主流操作系统，包括 Ubuntu、CentOS、麒麟、统信�
 
 #### 第三方生态工具兼容
 
-KWDB 无缝集成 [EMQX](https://www.emqx.io/)、[Kafka](https://kafka.apache.org/)、[Telegraf](https://github.com/influxdata/telegraf) 等第三方工具。用户无需额外编写代码，只需要通过简单的配置即可高效地写入和读取数据。这不仅极大地简化系统的搭建和维护工作，还能有效地提高数据处理的灵活性和扩展性。
+KWDB 无缝集成 [EMQX](https://www.emqx.io/)、[Kafka](https://kafka.apache.org/)、[Flink](https://flink.apache.org/)、[Telegraf](https://github.com/influxdata/telegraf) 等第三方工具。用户无需额外编写代码，只需要通过简单的配置即可高效地写入和读取数据。这不仅极大地简化系统的搭建和维护工作，还能有效地提高数据处理的灵活性和扩展性。
