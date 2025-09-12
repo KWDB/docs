@@ -27,7 +27,6 @@ CREATE TS DATABASE <db_name> [RETENTIONS <keep_duration>] [COMMENT [=] <'comment
 | --- | --- |
 | `db_name` | 待创建的数据库的名称。该名称必须唯一，且遵循[数据库标识符规则](../../sql-reference/sql-identifiers.md)。目前，数据库名称不支持中文字符，最大长度不能超过 63 个字节。|
 | `keep_duration` | 可选参数。指定数据库的生命周期，默认值为 `0d`，即不会过期删除。支持配置的时间单位包括：秒（S 或 SECOND）、分钟（M 或 MINUTE）、小时（H 或 HOUR）、天（D 或 DAY）、周（W 或 WEEK）、月（MON 或 MONTH）、年（Y 或 YEAR），例如 `RETENTIONS 10 DAY`。取值必须是整数值，最大值不得超过 `1000` 年。|
-| `interval` | 可选参数，指定数据库数据目录分区的时间范围。默认值为 `10d`，即每 10 天进行一次分区。支持配置的时间单位包括：天（D 或 DAY）、周（W 或 WEEK）、月（MON 或 MONTH）、年（Y 或 YEAR）。取值必须是整数值，最大值不得超过 `1000` 年。|
 
 ### 语法示例
 
@@ -51,20 +50,6 @@ CREATE TS DATABASE <db_name> [RETENTIONS <keep_duration>] [COMMENT [=] <'comment
 
     ```sql
     CREATE TS DATABASE ts_db_temp RETENTIONS 50d;
-    ```
-
-    执行成功后，控制台输出以下信息：
-
-    ```sql
-    CREATE TS DATABASE
-    ```
-
-- 创建数据库时，指定数据库的生命周期和分区时间范围。
-
-    以下示例创建一个名为 `iot` 的数据库，并将数据库的生命周期和分区时间范围分别设置为 `50d` 和 `2d`。
-
-    ```sql
-    CREATE TS DATABASE iot RETENTIONS 50d PARTITION INTERVAL 2d;
     ```
 
     执行成功后，控制台输出以下信息：
@@ -139,7 +124,9 @@ SHOW DATABASES [WITH COMMENT];
 
 ## 查看数据库的建库语句
 
-`SHOW CREATE DATABASE` 语句用于查看创建数据库的 SQL 语句以及创建数据库时指定的相关参数。时序数据库支持查看创建数据库时使用的数据库名称、以及 `retentions` 和 `partition interval` 参数的取值。创建数据库时，如果指定 `retentions` 和 `partition interval` 参数的取值，则显示指定的取值。如未指定，则显示该参数的默认值。默认情况下，`retentions` 参数的取值为 `0s`，`partition interval` 参数的取值为 `10d`。
+`SHOW CREATE DATABASE` 语句用于查看创建数据库的 SQL 语句以及创建数据库时指定的相关参数。
+
+时序数据库支持查看创建数据库时使用的数据库名称、以及生命周期 `retentions` 参数的取值。创建数据库时，如果指定 `retentions` 的取值，则显示指定的取值。如未指定，则显示该参数的默认值 `0s`。
 
 ### 前提条件
 
@@ -162,9 +149,9 @@ SHOW CREATE DATABASE <database_name>;
 以下示例查看 `tsdb1` 数据库的建库语句和相关参数取值。
 
 ```sql
--- 1. 创建数据库 tsdb1，并将 `retentions` 和 `partition interval` 参数的取值均设置为 `10d`。
+-- 1. 创建数据库 tsdb1，并将 `retentions` 参数的取值设置为 `10d`。
 
-CREATE TS DATABASE tsdb1 RETENTIONS 10d PARTITION INTERVAL 10d;
+CREATE TS DATABASE tsdb1 RETENTIONS 10d;
 
 --2. 查看已创建的 tsdb1 数据库。
 
@@ -173,7 +160,6 @@ SHOW CREATE DATABASE tsdb1;
 ----------------+-------------------------------------
   tsdb1         | CREATE TS DATABASE tsdb1
                 |      retentions 864000s
-                |      partition interval 10d
 (1 row)
 ```
 
@@ -205,14 +191,14 @@ USE ts_db;
 
 ## 修改数据库
 
-KWDB 支持修改数据库的名称、生命周期、分区时间范围。
+KaiwuDB 支持修改数据库的名称和生命周期。
 
 ### 前提条件
 
 - 修改数据库的名称
   - 用户为 Admin 用户或者 Admin 角色成员。
   - 目标数据库不是当前数据库。
-- 修改数据库生命周期或分区时间范围
+- 修改数据库生命周期
   - 用户为 Admin 用户或者 Admin 角色成员。
 
 ### 语法格式
@@ -223,10 +209,10 @@ KWDB 支持修改数据库的名称、生命周期、分区时间范围。
     ALTER DATABASE <old_name> RENAME TO <new_name>;
     ```
 
-- 修改数据生命周期或分区时间范围
+- 修改数据生命周期
 
     ```sql
-    ALTER TS DATABASE <db_name> SET [RETENTIONS = <keep_duration> | PARTITION INTERVAL = <interval> ];
+    ALTER TS DATABASE <db_name> SET RETENTIONS = <keep_duration>;
     ```
 
 ### 参数说明
@@ -237,7 +223,6 @@ KWDB 支持修改数据库的名称、生命周期、分区时间范围。
 | `new_name` | 拟修改的数据库名称，新数据库名称必须唯一，并且[遵循数据库标识符规则](../../sql-reference/sql-identifiers.md)。目前，数据库名称不支持中文字符，最大长度不能超过 63 个字节。|
 | `db_name` | 待修改的数据库名称。|
 | `keep_duration` | 数据库的生命周期，默认值为 `0d`，即不会过期删除。支持配置的时间单位包括：秒（S 或 SECOND）、分钟（M 或 MINUTE）、小时（H 或 HOUR）、天（D 或 DAY）、周（W 或 WEEK）、月（MON 或 MONTH）、年（Y 或 YEAR），例如 `RETENTIONS 10 DAY`。取值必须是整数值，最大值不得超过 `1000` 年。|
-| `interval` |可选参数，指定数据库数据目录分区的时间范围。默认值为 `10d`，即每 10 天进行一次分区。支持配置的时间单位包括：天（D 或 DAY）、周（W 或 WEEK）、月（MON 或 MONTH）、年（Y 或 YEAR）。取值必须是整数值，最大值不得超过 `1000` 年。|
 
 ### 语法示例
 
@@ -255,14 +240,6 @@ KWDB 支持修改数据库的名称、生命周期、分区时间范围。
 
     ```sql
     ALTER TS DATABASE tsdb SET RETENTIONS = 10 day;
-    ```
-
-- 修改数据库的分区时间范围。
-
-    以下示例将 `tsdb` 数据库的分区时间范围设置为 `2 day`。
-
-    ```sql
-    ALTER TS DATABASE tsdb SET PARTITION INTERVAL = 2 day;
     ```
 
 ## 删除数据库
