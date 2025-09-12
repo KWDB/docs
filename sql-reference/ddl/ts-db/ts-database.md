@@ -18,7 +18,7 @@ id: ts-database
 
 ### 语法格式
 
-![](../../../static/sql-reference/PZsmbxjlxoqNSAxnrAAc2IYanmf.png)
+![](../../../static/sql-reference/createdb_ts.png)
 
 ### 参数说明
 
@@ -30,6 +30,7 @@ id: ts-database
 | --- | --- |
 | `database_name` | 待创建的数据库的名称。该名称必须唯一，且遵循[数据库标识符规则](../../sql-identifiers.md)。目前，数据库名称不支持中文字符，最大长度不能超过 63 个字节。|
 | `keep_duration` | 可选参数，指定数据库的数据生命周期。超过设置时间后，系统自动清除数据库中的过期数据。<br><br>**默认值：** `0s`（永不过期）<br><br>**支持的时间单位：**<br>- 秒：`s` 或 `second`<br>- 分钟：`m` 或 `minute`<br>- 小时：`h` 或 `hour`<br>- 天：`d` 或 `day`<br>- 周：`w` 或 `week`<br>- 月：`mon` 或 `month`<br>- 年：`y` 或 `year`<br><br>**取值范围：** 正整数，最大不超过 1000 年<br><br>**说明：**<br>-当用户单独指定或者修改数据库内某一时序表的生命周期时，表设置优先于库设置 <br>- 系统按时间分区删除数据，而非逐条删除。当整个分区的所有数据都超过生命周期时间点（`now() - keep_duration`）时，系统才会删除该分区<br>- 正在使用的当前分区数据不会被删除，即使已超过生命周期。当生命周期短于分区时间范围（10天）时，用户仍可查询到当前分区中的过期数据<br>- 如果分区正在被读写或处理中，系统将在下次调度时重试删除（默认每小时一次）<br>- 生命周期与存储空间需求成正比，建议根据业务需要和存储容量合理设置 |
+| `comment_text` | 可选参数。指定数据库的注释信息。 |
 
 ### 语法示例
 
@@ -53,6 +54,20 @@ id: ts-database
 
     ```sql
     CREATE TS DATABASE ts_db_temp RETENTIONS 50d;
+    ```
+
+    执行成功后，控制台输出以下信息：
+
+    ```sql
+    CREATE TS DATABASE
+    ```
+
+- 创建数据库时，指定数据库的注释信息。
+
+    以下示例创建一个名为 `ts_db_power` 的数据库，并将数据库的注释信息设置为 `database for power statistics`。
+
+    ```sql
+    CREATE TS DATABASE ts_db_power COMMENT = 'database for power statistics';
     ```
 
     执行成功后，控制台输出以下信息：
