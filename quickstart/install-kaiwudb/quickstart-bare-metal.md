@@ -32,28 +32,21 @@ KWDB 支持基于 DRBD 块设备复制的开源软件方案，实现主备节点
 
 KWDB 支持在以下服务器操作系统进行安装部署。
 
-| **操作系统** | **版本**                     | **架构** |
-| :----------- | :--------------------------- | :------- |
-| Anolis       | 8.6                          | ARM_64   |
-|              | 8.6                          | x86_64   |
-| KylinOS      | V10 SP3 2403                 | [ARM_64](https://gitee.com/kwdb/kwdb/releases/)   |
-|              | V10 SP3 2303                 | ARM_64   |
-|              | V10 SP3 2403                 | [x86_64](https://gitee.com/kwdb/kwdb/releases/)   |
-|              | V10 SP3 2303                 | x86_64   |
-| Ubuntu       | V18.04                       | x86_64   |
-|              | V20.04                       | ARM_64   |
-|              | V20.04                       | [x86_64](https://gitee.com/kwdb/kwdb/releases/)   |
-|              | V22.04                       | [ARM_64]((https://gitee.com/kwdb/kwdb/releases/))   |
-|              | V22.04                       | [x86_64](https://gitee.com/kwdb/kwdb/releases/)   |
-|              | V24.04                       | ARM_64   |
-|              | V24.04                       | x86_64   |
-| UOS          | 1060e                        | x86_64   |
-|              | 1060e                        | ARM_64   |
+| **操作系统** | **版本**                     | **ARM_64** | **x86_64** |
+| :----------- | :--------------------------- | :--------- | :--------- |
+| Anolis       | 8                          | ✓          | ✓          |
+| KylinOS      | V10 SP2                      | ✓          | ✓          |
+|              | V10 SP3 2403                 | ✓          | ✓          |
+| Ubuntu       | V20.04                       | ✓          | ✓          |
+|              | V22.04                       | ✓          | ✓          |
+|              | V24.04                       | ✓          | ✓          |
+| UOS          | 1070e                        | ✓          | ✓          |
+| Windows Server  | WSL2                      |           | ✓          |
 
 ::: warning 说明
 
 - 未提及的操作系统版本**也许可以**运行 KWDB，但尚未得到 KWDB 官方支持。
-- 如需获取下载页面未提供的对应版本安装包，请联系 [KWDB 技术支持](https://www.kaiwudb.com/support/)。
+- 如需获取[下载页面](https://gitee.com/kwdb/kwdb/releases/)未提供的对应版本安装包，请联系 [KWDB 技术支持](https://www.kaiwudb.com/support/)。
 
 :::
 
