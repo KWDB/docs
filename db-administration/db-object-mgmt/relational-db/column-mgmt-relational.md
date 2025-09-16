@@ -215,6 +215,13 @@ ALTER TABLE [IF EXISTS] <table_name> ALTER [COLUMN] <column_name>
   - `DROP STORED`：将计算出的列转换为常规列。
 - `SET DATA TYPE`：修改列的数据类型，`SET DATA` 是可选关键字，是否使用不影响修列的数据类型。
 
+    ::: warning 说明
+
+    - 对于字符类型和字节类型的数据，如果原数据类型未限制宽度，转换后的数据类型只能修改为无限长（即不指定数据类型长度）。
+    - 修改列的数据类型时，字符类型的数据可以转换为字节类型。但是，字节类型的数据无法转换为字符类型。有关 KWDB 支持修改的数据类型、默认宽度、最大宽度、可转换的数据类型等详细信息，参见[关系数据类型](../../../sql-reference/data-type/data-type-relational-db.md)。
+
+    :::
+
 ### 参数说明
 
 | 参数 | 说明 |
