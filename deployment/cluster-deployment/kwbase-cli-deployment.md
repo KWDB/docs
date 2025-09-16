@@ -59,6 +59,7 @@ id: kwbase-cli-deployment
             ./kwbase start-single-replica --insecure \
             --listen-addr=0.0.0.0:26257 \
             --advertise-addr=<host1>:26257 \
+            --brpc-addr=:27257 \
             --http-addr=0.0.0.0:8080 \
             --store=/var/lib/kaiwudb \
             --join=<host1>:26257
@@ -67,6 +68,7 @@ id: kwbase-cli-deployment
             ./kwbase start-single-replica --insecure \
             --listen-addr=0.0.0.0:26257 \
             --advertise-addr=<host2>:26258 \
+            --brpc-addr=:27258 \
             --http-addr=0.0.0.0:8080 \
             --store=/var/lib/kaiwudb \
             --join=<host1>:26257
@@ -75,6 +77,7 @@ id: kwbase-cli-deployment
             ./kwbase start-single-replica --insecure \
             --listen-addr=0.0.0.0:26257 \
             --advertise-addr=<host3>:26259 \
+            --brpc-addr=:27259 \
             --http-addr=0.0.0.0:8080 \
             --store=/var/lib/kaiwudb \
             --join=<host1>:26257
@@ -88,6 +91,7 @@ id: kwbase-cli-deployment
             --certs-dir=<certs_dir> \
             --listen-addr=0.0.0.0:26257 \
             --advertise-addr=<host1>:26257 \
+            --brpc-addr=:27257 \
             --http-addr=0.0.0.0:8080 \
             --store=/var/lib/kaiwudb \
             --join=<host1>:26257
@@ -97,6 +101,7 @@ id: kwbase-cli-deployment
             --certs-dir=<certs_dir> \
             --listen-addr=0.0.0.0:26257 \
             --advertise-addr=<host2>:26258 \
+            --brpc-addr=:27258 \
             --http-addr=0.0.0.0:8080 \
             --store=/var/lib/kaiwudb \
             --join=<host1>:26257
@@ -106,6 +111,7 @@ id: kwbase-cli-deployment
             --certs-dir=<certs_dir> \
             --listen-addr=0.0.0.0:26257 \
             --advertise-addr=<host3>:26259 \
+            --brpc-addr=:27259 \
             --http-addr=0.0.0.0:8080 \
             --store=/var/lib/kaiwudb \
             --join=<host1>:26257
@@ -120,6 +126,7 @@ id: kwbase-cli-deployment
             ./kwbase start --insecure \
             --listen-addr=0.0.0.0:26257 \
             --advertise-addr=<host1>:26257 \
+            --brpc-addr=:27257 \
             --http-addr=0.0.0.0:8080 \
             --store=/var/lib/kaiwudb \
             --join=<host1>:26257
@@ -128,6 +135,7 @@ id: kwbase-cli-deployment
             ./kwbase start --insecure \
             --listen-addr=0.0.0.0:26257 \
             --advertise-addr=<host2>:26258 \
+            --brpc-addr=:27258 \
             --http-addr=0.0.0.0:8080 \
             --store=/var/lib/kaiwudb \
             --join=<host1>:26257
@@ -136,6 +144,7 @@ id: kwbase-cli-deployment
             ./kwbase start --insecure \
             --listen-addr=0.0.0.0:26257 \
             --advertise-addr=<host3>:26259 \
+            --brpc-addr=:27259 \
             --http-addr=0.0.0.0:8080 \
             --store=/var/lib/kaiwudb \
             --join=<host1>:26257
@@ -149,6 +158,7 @@ id: kwbase-cli-deployment
             --certs-dir=<certs_dir> \
             --listen-addr=0.0.0.0:26257 \
             --advertise-addr=<host1>:26257 \
+            --brpc-addr=:27257 \
             --http-addr=0.0.0.0:8080 \
             --store=/var/lib/kaiwudb \
             --join=<host1>:26257
@@ -158,6 +168,7 @@ id: kwbase-cli-deployment
             --certs-dir=<certs_dir> \
             --listen-addr=0.0.0.0:26257 \
             --advertise-addr=<host2>:26258 \
+            --brpc-addr=:27258 \
             --http-addr=0.0.0.0:8080 \
             --store=/var/lib/kaiwudb \
             --join=<host1>:26257
@@ -167,6 +178,7 @@ id: kwbase-cli-deployment
             --certs-dir=<certs_dir> \
             --listen-addr=0.0.0.0:26257 \
             --advertise-addr=<host3>:26259 \
+            --brpc-addr=:27259 \
             --http-addr=0.0.0.0:8080 \
             --store=/var/lib/kaiwudb \
             --join=<host1>:26257

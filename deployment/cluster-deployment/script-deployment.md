@@ -34,6 +34,7 @@ id: script-deployment
     secure_mode=tls
     management_user=kaiwudb
     rest_port=8080
+    brpc_port=27257
     kaiwudb_port=26257
     data_root=/var/lib/kaiwudb
 
@@ -55,6 +56,7 @@ id: script-deployment
         - `management_user`：KWDB 的管理用户，默认为 `kaiwudb`。安装部署后，KWDB 创建相应的管理用户以及和管理用户同名的用户组。
         - `rest_port`：KWDB Web 服务端口，默认为 `8080`。
         - `kaiwudb_port`：KWDB 服务端口，默认为 `26257`。
+        - `brpc_port`：KWDB 时序引擎间的 brpc 通信端口，用于节点间通信，默认为 `27257`。
         - `data_root`：数据目录，默认为 `/var/lib/kaiwudb`。
         - `cpu`: 可选参数，用于指定 KWDB 服务占用当前节点服务器 CPU 资源的比例，默认无限制。取值范围为 `[0,1]`，最大精度为小数点后两位。KWDB 支持调整 CPU 资源占用率。更多信息，参见[配置裸机部署集群](../cluster-config/cluster-config-bare-metal.md)或[配置容器部署集群](../cluster-config/cluster-config-docker.md) 。**注意**：如果部署环境为 Ubuntu 18.04 版本，在裸机部署集群完成后，需要将 `kaiwudb.service` 文件中的 `CPUQuota` 修改为整型值，例如，将 `180.0%` 修改为 `180%`，以确保设置生效。具体操作步骤，参见[配置 CPU 资源占用率](../cluster-config/cluster-config-bare-metal.md#配置-cpu-资源占用率)。
     - `local`：本地节点配置

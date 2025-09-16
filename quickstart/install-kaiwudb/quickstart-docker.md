@@ -158,6 +158,7 @@ KWDB 支持通过以下方式获取容器镜像：
     management_user=kaiwudb
     rest_port=8080
     kaiwudb_port=26257
+    # brpc_port=27257
     data_root=/var/lib/kaiwudb
     cpu=1
     [local]
@@ -178,6 +179,7 @@ KWDB 支持通过以下方式获取容器镜像：
       - `management_user`：KWDB 的管理用户，默认为 `kaiwudb`。安装部署后，KWDB 创建相应的管理用户以及和管理用户同名的用户组。
       - `rest_port`：KWDB Web 服务端口，默认为 `8080`。
       - `kaiwudb_port`：KWDB 服务端口，默认为 `26257`。
+      - `brpc_port`：KWDB 时序引擎间的 brpc 通信端口，用于节点间通信。单节点部署时可不指定，指定后系统会自动忽略该设置。
       - `data_root`：数据目录，默认为 `/var/lib/kaiwudb`。
       - `cpu`: 可选参数，用于指定 KWDB 服务占用当前节点服务器 CPU 资源的比例，默认无限制。取值范围为 `[0,1]`，最大精度为小数点后两位。
     - `local`：本地节点配置
