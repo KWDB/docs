@@ -7,18 +7,20 @@ id: export-data
 
 KWDB 支持导出以下数据：
 
-- **表数据**：包括时序表和关系表的元数据、权限信息、用户数据、以及用户表、权限信息表和系统配置表的数据。
-- **库数据**：导出指定时序库或关系库的元数据、权限信息和用户数据。
-- **用户设置信息**：导出创建非系统用户的 SQL 语句。
-- **集群参数信息**：导出集群参数配置的 SQL 语句。
+- **表数据**：包括指定时序表和关系表的元数据、用户数据及权限信息。
+- **库数据**：导出指定时序库或关系库的元数据、用户数据及权限信息。
+- **用户设置信息**：导出非系统用户的 SQL 语句或 CSV 文件。
+- **集群参数信息**：导出集群参数配置的 SQL 语句或 CSV 文件。
 
 ## 表级别数据导出
 
-KWDB 支持使用 SQL 语句导出以下信息：
+KWDB 支持使用 SQL 语句导出以下表数据：
 
-- 时序表或关系表的元数据、权限信息和用户数据。元数据和权限信息保存为 `meta.sql` 文件。用户数据保存为 `.csv` 文件。
-- 时序表或关系表指定范围的用户数据。
-- 系统表数据：包括用户信息表、权限信息表和集群配置表的数据。
+- 时序表或关系表的元数据、权限信息和用户数据。
+  - 元数据和权限信息保存为 `meta.sql` 文件。
+  - 用户数据可根据需要保存为 `.csv` 或 `.sql` 格式文件。
+- 时序表或关系表指定范围的用户数据，保存为 `.csv` 格式。
+- 权限信息表：保存为 `.csv` 格式。
 
 导出数据的过程中，如果目标位置不可达，系统报错。如果由于其他原因导致数据导出中断，系统保留已成功导出的文件。
 
@@ -37,13 +39,22 @@ KWDB 支持使用 SQL 语句导出以下信息：
 - 筛选范围导出数据时，系统不会导出元数据。
 - 如果符合筛选范围的数据行不存在，系统不会导出任何数据，系统将返回 `succeed`。
 - 导出带有普通标签索引的时序表时，系统会默认同时导出索引创建语句。
+- 以 SQL 格式导出表的元数据、用户数据和权限信息时，暂不支持表内包含 `BYTES` 和 `VARBYTES` 类型的数据。
 
 :::
 
 - 导出时序表或关系表的元数据、用户数据和权限信息
 
+  - 以 CSV 格式导出用户数据
+
     ```sql
     EXPORT INTO CSV "<expt_path>" FROM TABLE <table_name> WITH [ column_name | meta_only | data_only | delimiter = '<char>' | chunk_rows = '<number>' | enclosed = '<char>' | escaped = '<char>' | nullas = '<char>' | comment | charset = '<coding>' | privileges ];
+    ```
+
+  - 以 SQL 格式导出用户数据
+
+    ```sql
+    EXPORT INTO SQL "<expt_path>" FROM TABLE <table_name> WITH [ meta_only | data_only | delimiter = '<char>' | comment | charset = '<coding>' | privileges ];
     ```
 
 - 导出指定范围的用户数据
@@ -52,22 +63,10 @@ KWDB 支持使用 SQL 语句导出以下信息：
     EXPORT INTO CSV "<expt_path>" FROM <select_clause>;
     ```
 
-- 导出用户信息表
+- 导出用户权限信息表
 
     ```sql
-    EXPORT INTO CSV "<expt_path>" FROM TABLE system.users;
-    ```
-
-- 导出用户权限信息
-
-    ```sql
-    EXPORT INTO CSV "<expt_path>" FROM SELELCT * FROM system.information_schema.table_privileges;
-    ```
-
-- 导出集群配置表
-
-    ```sql
-    EXPORT INTO CSV "<expt_path>" FROM TABLE system.settings;
+    EXPORT INTO CSV "<expt_path>" FROM SELECT * FROM system.information_schema.table_privileges;
     ```
 
 ### 参数说明
@@ -93,200 +92,109 @@ KWDB 支持使用 SQL 语句导出以下信息：
 
 以下示例假设已经创建时序表 `ts_table` 并写入相关数据。
 
-- 将时序表的用户数据和元数据导出到本地节点。
+- 基本导出
 
-    ```sql
-    EXPORT INTO CSV "nodelocal://1/a" FROM TABLE ts_table;
-    ```
+  - 导出到本地节点。
 
-    执行成功后，控制台输出以下信息：
+      ```sql
+      -- 以 CSV 格式导出
+      EXPORT INTO CSV "nodelocal://1/a" FROM TABLE ts_table;
 
-    ```sql
-      result
-    -----------
-      succeed
-    (1 row)
-    ```
+      -- 以 SQL 格式导出
+      EXPORT INTO SQL "nodelocal://1/a" FROM TABLE ts_table;
+      ```
 
-- 将时序表的用户数据和元数据导出到指定服务器。
+  - 导出到指定服务器。
 
-    ```sql
-    EXPORT INTO CSV "http://172.18.10.1:8090/ts_table" FROM TABLE ts_table;
-    ```
+      ```sql
+      -- 以 CSV 格式导出
+      EXPORT INTO CSV "http://172.18.10.1:8090/ts_table" FROM TABLE ts_table;
 
-    执行成功后，控制台输出以下信息：
+      -- 以 SQL 格式导出
+      EXPORT INTO SQL "http://172.18.10.1:8090/ts_table" FROM TABLE ts_table;
+      ```
 
-    ```sql
-      result
-    -----------
-      succeed
-    (1 row)
-    ```
+- 条件筛选导出
 
-- 根据时间戳、列名筛选时序表数据，并将筛选后的数据导出到本地节点。
+  - 按时间戳和列名筛选。
 
-    ```sql
-    EXPORT INTO CSV "nodelocal://1/a" FROM SELECT ts, value, site_id FROM ts_table WHERE ts > '2024-02-01 09:00:00';
-    ```
+      ```sql
+      EXPORT INTO CSV "nodelocal://1/a" FROM SELECT ts, value, site_id FROM ts_table WHERE ts > '2024-02-01 09:00:00';
+      ```
 
-    执行成功后，控制台输出以下信息：
+  - 导出非空值数据。
 
-    ```sql
-      result
-    -----------
-      succeed
-    (1 row)
-    ```
+      ```sql
+      EXPORT INTO CSV "nodelocal://1/a" FROM SELECT * from ts_table WHERE value IS NOT NULL;
+      ```
 
-- 将时序表的非空值数据导出到本地节点。
+- 指定导出内容
+  - 仅导出用户数据。
 
-    ```sql
-    EXPORT INTO CSV "nodelocal://1/a" FROM SELECT * from ts_table WHERE value IS NOT NULL;
-    ```
+      ```sql
+      -- 以 CSV 格式导出
+      EXPORT INTO CSV "nodelocal://1/a" FROM TABLE ts_table WITH data_only;
 
-    执行成功后，控制台输出以下信息：
+      -- 以 SQL 格式导出
+      EXPORT INTO SQL "nodelocal://1/a" FROM TABLE ts_table WITH data_only;
+      ```
 
-    ```sql
-      result
-    -----------
-      succeed
-    (1 row)
-    ```
+  - 仅导出元数据。
 
-- 将时序表的用户数据导出到本地节点。
+      ```sql
+      -- 以 CSV 格式导出
+      EXPORT INTO CSV "nodelocal://1/a" FROM TABLE ts_table WITH meta_only;
 
-    ```sql
-    EXPORT INTO CSV "nodelocal://1/a" FROM TABLE ts_table WITH data_only;
-    ```
+      -- 以 SQL 格式导出
+      EXPORT INTO SQL "nodelocal://1/a" FROM TABLE ts_table WITH meta_only;
+      ```
+  
+  - 限制文件行数。
 
-    执行成功后，控制台输出以下信息：
+      ```sql
+      EXPORT INTO CSV "nodelocal://1/a" FROM TABLE ts_table WITH chunk_rows = '1000';
+      ```
 
-    ```sql
-      result
-    -----------
-      succeed
-    (1 row)
-    ```
+  - 导出注释信息。
 
-- 将时序表的元数据导出到本地节点。
+      ```sql
+      -- 以 CSV 格式导出
+      EXPORT INTO CSV "nodelocal://1/a" FROM TABLE ts_table WITH COMMENT;
 
-    ```sql
-    EXPORT INTO CSV "nodelocal://1/a" FROM TABLE ts_table WITH meta_only;
-    ```
+      -- 以 SQL 格式导出
+      EXPORT INTO SQL "nodelocal://1/a" FROM TABLE ts_table WITH COMMENT;
+      ```
 
-    执行成功后，控制台输出以下信息：
+- 格式化选项
+  - 指定分隔符为斜杆（`/`）。
 
-    ```sql
-      result
-    -----------
-      succeed
-    (1 row)
-    ```
+      ```sql
+      EXPORT INTO CSV "nodelocal://1/a" FROM TABLE ts_table WITH DELIMITER = '/';
+      ```
 
-- 将时序表导出到本地节点时，指定分隔符。
+  - 指定包围符为单引号（`'`）。
 
-    ```sql
-    EXPORT INTO CSV "nodelocal://1/a" FROM TABLE ts_table WITH DELIMITER = '/';
-    ```
+      ```sql
+      EXPORT INTO CSV "nodelocal://1/a" FROM TABLE ts_table WITH enclosed = "'";
+      ```
 
-    执行成功后，控制台输出以下信息：
+  - 指定转义符为反斜杠（`\`）。
 
-    ```sql
-      result
-    -----------
-      succeed
-    (1 row)
-    ```
+      ```sql
+      EXPORT INTO CSV "nodelocal://1/a" FROM TABLE ts_table WITH escaped = '\';
+      ```
 
-- 将时序表导出到本地节点时，限制单个文件的行数为 `1000`。
+  - 指定空值表现形式为 `NULL`。
 
-    ```sql
-    EXPORT INTO CSV "nodelocal://1/a" FROM TABLE ts_table WITH chunk_rows = '1000';
-    ```
+      ```sql
+      EXPORT INTO CSV "nodelocal://1/a" FROM TABLE ts_table WITH NULLAS = 'NULL';
+      ```
 
-    执行成功后，控制台输出以下信息：
+  - 指定字符集编码为 `GBK`。
 
-    ```sql
-      result
-    -----------
-      succeed
-    (1 row)
-    ```
-
-- 将时序表导出到本地节点时，指定包围符为单引号（`'`）。
-
-    ```sql
-    EXPORT INTO CSV "nodelocal://1/a" FROM TABLE ts_table WITH enclosed = "'";
-    ```
-
-    执行成功后，控制台输出以下信息：
-
-    ```sql
-      result
-    -----------
-      succeed
-    (1 row)
-    ```
-
-- 将时序表导出到本地节点时，指定转义符为反斜杠（`\`）。
-
-    ```sql
-    EXPORT INTO CSV "nodelocal://1/a" FROM TABLE ts_table WITH escaped = '\';
-    ```
-
-    执行成功后，控制台输出以下信息：
-
-    ```sql
-      result
-    -----------
-      succeed
-    (1 row)
-    ```
-
-- 将时序表导出到本地节点时，指定空值表现形式为 `NULL`。
-
-    ```sql
-    EXPORT INTO CSV "nodelocal://1/a" FROM TABLE ts_table WITH NULLAS = 'NULL';
-    ```
-
-    执行成功后，控制台输出以下信息：
-
-    ```sql
-      result
-    -----------
-      succeed
-    (1 row)
-    ```
-
-- 将时序表导出到本地节点时，指定携带注释信息。
-
-    ```sql
-    EXPORT INTO CSV "nodelocal://1/a" FROM TABLE ts_table WITH COMMENT;
-    ```
-
-    执行成功后，控制台输出以下信息：
-
-    ```sql
-      result
-    -----------
-      succeed
-    (1 row)
-    ```
-
-- 将时序表导出到本地节点时，指定字符集编码为 GBK。
-
-    ```sql
-    EXPORT INTO CSV "nodelocal://1/a" FROM TABLE ts_table WITH charset = 'GBK';
-    ```
-
-    执行成功后，控制台输出以下信息：
-
-    ```sql
-      result
-    -----------
-      succeed
-    (1 row)
-    ```
+      ```sql
+      EXPORT INTO CSV "nodelocal://1/a" FROM TABLE ts_table WITH charset = 'GBK';
+      ```
 
 ## 库级别数据导出
 
@@ -294,7 +202,9 @@ KWDB 支持一次性导出指定数据库中所有表的元数据、用户数据
 
 - 时序数据库
 
-    导出的时序表位于 `public` 模式下。每张表是一个单独的目录，用于存放该表的用户数据（`.csv` 文件）。导出的时序数据库数据组织形式如下所示：
+    导出的时序表位于 `public` 模式下。每张表是一个单独的目录，用于存放该表的用户数据（支持 `.csv` 和 `.sql` 格式）。
+
+    导出的数据组织形式如下所示：
 
     ```shell
     tsdb
@@ -308,7 +218,9 @@ KWDB 支持一次性导出指定数据库中所有表的元数据、用户数据
 
 - 关系数据库
 
-    导出的关系表按其所在模式进行组织。每张表是一个单独的目录，用于存放该表的元数据信息（`meta.sql`）和用户数据（`.csv` 文件）。导出的关系库数据组织形式如下所示：
+    导出的关系表按其所在模式进行组织。每张表是一个单独的目录，用于存放该表的元数据信息（`meta.sql`）和用户数据（支持 `.csv` 和 `.sql` 格式）。
+
+    导出的数据组织形式如下所示：
 
     ```shell
     rdb
@@ -330,12 +242,25 @@ KWDB 支持一次性导出指定数据库中所有表的元数据、用户数据
 ### 前提条件
 
 用户是 `admin` 角色的成员。默认情况下，`root` 用户属于 `admin` 角色。
+
 ### 语法格式
+
+::: warning 说明
+以 SQL 格式导出用户数据时，暂不支持表内包含 `BYTES` 和 `VARBYTES` 类型的数据。
+:::
 
 时序数据库和关系数据库的导出语法相同：
 
+- 以 CSV 格式导出用户数据
+
   ```sql
   EXPORT INTO CSV "<expt_path>" FROM DATABASE <db_name> WITH [ column_name | meta_only | data_only | delimiter = '<char>' | chunk_rows = '<number>' | enclosed = '<char>' | escaped = '<char>' | nullas = '<char>' | comment | charset = '<coding>' | privileges ];
+  ```
+
+- 以 SQL 格式导出用户数据
+
+  ```sql
+  EXPORT INTO SQL "<expt_path>" FROM DATABASE <db_name> WITH [ meta_only | data_only | delimiter = '<char>' | comment | charset = '<coding>' | privileges ];
   ```
 
 ### 参数说明
@@ -360,197 +285,117 @@ KWDB 支持一次性导出指定数据库中所有表的元数据、用户数据
 
 以下示例假设已经创建时序数据库 `ts_db` 和关系数据库 `rdb`。
 
-- 将时序数据库的用户数据和元数据导出到本地节点。
+- 基本导出
 
-    ```sql
-    EXPORT INTO CSV "nodelocal://1/ts_db" FROM DATABASE ts_db;
-    ```
+  - 将时序数据库的用户数据和元数据导出到本地节点。
 
-    执行成功后，控制台输出以下信息：
+      ```sql
+      -- 以 CSV 格式导出
+      EXPORT INTO CSV "nodelocal://1/ts_db" FROM DATABASE ts_db;
 
-    ```sql
-      result
-    -----------
-      succeed
-    (1 row)
-    ```
+      -- 以 SQL 格式导出
+      EXPORT INTO SQL "nodelocal://1/ts_db" FROM DATABASE ts_db;
+      ```
 
-- 将关系数据库的用户数据和元数据导出到本地节点。
+  - 将关系数据库的用户数据和元数据导出到本地节点。
 
-    ```sql
-    EXPORT INTO CSV "nodelocal://1/rdb" FROM DATABASE rdb;
-    ```
+      ```sql
+      -- 以 CSV 格式导出
+      EXPORT INTO CSV "nodelocal://1/ts_db" FROM DATABASE rdb;
 
-    执行成功后，控制台输出以下信息：
+      -- 以 SQL 格式导出
+      EXPORT INTO SQL "nodelocal://1/ts_db" FROM DATABASE rdb;
+      ```
 
-    ```sql
-    filename           |rows|node_id|file_num
-    -------------------+----+-------+--------
-    TABLE rdb.public.t1|2   |1      |1
-    meta.sql           |1   |1      |1
-    TABLE rdb.public.t2|2   |1      |1
-    meta.sql           |1   |1      |1
-    (4 rows)
-    ```
+  - 将时序数据库的用户数据和元数据导出到指定服务器。
 
-- 将时序数据库的用户数据和元数据导出到指定服务器。
+      ```sql
+      -- 以 CSV 格式导出
+      EXPORT INTO CSV "http://172.18.10.1:8090/ts_db" FROM DATABASE ts_db;
+      
+      -- 以 SQL 格式导出
+      EXPORT INTO SQL "http://172.18.10.1:8090/ts_db" FROM DATABASE ts_db;
+      ```
 
-    ```sql
-    EXPORT INTO CSV "http://172.18.10.1:8090/ts_db" FROM DATABASE ts_db;
-    ```
+- 指定导出内容
+  - 将时序数据库的用户数据导出到本地节点。
 
-    执行成功后，控制台输出以下信息：
+      ```sql
+      -- 以 CSV 格式导出
+      EXPORT INTO CSV "nodelocal://1/ts_db" FROM DATABASE ts_db WITH data_only;
+      
+      -- 以 SQL 格式导出
+      EXPORT INTO SQL "nodelocal://1/ts_db" FROM DATABASE ts_db WITH data_only;
+      ```
 
-    ```sql
-      result
-    -----------
-      succeed
-    (1 row)
-    ```
+  - 将时序数据库的元数据导出到本地节点。
 
-- 将时序数据库的用户数据导出到本地节点。
+      ```sql
+      -- 以 CSV 格式导出
+      EXPORT INTO CSV "nodelocal://1/ts_db" FROM DATABASE ts_db WITH meta_only;
+      
+      -- 以 SQL 格式导出
+      EXPORT INTO SQL "nodelocal://1/ts_db" FROM DATABASE ts_db WITH meta_only;
+      ```
 
-    ```sql
-    EXPORT INTO CSV "nodelocal://1/ts_db" FROM DATABASE ts_db WITH data_only;
-    ```
+  - 指定导出注释信息。
 
-    执行成功后，控制台输出以下信息：
+      ```sql
+      -- 以 CSV 格式导出
+      EXPORT INTO CSV "nodelocal://1/ts_db" FROM DATABASE ts_db WITH COMMENT;
+      
+      -- 以 SQL 格式导出
+      EXPORT INTO SQL "nodelocal://1/ts_db" FROM DATABASE ts_db WITH COMMENT;
+      ```
 
-    ```sql
-      result
-    -----------
-      succeed
-    (1 row)
-    ```
+  - 限制文件行数为 `1000`。
 
-- 将时序数据库的元数据导出到本地节点。
+      ```sql
+      EXPORT INTO CSV "nodelocal://1/ts_db" FROM DATABASE ts_db WITH chunk_rows = '1000';
+      ```
 
-    ```sql
-    EXPORT INTO CSV "nodelocal://1/ts_db" FROM DATABASE ts_db WITH meta_only;
-    ```
+- 格式化选项
+  - 指定分隔符为（`/`）。
 
-    执行成功后，控制台输出以下信息：
+      ```sql
+      EXPORT INTO CSV "nodelocal://1/ts_db" FROM DATABASE ts_db WITH DELIMITER = '/';
+      ```
 
-    ```sql
-      result
-    -----------
-      succeed
-    (1 row)
-    ```
+  - 指定包围符为单引号（`'`）。
 
-- 将时序数据库数据导出到本地节点时，指定分隔符。
+      ```sql
+      EXPORT INTO CSV "nodelocal://1/ts_db" FROM DATABASE ts_db WITH enclosed = "'";
+      ```
 
-    ```sql
-    EXPORT INTO CSV "nodelocal://1/ts_db" FROM DATABASE ts_db WITH DELIMITER = '/';
-    ```
+  - 指定转义符为反斜杠（`\`）。
 
-    执行成功后，控制台输出以下信息：
+      ```sql
+      EXPORT INTO CSV "nodelocal://1/ts_db" FROM DATABASE ts_db WITH escaped = '\';
+      ```
 
-    ```sql
-      result
-    -----------
-      succeed
-    (1 row)
-    ```
+  - 指定空值表现形式为 `NULL`。
 
-- 将时序数据库数据导出到本地节点时，限制单个文件的行数为 `1000`。
+      ```sql
+      EXPORT INTO CSV "nodelocal://1/ts_db" FROM DATABASE ts_db WITH NULLAS = 'NULL';
+      ```
 
-    ```sql
-    EXPORT INTO CSV "nodelocal://1/ts_db" FROM DATABASE ts_db WITH chunk_rows = '1000';
-    ```
+  - 指定字符集编码为 `GBK`。
 
-    执行成功后，控制台输出以下信息：
-
-    ```sql
-      result
-    -----------
-      succeed
-    (1 row)
-    ```
-
-- 将时序数据库数据导出到本地节点时，指定包围符为单引号（`'`）。
-
-    ```sql
-    EXPORT INTO CSV "nodelocal://1/ts_db" FROM DATABASE ts_db WITH enclosed = "'";
-    ```
-
-    执行成功后，控制台输出以下信息：
-
-    ```sql
-      result
-    -----------
-      succeed
-    (1 row)
-    ```
-
-- 将时序数据库数据导出到本地节点时，指定转义符为反斜杠（`\`）。
-
-    ```sql
-    EXPORT INTO CSV "nodelocal://1/ts_db" FROM DATABASE ts_db WITH escaped = '\';
-    ```
-
-    执行成功后，控制台输出以下信息：
-
-    ```sql
-      result
-    -----------
-      succeed
-    (1 row)
-    ```
-
-- 将时序数据库数据导出到本地节点时，指定空值表现形式为 `NULL`。
-
-    ```sql
-    EXPORT INTO CSV "nodelocal://1/ts_db" FROM DATABASE ts_db WITH NULLAS = 'NULL';
-    ```
-
-    执行成功后，控制台输出以下信息：
-
-    ```sql
-      result
-    -----------
-      succeed
-    (1 row)
-    ```
-
-- 将时序数据库数据导出到本地节点时，指定携带注释信息。
-
-    ```sql
-    EXPORT INTO CSV "nodelocal://1/ts_db" FROM DATABASE ts_db WITH COMMENT;
-    ```
-
-    执行成功后，控制台输出以下信息：
-
-    ```sql
-      result
-    -----------
-      succeed
-    (1 row)
-    ```
-  
-- 将时序数据库数据导出到本地节点时，指定字符集编码为 GBK。
-
-    ```sql
-    EXPORT INTO CSV "nodelocal://1/ts_db" FROM DATABASE ts_db WITH charset = 'GBK';
-    ```
-
-    执行成功后，控制台输出以下信息：
-
-    ```sql
-      result
-    -----------
-      succeed
-    (1 row)
-    ```
+      ```sql
+      EXPORT INTO CSV "nodelocal://1/ts_db" FROM DATABASE ts_db WITH charset = 'GBK';
+      ```
 
 ## 用户信息导出
 
-KWDB 支持使用 SQL 语句导出当前 KWDB 集群的所有非系统用户信息，并将其存储为 `users.sql` 文件。
+KWDB 支持导出所有非系统用户信息，提供两种导出方式：
+
+- **SQL 语句导出**（推荐）：生成 `users.sql` 文件，支持后续导入到 KWDB 数据库
+- **CSV 文件导出**：生成 `.csv` 文件，便于数据查看和分析
 
 ::: warning 说明
 
-导出的用户信息不包含密码信息，后续导入时需要根据需要重新设置密码。
-
+- 导出的用户信息不包含密码信息，后续导入时需要重新设置密码
+- CSV 格式导出的文件暂不支持重新导入到 KWDB 数据库
 :::
 
 ### 前提条件
@@ -559,9 +404,17 @@ KWDB 支持使用 SQL 语句导出当前 KWDB 集群的所有非系统用户信�
 
 ### 语法格式
 
-```sql
-EXPORT USERS TO SQL "<file_path>";
-```
+- SQL 语句导出
+
+  ```sql
+  EXPORT USERS TO SQL "<file_path>";
+  ```
+
+- CSV 文件导出 
+
+  ```sql
+  EXPORT INTO CSV "<file_path>" FROM TABLE system.users;
+  ```
 
 ### 参数说明
 
@@ -569,33 +422,50 @@ EXPORT USERS TO SQL "<file_path>";
 |----------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `file_path`          | 导出文件的存放路径，支持以下两种格式：<br> - `nodelocal://<node_id>/<dir>`：将文件导出至本地节点。`node_id` 为节点 ID。如果本地只有一个节点，`node_id` 为 `1`。`dir` 为文件所在的文件夹。如果目标文件夹不存在，系统会在 KWDB 安装时定义的数据存放路径下创建该文件夹。默认路径为 `/var/lib/kaiwudb/extern/<dir>`。<br> - `<server_ip>/<dir>`：将文件导出至指定服务器。 `server_ip`为服务器的 IP 地址和端口，例如 `http://172.18.0.1:8090`。`dir` 为存放文件的文件夹路径，如果目标文件夹不存在，系统会创建该文件夹。                       |
 
-### 返回参数
-
-| 参数                 | 说明                                                                  |
-|----------------------|---------------------------------------------------------------------|
-| `queryname`          | 查询名称。                                                        |
-| `rows`               | 导出的行数。                                                          |
-| `node_id`            | 节点 ID。                                                       |
-| `file_num`           | 导出的文件数量。                                                       |
 
 ### 语法示例
 
-```sql
-EXPORT USERS TO SQL "nodelocal://1/users";
-```
+- SQL 语句导出
 
-执行成功后，控制台输出以下信息：
+  ```sql
+  EXPORT USERS TO SQL "nodelocal://1/users";
+  ```
 
-```sql
-     queryname       | rows | node_id | file_num
----------------------+------+---------+-----------
-       USERS         |    1 |     1   |        1
-(1 row)
-```
+  执行成功后，控制台输出以下信息：
+
+  ```sql
+      queryname       | rows | node_id | file_num
+  ---------------------+------+---------+-----------
+        USERS         |    1 |     1   |        1
+  (1 row)
+  ```
+
+- CSV 文件导出
+
+  ```sql
+  EXPORT INTO CSV "nodelocal://1/users" FROM TABLE system.users;
+  ```
+
+  执行成功后，控制台输出以下信息：
+
+  ```sql
+            filename          | rows | node_id | file_num
+  ----------------------------+------+---------+-----------
+    TABLE system.public.users |   11 |       1 |        1
+    meta.sql                  |    1 |       1 |        1
+  (2 rows)
+  ```
 
 ## 集群参数信息导出
 
-KWDB 支持使用 SQL 语句导出当前 KWDB 集群的参数设置信息，并将其存储为 `clustersetting.sql` 文件。
+KWDB 支持导出当前集群的参数设置信息，提供两种导出方式：
+
+- **SQL 语句导出**（推荐）：生成 `clustersetting.sql` 文件，支持后续导入到 KWDB 数据库
+- **CSV 文件导出**：生成 `.csv` 文件，便于数据查看和分析
+
+::: warning 说明
+CSV 格式导出的文件暂不支持重新导入到 KWDB 数据库
+:::
 
 ### 前提条件
 
@@ -603,36 +473,54 @@ KWDB 支持使用 SQL 语句导出当前 KWDB 集群的参数设置信息，并�
 
 ### 语法格式
 
-```sql
-EXPORT CLUSTER SETTING TO SQL "<file_path>";
-```
+- SQL 语句导出
+
+  ```sql
+  EXPORT CLUSTER SETTING TO SQL "<file_path>";
+  ```
+
+- CSV 文件导出
+
+  ```sql
+  EXPORT INTO CSV "<file_path>" FROM TABLE system.settings;
+  ```
 
 ### 参数说明
 
 | 参数                 | 说明                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 |----------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `file_path`          | 导出文件的存放路径，支持以下两种格式：<br> - `nodelocal://<node_id>/<dir>`：将文件导出至本地节点。`node_id` 为节点 ID。如果本地只有一个节点，`node_id` 为 `1`。`dir` 为文件所在的文件夹。如果目标文件夹不存在，系统会在 KaiwuDB 安装时定义的数据存放路径下创建该文件夹。默认路径为 `/var/lib/kaiwudb/extern/<dir>`。<br> - `<server_ip>/<dir>`：将文件导出至指定服务器。`server_ip`为服务器的 IP 地址和端口，例如 `http://172.18.0.1:8090`。`dir` 为文件的文件夹路径，如果目标文件夹不存在，系统会创建该文件夹。                         |
+| `file_path`          | 导出文件的存放路径，支持以下两种格式：<br> - `nodelocal://<node_id>/<dir>`：将文件导出至本地节点。`node_id` 为节点 ID。如果本地只有一个节点，`node_id` 为 `1`。`dir` 为文件所在的文件夹。如果目标文件夹不存在，系统会在 KWDB 安装时定义的数据存放路径下创建该文件夹。默认路径为 `/var/lib/kaiwudb/extern/<dir>`。<br> - `<server_ip>/<dir>`：将文件导出至指定服务器。`server_ip`为服务器的 IP 地址和端口，例如 `http://172.18.0.1:8090`。`dir` 为文件的文件夹路径，如果目标文件夹不存在，系统会创建该文件夹。                         |
 
-### 返回参数
-
-| 参数                 | 说明                                                                  |
-|----------------------|---------------------------------------------------------------------|
-| `queryname`          | 查询名称。                                                        |
-| `rows`               | 导出的行数。                                                          |
-| `node_id`            | 节点 ID。                                                       |
-| `file_num`           | 导出的文件数量。                                                       |
 
 ### 语法示例
 
-```sql
-EXPORT CLUSTER SETTING TO SQL "nodelocal://1/settings";
-```
+- SQL 语句导出
 
-执行成功后，控制台输出以下信息：
+  ```sql
+  EXPORT CLUSTER SETTING TO SQL "nodelocal://1/settings";
+  ```
 
-```sql
-     queryname       | rows | node_id | file_num
----------------------+------+---------+-----------
-  CLUSTER SETTING    |  215 |     1   |        1
-(1 row)
-```
+  执行成功后，控制台输出以下信息：
+
+  ```sql
+      queryname       | rows | node_id | file_num
+  ---------------------+------+---------+-----------
+    CLUSTER SETTING    |  215 |     1   |        1
+  (1 row)
+  ```
+
+- CSV 文件导出
+
+  ```sql
+  EXPORT INTO CSV "nodelocal://1/settings" FROM TABLE system.settings;
+  ```
+
+  执行成功后，控制台输出以下信息：
+
+  ```sql
+              filename           | rows | node_id | file_num
+  -------------------------------+------+---------+-----------
+    TABLE system.public.settings |    5 |       1 |        1
+    meta.sql                     |    1 |       1 |        1
+  (2 rows)
+  ```
