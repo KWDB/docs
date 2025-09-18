@@ -538,7 +538,7 @@ Knex.js is a powerful SQL query builder that supports multiple database systems,
     powerl double NOT NULL,
     allrenergy1 double NOT NULL,
     allrenergy2 double NOT NULL
-    ) ATTRIBUTES (machine_code varchar(64) NOT NULL, op_group varchar(64) NOT NULL, workshop_id int2 NOT NULL, cnc_number int) PRIMARY TAGS(machine_code) retentions 3d activetime 1h partition interval 1d;`)
+    ) ATTRIBUTES (machine_code varchar(64) NOT NULL, op_group varchar(64) NOT NULL, workshop_id int2 NOT NULL, cnc_number int) PRIMARY TAGS(machine_code) retentions 3d;`)
     );
 
     const tab_t_electmeter = () => knex.table("ts_shig.t_electmeter");

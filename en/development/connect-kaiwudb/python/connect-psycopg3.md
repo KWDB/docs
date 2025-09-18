@@ -60,8 +60,7 @@ The following example assumes you have already created a time-series database na
             temperature double \
             ) TAGS ( \
             number int NOT NULL) \
-            PRIMARY TAGS(number) \
-            ACTIVETIME 3h"
+            PRIMARY TAGS(number)"
         try:
             cur.execute(sql)
         except psycopg.Error as e:

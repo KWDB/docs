@@ -58,8 +58,7 @@ KWDB 支持用户通过 Psycopg 3 连接数据库，并执行创建、插入和�
             temperature double \
             ) TAGS ( \
             number int NOT NULL) \
-            PRIMARY TAGS(number) \
-            ACTIVETIME 3h"
+            PRIMARY TAGS(number)"
         try:
             cur.execute(sql)
         except psycopg.Error as e:

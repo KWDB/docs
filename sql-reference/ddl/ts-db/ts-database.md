@@ -18,24 +18,19 @@ id: ts-database
 
 ### 语法格式
 
-![](../../../static/sql-reference/PZsmbxjlxoqNSAxnrAAc2IYanmf.png)
+![](../../../static/sql-reference/createdb_ts.png)
 
 ### 参数说明
+
+:::warning 说明
+配置可选参数时，必须严格按照 `[RETENTIONS <keep_duration>] [COMMENT [=] <'comment_text'>]` 的顺序，否则系统将会报错。
+:::
 
 | 参数 | 说明 |
 | --- | --- |
 | `database_name` | 待创建的数据库的名称。该名称必须唯一，且遵循[数据库标识符规则](../../sql-identifiers.md)。目前，数据库名称不支持中文字符，最大长度不能超过 63 个字节。|
-| `keep_duration` | 可选参数。指定数据库的生命周期，默认值为 `0d`，即不会过期删除。支持配置的时间单位包括：秒（S 或 SECOND）、分钟（M 或 MINUTE）、小时（H 或 HOUR）、天（D 或 DAY）、周（W 或 WEEK）、月（MON 或 MONTH）、年（Y 或 YEAR），例如 `RETENTIONS 10 DAY`。取值必须是整数值，最大值不得超过 `1000` 年。|
-| `interval` | 可选参数，指定数据库数据目录分区的时间范围。默认值为 `10d`，即每 10 天进行一次分区。支持配置的时间单位包括：天（D 或 DAY）、周（W 或 WEEK）、月（MON 或 MONTH）、年（Y 或 YEAR）。取值必须是整数值，最大值不得超过 `1000` 年。|
-
-::: warning 说明
-
-- 生命周期的配置不适用于当前分区。当生命周期的取值小于分区时间范围的取值时，即使数据库的生命周期已到期，由于数据存储在当前分区中，用户仍然可以查询数据。
-- 当时间分区的所有数据超过生命周期时间点（`now() - retention time`）时，系统尝试删除该分区的数据。如果此时用户正在读写该分区的数据，或者系统正在对该分区进行压缩或统计信息处理等操作，系统无法立即删除该分区的数据。系统会在下一次生命周期调度时再次尝试删除数据（默认情况下，每小时调度一次）。
-- 生命周期和分区时间范围设置与系统的存储空间密切相关。生命周期越长，分区时间范围越大，系统所需的存储空间也越大。有关存储空间的计算公式，参见[预估磁盘使用量](../../../db-operation/cluster-planning.md#预估磁盘使用量)。
-- 当用户单独指定或者修改数据库内某一时序表的生命周期或分区时间范围时，该配置只适用于该时序表。
-
-:::
+| `keep_duration` | 可选参数，设置数据库的数据生命周期。数据超过此时长后将被系统自动清除。<br>默认值： `0s`（永久保留）<br>时间单位：<br>- 秒：`s` 或 `second`<br>- 分钟：`m` 或 `minute`<br>- 小时：`h` 或 `hour`<br>- 天：`d` 或 `day`<br>- 周：`w` 或 `week`<br>- 月：`mon` 或 `month`<br>- 年：`y` 或 `year`<br>取值范围:正整数，上限为 1000 年<br>**说明：**<br>- 表级设置优先于库级设置。<br>- 保留时长越长，存储空间占用越大，请根据业务需求合理配置。<br>- 如果待写入的数据已超过生命周期限制，系统会直接丢弃该数据，不予写入。|
+| `comment_text` | 可选参数。指定数据库的注释信息。 |
 
 ### 语法示例
 
@@ -67,12 +62,12 @@ id: ts-database
     CREATE TS DATABASE
     ```
 
-- 创建数据库时，指定数据库的生命周期和分区时间范围。
+- 创建数据库时，指定数据库的注释信息。
 
-    以下示例创建一个名为 `iot` 的数据库，并将数据库的生命周期和分区时间范围分别设置为 `50d` 和 `2d`。
+    以下示例创建一个名为 `ts_db_power` 的数据库，并将数据库的注释信息设置为 `database for power statistics`。
 
     ```sql
-    CREATE TS DATABASE iot RETENTIONS 50d PARTITION INTERVAL 2d;
+    CREATE TS DATABASE ts_db_power COMMENT = 'database for power statistics';
     ```
 
     执行成功后，控制台输出以下信息：
@@ -147,7 +142,9 @@ id: ts-database
 
 ## 查看数据库的建库语句
 
-`SHOW CREATE DATABASE` 语句用于查看创建数据库的 SQL 语句以及创建数据库时指定的相关参数。时序数据库支持查看创建数据库时使用的数据库名称、以及 `retentions` 和 `partition interval` 参数的取值。创建数据库时，如果指定 `retentions` 和 `partition interval` 参数的取值，则显示指定的取值。如未指定，则显示该参数的默认值。默认情况下，`retentions` 参数的取值为 `0s`，`partition interval` 参数的取值为 `10d`。
+`SHOW CREATE DATABASE` 语句用于查看创建数据库的 SQL 语句以及创建数据库时指定的相关参数。
+
+时序数据库支持查看创建数据库时使用的数据库名称、以及生命周期 `retentions` 参数的取值。创建数据库时，如果指定 `retentions` 的取值，则显示指定的取值。如未指定，则显示该参数的默认值 `0s`。
 
 ### 所需权限
 
@@ -168,9 +165,9 @@ id: ts-database
 以下示例查看 `tsdb1` 数据库的建库语句和相关参数取值。
 
 ```sql
--- 1. 创建数据库 tsdb1，并将 `retentions` 和 `partition interval` 参数的取值均设置为 `10d`。
+-- 1. 创建数据库 tsdb1，并将 `retentions` 参数的取值设置为 `10d`。
 
-CREATE TS DATABASE tsdb1 RETENTIONS 10d PARTITION INTERVAL 10d;
+CREATE TS DATABASE tsdb1 RETENTIONS 10d;
 
 --2. 查看已创建的 tsdb1 数据库。
 
@@ -179,7 +176,6 @@ SHOW CREATE DATABASE tsdb1;
 ----------------+-------------------------------------
   tsdb1         | CREATE TS DATABASE tsdb1
                 |      retentions 864000s
-                |      partition interval 10d
 (1 row)
 ```
 
@@ -211,7 +207,7 @@ USE ts_db;
 
 ## 修改数据库
 
-`ALTER DATABASE` 语句用于修改数据库的名称、生命周期或分区时间范围。
+`ALTER DATABASE` 语句用于修改数据库的名称和生命周期。
 
 ### 所需权限
 
@@ -223,7 +219,7 @@ USE ts_db;
 
     ![](../../../static/sql-reference/HLAybCbuLoVFWExpDzxc3l0ynnc.png)
 
-- 修改数据库的生命周期或分区时间范围
+- 修改数据库的生命周期
 
     ![](../../../static/sql-reference/Ab69bP86UozqWDxtCLMc3vxznwh.png)
 
@@ -234,17 +230,7 @@ USE ts_db;
 | `old_name` | 当前数据库的名称。|
 | `new_name` | 拟修改的数据库名称，新数据库名称必须唯一，并且遵循[数据库标识符规则](../../sql-identifiers.md)。目前，数据库名称不支持中文字符，最大长度不能超过 63 个字节。|
 | `database_name` | 待修改的数据库名称。|
-| `keep_duration` | 数据库的生命周期，默认值为 `0d`，即不会过期删除。支持配置的时间单位包括：秒（S 或 SECOND）、分钟（M 或 MINUTE）、小时（H 或 HOUR）、天（D 或 DAY）、周（W 或 WEEK）、月（MON 或 MONTH）、年（Y 或 YEAR），例如 `RETENTIONS 10 DAY`。取值必须是整数值，最大值不得超过 `1000` 年。|
-| `interval` | 可选参数，指定数据库数据目录分区的时间范围。默认值为 `10d`，即每 10 天进行一次分区。支持配置的时间单位包括：天（D 或 DAY）、周（W 或 WEEK）、月（MON 或 MONTH）、年（Y 或 YEAR）。取值必须是整数值，最大值不得超过 `1000` 年。|
-
-::: warning 说明
-
-- 生命周期的配置不适用于当前分区。当生命周期的取值小于分区时间范围的取值时，即使数据库的生命周期已到期，由于数据存储在当前分区中，用户仍然可以查询数据。
-- 当时间分区的所有数据超过生命周期时间点（`now() - retention time`）时，系统尝试删除该分区的数据。如果此时用户正在读写该分区的数据，或者系统正在对该分区进行压缩或统计信息处理等操作，系统无法立即删除该分区的数据。系统会在下一次生命周期调度时再次尝试删除数据（默认情况下，每小时调度一次）。
-- 生命周期和分区时间范围设置与系统的存储空间密切相关。生命周期越长，分区时间范围越大，系统所需的存储空间也越大。有关存储空间的计算公式，参见[预估磁盘使用量](../../../db-operation/cluster-planning.md#预估磁盘使用量)。
-- 当用户单独指定或者修改数据库内某一时序表的生命周期或分区时间范围时，该配置只适用于该时序表。
-
-:::
+| `keep_duration` | 可选参数，设置数据库的数据生命周期。数据超过此时长后将被系统自动清除。<br>默认值： `0s`（永久保留）<br>时间单位：<br>- 秒：`s` 或 `second`<br>- 分钟：`m` 或 `minute`<br>- 小时：`h` 或 `hour`<br>- 天：`d` 或 `day`<br>- 周：`w` 或 `week`<br>- 月：`mon` 或 `month`<br>- 年：`y` 或 `year`<br>取值范围:正整数，上限为 1000 年<br>**说明：**<br>- 表级设置优先于库级设置。<br>- 保留时长越长，存储空间占用越大，请根据业务需求合理配置。<br>- 如果待写入的数据已超过生命周期限制，系统会直接丢弃该数据，不予写入。|
 
 ### 语法示例
 
@@ -264,17 +250,13 @@ USE ts_db;
     ALTER TS DATABASE tsdb SET RETENTIONS = 10 day;
     ```
 
-- 修改数据库的分区时间范围。
-
-    以下示例将 `tsdb` 数据库的分区时间范围设置为 `2 day`。
-
-    ```sql
-    ALTER TS DATABASE tsdb SET PARTITION INTERVAL = 2 day;
-    ```
-
 ## 删除数据库
 
 `DROP DATABASE` 语句用于删除数据库及其所有对象。目标数据库不能是当前数据库。如需删除当前数据库，使用 `USE <database_name>` 语句将当前数据库切换成其他数据库，再进行删除。
+
+::: warning 说明
+删除时序库时，系统检查当前时序库是否被流计算引用。如果是，则输出错误消息并列出所有引用此时序库的流计算名称。用户可以使用 `CASCADE` 关键字级联删除时序库及相关的流计算。
+:::
 
 ### 所需权限
 

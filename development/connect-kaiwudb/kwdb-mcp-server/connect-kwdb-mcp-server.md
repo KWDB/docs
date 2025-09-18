@@ -13,7 +13,7 @@ KWDB MCP Server 是一个基于 [MCP](https://modelcontextprotocol.io/introducti
 
 KWDB MCP Server 的核心流程包括以下几个部分：
 
-- 协议解析：处理 MCP 标准输入或 HTTP SSE 请求。
+- 协议解析：处理 MCP 标准输入或 Streamable HTTP 请求。
 - 工具路由：根据工具类型（read/write）分发处理请求。
 - 查询预处理：自动添加 `LIMIT` 语法检查。
 - 结果封装：采用统一 JSON 响应格式。
@@ -115,7 +115,7 @@ MCP Prompts 指 KWDB MCP Server 定义的可复用提示模板，引导 LLM 交�
 
 ## 集成 LLM Agent
 
-KWDB MCP Server 可与任何支持 MCP 协议的 LLM Agent 配合使用。LLM Agent 通过 HTTP SSE 传输协议或 StdIO 标准输入/输出协议连接 KWDB MCP Server，然后连接 KWDB 数据库，执行创建、插入和查询操作。
+KWDB MCP Server 可与任何支持 MCP 协议的 LLM Agent 配合使用。LLM Agent 通过 Streamable HTTP 传输协议或 StdIO 标准输入/输出协议连接 KWDB MCP Server，然后连接 KWDB 数据库，执行创建、插入和查询操作。
 
 ::: warning 说明
 本节示例使用 [Cline](https://cline.bot)，但类似步骤也适用于其他兼容 MCP 协议的 LLM Agent。有关支持 MCP 协议的 LLM Agent 的详细信息，参见 [MCP 官方文档](https://modelcontextprotocol.io/clients)。
@@ -187,9 +187,8 @@ KWDB MCP Server 可与任何支持 MCP 协议的 LLM Agent 配合使用。LLM Ag
 
     参数说明：
 
-    - `-t` 或 `--transport`：传输类型，支持 `stdio`、`sse`、`http`。
+    - `-t` 或 `--transport`：传输类型，支持 `stdio`、`http`。
       - `stdio`：标准输入/输出模式
-      - `sse`：SSE 模式（即将弃用）
       - `http`：HTTP 模式（推荐）
     - `-p` 或 `--port`：KWDB MCP Server 的监听端口，默认为 `8080`。
     - `username`：连接 KWDB 数据库的用户名。
@@ -207,70 +206,18 @@ KWDB MCP Server 可与任何支持 MCP 协议的 LLM Agent 配合使用。LLM Ag
 
         ```json
         "mcpServers": {
-          "kwdb-server-sse": {
+          "kwdb-server-http": {
             "url": "http://localhost:8080/mcp",
             "disabled": false,
-            "autoApprove": []
+            "autoApprove": [],
+            "type": "streamableHttp"
           }
         }
         ```
 
         参数说明：
         - `url`：KWDB MCP Server 的 IP 地址，需要拼接 `/mcp` 路径。默认为 `http://localhost:8080/mcp`。
-
-#### SSE 模式
-
-::: warning 说明
-SSE 模式即将在未来版本中弃用，建议优先使用 HTTP 模式。
-:::
-
-1. 进入 KWDB MCP Server 安装目录，启动 KWDB MCP Server。
-
-    - 使用 Makefile 运行 SSE 模式：
-
-        ```bash
-        CONNECTION_STRING="postgresql://<username>:<password>@<host>:<port>/<database_name>?sslmode=disable" PORT=8080 make run-sse
-        ```
-
-    - 使用 SSE 模式运行 KWDB MCP Server：
-
-        ```bash
-        kwdb-mcp-server -t sse -p 8080 "postgresql://<username>:<password>@<host>:<port>/<database_name>?sslmode=disable"
-        ```
-
-    参数说明：
-    - `-t` 或 `--transport`：传输类型，支持 `stdio`、`sse`、`http`。
-      - `stdio`：标准输入/输出模式
-      - `sse`：SSE 模式（即将弃用）
-      - `http`：HTTP 模式（推荐）
-    - `-p` 或 `--port`：KWDB MCP Server 的监听端口，默认为 `8080`。
-    - `username`：连接 KWDB 数据库的用户名。
-    - `password`：身份验证时使用的密码。
-    - `hostname`：KWDB 数据库的 IP 地址。
-    - `port`：KWDB 数据库的连接端口。
-    - `database_name`：需要访问的 KWDB 数据库名称。
-    - `sslmode`：SSL 模式。支持的取值包括 `disable`、`allow`、`prefer`、`require`、`verify-ca` 和 `verify-full`。有关 SSL 模式相关的详细信息，参见 [SSL 模式参数](../java/connect-jdbc.md#ssl-模式参数)。
-
-2. 配置 Cline 连接 KWDB MCP Server。
-   1. 在 Visual Studio Code 右侧边栏，单击 Cline 图标。
-   2. 在 Cline 插件的顶部导航栏中，单击 **MCP Servers** 图标。
-   3. 选择 **Installed** 页签，然后单击页面底部的 **Configure MCP Servers**。
-   4. 在弹出的页面中，添加并保存 KWDB MCP Server 配置。
-
-        ```json
-        "mcpServers": {
-          "kwdb-server-sse": {
-            "url": "http://localhost:8080/sse",
-            "disabled": false,
-            "autoApprove": []
-          }
-        }
-        ```
-
-        参数说明：
-        - `url`：KWDB MCP Server 的 IP 地址，需要拼接 `/sse` 路径。默认为 `http://localhost:8080/sse`。
-
-3. 选择 **Installed** 页签，单击 KWDB MCP Server 旁边的重启按钮，或者单击页面底部的 **Restart Server**。
+        - `type`：HTTP 传输类型。
 
 ### 验证
 
@@ -299,12 +246,3 @@ SELECT COUNT(DISTINCT vehicle_name) AS abnormal_vehicle_count FROM lkyv_shr_chel
 - 检查数据库用户是否具有足够的权限。
 - 检查 LLM Agent 中 KWDB MCP Server 配置中数据库的连接地址否正确。
 - 检查是否阻塞端口的现有 `kwdb-mcp-server` 进程。
-
-### SSE 模式相关问题
-
-| 问题       | 处理策略                                                                                 |
-|----------|--------------------------------------------------------------------------------------|
-| 连接被拒绝 | 确保 KWDB MCP Server 正常运行并监听指定地址。                                             |
-| CORS 错误  | 如果通过 Web 浏览器访问 KWDB 数据库，确保 KWDB MCP Server 的基础 URL 与数据库的 URL 匹配。 |
-| 网络问题   | 检查防火墙规则或网络配置，确认是否阻止连接。                                               |
-| 数据库连接 | 确保 KWDB MCP Server 可以正常访问数据库。                                                 |

@@ -18,7 +18,7 @@ id: transport-encryption
 ```yaml
 [global]
 # 是否开启安全模式
-secure_mode=y
+secure_mode=tls
 # KWDB 的管理用户
 management_user=kaiwudb
 # KWDB Web 服务端口

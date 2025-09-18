@@ -25,7 +25,7 @@ id: uninstall-db
     ./deploy.sh uninstall 
     ```
 
-4. 确认是否删除数据目录。输入 `y` 将删除数据目录，取消 KWDB 数据目录下的 loop 设备挂载。输入 `n` 将保留数据目录。
+4. 确认是否删除数据目录。输入 `y` 将删除数据目录。输入 `n` 将保留数据目录。
 
     ```shell
     When uninstalling KaiwuDB, you can either delete or keep all user data. Please confirm your choice: Do you want to delete the data? (y/n): 
@@ -49,29 +49,19 @@ id: uninstall-db
 
 1. 停止 KWDB 服务。
 
-2. 检查并取消 loop 设备挂载。
-
-   ```bash
-   # 检查挂载
-   losetup -a
-   
-   # 取消挂载
-   sudo umount /dev/loop<device_number>
-   ```
-
-3. 删除自定义证书目录。
+2. 删除自定义证书目录。
 
    ```bash
    sudo rm -rf <cert_path>
    ```
 
-4. 删除数据目录。
+3. 删除数据目录。
 
    ```bash
    sudo rm -rf <data_path>
    ```
 
-5. 删除编译的二进制文件和库。
+4. 删除编译的二进制文件和库。
 
 ## 容器镜像部署卸载
 
@@ -110,23 +100,13 @@ id: uninstall-db
    docker rmi ${image_name}
    ```
 
-4. 检查并取消 loop 设备挂载。
-
-   ```bash
-   # 检查挂载
-   losetup -a
-   
-   # 取消挂载
-   sudo umount /dev/loop<device_number>
-   ```
-
-5. 删除自定义证书目录。
+4. 删除自定义证书目录。
 
    ```bash
    sudo rm -rf <cert_path>
    ```
 
-6. 删除数据目录（默认为 `/var/lib/kaiwudb`）。
+5. 删除数据目录（默认为 `/var/lib/kaiwudb`）。
 
    ```bash
    sudo rm -rf <data_path>

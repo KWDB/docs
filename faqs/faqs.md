@@ -226,7 +226,7 @@ id: faqs
      ...
          command: 
            - /bin/bash- -c- |
-             /kaiwudb/bin/kwbase  start-single-node --certs-dir=<certs_dir> --listen-addr=0.0.0.0:26257 --advertise-addr=your-host-ip:port --store=/kaiwudb/deploy/kwdb-container --buffer-pool-size=32657
+             /kaiwudb/bin/kwbase  start-single-node --certs-dir=<certs_dir> --listen-addr=0.0.0.0:26257 --brpc-addr=:27257 --advertise-addr=your-host-ip:port --store=/kaiwudb/deploy/kwdb-container --buffer-pool-size=32657
      ```
 
   3. 保存配置，重新创建并启动 KWDB 容器。
@@ -276,7 +276,7 @@ id: faqs
         SET CLUSTER SETTING sql.stats.ts_automatic_collection.enabled = FALSE;
         ```
 
-  5. 关闭数据压缩功能，减少写入时的计算开销，适用于对空间占用不敏感的场景。
+  5. （KaiwuDB 2.x 版本）关闭数据压缩功能，减少写入时的计算开销，适用于对空间占用不敏感的场景。
 
         ```SQL
         ALTER SCHEDULE scheduled_table_compress F Recurring '0 0 1 1 ？2099';
