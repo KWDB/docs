@@ -26,7 +26,7 @@ CREATE TS DATABASE <db_name> [RETENTIONS <keep_duration>] [COMMENT [=] <'comment
 | 参数 | 说明 |
 | --- | --- |
 | `db_name` | 待创建的数据库的名称。该名称必须唯一，且遵循[数据库标识符规则](../../sql-reference/sql-identifiers.md)。目前，数据库名称不支持中文字符，最大长度不能超过 63 个字节。|
-| `keep_duration` | 可选参数。指定数据库的生命周期，默认值为 `0d`，即不会过期删除。支持配置的时间单位包括：秒（S 或 SECOND）、分钟（M 或 MINUTE）、小时（H 或 HOUR）、天（D 或 DAY）、周（W 或 WEEK）、月（MON 或 MONTH）、年（Y 或 YEAR），例如 `RETENTIONS 10 DAY`。取值必须是整数值，最大值不得超过 `1000` 年。|
+| `keep_duration` | 可选参数，设置数据库的数据生命周期。数据超过此时长后将被系统自动清除。<br>默认值： `0s`（永久保留）<br>时间单位：<br>- 秒：`s` 或 `second`<br>- 分钟：`m` 或 `minute`<br>- 小时：`h` 或 `hour`<br>- 天：`d` 或 `day`<br>- 周：`w` 或 `week`<br>- 月：`mon` 或 `month`<br>- 年：`y` 或 `year`<br>取值范围:正整数，上限为 1000 年<br>**说明：**<br>- 表级设置优先于库级设置。<br>- 保留时长越长，存储空间占用越大，请根据业务需求合理配置。<br>- 如果待写入的数据已超过生命周期限制，系统会直接丢弃该数据，不予写入。|
 | `comment_text` | 可选参数。指定数据库的注释信息。 |
 
 ### 语法示例
@@ -237,7 +237,7 @@ KaiwuDB 支持修改数据库的名称和生命周期。
 | `old_name` | 当前数据库的名称。|
 | `new_name` | 拟修改的数据库名称，新数据库名称必须唯一，并且[遵循数据库标识符规则](../../sql-reference/sql-identifiers.md)。目前，数据库名称不支持中文字符，最大长度不能超过 63 个字节。|
 | `db_name` | 待修改的数据库名称。|
-| `keep_duration` | 数据库的生命周期，默认值为 `0d`，即不会过期删除。支持配置的时间单位包括：秒（S 或 SECOND）、分钟（M 或 MINUTE）、小时（H 或 HOUR）、天（D 或 DAY）、周（W 或 WEEK）、月（MON 或 MONTH）、年（Y 或 YEAR），例如 `RETENTIONS 10 DAY`。取值必须是整数值，最大值不得超过 `1000` 年。|
+| `keep_duration` | 可选参数，设置数据库的数据生命周期。数据超过此时长后将被系统自动清除。<br>默认值： `0s`（永久保留）<br>时间单位：<br>- 秒：`s` 或 `second`<br>- 分钟：`m` 或 `minute`<br>- 小时：`h` 或 `hour`<br>- 天：`d` 或 `day`<br>- 周：`w` 或 `week`<br>- 月：`mon` 或 `month`<br>- 年：`y` 或 `year`<br>取值范围:正整数，上限为 1000 年<br>**说明：**<br>- 表级设置优先于库级设置。<br>- 保留时长越长，存储空间占用越大，请根据业务需求合理配置。<br>- 如果待写入的数据已超过生命周期限制，系统会直接丢弃该数据，不予写入。|
 
 ### 语法示例
 
