@@ -40,6 +40,7 @@ id: overview
     - [数据分片](./ddl/relational-db/relational-range.md)
     - [区域配置](./ddl/relational-db/relational-zone.md)
     - [注释](./ddl/relational-db/relational-comment.md)
+    - [触发器](./ddl/relational-db/relational-trigger.md)
 - DML 语句
   - 时序数据
     - [SELECT](./dml/ts-db/ts-select.md)
