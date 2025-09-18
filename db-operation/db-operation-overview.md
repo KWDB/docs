@@ -21,3 +21,4 @@ id: log-mgmt
   - [PostgreSQL 错误码](./error-code/error-code-postgresql.md)
   - [KaiwuDB JDBC Driver 错误码](./error-code/error-code-jdbc-driver.md)
   - [时序函数错误码](./error-code/error-code-ts-functions.md)
+  - [触发器错误码](./error-code/error-code-trigger.md)

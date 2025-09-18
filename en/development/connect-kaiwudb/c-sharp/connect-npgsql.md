@@ -110,8 +110,7 @@ This example assumes that a relational database `bank` has been created in KWDB.
                                            "temperature double " +
                                            ") TAGS ( " +
                                            "number int NOT NULL) " +
-                                           "PRIMARY TAGS(number) " + 
-                                           "ACTIVETIME 3h; ", conn))
+                                           "PRIMARY TAGS(number); ", conn))
            {
            cmd.ExecuteNonQuery();
            }

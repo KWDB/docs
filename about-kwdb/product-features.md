@@ -35,9 +35,9 @@ KWDB 提供丰富的时序特色查询，降低查询分析难度。KWDB 支持�
 
 ## 低成本存储
 
-### 在线数据压缩
+<!-- ### 在线数据压缩
 
-KWDB 支持在线周期数据压缩，用户可通过参数配置选择不同的压缩算法，如 gzip、lz4、lzo、Xz、zstd 等，实现 5-30 倍的数据压缩效果，降低数据存储成本。同时，系统可以直接挂载压缩数据，无需解压缩即可查询数据。
+KWDB 支持在线周期数据压缩，用户可通过参数配置选择不同的压缩算法，如 gzip、lz4、lzo、Xz、zstd 等，实现 5-30 倍的数据压缩效果，降低数据存储成本。同时，系统可以直接挂载压缩数据，无需解压缩即可查询数据。 -->
 
 ### 生命周期管理
 
@@ -69,4 +69,4 @@ KWDB 兼容多种主流操作系统，包括 Ubuntu、CentOS、麒麟、统信�
 
 #### 第三方生态工具兼容
 
-KWDB 无缝集成 [EMQX](https://www.emqx.io/)、[Kafka](https://kafka.apache.org/)、[Telegraf](https://github.com/influxdata/telegraf) 等第三方工具。用户无需额外编写代码，只需要通过简单的配置即可高效地写入和读取数据。这不仅极大地简化系统的搭建和维护工作，还能有效地提高数据处理的灵活性和扩展性。
+KWDB 无缝集成 [EMQX](https://www.emqx.io/)、[Kafka](https://kafka.apache.org/)、[Flink](https://flink.apache.org/)、[Telegraf](https://github.com/influxdata/telegraf) 等第三方工具。用户无需额外编写代码，只需要通过简单的配置即可高效地写入和读取数据。这不仅极大地简化系统的搭建和维护工作，还能有效地提高数据处理的灵活性和扩展性。

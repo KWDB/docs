@@ -104,8 +104,7 @@ Rust is a high-performance, memory-safe programming language with strong concurr
             cur_a double NOT NULL,
             powerf_a double) ATTRIBUTES (machine_code varchar(64) NOT NULL) 
                             PRIMARY TAGS(machine_code) 
-                            retentions 3d activetime 1h 
-                            partition interval 1d;",
+                            retentions 3d;",
                 &[],
             )?
         );

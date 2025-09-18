@@ -30,6 +30,7 @@ id: overview
   - [区域配置管理](./db-object-mgmt/relational-db/zone-mgmt-relational.md)
   - [注释管理](./db-object-mgmt/relational-db/comment-mgmt-relational.md)
   - [存储过程管理](./db-object-mgmt/relational-db/procedure-mgmt-relational.md)
+  - [触发器管理](./db-object-mgmt/relational-db/trigger-relational.md)
 - 数据查询
   - [时序数据查询](./data-query/ts-data-query.md)
   - [关系数据查询](./data-query/relational-data-query.md)
@@ -39,3 +40,4 @@ id: overview
 - 数据导入与导出
   - [导出数据](./import-export-data/export-data.md)
   - [导入数据](./import-export-data/import-data.md)
+- [流计算](./data-stream.md)

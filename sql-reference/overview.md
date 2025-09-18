@@ -41,6 +41,7 @@ id: overview
     - [区域配置](./ddl/relational-db/relational-zone.md)
     - [注释](./ddl/relational-db/relational-comment.md)
     - [存储过程](./ddl/relational-db/relational-procedure.md)
+    - [触发器](./ddl/relational-db/relational-trigger.md)
 - DML 语句
   - 时序数据
     - [SELECT](./dml/ts-db/ts-select.md)
@@ -65,6 +66,7 @@ id: overview
   - [审计策略管理](./db-mgmt/audit-mgmt-sql.md)
 - 其他语句
   - [自定义函数](./other-sql-statements/self-defined-functions-sql.md)
+  - [自定义变量](./other-sql-statements/user-defined-variables-sql.md)
   - [查询](./other-sql-statements/query-sql.md)
   - [事务](./other-sql-statements/transactions-sql.md)
   - [统计信息](./other-sql-statements/statistics-sql.md)
@@ -75,6 +77,7 @@ id: overview
   - [声明](./other-sql-statements/declare-sql.md)
   - [游标](./other-sql-statements/cursor-sql.md)
   - [分隔符](./other-sql-statements/delimiter-sql.md)
+  - [流计算](./other-sql-statements/stream-sql.md)
 - [系统视图](./system-view-sql.md)
 - [NULL 值管理](./null-value-mgmt.md)
 - [查看 SQL 语句](./sql-help.md)
