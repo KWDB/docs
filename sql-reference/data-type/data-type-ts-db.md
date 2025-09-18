@@ -67,6 +67,26 @@ KWDB 时序数据库 timestamp、timestamptz 时间类型支持设置时间戳�
 
 KWDB 支持在查询中对列类型为时间戳、时间戳常量以及结果类型为时间戳的函数和表达式按最高精度进行加减运算并返回运算结果。运算结果支持使用大于号（`>`）、小于号（`<`）、等号（`=`）、大于等于号（`>=`）、小于等于号（`<=`）进行比较。有关详细信息，参见[简单查询](../dml/ts-db/ts-select.md).
 
+### 类型转换
+
+TIMESTAMP 类型的数据可以转换为以下任何一种数据类型。
+
+| Type | 描述 |
+| --- | --- |
+| INT | 超出转换类型的范围时，系统报错。 |
+| FLOAT | 结果转换为毫秒数。 |
+| STRING | - |
+| TIMESTAMPZ | - |
+
+TIMESTAMPZ 类型的数据可以转换为以下任何一种数据类型。
+
+| Type | 描述 |
+| --- | --- |
+| INT | 超出转换类型的范围时，系统报错。 |
+| FLOAT | 结果转换为毫秒数。 |
+| STRING | - |
+| TIMESTAMP | - |
+
 ### 示例
 
 示例 1：以下示例创建一个名为 `timestamps` 的表，包括 TIMESTAMP 和 TIMESTAMPTZ 时间戳类型的列。
@@ -132,6 +152,18 @@ KWDB 支持有符号的整数数据类型。
 
 :::
 
+#### 类型转换
+
+整数类型的数据可以转换为以下任何一种数据类型。
+
+| Type | 描述 |
+| --- | --- |
+| BOOL | 非零的值转换为 `true`，零转换为 `false`。 |
+| FLOAT | - |
+| STRING | 根据转换后的 STRING 类型的长度进行截断。 |
+| TIMESTAMP | 按照毫秒数进行转换。|
+| TIMESTAMPZ | 按照毫秒数进行转换。 |
+
 #### 示例
 
 以下示例创建一个名为 `ints` 的表，包括具有整数类型的列。
@@ -176,6 +208,16 @@ KWDB 支持 FLOAT8 和 FLOAT4 不确定精度的浮点数据类型，最大精�
 FLOAT 列存储最多 8 个字节的值。但由于元数据的影响，实际存储大小可能会更大。
 
 FLOAT 列支持在查询时通过 `CAST(column as DECIMAL(precision, scale))` 限制显示的精度。其中，`precision` 为小数点左侧和右侧位数之和的最大值，`scale` 为小数点右侧的精确位数。`precision` 不能小于 `scale`。使用 `DECIMAL(precision)` 等效于 `DECIMAL(precision, 0)`。
+
+#### 类型转换
+
+浮点类型的数据可以转换为以下任何一种数据类型。
+
+| Type | 描述 |
+| --- | --- |
+| BOOL | 非零的值转换为 `true`，零转换为 `false`。 |
+| FLOAT | 转换为 FLOAT4 类型时，会损失精度。|
+| STRING | 根据转换后的 STRING 类型的长度进行截断。 |
 
 #### 示例
 
@@ -237,6 +279,16 @@ c1      |c2
 
 - `CAST(0 AS BOOL) (false)`
 - `CAST(119 AS BOOL) (true)`
+
+### 类型转换
+
+布尔类型的数据可以转换为以下任何一种数据类型。
+
+| Type | 描述 |
+| --- | --- |
+| INT | `true` 转换为 1，`false` 转换为 0。|
+| FLOAT | `true` 转换为 1，`false` 转换为 0。|
+| STRING | - |
 
 ### 示例
 
