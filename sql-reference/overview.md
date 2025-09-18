@@ -73,6 +73,7 @@ id: overview
   - [定时任务](./other-sql-statements/schedules-sql.md)
   - [会话](./other-sql-statements/sessions-sql.md)
   - [集群设置](./other-sql-statements/cluster-settings-sql.md)
+  - [流计算](./other-sql-statements/stream-sql.md)
 - [系统视图](./system-view-sql.md)
 - [NULL 值管理](./null-value-mgmt.md)
 - [查看 SQL 语句](./sql-help.md)
