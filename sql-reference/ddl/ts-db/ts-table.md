@@ -15,7 +15,7 @@ id: ts-table
 
 ### 语法格式
 
-![](../../../static/sql-reference/create-ts-table.png)
+![](../../../static/sql-reference/create_table_ts.png)
 
 ### 参数说明
 
@@ -265,6 +265,8 @@ id: ts-table
 - 修改表名、设置表的数据生命周期、活跃时间和数据目录分区的时间范围
 - 添加列、修改列名、列的数据类型或宽度、设置列的默认值、删除列的默认值
 - 添加标签、修改标签名、标签的数据类型或宽度、删除标签
+- 修改表的区域配置
+- 创建表分区
 
 ::: warning 说明
 
@@ -277,11 +279,14 @@ id: ts-table
 ### 所需权限
 
 - 重命名表：用户拥有目标表的 DROP 权限及所在数据库的 CREATE 权限。
-- 其它修改表操作：用户拥有目标表的 CREATE 权限。
+- 添加、修改、删除、重命名列或标签：用户拥有目标表的 CREATE 权限。
+- 设置表的数据生命周期：用户拥有目标表的 CREATE 权限。
+- 修改表的区域配置：用户拥有目标表的 CREATE 或 ZONECONFIG 权限。
+- 创建表分区：用户拥有目标表的 CREATE 权限。
 
 ### 语法格式
 
-![](../../../static/sql-reference/alter_table_ts.png)
+![](../../../static/sql-reference/alter-ts-table.png)
 
 ### 支持的操作
 
@@ -298,11 +303,13 @@ id: ts-table
     - `SET DEFAULT <default_expr>`：必选关键字。系统写入表数据时写入指定的默认值，从而不需要显式定义该列的值。对于非时间类型的数据列，默认值只能是常量。对于时间类型的列（TIMESTAMPTZ 或 TIMESTAMP），默认值可以是常量，也可以是 `now()` 函数。如果默认值类型与列类型不匹配，设置默认值时，系统报错。支持默认值设置为 NULL。
     - `DROP DEFAULT`：必选关键字。删除已定义的列的默认值，删除后将不再写入默认值。
   - `ALTER TAG/ATTRITBUTE`：修改标签的数据类型或宽度，其中 `SET DATA` 为可选关键字，是否使用不影响修改标签的数据类型和宽度，不支持修改主标签的数据类型和宽度。**注意**：如果待修改的标签列已创建索引，必须先删除该索引，再进行修改。
+- `CONFIGURE ZONE`：修改表的区域配置。更多详细信息，参见[区域配置](./ts-zone.md)。
 - DROP
   - `DROP COLUMN`: 删除列，需指定列名。
     - `COLUMN`：可选关键字，如未使用，默认添加列。
     - `IF EXISTS`：可选关键字。当使用 `IF EXISTS` 关键字时，如果列名存在，系统删除列。如果列名不存在，系统删除列失败，但不会报错。当未使用 `IF EXISTS` 关键字时，如果列名存在，系统删除列。如果列名不存在，系统报错，提示列名不存在。
   - `DROP TAG/ATTRITBUTE`：删除标签，需指定标签名称。不支持删除主标签。如果待删除的标签列已创建索引，删除该标签时，需要先删除标签列关联的索引。
+- PARTITION BY：创建表分区，更多详细信息，参见[分区](./ts-partition.md)。
 - RENAME
   - `RENAME TO`: 修改表的名称。
   - `RENAME COLUMN`：修改列的名称。

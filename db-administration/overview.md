@@ -15,6 +15,8 @@ id: overview
   - [列管理](./db-object-mgmt/ts-db/column-mgmt-ts.md)
   - [标签管理](./db-object-mgmt/ts-db/label-mgmt-ts.md)
   - [索引管理](./db-object-mgmt/ts-db/index-mgmt-ts.md)
+  - [数据分片管理](./db-object-mgmt/ts-db/range-mgmt-ts.md)
+  - [分区管理](./db-object-mgmt/ts-db/partition-mgmt-ts.md)
   - [区域配置管理](./db-object-mgmt/ts-db/zone-mgmt-ts.md)
   - [注释管理](./db-object-mgmt/ts-db/comment-mgmt-ts.md)
 - 关系数据库对象管理
@@ -27,7 +29,8 @@ id: overview
   - [物化视图管理](./db-object-mgmt/relational-db/materialized-view-mgmt-relational.md)
   - [序列管理](./db-object-mgmt/relational-db/sequence-mgmt-relational.md)
   - [数据分片管理](./db-object-mgmt/relational-db/range-mgmt-relational.md)
-  - [区域配置管理](./db-object-mgmt/relational-db/zone-mgmt-relational.md)
+  - [区域管理](./db-object-mgmt/relational-db/zone-mgmt-relational.md)
+  - [分区管理](./db-object-mgmt/relational-db/partition-mgmt-relational.md)  
   - [注释管理](./db-object-mgmt/relational-db/comment-mgmt-relational.md)
 - 数据查询
   - [时序数据查询](./data-query/ts-data-query.md)

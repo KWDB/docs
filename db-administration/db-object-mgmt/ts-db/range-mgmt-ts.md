@@ -1,0 +1,69 @@
+---
+title: 数据分片管理
+id: range-mgmt-ts
+---
+
+# 数据分片管理
+
+KWDB 支持用户使用 `SELECT * from kwdb_internal.ranges` 语句查看时序库、表的数据分片信息，使用 `ALTER RANGE` 语句修改、移除数据分片的区域配置或对数据分片进行手动均衡。
+
+## 修改数据分片
+
+`ALTER RANGE` 语句用于修改、移除数据分片的区域配置或对数据分片进行手动均衡。
+
+除了用户可见的数据库和表之外，KWDB 在以下系统数据分片内存储了部分内部数据，进行了副本区域配置：
+
+- `meta`：包含集群中所有数据的位置信息，副本数设置为 5，以提高容错性，`gc.ttlseconds` 设置低于默认值，以保持数据分片大小适中，确保性能稳定。
+- `liveness`：包含给定时间活动节点的信息，副本数设置为 5，以提高容错性，`gc.ttlseconds` 设置低于默认值，以保持数据分片大小适中。
+- `system`：包括分配新表ID所需的信息以及追踪集群节点状态，副本数设置为5，以提高容错性。
+- `timeseries`：包含集群监控数据。
+
+::: warning 注意
+
+- 修改系统数据分片的区域配置可能导致部分或全部集群停止工作，因此需要格外谨慎。
+- 目前暂不支持对系统数据分片进行手动均衡。
+:::
+
+### 所需权限
+
+用户为 Admin 用户或者 Admin 角色成员。默认情况下，root 用户具有 Admin 角色。
+
+### 语法格式
+
+```sql
+ALTER RANGE <range_name> CONFIGURE ZONE [USING <variable> = [COPY FROM PARENT | <value>], <variable> = [<value> | COPY FROM PARENT], ... | USING REBALANCE | DISCARD];
+```
+
+### 参数说明
+
+| 参数 | 说明 |
+| --- | --- |
+| `range_name` | 待修改的数据分片名称，包括：<br>-  `default`：默认副本设置<br>- `meta`：所有数据的位置信息<br>- `liveness`：给定时间活动节点的信息 <br>- `system`：分配新表ID所需的信息以及追踪集群节点状态<br>- `timeseries`：集群监控数据|
+| `variable` | 要修改的变量名，时序库支持修改以下变量：<br>- `range_min_bytes`：数据分片的最小大小，单位为字节。数据分片小于该值时，KWDB 会将其与相邻数据分片合并。默认值：256 MiB，设置值应大于 1 MiB（1048576 字节），小于数据分片的最大大小。 <br>- `range_max_bytes`：数据分片的最大大小，单位为字节。数据分片大于该值时，KWDB 会将其切分到两个数据分片。默认值： 512 MiB。设置值不得小于 5 MiB（5242880 字节）。<br>- `gc.ttlseconds`：数据在垃圾回收前保留的时间，单位为秒。默认值为 `90000`（25 小时）。设置值建议不小于 600 秒（10 分钟），以免影响长时间运行的查询。设置值较小时可以节省磁盘空间，设置值较大时会增加 `AS OF SYSTEM TIME` 查询的时间范围。另外，由于每行的所有版本都存储在一个永不拆分的单一数据分片内，不建议将该值设置得太大，以免单行的所有更改累计超过 64 MiB，导致内存不足或其他问题。<br>- `num_replicas`：副本数量。默认值为 3。`system` 数据库、`meta`、`liveness` 和 `system` 数据分片的默认副本数为 5。 **注意**：集群中存在不可用节点时，副本数量不可缩减。<br>- `ts_merge.days`：时序数据分片合并时间。同一个时序表同哈希点按照时间戳分裂后，超过该时间的数据分片将自动合并，且合并后不会再自动拆分。默认值：10（10天）。设置值必须大于等于 0，设置值为 0 时表示时序数据分片按照时间戳分裂后便立刻自动合并。系统数据分片数量过多导致出现网络等故障时可以将该值适当调小，以缓解数据过大的问题。**提示：**  KWDB 默认只根据哈希点拆分数据分片，因此数据分片按时间合并功能默认关闭，如需支持按时间合并数据分片，需将 `kv.kvserver.ts_split_interval` 实时参数设置为 `1`, 将 `kv.kvserver.ts_split_by_timestamp.enabled` 实时参数设置为 `true` 以支持按照哈希点和时间戳拆分数据分片。 |
+| `value` | 变量值。 |
+|`COPY FROM PARENT`| 使用父区域的设置值。|
+|`USING REBALANCE` | 手动触发数据分片的区域重新分配和负载均衡。<br><br>适用于以下场景：<br>- 关闭自动均衡后的主动调优<br>- 负载不均时的人工干预<br><br>KWDB 默认自动执行后台数据分片均衡，用户通过 `SET CLUSTER SETTING kv.allocator.ts_consider_rebalance.enabled = false;` 关闭自动均衡功能后，可在系统低负载时段进行手动均衡。<br><br>注意：<br>- 该功能仅适用于用户数据分片，不适用于系统数据分片<br>- 建议在业务低峰期执行，避免影响正常业务性能。 |
+|`DISCARD` | 移除区域配置，采用默认值。|
+
+### 语法示例
+
+- 修改系统数据分片的区域配置
+
+  以下示例将 `meta` 数据分片的副本数改为7个。
+
+  ```SQL
+  ALTER RANGE meta CONFIGURE ZONE USING num_replicas=7;
+  ALTER RANGE 
+
+  SHOW ZONE CONFIGURATION FOR RANGE meta;
+      target   |            raw_config_sql
+  -------------+----------------------------------------
+    RANGE meta | ALTER RANGE meta CONFIGURE ZONE USING
+              |     range_min_bytes = 268435456,
+              |     range_max_bytes = 536870912,
+              |     gc.ttlseconds = 3600,
+              |     num_replicas = 7,
+              |     constraints = '[]',
+              |     lease_preferences = '[]'
+  (1 row)
+  ```

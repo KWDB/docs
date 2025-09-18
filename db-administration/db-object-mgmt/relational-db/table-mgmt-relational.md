@@ -17,7 +17,8 @@ id: table-mgmt-relational
 ```sql
 CREATE TABLE [IF NOT EXISTS] <table_name>
 [<column_def> | <index_def> | <family_def> | <table_constraint>]
-[<interleave_clause>];
+[<interleave_clause>]
+[<partition_by_clause>];
 ```
 
 ### 参数说明
@@ -31,6 +32,8 @@ CREATE TABLE [IF NOT EXISTS] <table_name>
 | `family_def` | 可选项，列族定义列表，支持定义一个或多个列族，各列族之间使用逗号（`,`）隔开，格式为 `FAMILY [family_name] (name_list)`。列族名称在表中必须唯一，但可以与列、约束或索引同名。列族是一组以单个键值对的形式存储在底层键值存储中的列，KWDB 自动将列分组到列族中，以确保有效的存储和性能，也支持用户手动将列分配给列族。|
 | `table_constraint` |可选项，表级约束隔列表，支持定义一个或多个约束，各约束之间使用逗号（`,`）隔开，格式为 `CONSTRAINT <constraint_name> <constraint_elem>`。约束名称在表中必须唯一，但可以与列，列族或索引具有相同的名称。|
 | `interleave_clause` |可选项，支持使用交错索引（Interleaving Indexes）优化查询性能， 格式为 `INTERLEAVE IN PARENT <table_name> (<name_list>)`。这会改变 KWDB 存储数据的方式。 |
+| `partition_by_clause` |可选项，允许用户在行级别定义表分区，支持按列表、范围和哈希值定义表分区。更多信息，参见[分区管理](./partition-mgmt-relational.md)。 |
+
 ### 语法示例
 
 - 创建表，但未定义表的主键。
@@ -644,6 +647,8 @@ SHOW CREATE [TABLE] [<database_name>.] <table_name>;
 - 在现有表中添加、修改、重命名或删除列。
 - 在现有表中添加、验证、重命名或删除约束。
 - 修改现有表上的主键列。
+- 修改表的区域配置。
+- 创建表分区。
 - 重命名现有表。表的重命名支持跨数据库迁移操作，即重命名后的表可迁移到新的数据库和新的模式中。避免在时序数据库下重命名关系表。
 - 在表的特定行或范围上创建或移除拆分点，以提升性能。
 - 重新分布表中的数据。
@@ -654,9 +659,8 @@ SHOW CREATE [TABLE] [<database_name>.] <table_name>;
 - 在现有表中添加、修改、重命名或删除列：用户拥有目标表的 CREATE 权限。
 - 在现有表中添加、验证、重命名或删除约束：用户拥有目标表的 CREATE 权限。
 - 修改现有表上的主键列：用户拥有目标表的 CREATE 权限。
-- 设置现有表的区域：
-  - 修改 `system` 数据库中的表：用户为 Admin 用户或者 Admin 角色成员。
-  - 修改其他数据库中的表：用户拥有目标表的 CREATE 权限或 ZONECONFIG 权限。
+- 修改表的区域配置：用户拥有目标表的 CREATE 权限或 ZONECONFIG 权限。
+- 创建表分区：用户拥有目标表的 CREATE 权限。
 - 重命名表：
   - 重命名当前数据库中的表：用户拥有表所属数据库的 CREATE 权限和原表的 DROP 权限时。当表存在视图依赖时，系统不支持重命名表。
   - 重命名表并将其迁移表到其他数据库：用户拥有目标数据库的 CREATE 权限。
@@ -672,8 +676,10 @@ ALTER TABLE [IF EXISTS] <table_name>
 | ALTER [COLUMN] <column_name> DROP [DEFAULT | NOT NULL | STORED] 
 | ALTER [COLUMN] <column_name> [SET DATA] TYPE <type_name> [COLLATE <collation_name>]
 | ALTER PRIMARY KEY USING COLUMNS (<index_params>) [interleave_clause]
+| CONFIGURE ZONE [USING <variable> = [COPY FROM PARENT | <value>], <variable> = [COPY FROM PARENT | <value>] ... | DISCARD]
 | DROP [COLUMN] [IF EXISTS] <column_name> [CASCADE | RESTRICT] 
 | DROP CONSTRAINT [IF EXISTS] <constraint_name> [CASCADE | RESTRICT]
+| <partition_by_clause>
 | RENAME TO new_name
 | RENAME [COLUMN] current_name 'TO' new_name 
 | RENAME CONSTRAINT current_name 'TO' new_name 
@@ -692,9 +698,11 @@ ALTER TABLE [IF EXISTS] <table_name>
 - ALTER
   - `ALTER COLUMN`: 修改列的默认值、是否非空以及列数据类型。
   - `ALTER PRIMARY KEY`：修改表主键。
+- `CONFIGURE ZONE`：修改表的区域配置。更多详细信息，参见[区域配置管理](./zone-mgmt-relational.md)。
 - DROP
   - `DROP COLUMN`: 删除列，需指定列名。`COLUMN` 为可选关键字，如未使用，默认删除列。`IF EXISTS` 关键字可选。当使用 `IF EXISTS` 关键字时，如果列名存在，系统删除列。如果列名不存在，系统删除列失败，但不会报错。当未使用 `IF EXISTS` 关键字时，如果列名存在，系统删除列。如果列名不存在，系统报错，提示列名不存在。
   - `DROP CONSTRAINT`：删除约束。更多详细信息，参见[删除约束](./constraint-mgmt-relational.md#删除约束)。
+- PARTITION BY: 创建表的数据分区，更多详细信息，参见[分区管理](./partition-mgmt-relational.md)
 - RENAME
   - `RENAME TO`: 修改表的名称。
   - `RENAME COLUMN`：修改列的名称。更多详细信息，参见[修改列](./column-mgmt-relational.md#修改列)。
