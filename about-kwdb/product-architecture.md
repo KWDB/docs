@@ -15,4 +15,4 @@ id: product-architecture
   - **自适应时序引擎**：支持多种时序数据特色的复杂查询和多维聚合方式。与传统关系数据库相比，KWDB 具备优异的查询性能。另外，KWDB 提供 5-30 倍的压缩能力，数据压缩后无需解压缩即可使用。
   - **事务处理引擎**：支持分布式事务和多版本并发控制（Multi-Version Concurrency Control，MVCC），具备注释、视图、约束、索引、序列等功能。
 - **系统管理**：提供系统连接、身份认证、权限管理、资源管理等多种系统管理方式。
-- **生态工具与兼容**：提供数据库操作、监控管理等可视化工具，兼容 [EMQX](https://www.emqx.io/)、[Kafka](https://kafka.apache.org/)、[Telegraf](https://github.com/influxdata/telegraf) 等第三方工具。
+- **生态工具与兼容**：提供数据库操作、监控管理等可视化工具，兼容 [EMQX](https://www.emqx.io/)、[Kafka](https://kafka.apache.org/)、[Flink](https://flink.apache.org/)、[Telegraf](https://github.com/influxdata/telegraf) 等第三方工具。
