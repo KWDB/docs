@@ -167,10 +167,7 @@ CREATE SCHEDULE s1 FOR SQL 'INSERT INTO tsdb.t2 SELECT * FROM tsdb.t1' RECURRING
 
 ## 查看定时任务
 
-`SHOW SCHEDULE` 语句用于查看系统默认创建的以下定时任务：
-
-- 表生命周期管理，任务名称为 `scheduled_table_retention`。
-- 表压缩，任务名称为 `scheduled_table_compress`。
+`SHOW SCHEDULE` 语句用于查看系统默认创建的表生命周期管理任务，任务名称为 `scheduled_table_retention`。
 
 ### 所需权限
 
@@ -307,7 +304,7 @@ RESUME SCHEDULE scheduled_table_statistics;
 
 ## 删除定时任务
 
-`DROP SCHEDULE` 语句用于删除定时任务。目前，不支持删除系统创建的 `scheduled_table_compress` `scheduled_table_retention` 默认定时任务。
+`DROP SCHEDULE` 语句用于删除定时任务。目前，不支持删除系统创建的 `scheduled_table_retention` 默认定时任务。
 
 ### 所需权限
 

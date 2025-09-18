@@ -82,8 +82,7 @@ This section demonstrates how to connect to KWDB using the pgx driver and perfor
            "temperature double " +
            ") TAGS ( " +
            "number int NOT NULL) " +
-           "PRIMARY TAGS(number) " +
-           "ACTIVETIME 3h;")
+           "PRIMARY TAGS(number);")
        if err != nil {
            log.Fatalf("error creating table: %v", err)
        }

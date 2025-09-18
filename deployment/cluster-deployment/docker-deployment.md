@@ -60,7 +60,6 @@ id: docker-deployment
         -p 27257:27257 \
         -p 8080:8080 \
         -v /var/lib/kaiwudb1:/kaiwudb/deploy/kwdb-container \
-        -v /dev:/dev \
         --ipc shareable -w /kaiwudb/bin \
         <kwdb_image> \
         ./kwbase start --insecure --listen-addr=0.0.0.0:26257 \
@@ -73,8 +72,7 @@ id: docker-deployment
         -p 26258:26257 \
         -p 27258:27258 \
         -p 8081:8080 \
-        -v /var/lib/kaiwudb2:/kaiwudb/deploy/kwdb-container \
-        -v /dev:/dev \        
+        -v /var/lib/kaiwudb2:/kaiwudb/deploy/kwdb-container \       
         --ipc shareable -w /kaiwudb/bin \
         <kwdb_image> \
         ./kwbase start --insecure --listen-addr=0.0.0.0:26257 \
@@ -87,8 +85,7 @@ id: docker-deployment
         -p 26259:26257 \
         -p 27259:27259 \
         -p 8082:8080 \
-        -v /var/lib/kaiwudb3:/kaiwudb/deploy/kwdb-container \
-        -v /dev:/dev \        
+        -v /var/lib/kaiwudb3:/kaiwudb/deploy/kwdb-container \      
         --ipc shareable -w /kaiwudb/bin \
         <kwdb_image> \
         ./kwbase start --insecure --listen-addr=0.0.0.0:26257 \
@@ -107,7 +104,6 @@ id: docker-deployment
         -p 8080:8080 \
         -v /etc/kaiwudb/certs:<certs_dir> \
         -v /var/lib/kaiwudb1:/kaiwudb/deploy/kwdb-container \
-        -v /dev:/dev \
         --ipc shareable -w /kaiwudb/bin \
         <kwdb_image> \
         ./kwbase start --certs-dir=<certs_dir> --listen-addr=0.0.0.0:26257 \
@@ -122,7 +118,6 @@ id: docker-deployment
         -p 8081:8080 \
         -v /etc/kaiwudb/certs:<certs_dir> \
         -v /var/lib/kaiwudb2:/kaiwudb/deploy/kwdb-container \
-        -v /dev:/dev \
         --ipc shareable -w /kaiwudb/bin \
         <kwdb_image> \
         ./kwbase start --certs-dir=<certs_dir> --listen-addr=0.0.0.0:26257 \
@@ -137,7 +132,6 @@ id: docker-deployment
         -p 8082:8080 \
         -v /etc/kaiwudb/certs:<certs_dir> \
         -v /var/lib/kaiwudb3:/kaiwudb/deploy/kwdb-container \
-        -v /dev:/dev \
         --ipc shareable -w /kaiwudb/bin \
         <kwdb_image> \
         ./kwbase start --certs-dir=<certs_dir> --listen-addr=0.0.0.0:26257 \

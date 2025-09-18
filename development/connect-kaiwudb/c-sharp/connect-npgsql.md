@@ -107,8 +107,7 @@ KWDB 支持用户通过 Npgsql 驱动连接数据库，并执行创建、插入�
                                             "temperature double " +
                                             ") TAGS ( " +
                                             "number int NOT NULL) " +
-                                            "PRIMARY TAGS(number) " + 
-                                            "ACTIVETIME 3h; ", conn))
+                                            "PRIMARY TAGS(number); ", conn))
             {
             cmd.ExecuteNonQuery();
             }

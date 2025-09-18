@@ -28,7 +28,7 @@ KWDB 支持基于 DRBD 块设备复制的开源软件方案，实现主备节点
 | 项目       | 要求                                                                                                                               |
 | ---------- | ---------------------------------------------------------------------------------------------------------------------------------- |
 | CPU 和内存 | 单节点配置建议不低于 4 核 8G。对于数据量大、复杂的工作负载、高并发和高性能场景，建议配置更高的 CPU 和内存资源以确保系统的高效运行。  |
-| 磁盘       | - 推荐使用 SSD 或者 NVMe 设备，尽量避免使用 NFS、CIFS、CEPH 等共享存储。<br > - 磁盘必须能够实现 500 IOPS 和 30 MB/s 处理效率。 <br> - KWDB 系统自身启动不会占用过多磁盘容量（低于 1G）。实际所需磁盘大小主要取决于用户的业务量以及是否开启 KaiwuDB 压缩等可以减少原始数据磁盘占用的功能。实际部署时，用户可以根据实际的业务规模和性能要求规划硬件资源。更多详细信息，参见[预估磁盘使用量](../../db-operation/cluster-planning.md#预估磁盘使用量)。 |
+| 磁盘       | - 推荐使用 SSD 或者 NVMe 设备，尽量避免使用 NFS、CIFS、CEPH 等共享存储。<br > - 磁盘必须能够实现 500 IOPS 和 30 MB/s 处理效率。 <br> - KWDB 系统自身启动不会占用过多磁盘容量（低于 1G）。实际所需磁盘大小主要取决于用户的业务量。 |
 | 文件系统   | 建议使用 ext4 文件系统。                                                                                                           |
 
 ### 操作系统
@@ -362,7 +362,6 @@ KWDB 支持通过以下方式获取容器镜像：
         -p $db_port:26257 \
         -p $http_port:8080 \
         -v /var/lib/kaiwudb:/kaiwudb/deploy/kwdb-container \
-        -v /dev:/dev \
         --ipc shareable \
         -w /kaiwudb/bin \
         <kwdb_image> \
@@ -383,7 +382,6 @@ KWDB 支持通过以下方式获取容器镜像：
         -p $http_port:8080 \
         -v /etc/kaiwudb/certs:<certs_dir> \
         -v /var/lib/kaiwudb:/kaiwudb/deploy/kwdb-container \
-        -v /dev:/dev \
         --ipc shareable \
         -w /kaiwudb/bin \
         <kwdb_image> \

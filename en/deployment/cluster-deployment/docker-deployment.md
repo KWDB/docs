@@ -63,7 +63,6 @@ This section describes how to deploy a KaiwuDB cluster on a single machine using
         --ulimit memlock=-1 --ulimit nofile=1048576 \
         -p 26257:26257 -p 8080:8080 \
         -v /var/lib/kwdb1:/kaiwudb/deploy/kwdb-container \
-        -v /dev:/dev \
         --ipc shareable -w /kaiwudb/bin \
         <kwdb_image> \
         ./kwbase start --insecure --listen-addr=0.0.0.0:26257 \
@@ -75,7 +74,6 @@ This section describes how to deploy a KaiwuDB cluster on a single machine using
         --ulimit memlock=-1 --ulimit nofile=1048576 \
         -p 26258:26257 -p 8081:8080 \
         -v /var/lib/kaiwudb2:/kaiwudb/deploy/kwdb-container \
-        -v /dev:/dev \
         --ipc shareable -w /kaiwudb/bin \
         <kwdb_image> \
         ./kwbase start --insecure --listen-addr=0.0.0.0:26257 \
@@ -87,7 +85,6 @@ This section describes how to deploy a KaiwuDB cluster on a single machine using
         --ulimit memlock=-1 --ulimit nofile=1048576 \
         -p 26259:26257 -p 8082:8080 \
         -v /var/lib/kaiwudb3:/kaiwudb/deploy/kwdb-container \
-        -v /dev:/dev \
         --ipc shareable -w /kaiwudb/bin \
         <kwdb_image> \
         ./kwbase start --insecure --listen-addr=0.0.0.0:26257 \
@@ -104,7 +101,6 @@ This section describes how to deploy a KaiwuDB cluster on a single machine using
         -p 26257:26257 -p 8080:8080 \
         -v /etc/kaiwudb/certs:<certs_dir> \
         -v /var/lib/kwdb1:/kaiwudb/deploy/kwdb-container \
-        -v /dev:/dev \
         --ipc shareable -w /kaiwudb/bin \
         <kwdb_image> \
         ./kwbase start --certs-dir=<certs_dir> --listen-addr=0.0.0.0:26257 \
@@ -117,7 +113,6 @@ This section describes how to deploy a KaiwuDB cluster on a single machine using
         -p 26258:26257 -p 8081:8080 \
         -v /etc/kaiwudb/certs:<certs_dir> \
         -v /var/lib/kaiwudb2:/kaiwudb/deploy/kwdb-container \
-        -v /dev:/dev \
         --ipc shareable -w /kaiwudb/bin \
         <kwdb_image> \
         ./kwbase start --certs-dir=<certs_dir> --listen-addr=0.0.0.0:26257 \
@@ -130,7 +125,6 @@ This section describes how to deploy a KaiwuDB cluster on a single machine using
         -p 26259:26257 -p 8082:8080 \
         -v /etc/kaiwudb/certs:<certs_dir> \
         -v /var/lib/kaiwudb3:/kaiwudb/deploy/kwdb-container \
-        -v /dev:/dev \
         --ipc shareable -w /kaiwudb/bin \
         <kwdb_image> \
         ./kwbase start --certs-dir=<certs_dir> --listen-addr=0.0.0.0:26257 \
