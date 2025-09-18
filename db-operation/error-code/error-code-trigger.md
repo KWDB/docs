@@ -21,5 +21,5 @@ id: error-code-ts-functions
 | 42P13 | Can't update table %s in trigger because it is already used by statement which invoked this trigger. | 不支持在触发器主体中对触发器关联的表进行操作。 |
 | 42704 | trigger \"%s\" on table \"%s\" does not exist | 重命名触发器时目标触发器不存在。 |
 | 42P17 | trigger \"%s\" already exists on table \"%s\" | 重命名触发器时已存在同名触发器。 |
-| 42P17 | Referenced trigger \"%s\" for the given action time does not exist | 创建的触发器的触发时机和引用的（`FOLLOWS`、`PRECEDES`）触发器的触发时机不一致。 |
+| 42P17 | referenced trigger "trig1" for the given action time and event type does not exist | 创建的触发器的触发事件和触发时机和引用（`FOLLOWS`、`PRECEDES`）的触发器不一致。 |
 | 09000 | TriggeredActionException: errMsg | 执行触发器主体时遇到错误。 |
