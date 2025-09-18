@@ -56,37 +56,43 @@ id: docker-deployment
       # 启动第一个容器
       docker run -d --name kwdb1 --privileged \
         --ulimit memlock=-1 --ulimit nofile=1048576 \
-        -p 26257:26257 -p 8080:8080 \
-        -v /var/lib/kwdb1:/kaiwudb/deploy/kwdb-container \
+        -p 26257:26257 \
+        -p 27257:27257 \
+        -p 8080:8080 \
+        -v /var/lib/kaiwudb1:/kaiwudb/deploy/kwdb-container \
         -v /dev:/dev \
         --ipc shareable -w /kaiwudb/bin \
         <kwdb_image> \
         ./kwbase start --insecure --listen-addr=0.0.0.0:26257 \
-        --advertise-addr=<host1>:26257 --http-addr=0.0.0.0:8080 \
+        --advertise-addr=<host1>:26257 --brpc-addr=:27257 --http-addr=0.0.0.0:8080 \
         --store=/kaiwudb/deploy/kwdb-container --join <host1>:26257
 
       # 启动第二个容器
       docker run -d --name kwdb2 --privileged \
         --ulimit memlock=-1 --ulimit nofile=1048576 \
-        -p 26258:26257 -p 8081:8080 \
+        -p 26258:26257 \
+        -p 27258:27258 \
+        -p 8081:8080 \
         -v /var/lib/kaiwudb2:/kaiwudb/deploy/kwdb-container \
         -v /dev:/dev \        
         --ipc shareable -w /kaiwudb/bin \
         <kwdb_image> \
         ./kwbase start --insecure --listen-addr=0.0.0.0:26257 \
-        --advertise-addr=<host2>:26258 --http-addr=0.0.0.0:8080 \
+        --advertise-addr=<host2>:26258 --brpc-addr=:27258 --http-addr=0.0.0.0:8080 \
         --store=/kaiwudb/deploy/kwdb-container --join <host1>:26257
 
       # 启动第三个容器
       docker run -d --name kwdb3 --privileged \
         --ulimit memlock=-1 --ulimit nofile=1048576 \
-        -p 26259:26257 -p 8082:8080 \
+        -p 26259:26257 \
+        -p 27259:27259 \
+        -p 8082:8080 \
         -v /var/lib/kaiwudb3:/kaiwudb/deploy/kwdb-container \
         -v /dev:/dev \        
         --ipc shareable -w /kaiwudb/bin \
         <kwdb_image> \
         ./kwbase start --insecure --listen-addr=0.0.0.0:26257 \
-        --advertise-addr=<host3>:26259 --http-addr=0.0.0.0:8080 \
+        --advertise-addr=<host3>:26259 --brpc-addr=:27259 --http-addr=0.0.0.0:8080 \
         --store=/kaiwudb/deploy/kwdb-container --join <host1>:26257
       ```
 
@@ -96,40 +102,46 @@ id: docker-deployment
       # 启动第一个容器
       docker run -d --name kwdb1 --privileged \
         --ulimit memlock=-1 --ulimit nofile=1048576 \
-        -p 26257:26257 -p 8080:8080 \
+        -p 26257:26257 \
+        -p 27257:27257 \
+        -p 8080:8080 \
         -v /etc/kaiwudb/certs:<certs_dir> \
-        -v /var/lib/kwdb1:/kaiwudb/deploy/kwdb-container \
+        -v /var/lib/kaiwudb1:/kaiwudb/deploy/kwdb-container \
         -v /dev:/dev \
         --ipc shareable -w /kaiwudb/bin \
         <kwdb_image> \
         ./kwbase start --certs-dir=<certs_dir> --listen-addr=0.0.0.0:26257 \
-        --advertise-addr=<host1>:26257 --http-addr=0.0.0.0:8080 \
+        --advertise-addr=<host1>:26257 --brpc-addr=:27257 --http-addr=0.0.0.0:8080 \
         --store=/kaiwudb/deploy/kwdb-container --join <host1>:26257
 
       # 启动第二个容器
       docker run -d --name kwdb2 --privileged \
         --ulimit memlock=-1 --ulimit nofile=1048576 \
-        -p 26258:26257 -p 8081:8080 \
+        -p 26258:26257 \
+        -p 27258:27258 \
+        -p 8081:8080 \
         -v /etc/kaiwudb/certs:<certs_dir> \
         -v /var/lib/kaiwudb2:/kaiwudb/deploy/kwdb-container \
         -v /dev:/dev \
         --ipc shareable -w /kaiwudb/bin \
         <kwdb_image> \
         ./kwbase start --certs-dir=<certs_dir> --listen-addr=0.0.0.0:26257 \
-        --advertise-addr=<host2>:26258 --http-addr=0.0.0.0:8080 \
+        --advertise-addr=<host2>:26258 --brpc-addr=:27258 --http-addr=0.0.0.0:8080 \
         --store=/kaiwudb/deploy/kwdb-container --join <host1>:26257
 
       # 启动第三个容器
       docker run -d --name kwdb3 --privileged \
         --ulimit memlock=-1 --ulimit nofile=1048576 \
-        -p 26259:26257 -p 8082:8080 \
+        -p 26259:26257 \
+        -p 27259:27259 \
+        -p 8082:8080 \
         -v /etc/kaiwudb/certs:<certs_dir> \
         -v /var/lib/kaiwudb3:/kaiwudb/deploy/kwdb-container \
         -v /dev:/dev \
         --ipc shareable -w /kaiwudb/bin \
         <kwdb_image> \
         ./kwbase start --certs-dir=<certs_dir> --listen-addr=0.0.0.0:26257 \
-        --advertise-addr=<host3>:26259 --http-addr=0.0.0.0:8080 \
+        --advertise-addr=<host3>:26259 --brpc-addr=:27259 --http-addr=0.0.0.0:8080 \
         --store=/kaiwudb/deploy/kwdb-container --join <host1>:26257
         ```
 
@@ -139,9 +151,9 @@ id: docker-deployment
     - `--privileged`：给予容器扩展权限。
     - `--ulimit memlock=-1`：取消容器内存大小限制。
     - `--ulimit nofile=1048576`：设置容器内进程可以打开的最大文件数。
-    - `-p`：端口映射，分别映射数据库服务端口（26257）和 HTTP 端口（8080）。
+    - `-p`：端口映射，分别映射数据库服务端口（26257）、brpc 端口和 HTTP 端口（8080）。**注意**：容器内外 brpc 端口必须保持一致。
     - `-v`：设置容器目录映射：
-      - 将主机的 `/var/lib/kaiwudb` 目录挂载到容器内的 `/kaiwudb/deploy/kwdb-container` 目录，用于持久化数据存储。
+      - 将主机的 `/var/lib/kaiwudbX` 目录挂载到容器内的 `/kaiwudb/deploy/kwdb-container` 目录，用于持久化数据存储。
       - 安全模式下，将主机的 `/etc/kaiwudb/certs` 目录挂载到容器内的 `<certs_dir>` 目录，用于存放证书和密钥。
     - `--ipc shareable`：允许其他容器共享此容器的IPC命名空间。
     - `-w /kaiwudb/bin`：将容器内的工作目录设置为 `/kaiwudb/bin`。
@@ -151,6 +163,7 @@ id: docker-deployment
       - `--certs-dir=<certs_dir>`：（安全模式）证书目录位置。
       - `--listen-addr=0.0.0.0:26257`：数据库监听的地址和端口。
       - `--advertise-addr=<hostx>:2625X`：数据库向集群中其他节点通信的地址和端口。
+      - `--brpc-addr=:2725X`：时序引擎间的 brpc 通信端口，用于节点间通信。
       - `--http-addr=0.0.0.0:8080`：HTTP 接口监听的地址和端口。
       - `--store=/kaiwudb/deploy/kwdb-container`：指定数据存储位置。
       - `--join <host1>:26257`：节点连接集群的地址，可指定集群中的一个或多个节点。

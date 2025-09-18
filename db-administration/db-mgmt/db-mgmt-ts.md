@@ -19,16 +19,21 @@ KWDB 时序数据库支持在创建数据库的时候设置数据库的生命周
 ### 语法格式
 
 ```sql
-CREATE TS DATABASE <db_name> [RETENTIONS <keep_duration>] [PARTITION INTERVAL <interval>];
+CREATE TS DATABASE <db_name> [RETENTIONS <keep_duration>] [PARTITION INTERVAL <interval>] [COMMENT [=] <'comment_text'>];
 ```
 
 ### 参数说明
+
+:::warning 说明
+配置可选参数时，必须严格按照 `[RETENTIONS <keep_duration>] [PARTITION INTERVAL <interval>] [COMMENT [=] <'comment_text'>]` 的顺序，否则系统将会报错。
+:::
 
 | 参数 | 说明 |
 | --- | --- |
 | `db_name` | 待创建的数据库的名称。该名称必须唯一，且遵循[数据库标识符规则](../../sql-reference/sql-identifiers.md)。目前，数据库名称不支持中文字符，最大长度不能超过 63 个字节。|
 | `keep_duration` | 可选参数。指定数据库的生命周期，默认值为 `0d`，即不会过期删除。支持配置的时间单位包括：秒（S 或 SECOND）、分钟（M 或 MINUTE）、小时（H 或 HOUR）、天（D 或 DAY）、周（W 或 WEEK）、月（MON 或 MONTH）、年（Y 或 YEAR），例如 `RETENTIONS 10 DAY`。取值必须是整数值，最大值不得超过 `1000` 年。|
 | `interval` | 可选参数，指定数据库数据目录分区的时间范围。默认值为 `10d`，即每 10 天进行一次分区。支持配置的时间单位包括：天（D 或 DAY）、周（W 或 WEEK）、月（MON 或 MONTH）、年（Y 或 YEAR）。取值必须是整数值，最大值不得超过 `1000` 年。|
+| `comment_text` | 可选参数。指定数据库的注释信息。 |
 
 ### 语法示例
 
@@ -66,6 +71,20 @@ CREATE TS DATABASE <db_name> [RETENTIONS <keep_duration>] [PARTITION INTERVAL <i
 
     ```sql
     CREATE TS DATABASE iot RETENTIONS 50d PARTITION INTERVAL 2d;
+    ```
+
+    执行成功后，控制台输出以下信息：
+
+    ```sql
+    CREATE TS DATABASE
+    ```
+
+- 创建数据库时，指定数据库的注释信息。
+
+    以下示例创建一个名为 `ts_db_power` 的数据库，并将数据库的注释信息设置为 `database for power statistics`。
+
+    ```sql
+    CREATE TS DATABASE ts_db_power COMMENT = 'database for power statistics';
     ```
 
     执行成功后，控制台输出以下信息：
