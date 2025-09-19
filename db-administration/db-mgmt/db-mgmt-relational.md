@@ -14,10 +14,14 @@ id: db-mgmt-relational
 ### 语法格式
 
 ```sql
-CREATE DATABASE [IF NOT EXISTS] <db_name> [WITH] [ENCODING [=] <'code_name'>];
+CREATE DATABASE [IF NOT EXISTS] <db_name> [WITH] [ENCODING [=] <'code_name'>] [COMMENT [=] <'comment_text'>];
 ```
 
 ### 参数说明
+
+:::warning 说明
+配置可选参数时，必须严格按照 `[ENCODING [=] <'code_name'>] [COMMENT [=] <'comment_text'>]` 的顺序，否则系统将会报错。
+:::
 
 | 参数 | 说明 |
 | --- | --- |
@@ -25,14 +29,25 @@ CREATE DATABASE [IF NOT EXISTS] <db_name> [WITH] [ENCODING [=] <'code_name'>];
 | `db_name` | 待创建的数据库的名称。该名称必须唯一，且遵循[数据库标识符规则](../../sql-reference/sql-identifiers.md)。|
 | `WITH` | 可选关键字，是否使用该关键字不影响数据库的创建。 |
 | `ENCODING` | 可选关键字，指定编码方式。目前，KWDB 只支持 UTF-8 编码以及 UTF-8 的别名（UTF8 和 UNICODE）。编码值应该用单引号（`''`）括起来，并且不区分大小写。例如：`CREATE DATABASE bank ENCODING = 'UTF-8'`。 |
+| `COMMENT` | 可选关键字。指定数据库的注释信息。|
 
 ### 语法示例
 
-以下示例创建一个名为 `db1` 的关系数据库。
+- 创建数据库。
 
-```sql
-CREATE DATABASE db1;
-```
+    以下示例创建一个名为 `db1` 的关系数据库。
+
+    ```sql
+    CREATE DATABASE db1;
+    ```
+
+- 创建数据库时，指定数据库的注释信息。
+
+    以下示例创建一个名为 `db_student` 的关系数据库，并将数据库的注释信息设置为 `database for student statistics`。
+
+    ```sql
+    CREATE DATABASE db_student COMMENT = 'database for student statistics';
+    ```
 
 ## 查看数据库
 

@@ -210,13 +210,15 @@ KWDB MCP Server 可与任何支持 MCP 协议的 LLM Agent 配合使用。LLM Ag
           "kwdb-server-sse": {
             "url": "http://localhost:8080/mcp",
             "disabled": false,
-            "autoApprove": []
+            "autoApprove": [],
+            "type": "streamableHttp"
           }
         }
         ```
 
         参数说明：
         - `url`：KWDB MCP Server 的 IP 地址，需要拼接 `/mcp` 路径。默认为 `http://localhost:8080/mcp`。
+        - `type`：HTTP 传输类型。
 
 #### SSE 模式
 
