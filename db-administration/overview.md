@@ -17,7 +17,7 @@ id: overview
   - [索引管理](./db-object-mgmt/ts-db/index-mgmt-ts.md)
   - [数据分片管理](./db-object-mgmt/ts-db/range-mgmt-ts.md)
   - [分区管理](./db-object-mgmt/ts-db/partition-mgmt-ts.md)
-  - [区域配置管理](./db-object-mgmt/ts-db/zone-mgmt-ts.md)
+  - [区域管理](./db-object-mgmt/ts-db/zone-mgmt-ts.md)
   - [注释管理](./db-object-mgmt/ts-db/comment-mgmt-ts.md)
 - 关系数据库对象管理
   - [关系表管理](./db-object-mgmt/relational-db/table-mgmt-relational.md)
