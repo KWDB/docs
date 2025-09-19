@@ -203,7 +203,7 @@ KWDB supports the following group window functions:
 
     In this example, the fixed row count is set to 3 and the sliding row is set to 2. Data are grouped into 3 windows, where the first window includes data in `[1,4)` row while the second window includes data in `[3,6)` row.
 
-    ![](../../../../static/sql-reference/ts-count-window-2-en.png)
+    ![](../../../../static/sql-reference/ts-count-window-2.png)
 
 - **Event window**: creates data windows dynamically using start and end conditions. Windows open when data meets the start condition and close when the end condition is met. You can use any expression for both conditions, and they can reference different columns.
   
