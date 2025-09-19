@@ -53,8 +53,6 @@ id: relational-table
 
     ![](../../../static/sql-reference/create-r-table-partition.png)
 
-:::warning 说明 配置可选参数时，必须严格按照 [<column_def> | <index_def> | <family_def> | <table_constraint>] [<interleave_clause>] [COMMENT [=] <'comment_text'>] 的顺序，否则系统将会报错。 :::
-
 ### 参数说明
 
 :::warning 说明
