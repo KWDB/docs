@@ -681,6 +681,7 @@ id: functions-relational-db
 | current_schemas(include_pg_catalog: bool) → string[]                               | 返回搜索路径中的有效 schema。                                                                                                                                                                                                                       |
 | current_user() → string                                                            | 返回当前用户。该功能为了与 PostgreSQL 兼容。                                                                                                                                                                                                 |
 | version() → string                                                                 | 返回节点的 KWDB 版本。                                                                                                                                                                                                                           |
+| row_count() | 返回 DML 语句的修改行数。支持不带 `RETURNING` 子句的 `INSERT`、`UPDATE`、`DELETE` 语句。<br > **说明** <br >- 除 `INSERT`、`UPDATE`、`DELETE` 语句以外，其他 DML 语句对该函数没有影响。当该函数位于其他 DML 语句之后，如果之前未执行过相关 DML 语句，则返回 `0`。如果之前执行过相关语句，则返回上一次执行 DML 语句影响的行数。<br >- 该函数没有事务性。 |
 
 ### 时间函数
 
