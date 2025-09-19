@@ -24,4 +24,4 @@ id: overview
 
 - 卸载 KWDB
 
-  如需了解如何卸载 KaiwuDB，请参见[卸载 KWDB 数据库](./uninstall-kaiwudb/uninstall-db.md)
+  如需了解如何卸载 KWDB，请参见[卸载 KWDB 数据库](./uninstall-kaiwudb/uninstall-db.md)

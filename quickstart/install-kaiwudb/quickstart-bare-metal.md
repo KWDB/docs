@@ -62,10 +62,7 @@ KWDB 支持在以下服务器操作系统进行安装部署。
 | libprotobuf | v3.6.1+ | **注意**：Ubuntu 18.04 默认的 libprotobuf 版本不满足要求，用户需要提前安装所需版本（推荐 3.6.1 和 3.12.4）。|
 | GEOS | v3.3.8+ | 可选依赖 |
 | xz-libs | v5.2.0+ | N/A |
-| squashfs-tools | any | N/A |
 | libgcc | v7.3.0+ | N/A |
-| mount | any | N/A |
-| squashfuse | any | 可选依赖 |
 
 ### 端口要求
 
@@ -89,7 +86,7 @@ KWDB 支持在以下服务器操作系统进行安装部署。
 目前 KWDB 开源仓库提供了以下系统与架构的 [DEB 或 RPM 安装包](https://gitee.com/kwdb/kwdb/releases/)，如需其它系统或架构的安装包，请联系 [KWDB 技术支持](https://www.kaiwudb.com/support/)：
 
 - Ubuntu V20.04 x86_64
-- Ubuntu V22.04 x86_64
+- Ubuntu V20.04 ARM_64
 - Kylin V10_2403 x86_64
 - Kylin V10_2403 ARM_64
 
@@ -172,7 +169,7 @@ tar -zxvf <package_name>
       - `kaiwudb_port`：KWDB 服务端口，默认为 `26257`。
       - `brpc_port`：KWDB 时序引擎间的 brpc 通信端口，用于节点间通信。单节点部署时可不指定，指定后系统会自动忽略该设置。
       - `data_root`：数据目录，默认为 `/var/lib/kaiwudb`。
-      - `cpu`: 可选参数，用于指定 KWDB 服务占用当前节点服务器 CPU 资源的比例，默认无限制。取值范围为 `[0,1]`，最大精度为小数点后两位。**注意**：如果部署环境为 Ubuntu 18.04 版本，部署集群后，需要将 `kaiwudb.service` 文件中的 `CPUQuota` 修改为整型值，例如，将 `180.0%` 修改为 `180%`，以确保设置生效。具体操作步骤，参见[配置 CPU 资源占用率](../../deployment/cluster-config/cluster-config-bare-metal.md#配置-cpu-资源占用率)。
+      - `cpu`：可选参数，用于指定 KWDB 服务占用当前节点服务器 CPU 资源的比例，默认无限制。取值范围为 `[0,1]`，最大精度为小数点后两位。**注意**：如果部署环境为 Ubuntu 18.04 版本，部署集群后，需要将 `kaiwudb.service` 文件中的 `CPUQuota` 修改为整型值，例如，将 `180.0%` 修改为 `180%`，以确保设置生效。具体操作步骤，参见[配置 CPU 资源占用率](../../deployment/cluster-config/cluster-config-bare-metal.md#配置-cpu-资源占用率)。
     - `local`：本地节点配置
       - `node_addr`：本地节点对外提供服务的 IP 地址，监听地址为 `0.0.0.0`，端口为 KWDB 服务端口。
 

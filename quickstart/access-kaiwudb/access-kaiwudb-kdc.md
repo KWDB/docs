@@ -46,7 +46,7 @@ KaiwuDB 开发者中心的安装需满足以下环境要求：
 
 2. 合并解压缩安装包，文件目录如下：
 
-   ![安装包](../../static/quickstart/JD1MbIGlXoE7qzxwqOjcc8Wtn4e.png)
+   <img src="../../static/quickstart/JD1MbIGlXoE7qzxwqOjcc8Wtn4e.png" style="zoom:67%;" />
 
 3. 双击运行 KaiwuDB 开发者中心应用程序。
 
@@ -54,23 +54,21 @@ KaiwuDB 开发者中心的安装需满足以下环境要求：
 
 首次建立连接或软件中的所有连接都被删除后，软件启动后会自动弹出**新建连接**向导，引导用户建立连接。
 
-![数据库连接](../../static/quickstart/VfcqbD99roY3zbxdCQdcCRFenBc.png)
+<img src="../../static/quickstart/VfcqbD99roY3zbxdCQdcCRFenBc.png" style="zoom:50%;" />
 
 其他情况下，如需创建连接，可以选择以下任一操作：
 
 - 单击工具栏或数据库导航区工具栏中的**新建连接**按钮。
-
-  ![](../../static/quickstart/RSxWbFLxYoqf5dxHTHkcpyN3nle.png)
+   <img src="../../static/quickstart/RSxWbFLxYoqf5dxHTHkcpyN3nle.png" style="zoom:67%;" />
 
 - 在菜单栏中，单击**数据库**，然后从下拉菜单中选择**新建连接**。
-
-  ![](../../static/quickstart/WcrObb1VhorfioxESFJcxGtgnAd.png)
+   <img src="../../static/quickstart/WcrObb1VhorfioxESFJcxGtgnAd.png" style="zoom:67%;" />
 
 以下步骤以首次建立连接为例，说明如何连接数据库。
 
 1. 在**创建新连接**窗口，选择 KaiwuDB 驱动，然后单击**下一步**。
 
-   ![](../../static/quickstart/FU8sbwC1yoqPchxh3ttcptgan4d.png)
+   <img src="../../static/quickstart/FU8sbwC1yoqPchxh3ttcptgan4d.png" style="zoom:62%;" />
 
 2. 在**常规**页签，设置主机、端口、数据库、用户和密码（如果采用非安全部署模式，则无需设置密码）。
 
@@ -84,4 +82,6 @@ KaiwuDB 开发者中心的安装需满足以下环境要求：
 
    数据库导航区将自动更新，显示已连接的数据库。
 
-   ![](../../static/quickstart/TLQcbBq6eoTndRxSYQucuY7bn9e.png)
+   <img src="../../static/quickstart/TLQcbBq6eoTndRxSYQucuY7bn9e.png" style="zoom:67%;" />
+
+   

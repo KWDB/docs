@@ -48,4 +48,4 @@ KWDB 支持在安装时通过修改 `deploy.cfg` 文件中的 `data_root` 参数
 
 ### 重组配置
 
-在 KaiwuDB 中，数据重组功能默认启用，用户可以通过 `ts.auto_vacuum.enabled` 实时参数选择是否启用或禁用该功能。有关详细信息，参见[集群实时参数](./cluster-settings-config.md#实时参数)。
+在 KWDB 中，数据重组功能默认启用，用户可以通过 `ts.auto_vacuum.enabled` 实时参数选择是否启用或禁用该功能。有关详细信息，参见[集群实时参数](./cluster-settings-config.md#实时参数)。

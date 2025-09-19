@@ -5,11 +5,11 @@ id: overview
 
 # Overview
 
-This section offers a complete set of resources for developing applications with KaiwuDB. It includes guidance on how to connect using different programming language connectors and how to integrate with popular data tools.
+This section offers a complete set of resources for developing applications with KWDB. It includes guidance on how to connect using different programming language connectors and how to integrate with popular data tools.
 
-## Connecting to KaiwuDB
+## Connecting to KWDB
 
-Learn how to connect to KaiwuDB using various supported connectors. Each option includes setup instructions and sample code:
+Learn how to connect to KWDB using various supported connectors. Each option includes setup instructions and sample code:
 
 - **Java**
   - [JDBC](./connect-kaiwudb/java/connect-jdbc.md)
@@ -42,7 +42,7 @@ Learn how to connect to KaiwuDB using various supported connectors. Each option 
 
 ## Reading and Writing Data
 
-Discover how to integrate KaiwuDB with popular messaging and data processing tools to enable smooth data flows:
+Discover how to integrate KWDB with popular messaging and data processing tools to enable smooth data flows:
 
 - [Kafka](./read-write-data/kafka.md)
 - [DataX](./read-write-data/datax.md)

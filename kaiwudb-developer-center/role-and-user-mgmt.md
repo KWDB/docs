@@ -76,7 +76,7 @@ KaiwuDB 开发者中心支持为角色或用户添加成员。角色或用户的
 
 ::: warning 说明
 
-KaiwuDB 不支持将 `root` 用户从 `admin` 角色中删除。
+KWDB 不支持将 `root` 用户从 `admin` 角色中删除。
 :::
 
 #### 前提条件

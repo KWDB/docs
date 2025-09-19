@@ -42,9 +42,9 @@ docker exec -it <container-name> ./kwbase sql [security-opions] --host=<your-hos
     ./kwbase sql --insecure --host=<your-host-ip> -u <username>
     ```
 
-## TLS 安全模式连接
+## 安全模式连接
 
-以下示例说明如何以 TLS 安全模式连接 KWDB。
+以下示例说明如何以安全模式连接 KWDB。
 
 - 使用部署数据库时所用的用户：
 

@@ -15,8 +15,7 @@ id: stream-sql
 
 ### 所需权限
 
-- 非三权分立模式下，用户拥有源时序表的 `SELECT` 权限和目标表的 `INSERT` 权限。
-- 三权分立模式下，普通用户拥有源时序表的 `SELECT` 权限和目标表的 `INSERT` 权限。
+用户拥有源时序表的 `SELECT` 权限和目标表的 `INSERT` 权限。
 
 ### 语法格式
 
@@ -109,8 +108,7 @@ SHOW STREAM test_stream;
 
 ### 所需权限
 
-- 非三权分立模式下，用户为 Admin 用户或者流计算的创建者。
-- 三权分立模式下，用户为 `sysadmin` 用户或者流计算的创建者。
+用户为 Admin 用户或者流计算的创建者。
 
 ::: warning 说明
 如果创建流计算的用户被删除后，只有 Admin 用户或 `sysadmin` 用户可以修改流计算。
@@ -150,8 +148,7 @@ ALTER STREAM cpu_stream SET enable = 'off';
 
 ### 所需权限
 
-- 非三权分立模式下，用户为 Admin 用户或者流计算的创建者。
-- 三权分立模式下，用户为 `sysadmin` 用户或者流计算的创建者。
+用户为 Admin 用户或者流计算的创建者。
 
 ::: warning 说明
 如果创建流计算的用户被删除后，只有 Admin 用户或 `sysadmin` 用户可以删除流计算。
