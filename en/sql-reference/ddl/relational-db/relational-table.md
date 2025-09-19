@@ -27,7 +27,7 @@ The user must have been granted the `CREATE` privilege on the specified database
 
 - `col_quailfication_elem`
 
-    ![](../../../../static/sql-reference/col_qualification_elem.png)
+    ![](../../../../static/sql-reference/JgXXboDxzoUFPVxND7UcGSFNngg.png)
 
 - `index_def`
 
