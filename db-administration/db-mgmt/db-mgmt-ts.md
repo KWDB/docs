@@ -20,7 +20,9 @@ CREATE TS DATABASE <db_name> [RETENTIONS <keep_duration>] [COMMENT [=] <'comment
 ### 参数说明
 
 :::warning 说明
-配置可选参数时，必须严格按照 `[RETENTIONS <keep_duration>] [COMMENT [=] <'comment_text'>]` 的顺序，否则系统将会报错。
+- 配置可选参数时，必须严格按照 `[RETENTIONS <keep_duration>] [COMMENT [=] <'comment_text'>]` 的顺序，否则系统将会报错。
+- 3.0.0 版本数据库分区间隔仅支持 10 天，其他配置值无效。
+
 :::
 
 | 参数 | 说明 |
@@ -174,7 +176,8 @@ SHOW CREATE DATABASE tsdb1;
   database_name |          create_statement
 ----------------+-------------------------------------
   tsdb1         | CREATE TS DATABASE tsdb1
-                |      retentions 864000s
+                |      retentions 0s
+                |      partition interval 10d
 (1 row)
 ```
 
@@ -182,7 +185,7 @@ SHOW CREATE DATABASE tsdb1;
 
 ### 前提条件
 
-用户拥有数据库的 CREATE 或 ALL 权限。
+无
 
 ### 语法格式
 
@@ -292,7 +295,7 @@ KWDB 支持修改数据库的名称、生命周期和区域配置。
               |     num_replicas = 5,                    
               |     constraints = '[]',                  
               |     lease_preferences = '[]'             
-    (6 rows)
+    (1 row)
     ```
 
 ## 删除数据库

@@ -135,7 +135,7 @@ SHOW CREATE DATABASE reldb1;
 
 ### 前提条件
 
-用户拥有数据库的 CREATE 或 ALL 权限。
+无
 
 ### 语法格式
 
@@ -159,7 +159,7 @@ USE db1;
 
 ## 修改数据库
 
-KWDB 支持修改数据库名称。
+KWDB 支持修改数据库名称以及数据库区域配置。
 
 ::: warning 说明
 KWDB 不支持修改视图关联的数据库的名称。
@@ -167,13 +167,25 @@ KWDB 不支持修改视图关联的数据库的名称。
 
 ### 前提条件
 
-用户为 Admin 用户或者 Admin 角色成员。默认情况下，root 用户具有 Admin 角色。
+- 修改数据库名称：用户是 `admin` 角色的成员。默认情况下，`root` 用户属于 `admin` 角色。
+- 修改数据库区域配置：
+  - 修改系统数据库区域配置：用户是 `admin` 角色的成员。默认情况下，`root` 用户属于 `admin` 角色。
+  - 修改其他数据库区域配置：用户是 `admin` 角色的成员或者拥有目标数据库的 CREATE 或 ZONECONFIG 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
-```sql
-ALTER DATABASE <db_name> RENAME TO <new_name>;
-```
+- 修改数据库名称：
+
+  ```sql
+  ALTER DATABASE <db_name> RENAME TO <new_name>;
+  ```
+
+- 修改数据库区域配置：
+  
+  ```sql
+  ALTER DATABASE <db_name> CONFIGURE ZONE 
+  [USING <variable> = [COPY FROM PARENT | <value>], <variable> = [<value> | COPY FROM PARENT], ... | DISCARD];
+  ```
 
 ### 参数说明
 
@@ -181,6 +193,10 @@ ALTER DATABASE <db_name> RENAME TO <new_name>;
 | --- | --- |
 | `db_name` | 待修改的数据库名称。如果目标数据库为当前数据库，或者将 `sql_safe_updates` 参数设置为 `true`，则无法重命名该数据库。|
 | `new_name` | 拟修改的数据库名称，新数据库名称必须唯一，并且[遵循数据库标识符规则](../../sql-reference/sql-identifiers.md)。|
+| `variable` | 待修改的变量名，关系库支持修改以下变量：<br> - `range_min_bytes`：数据分片的最小大小，单位为字节。数据分片小于该值时，KWDB 会将其与相邻数据分片合并。默认值：256 MiB，设置值应大于 1 MiB（1048576 字节），小于数据分片的最大大小。<br> - `range_max_bytes`：数据分片的最大大小，单位为字节。数据分片大于该值时，KWDB 会将其切分到两个数据分片。默认值： 512 MiB。设置值不得小于 5 MiB（5242880 字节）。<br> - `gc.ttlseconds`：数据在垃圾回收前保留的时间，单位为秒。默认值为 `90000`（25 小时）。设置值建议不小于 600 秒（10 分钟），以免影响长时间运行的查询。设置值较小时可以节省磁盘空间，设置值较大时会增加 `AS OF SYSTEM TIME` 查询的时间范围。另外，由于每行的所有版本都存储在一个永不拆分的单一数据分片内，不建议将该值设置得太大，以免单行的所有更改累计超过 64 MiB，导致内存不足或其他问题。<br>- `num_replicas`：副本数量。默认值为 3。`system` 数据库、`meta`、`liveness` 和 `system` 数据分片的默认副本数为 5。 **注意**：集群中存在不可用节点时，副本数量不可缩减。<br>- `constraints`：副本位置的必需（+）和/或禁止（-）约束。<br> - `lease_preferences`：租约位置的必需（+）和/或禁止（-）约束的有序列表。每个约束前可带 + 表示必需，或 - 表示禁止。注意，租约偏好不必与 `constraints` 字段共享，用户可以单独定义 `lease_preferences`，也可以单独定义 `lease_preferences`。如果不能满足首选项，KWDB 将尝试下一个优先级。如果所有首选项都无法满足，KWDB 将使用默认的租约分布算法，该算法基于每个节点已持有的租约数量来决定租约位置，尝试平衡租约分布。列表中的每个值可以包含多个约束。例如，列表 `[[+zone=zn-east-1b, +ssd], [+zone=zn-east-1a], [+zone=zn-east-1c, +ssd]]` 表示首选位于 `zn-east-1b` 区域具有 SSD 的节点，其次是位于 `zn-east-1a` 区域的节点，最后是 `zn-east-1c` 区域具有 SSD 的节点。默认值：如果未指定此字段，则不应用租约偏好。 |
+| `value` | 变量值。 |
+|`COPY FROM PARENT`| 使用父区域的设置值。|
+|`DISCARD` | 移除区域配置，采用默认值。|
 
 ### 语法示例
 
@@ -219,6 +235,30 @@ ALTER DATABASE <db_name> RENAME TO <new_name>;
     (5 rows)
     ```
 
+- 修改数据库区域配置
+  
+  以下示例将 `db3` 数据库副本数改为 5， 将数据在垃圾回收前保留的时间改为100000。
+  
+  ```sql
+  -- 1. 修改数据库区域配置
+  > ALTER DATABASE db3 CONFIGURE ZONE USING num_replicas = 5, gc.ttlseconds = 100000;
+  CONFIGURE ZONE 1
+
+  -- 2. 查看数据库区域配置
+
+  > SHOW ZONE CONFIGURATION FOR DATABASE db3;
+        target  |               raw_config_sql
+  -------------------+------------------------------------------
+    DATABASE db3 | ALTER DATABASE db3 CONFIGURE ZONE USING
+                |     range_min_bytes = 134217728,
+                |     range_max_bytes = 536870912,
+                |     gc.ttlseconds = 100000,
+                |     num_replicas = 5,
+                |     constraints = '[]',
+                |     lease_preferences = '[]'
+  (1 row)
+  ```
+  
 ## 删除数据库
 
 ### 前提条件

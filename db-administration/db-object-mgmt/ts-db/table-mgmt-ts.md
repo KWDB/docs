@@ -30,6 +30,7 @@ PRIMARY [TAGS|ATTRIBUTES] (<primary_tag_list>)
 :::warning 说明
 - 目前，时序表名、列名和标签名称不支持中文字符。
 - 配置可选参数时，必须严格按照 `[RETENTIONS <keep_duration>] [DICT ENCODING] [COMMENT [=] <'comment_text'>] [WITH HASH(<hash_value>)]` 的顺序，否则系统将会报错。
+- 3.0.0 版本中，表活跃时间和分区间隔的配置不会生效。
 :::
 
 | 参数 | 说明 |
@@ -111,7 +112,6 @@ PRIMARY [TAGS|ATTRIBUTES] (<primary_tag_list>)
 
     ```sql
     CREATE TABLE device_info (create_time TIMESTAMPZ NOT NULL, device_id INT COMMENT 'device ID' NOT NULL, install_date TIMESTAMPZ, warranty_period INT2) TAGS (plant_code INT2 NOT NULL COMMENT = 'plant code', workshop VARCHAR(128) NOT NULL, device_type CHAR(1023) NOT NULL, manufacturer NCHAR(254) NOT NULL) PRIMARY TAGS(plant_code, workshop, device_type, manufacturer) COMMENT = 'table for device information';
-    CREATE 
     ```
 
 - 创建时序表并设置 HASH 环大小。
@@ -238,15 +238,17 @@ SHOW CREATE [TABLE] [<database_name>.] <table_name>;
     -- 2. 查看已创建的 t1 时序表。
 
     SHOW CREATE TABLE t3;
-      table_name |              create_statement
-    -------------+----------------------------------------------
-      t3         | CREATE TABLE t3 (
-                |     ts TIMESTAMPTZ NOT NULL,
-                |     a INT4 NULL
-                | ) TAGS (
-                |     ptag INT4 NOT NULL ) PRIMARY TAGS(ptag)
-                |     retentions 0s
-    (1 row)
+    table_name |              create_statement
+  -------------+----------------------------------------------
+    t3         | CREATE TABLE t3 (
+              |     ts TIMESTAMPTZ(3) NOT NULL,
+              |     a INT4 NULL
+              | ) TAGS (
+              |     ptag INT4 NOT NULL ) PRIMARY TAGS(ptag)
+              |     retentions 0s
+              |     activetime 1d
+              |     partition interval 30d
+  (1 row)
     ```
 
 - 查看其它数据库中指定表的建表语句。
@@ -268,7 +270,9 @@ SHOW CREATE [TABLE] [<database_name>.] <table_name>;
                     | ) TAGS (
                     |     site INT4 NOT NULL ) PRIMARY TAGS(site)
                     |     retentions 0s
-    (1 row)
+                    |     activetime 1d
+                    |     partition interval 30d
+        (1 row)
     ```
 
 ## 修改表

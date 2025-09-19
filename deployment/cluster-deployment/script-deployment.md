@@ -58,7 +58,7 @@ id: script-deployment
         - `kaiwudb_port`：KWDB 服务端口，默认为 `26257`。
         - `brpc_port`：KWDB 时序引擎间的 brpc 通信端口，用于节点间通信，默认为 `27257`。
         - `data_root`：数据目录，默认为 `/var/lib/kaiwudb`。
-        - `cpu`: 可选参数，用于指定 KWDB 服务占用当前节点服务器 CPU 资源的比例，默认无限制。取值范围为 `[0,1]`，最大精度为小数点后两位。KWDB 支持调整 CPU 资源占用率。更多信息，参见[配置裸机部署集群](../cluster-config/cluster-config-bare-metal.md)或[配置容器部署集群](../cluster-config/cluster-config-docker.md) 。**注意**：如果部署环境为 Ubuntu 18.04 版本，在裸机部署集群完成后，需要将 `kaiwudb.service` 文件中的 `CPUQuota` 修改为整型值，例如，将 `180.0%` 修改为 `180%`，以确保设置生效。具体操作步骤，参见[配置 CPU 资源占用率](../cluster-config/cluster-config-bare-metal.md#配置-cpu-资源占用率)。
+        - `cpu`：可选参数，用于指定 KWDB 服务占用当前节点服务器 CPU 资源的比例，默认无限制。取值范围为 `[0,1]`，最大精度为小数点后两位。KWDB 支持调整 CPU 资源占用率。更多信息，参见[配置裸机部署集群](../cluster-config/cluster-config-bare-metal.md)或[配置容器部署集群](../cluster-config/cluster-config-docker.md) 。**注意**：如果部署环境为 Ubuntu 18.04 版本，在裸机部署集群完成后，需要将 `kaiwudb.service` 文件中的 `CPUQuota` 修改为整型值，例如，将 `180.0%` 修改为 `180%`，以确保设置生效。具体操作步骤，参见[配置 CPU 资源占用率](../cluster-config/cluster-config-bare-metal.md#配置-cpu-资源占用率)。
     - `local`：本地节点配置
         - `local_node_ip`：本地节点对外提供服务的 IP 地址，监听地址为 `0.0.0.0`，端口为 KWDB 服务端口。
     - `cluster`：集群内其他节点的配置
@@ -130,7 +130,7 @@ id: script-deployment
     | `build`        | 节点的 KWDB 版本                                                                                                                                                       |
     | `started_at`   | 节点启动的日期和时间。                                                                                                                                                     |
     | `updated_at`   | 节点更新命令结果的日期和时间。节点正常时，每 10 秒左右记录一次新状态。节点不正常时，此命令的统计信息可能会较旧。                                                             |
-    | `locality`     | 节点机器的地理位置，例如国家、数据中心或机架等。                                                                                                            |
+    | `locality`     | 节点 ID。                                                                                                            |
     | `start_mode`   | 节点启动模式。                                                                                                                                  |
     | `is_available`<br>`is_live` | 如果均为 `true`，表示节点为存活状态。<br>如果均为 `false`，表示节点为异常状态。                                                                                     |
 

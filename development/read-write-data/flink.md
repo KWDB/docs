@@ -7,7 +7,7 @@ id: flink
 
 Apache Flink 是 Apache 软件基金会开源的分布式流批一体化处理框架，广泛应用于流处理、批处理、复杂事件处理、实时数据仓库构建以及机器学习等大数据场景。
 
-为实现 Flink 与 KWDB 的高效集成，KWDB 提供了专用的 KaiwuDB Flink Connector。该连接器通过 Source 组件从 KWDB 读取数据进行实时分析，通过 Sink 组件将 Flink 处理后的结果写入 KWDB，实现高效的数据存储与管理。
+为实现 Flink 与 KWDB 的高效集成，KWDB 提供了专用的连接器 KaiwuDB Flink Connector。该连接器通过 Source 组件从 KWDB 读取数据进行实时分析，通过 Sink 组件将 Flink 处理后的结果写入 KWDB，实现高效的数据存储与管理。
 
 KaiwuDB Flink Connector 支持以下两种使用方式：
 
@@ -16,7 +16,7 @@ KaiwuDB Flink Connector 支持以下两种使用方式：
 
 ## 功能概述
 
-KaiwuDB Flink 连接器支持以下功能：
+KaiwuDB Flink Connector 支持以下功能：
 
 - 从 KWDB 读取数据并使用 Flink 进行分析处理
 - 将 Flink 的复杂计算和深度分析结果写入 KWDB
@@ -24,7 +24,7 @@ KaiwuDB Flink 连接器支持以下功能：
 - 灵活的参数配置：支持 URL 地址、批处理大小、数据库和表名、并发度等配置
 - 支持按时间戳和主标签进行数据分片，实现并发读取
 
-## 配置 KWDB Flink Connector
+## 配置 KaiwuDB Flink Connector 
 
 ### 前提条件
 
