@@ -37,7 +37,7 @@ id: relational-zone
 
 ### 语法格式
 
-![](../../../static/sql-reference/show-zone.png)
+![](../../../static/sql-reference/show-zone-r.png)
 
 ### 参数说明
 
