@@ -195,16 +195,16 @@ KWDB 支持创建函数索引，函数索引的索引列不是表中的列，而
 
 ## 查看索引
 
-`SHOW INDEX` 语句用于查看目标表或数据库的索引信息。
+`SHOW INDEX` 语句用于查看目标表、数据库、物化视图的索引信息。
 
 ### 前提条件
 
-用户拥有对应数据库及表的任意权限。
+用户拥有对应数据库、表、物化视图的任意权限。
 
 ### 语法格式
 
 ```sql
-SHOW [INDEX | INDEXES | KEYS] FROM [<table_name> | DATABASE <database_name>] [WITH COMMENT];
+SHOW [INDEX | INDEXES | KEYS] FROM [<table_name> | DATABASE <database_name> | <mview_name>] [WITH COMMENT];
 ```
 
 ### 参数说明
@@ -213,6 +213,7 @@ SHOW [INDEX | INDEXES | KEYS] FROM [<table_name> | DATABASE <database_name>] [WI
 | --- | --- |
 | `table_name` | 索引所在表的名称。 |
 | `database_name` | 索引所在数据库的名称。 |
+| `mview_name` | 索引所在物化视图的名称。 |
 | `WITH COMMENT` | 可选关键字，查看索引的注释信息。默认情况下，索引的注释信息为 `NULL`。 |
 
 ### 返回字段说明
@@ -230,29 +231,59 @@ SHOW [INDEX | INDEXES | KEYS] FROM [<table_name> | DATABASE <database_name>] [WI
 
 ### 语法示例
 
-以下示例查看 `re_users` 表的索引。
+- 查看表的索引。
 
-```sql
-SHOW INDEX FROM re_users;
-```
+    以下示例查看 `re_users` 表的索引。
 
-执行成功后，控制台输出以下信息：
+    ```sql
+    SHOW INDEX FROM re_users;
+    ```
 
-```sql
-  table_name |        index_name        | non_unique | seq_in_index | column_name | direction | storing | implicit
--------------+--------------------------+------------+--------------+-------------+-----------+---------+-----------
-  re_users   | primary                  |   false    |            1 | city        | ASC       |  false  |  false
-  re_users   | primary                  |   false    |            2 | id          | ASC       |  false  |  false
-  re_users   | re_users_city_idx        |    true    |            1 | city        | ASC       |  false  |  false
-  re_users   | re_users_city_idx        |    true    |            2 | id          | ASC       |  false  |   true
-  re_users   | re_users_city_name_idx   |    true    |            1 | city        | ASC       |  false  |  false
-  re_users   | re_users_city_name_idx   |    true    |            2 | name        | ASC       |  false  |  false
-  re_users   | re_users_city_name_idx   |    true    |            3 | id          | ASC       |  false  |   true
-  re_users   | re_users_credit_card_key |   false    |            1 | credit_card | ASC       |  false  |  false
-  re_users   | re_users_credit_card_key |   false    |            2 | city        | ASC       |  false  |   true
-  re_users   | re_users_credit_card_key |   false    |            3 | id          | ASC       |  false  |   true
-(10 rows)
-```
+    执行成功后，控制台输出以下信息：
+
+    ```sql
+      table_name |        index_name        | non_unique | seq_in_index | column_name | direction | storing | implicit
+    -------------+--------------------------+------------+--------------+-------------+-----------+---------+-----------
+      re_users   | primary                  |   false    |            1 | city        | ASC       |  false  |  false
+      re_users   | primary                  |   false    |            2 | id          | ASC       |  false  |  false
+      re_users   | re_users_city_idx        |    true    |            1 | city        | ASC       |  false  |  false
+      re_users   | re_users_city_idx        |    true    |            2 | id          | ASC       |  false  |   true
+      re_users   | re_users_city_name_idx   |    true    |            1 | city        | ASC       |  false  |  false
+      re_users   | re_users_city_name_idx   |    true    |            2 | name        | ASC       |  false  |  false
+      re_users   | re_users_city_name_idx   |    true    |            3 | id          | ASC       |  false  |   true
+      re_users   | re_users_credit_card_key |   false    |            1 | credit_card | ASC       |  false  |  false
+      re_users   | re_users_credit_card_key |   false    |            2 | city        | ASC       |  false  |   true
+      re_users   | re_users_credit_card_key |   false    |            3 | id          | ASC       |  false  |   true
+    (10 rows)
+    ```
+
+- 查看物化视图的索引。
+
+    以下示例查看 `small_order` 物化视图的索引。
+
+    ```sql
+    -- 查看当前数据库中的表。
+    SHOW TABLES;
+      table_name  |    table_type
+    --------------+--------------------
+      accounts    | BASE TABLE
+      small_order | MATERIALIZED VIEW
+    (2 rows)
+
+    -- 查看指定物化视图的索引。
+    SHOW INDEX FROM small_order;
+    ```
+
+    执行成功后，控制台输出以下信息：
+
+    ```sql
+      table_name  | index_name | non_unique | seq_in_index | column_name | direction | storing | implicit
+    --------------+------------+------------+--------------+-------------+-----------+---------+-----------
+      small_order | primary    |   false    |            1 | rowid       | ASC       |  false  |  false
+      small_order | idx1       |    true    |            1 | id          | ASC       |  false  |  false
+      small_order | idx1       |    true    |            2 | rowid       | ASC       |  false  |   true
+    (3 rows)
+    ```
 
 ## 修改索引
 
