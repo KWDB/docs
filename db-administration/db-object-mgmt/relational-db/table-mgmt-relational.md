@@ -10,7 +10,7 @@ id: table-mgmt-relational
 
 ### 前提条件
 
-用户拥有数据库的 CREATE 权限。
+用户是 `admin` 角色的成员或者拥有数据库的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -25,7 +25,7 @@ CREATE TABLE [IF NOT EXISTS] <table_name>
 ### 参数说明
 
 :::warning 说明
-配置可选参数时，必须严格按照 `[<column_def> | <index_def> | <family_def> | <table_constraint>] [<interleave_clause>] [COMMENT [=] <'comment_text'>]` 的顺序，否则系统将会报错。
+配置可选参数时，必须严格按照 `[<column_def> | <index_def> | <family_def> | <table_constraint>] [<interleave_clause>] [<partition_by_clause>] [COMMENT [=] <'comment_text'>]` 的顺序，否则系统将会报错。
 :::
 
 | 参数 | 说明 |
@@ -579,7 +579,7 @@ SHOW TABLES [FROM <database_name>][.<schema_name>] [WITH COMMENT];
 
 ### 前提条件
 
-用户拥有指定表的任何权限。
+用户拥有目标表的任何权限。
 
 ### 语法格式
 
@@ -646,15 +646,15 @@ SHOW CREATE [TABLE] [<database_name>.] <table_name>;
 
 ### 前提条件
 
-- 在现有表中添加、修改、重命名或删除列：用户拥有目标表的 CREATE 权限。
-- 在现有表中添加、验证、重命名或删除约束：用户拥有目标表的 CREATE 权限。
-- 修改现有表上的主键列：用户拥有目标表的 CREATE 权限。
-- 修改表的区域配置：用户拥有目标表的 CREATE 权限或 ZONECONFIG 权限。
-- 创建表分区：用户拥有目标表的 CREATE 权限。
+- 在现有表中添加、修改、重命名或删除列：用户是 `admin` 角色的成员或者拥有目标表的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
+- 在现有表中添加、验证、重命名或删除约束：用户是 `admin` 角色的成员或者拥有目标表的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
+- 修改现有表上的主键列：用户是 `admin` 角色的成员或者拥有目标表的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
+- 修改表的区域配置：用户是 `admin` 角色的成员或者拥有目标表的 CREATE 权限或 ZONECONFIG 权限。默认情况下，`root` 用户属于 `admin` 角色。
+- 创建表分区：用户是 `admin` 角色的成员或者拥有目标表的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
 - 重命名表：
-  - 重命名当前数据库中的表：用户拥有表所属数据库的 CREATE 权限和原表的 DROP 权限时。当表存在视图依赖时，系统不支持重命名表。
-  - 重命名表并将其迁移表到其他数据库：用户拥有目标数据库的 CREATE 权限。
-- 在表的特定行或范围上创建或移除拆分点: 用户拥有目标表的 INSERT 权限。
+  - 重命名当前数据库中的表：用户是 `admin` 角色的成员或者拥有所属数据库的 CREATE 权限和原表的 DROP 权限。默认情况下，`root` 用户属于 `admin` 角色。当表存在视图依赖时，系统不支持重命名表。
+  - 重命名表并将其迁移表到其他数据库：用户是 `admin` 角色的成员或者拥有目标数据库的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
+- 在表的特定行或范围上创建或移除拆分点: 用户是 `admin` 角色的成员或者拥有目标表的 INSERT 权限。默认情况下，`root` 用户属于 `admin` 角色。
   
 ### 语法格式
 
@@ -692,7 +692,7 @@ ALTER TABLE [IF EXISTS] <table_name>
 - DROP
   - `DROP COLUMN`: 删除列，需指定列名。`COLUMN` 为可选关键字，如未使用，默认删除列。`IF EXISTS` 关键字可选。当使用 `IF EXISTS` 关键字时，如果列名存在，系统删除列。如果列名不存在，系统删除列失败，但不会报错。当未使用 `IF EXISTS` 关键字时，如果列名存在，系统删除列。如果列名不存在，系统报错，提示列名不存在。
   - `DROP CONSTRAINT`：删除约束。更多详细信息，参见[删除约束](./constraint-mgmt-relational.md#删除约束)。
-- PARTITION BY: 创建表的数据分区，更多详细信息，参见[分区管理](./partition-mgmt-relational.md)
+- PARTITION BY: 创建表的数据分区，更多详细信息，参见[分区管理](./partition-mgmt-relational.md)。
 - RENAME
   - `RENAME TO`: 修改表的名称。
   - `RENAME COLUMN`：修改列的名称。更多详细信息，参见[修改列](./column-mgmt-relational.md#修改列)。
@@ -807,7 +807,7 @@ ALTER TABLE [IF EXISTS] <table_name>
 
 ### 前提条件
 
-- 用户拥有目标表的 DROP 权限。
+- 用户是 `admin` 角色的成员或者拥有目标表的 DROP 权限。默认情况下，`root` 用户属于 `admin` 角色。
 - 当目标表存在关联的外键约束或与其他交错表关联，用户还需要拥有关联表的 REFERENCES 权限。
 - 当目标表存在视图等依赖关系，用户还需要拥有所有依赖此表视图的 DROP 权限。
 

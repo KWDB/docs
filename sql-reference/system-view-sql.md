@@ -7,7 +7,7 @@ id: system-view-sql
 
 ## 所需权限
 
-用户拥有 root 权限。
+用户是 `admin` 角色的成员。默认情况下，`root` 用户属于 `admin` 角色。
 
 ## kwdb_internal.audit_policies
 

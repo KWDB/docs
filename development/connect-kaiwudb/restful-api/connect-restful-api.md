@@ -1196,7 +1196,7 @@ Accept: text/plain</code></pre></td>
   "code": "code",
   "desc": "desc"
 }</code></pre></td>
-      <td><br>- <code>code（int）</code>：状态码。<code>0</code>表示成功，其它值表示失败。。<br>- <code>desc（string）</code>：删除操作的结果描述。</td>
+      <td><br>- <code>code（int）</code>：状态码。<code>0</code>表示成功，其它值表示失败。<br>- <code>desc（string）</code>：删除操作的结果描述。</td>
     </tr>
   </tbody>
 </table>

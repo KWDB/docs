@@ -10,7 +10,7 @@ id: relational-insert
 
 ## 所需权限
 
-用户拥有目标表的 INSERT 权限。如需使用 `INSERT ON CONFLICT`、`ON CONFLICT DO UPDATE` 子句，用户还需要拥有目标表的 SELECT 和 UPDATE 权限。
+用户是 `admin` 角色的成员或者拥有目标表的 INSERT 权限。默认情况下，`root` 用户属于 `admin` 角色。如需使用 `INSERT ON CONFLICT`、`ON CONFLICT DO UPDATE` 子句，用户还需要拥有目标表的 SELECT 和 UPDATE 权限。
 
 ## 语法格式
 

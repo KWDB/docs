@@ -7,15 +7,16 @@ id: ts-zone
 
  KWDB 集群中，每个数据分片都隶属于一个特定的副本区域（zone）。集群在重新平衡数据分片时，会考虑副本区域的配置，以确保遵守所有约束条件。
 
-集群启动时，会自动生成预配置的副本区域和 `default` 副本区域。其中预配置的副本区域适用于内部系统数据，`default` 副本区域适用于集群中的其他数据。用户可以直接使用或调整上述副本区域，也可以为指定时序库或时序表单独设置副本区域。
+集群启动时，会自动生成预配置的副本区域和 `default` 副本区域。其中预配置的副本区域适用于内部系统数据，`default` 副本区域适用于集群中的其他数据。用户可以直接使用或调整上述副本区域，也可以为指定数据库、表、分区单独设置副本区域。
 
 表数据适用的副本区域分为以下级别：
 
 - **集群**：预配置的 `default` 副本区域，适用于未受指定数据库、表或行约束的数据。此区域可以调整但不能删除。
-- **数据库**：为指定时序库单独设置副本区域。
+- **数据库**：为指定数据库单独设置副本区域。
 - **表**：为指定时序表单独设置副本区域。
+- **分区**：为指定时序表的分区单独设置副本区域。
 
-数据复制过程中，副本区域的优先级排序为 表 > 数据库 > 集群。
+数据复制过程中，副本区域的优先级排序为 分区 > 表 > 数据库 > 集群。
 
 内部系统数据存储在系统数据分片内，适用于以下级别的副本区域：
 
@@ -45,6 +46,7 @@ id: ts-zone
 | `range_name` | 数据分片名称，包括：<br>-  `default`：默认副本设置<br>- `meta`：所有数据的位置信息<br>- `liveness`：给定时间活动节点的信息 <br>- `system`：分配新表ID所需的信息以及追踪集群节点状态<br>- `timeseries`：集群监控数据 |
 | `database_name` | 数据库的名称。 |
 | `table_name` | 表的名称。 |
+| `partition_name` | 分区的名称。 |
 
 ### 语法示例
 
@@ -121,14 +123,14 @@ id: ts-zone
 
 `ALTER ... CONFIGURE ZONE` 语句用于以下操作：
 
-- 修改数据库、表、数据分片的区域配置
-- 移除数据库、表、数据分片的区域配置
+- 修改数据库、表、数据分片、分区的区域配置
+- 移除数据库、表、数据分片、分区的区域配置
 - 对指定数据库、表或数据分片进行手动均衡
 
 ### 所需权限
 
-- 修改系统数据库或系统数据数据分片：用户为 Admin 用户或者 Admin 角色成员。默认情况下，root 用户具有 Admin 角色。
-- 修改其他库或其他库下的数据分片或表：用户拥有目标对象的 CREATE 权限或 ZONECONFIG 权限。
+- 修改系统数据库或系统数据数据分片：用户是 `admin` 角色的成员。默认情况下，`root` 用户属于 `admin` 角色。
+- 修改其他库或其他库下的数据分片、分区或表：用户是 `admin` 角色的成员或者拥有目标对象的 CREATE 权限或 ZONECONFIG 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -142,7 +144,7 @@ id: ts-zone
 | `database_name` | 待修改的数据库名称。|
 | `table_name` | 待修改的表名称。|
 | `partition_name` | 待修改的表分区名。|
-| `variable` | 要修改的变量名，时序库支持修改以下变量：<br>- `range_min_bytes`：数据分片的最小大小，单位为字节。数据分片小于该值时，KWDB 会将其与相邻数据分片合并。默认值：256 MiB，设置值应大于 1 MiB（1048576 字节），小于数据分片的最大大小。 <br>- `range_max_bytes`：数据分片的最大大小，单位为字节。数据分片大于该值时，KWDB 会将其切分到两个数据分片。默认值： 512 MiB。设置值不得小于 5 MiB（5242880 字节）。<br>- `gc.ttlseconds`：数据在垃圾回收前保留的时间，单位为秒。默认值为 `90000`（25 小时）。设置值建议不小于 600 秒（10 分钟），以免影响长时间运行的查询。设置值较小时可以节省磁盘空间，设置值较大时会增加 `AS OF SYSTEM TIME` 查询的时间范围。另外，由于每行的所有版本都存储在一个永不拆分的单一数据分片内，不建议将该值设置得太大，以免单行的所有更改累计超过 64 MiB，导致内存不足或其他问题。<br>- `num_replicas`：副本数量。默认值为 3。`system` 数据库、`meta`、`liveness` 和 `system` 数据分片的默认副本数为 5。 **注意**：集群中存在不可用节点时，副本数量不可缩减。<br>- `constraints`：副本位置的必需（+）和/或禁止（-）约束。例如 `constraints = '{+region=node1: 1, +region=node2: 1, +region=node3: 1}'` 表示在 `node1`、`node2`、`node3` 上必须各放置 1 个副本。目前只支持 `region=nodex` 格式。 <br> - `lease_preferences`：主副本位置的必需（+）和/或禁止（-）约束的有序列表。例如 `lease_preferences = '[[+region=node1]]'` 表示倾向将主副本放置在 `node1`。如果不能满足首选项，KWDB 将尝试下一个优先级。如果所有首选项都无法满足，KWDB 将使用默认的租约分布算法，基于每个节点已持有的租约数量来决定租约位置，尝试平衡租约分布。列表中的每个值可以包含多个约束。<br>- `ts_merge.days`：时序数据分片合并时间。同一个时序表同哈希点按照时间戳分裂后，超过该时间的数据分片将自动合并，且合并后不会再自动拆分。默认值：10（10天）。设置值必须大于等于 0，设置值为 0 时表示时序数据分片按照时间戳分裂后便立刻自动合并。系统数据分片数量过多导致出现网络等故障时可以将该值适当调小，以缓解数据过大的问题。<br><br>**提示**：<br>- 租约偏好不必与 `constraints` 字段共享，用户可以单独定义 `lease_preferences`。<br>- 设置 `constraints` 时需要同步设置 `num_replicas`，且 `constraints` 数量需要小于等于 `num_replicas` 数量。`constraints` 中的顺序无影响。<br>- KWDB 默认只根据哈希点拆分数据分片，因此数据分片按时间合并功能默认关闭，如需支持按时间合并数据分片，需将 `kv.kvserver.ts_split_interval` 实时参数设置为 `1`, 将 `kv.kvserver.ts_split_by_timestamp.enabled` 实时参数设置为 `true` 以支持按照哈希点和时间戳拆分数据分片。 |
+| `variable` | 要修改的变量名，时序库支持修改以下变量：<br>- `range_min_bytes`：数据分片的最小大小，单位为字节。数据分片小于该值时，KWDB 会将其与相邻数据分片合并。默认值：256 MiB，设置值应大于 1 MiB（1048576 字节），小于数据分片的最大大小。 <br>- `range_max_bytes`：数据分片的最大大小，单位为字节。数据分片大于该值时，KWDB 会将其切分到两个数据分片。默认值： 512 MiB。设置值不得小于 5 MiB（5242880 字节）。<br>- `gc.ttlseconds`：数据在垃圾回收前保留的时间，单位为秒。默认值为 `90000`（25 小时）。设置值建议不小于 600 秒（10 分钟），以免影响长时间运行的查询。设置值较小时可以节省磁盘空间，设置值较大时会增加 `AS OF SYSTEM TIME` 查询的时间范围。另外，由于每行的所有版本都存储在一个永不拆分的单一数据分片内，不建议将该值设置得太大，以免单行的所有更改累计超过 64 MiB，导致内存不足或其他问题。<br>- `num_replicas`：副本数量。默认值为 3。`system` 数据库、`meta`、`liveness` 和 `system` 数据分片的默认副本数为 5。 **注意**：集群中存在不可用节点时，副本数量不可缩减。<br>- `constraints`：副本位置的必需（+）和/或禁止（-）约束。例如 `constraints = '{"+region=NODE1": 1, "+region=NODE2": 1, "+region=NODE3": 1}'` 表示在节点 1、2 和 3 上必须各放置 1 个副本。目前只支持 `region=NODEx` 格式。 <br> - `lease_preferences`：主副本位置的必需（+）和/或禁止（-）约束的有序列表。例如 `lease_preferences = '[[+region=NODE1]]'` 表示倾向将主副本放置在节点 1。如果不能满足首选项，KWDB 将尝试下一个优先级。如果所有首选项都无法满足，KWDB 将使用默认的租约分布算法，基于每个节点已持有的租约数量来决定租约位置，尝试平衡租约分布。列表中的每个值可以包含多个约束。<br>- `ts_merge.days`：时序数据分片合并时间。同一个时序表同哈希点按照时间戳分裂后，超过该时间的数据分片将自动合并，且合并后不会再自动拆分。默认值：10（10天）。设置值必须大于等于 0，设置值为 0 时表示时序数据分片按照时间戳分裂后便立刻自动合并。系统数据分片数量过多导致出现网络等故障时可以将该值适当调小，以缓解数据过大的问题。<br><br>**提示**：<br>- 租约偏好不必与 `constraints` 字段共享，用户可以单独定义 `lease_preferences`。<br>- 设置 `constraints` 时需要同步设置 `num_replicas`，且 `constraints` 数量需要小于等于 `num_replicas` 数量。`constraints` 中的顺序无影响。<br>- KWDB 默认只根据哈希点拆分数据分片，因此数据分片按时间合并功能默认关闭，如需支持按时间合并数据分片，需将 `kv.kvserver.ts_split_interval` 实时参数设置为 `1`, 将 `kv.kvserver.ts_split_by_timestamp.enabled` 实时参数设置为 `true` 以支持按照哈希点和时间戳拆分数据分片。 |
 | `value` | 变量值。 |
 |`COPY FROM PARENT`| 使用父区域的设置值。|
 |`DISCARD` | 移除区域配置，采用默认值。|
@@ -152,28 +154,28 @@ id: ts-zone
 
 - 修改数据库的区域配置
   
-     以下示例将 `vtx` 数据库的副本数改为5个，将数据在垃圾回收前保留的时间改为100000秒。
+     以下示例将 `vtx` 数据库的副本数改为 5 个，将数据在垃圾回收前保留的时间改为 100000 秒。
 
      ```SQL
      > ALTER DATABASE vtx CONFIGURE ZONE USING num_replicas = 5, gc.ttlseconds = 100000;
      CONFIGURE ZONE 1
 
      > SHOW ZONE CONFIGURATION FOR DATABASE vtx;
-     zone_name |               config_sql                 
-     +-----------+-----------------------------------------+
-     vtx       | ALTER DATABASE vtx CONFIGURE ZONE USING  
-               |     range_min_bytes = 268435456,          
-               |     range_max_bytes = 536870912,          
-               |     gc.ttlseconds = 100000,              
-               |     num_replicas = 5,                    
-               |     constraints = '[]',                  
-               |     lease_preferences = '[]'             
-     (6 rows)
+          target     |              raw_config_sql
+     ----------------+-------------------------------------------
+     DATABASE vtx   | ALTER DATABASE tsdb CONFIGURE ZONE USING
+                    |     range_min_bytes = 134217728,
+                    |     range_max_bytes = 536870912,
+                    |     gc.ttlseconds = 100000,
+                    |     num_replicas = 5,
+                    |     constraints = '[]',
+                    |     lease_preferences = '[]'
+     (1 row)
      ```
 
 - 修改表的区域配置
   
-     以下示例将 `vehicles` 表的副本数改为3个，将数据在垃圾回收前保留的时间改为100000秒。
+     以下示例将 `vehicles` 表的副本数改为 3 个，将数据在垃圾回收前保留的时间改为 100000 秒。
 
      ```SQL
      > ALTER TABLE vehicles CONFIGURE ZONE USING num_replicas = 3, gc.ttlseconds = 100000;
@@ -218,6 +220,5 @@ id: ts-zone
   以下示例将时序表 `sensor` 的数据分片进行了手动均衡。
 
   ```SQL
-  > ALTER TABLE sensor CONFIGURE ZONE USING REBALANCE;
-  ALTER TABLE 
+  ALTER TABLE sensor CONFIGURE ZONE USING REBALANCE;
   ```

@@ -34,7 +34,7 @@ id: ts-partition
 
 ### 所需权限
 
-用户为 `admin` 角色成员或拥有目标表的 CREATE 权限，root 用户默认属于 `admin` 角色。
+用户是 `admin` 角色成员或拥有目标表的 CREATE 权限，root 用户默认属于 `admin` 角色。
 
 ### 语法格式
 
@@ -46,11 +46,11 @@ id: ts-partition
 
 - 按指定哈希值分区：
 
-    ![](../../../static/sql-reference/alter-ts-table-partition-in.png)
+    <img src="../../../static/sql-reference/alter-ts-table-partition-in.png" style="zoom: 67%;" />
 
 - 按指定哈希值范围分区：
 
-    ![](../../../static/sql-reference/alter-ts-table-partition-from.png)
+    <img src="../../../static/sql-reference/alter-ts-table-partition-from.png" style="zoom: 90%;" />
 
 ### 参数说明
 
@@ -70,9 +70,9 @@ id: ts-partition
     -- 为订单表创建按指定哈希值的分区 
     ALTER TABLE orders  
     PARTITION BY HASHPOINT (
-        PARTITION p_region_1 VALUES IN (1, 3, 5, 7),
-        PARTITION p_region_2 VALUES IN (2, 4, 6, 8),
-        PARTITION p_region_3 VALUES IN (9, 10) 
+        PARTITION p_region_1 VALUES IN [1, 3, 5, 7],
+        PARTITION p_region_2 VALUES IN [2, 4, 6, 8],
+        PARTITION p_region_3 VALUES IN [9, 10] 
     );
     ```
 
@@ -82,9 +82,9 @@ id: ts-partition
     -- 为用户表创建按哈希值范围的分区 
     ALTER TABLE users
     PARTITION BY HASHPOINT (
-        PARTITION p_low FROM (0) TO (100),
-        PARTITION p_medium FROM (100) TO (200),
-        PARTITION p_high FROM (200) TO (300) 
+        PARTITION p_low VALUES FROM (0) TO (100),
+        PARTITION p_medium VALUES FROM (100) TO (200),
+        PARTITION p_high VALUES FROM (200) TO (300) 
     );
     ```
 
@@ -103,11 +103,11 @@ id: ts-partition
 
 ### 所需权限
 
-用户为 `admin` 角色成员或拥有目标表的 CREATE 权限，root 用户默认属于 `admin` 角色。
+用户是 `admin` 角色成员或拥有目标表的 CREATE 权限，root 用户默认属于 `admin` 角色。
 
 ### 语法格式
 
-![](../../../static/sql-reference/alter-partition.png)
+<img src="../../../static/sql-reference/alter-partition.png" style="zoom: 67%;" />
 
 ### 参数说明
 
@@ -115,33 +115,33 @@ id: ts-partition
 | :--------------- | :----------------------------------------------------------- |
 | `partition_name` | 待修改的分区名称                                             |
 | `table_name`     | 分区所在的表名                                               |
-| `variable`       | 支持修改以下变量：<br>• `num_replicas`：副本数量。默认值为 3<br>• `constraints`：副本位置的必需（+）和/或禁止（-）约束。例如 `constraints = '{+region=node1: 1, +region=node2: 1, +region=node3: 1}'` 表示在 `node1`、`node2`、`node3` 上必须各放置 1 个副本。目前只支持 `region=nodex` 格式<br>• `lease_preferences`：主副本位置的必需（+）和/或禁止（-）约束的有序列表。例如 `lease_preferences = '[[+region=node1]]'` 表示倾向将主副本放置在 `node1`。如果不能满足首选项，KWDB 将尝试下一个优先级。如果所有首选项都无法满足，KWDB 将使用默认的租约分布算法，基于每个节点已持有的租约数量来决定租约位置，尝试平衡租约分布。列表中的每个值可以包含多个约束<br><br>**注意**：<br>• 租约偏好不必与 `constraints` 字段共享，用户可以单独定义 `lease_preferences`<br>• 设置 `constraints` 时需要同步设置 `num_replicas`，且 `constraints` 数量需要小于等于 `num_replicas` 数量。`constraints` 中的顺序无影响 |
+| `variable`       | 支持修改以下变量：<br>- `num_replicas`：副本数量。默认值为 3<br>- `constraints`：副本位置的必需（+）和/或禁止（-）约束。例如 `constraints = '{"+region=NODE1": 1, "+region=NODE2": 1, "+region=NODE3": 1}'` 表示在节点 1、节点 2、节点 3 上必须各放置 1 个副本。目前只支持 `region=NODEx` 格式<br>- `lease_preferences`：主副本位置的必需（+）和/或禁止（-）约束的有序列表。例如 `lease_preferences = '[[+region=NODE1]]'` 表示倾向将主副本放置在节点 1。如果不能满足首选项，KWDB 将尝试下一个优先级。如果所有首选项都无法满足，KWDB 将使用默认的租约分布算法，基于每个节点已持有的租约数量来决定租约位置，尝试平衡租约分布。列表中的每个值可以包含多个约束<br><br>**注意**：<br>- 租约偏好不必与 `constraints` 字段共享，用户可以单独定义 `lease_preferences`<br>- 设置 `constraints` 时需要同步设置 `num_replicas`，且 `constraints` 数量需要小于等于 `num_replicas` 数量。`constraints` 中的顺序无影响 |
 | `value`          | 变量值，可以是具体的配置值，也可以是 `COPY FROM PARENT`，即使用父区域的设置值 |
 | `DISCARD`        | 移除区域配置，采用默认值                                     |
 
 ### 语法示例
 
 ```SQL
--- 低哈希值分区：数据存储在所有节点，lease偏向node1
+-- 低哈希值分区：数据存储在所有节点，lease 偏向节点 1
 ALTER PARTITION p_low OF TABLE users 
 CONFIGURE ZONE USING 
     num_replicas = 3, 
-    constraints = '{+region=node1: 1, +region=node2: 1, +region=node3: 1}',
-    lease_preferences = '[[+region=node1]]';
+    constraints = '{"+region=NODE1": 1, "+region=NODE2": 1, "+region=NODE3": 1}',
+    lease_preferences = '[[+region=NODE1]]';
 
--- 中哈希值分区：数据存储在所有节点，lease偏向node2
+-- 中哈希值分区：数据存储在所有节点，lease 偏向节点 2
 ALTER PARTITION p_medium OF TABLE users  
 CONFIGURE ZONE USING 
     num_replicas = 3, 
-    constraints = '{+region=node1: 1, +region=node2: 1, +region=node3: 1}',
-    lease_preferences = '[[+region=node2]]';
+    constraints = '{"+region=NODE1": 1, "+region=NODE2": 1, "+region=NODE3": 1}',
+    lease_preferences = '[[+region=NODE2]]';
 
--- 高哈希值分区：数据存储在所有节点，lease偏向node3
+-- 高哈希值分区：数据存储在所有节点，lease 偏向节点 3
 ALTER PARTITION p_high OF TABLE users 
 CONFIGURE ZONE USING 
     num_replicas = 3, 
-    constraints = '{+region=node1: 1, +region=node2: 1, +region=node3: 1}',
-    lease_preferences = '[[+region=node3]]';
+    constraints = '{"+region=NODE1": 1, "+region=NODE2": 1, "+region=NODE3": 1}',
+    lease_preferences = '[[+region=NODE3]]';
 
 -- 插入测试数据
 INSERT INTO users (created_at, id, name, email, region) VALUES 

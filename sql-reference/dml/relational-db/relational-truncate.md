@@ -9,7 +9,7 @@ id: relational-truncate
 
 ## 所需权限
 
-用户拥有目标表的 DROP 权限。
+用户是 `admin` 角色的成员或者拥有目标表的 DROP 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 ## 语法格式
 

@@ -15,7 +15,7 @@ id: stream-sql
 
 ### 所需权限
 
-用户拥有源时序表的 `SELECT` 权限和目标表的 `INSERT` 权限。
+用户是 `admin` 角色的成员或者拥有源时序表的 SELECT 权限和目标表的 INSERT 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -108,10 +108,10 @@ SHOW STREAM test_stream;
 
 ### 所需权限
 
-用户为 Admin 用户或者流计算的创建者。
+用户是 `admin` 角色的成员或者流计算的创建者。默认情况下，`root` 用户属于 `admin` 角色。
 
 ::: warning 说明
-如果创建流计算的用户被删除后，只有 Admin 用户或 `sysadmin` 用户可以修改流计算。
+如果创建流计算的用户被删除后，只有  `admin` 角色成员或 `sysadmin` 用户可以修改流计算。
 :::
 
 ### 语法格式
@@ -148,10 +148,10 @@ ALTER STREAM cpu_stream SET enable = 'off';
 
 ### 所需权限
 
-用户为 Admin 用户或者流计算的创建者。
+用户是 `admin` 角色的成员或者流计算的创建者。默认情况下，`root` 用户属于 `admin` 角色。
 
 ::: warning 说明
-如果创建流计算的用户被删除后，只有 Admin 用户或 `sysadmin` 用户可以删除流计算。
+如果创建流计算的用户被删除后，只有  `admin` 角色成员或 `sysadmin` 用户可以删除流计算。
 :::
 
 ### 语法格式

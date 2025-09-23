@@ -19,7 +19,7 @@ KWDB 支持在创建表时创建表的标签，也支持使用 `ALTER TABLE ... 
 
 ### 前提条件
 
-用户拥有目标表的 CREATE 权限。
+用户是 `admin` 角色的成员或者拥有目标表的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -83,7 +83,7 @@ SHOW TAGS FROM sensor_data;
 
 ### 前提条件
 
-用户拥有目标表的 SELECT 权限。
+用户是 `admin` 角色的成员或者拥有目标表的 SELECT 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -128,7 +128,7 @@ KWDB 支持使用 `ALTER TABLE ... ALTER TAG` 语句修改标签的数据类型�
 
 #### 前提条件
 
-用户拥有目标表的 CREATE 权限。
+用户是 `admin` 角色的成员或者拥有目标表的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 #### 语法格式
 
@@ -159,7 +159,7 @@ KWDB 支持使用 `ALTER TABLE ... RENAME TAG` 语句修改标签名称。
 
 #### 前提条件
 
-用户拥有目标表的 CREATE 权限。
+用户是 `admin` 角色的成员或者拥有目标表的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 #### 语法格式
 
@@ -189,7 +189,7 @@ KWDB 支持通过 `UPDATE` 语句修改标签值。
 
 #### 前提条件
 
-用户拥有目标表的 UPDATE 和 SELECT 权限。
+用户是 `admin` 角色的成员或者拥有目标表的 UPDATE 和 SELECT 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 #### 语法格式
 
@@ -274,7 +274,7 @@ KWDB 支持使用 `ALTER TABLE ... DROP TAG` 语句删除标签。`DROP TAG` 为
 
 ### 前提条件
 
-用户拥有目标表的 CREATE 权限。
+用户是 `admin` 角色的成员或者拥有目标表的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 

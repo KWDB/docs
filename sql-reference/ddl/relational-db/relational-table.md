@@ -11,52 +11,52 @@ id: relational-table
 
 ### 所需权限
 
-用户拥有数据库的 CREATE 权限。
+用户是 `admin` 角色的成员或者拥有数据库的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
-![](../../../static/sql-reference/createtable_relational.png)
+<img src="../../../static/sql-reference/createtable_relational.png" style="zoom: 80%;" />
 
 - `column_def`
 
-    ![](../../../static/sql-reference/column_def_relational.png)
+  <img src="../../../static/sql-reference/column_def_relational.png" style="zoom: 65%;" />
 
 - `col_qualification`
 
-    ![](../../../static/sql-reference/UywHb2NSAoJnAwxRyutcqVq8nKc.png)
+  <img src="../../../static/sql-reference/UywHb2NSAoJnAwxRyutcqVq8nKc.png" style="zoom: 45%;" />
 
 - `col_quailfication_elem`
 
-    ![](../../../static/sql-reference/JgXXboDxzoUFPVxND7UcGSFNngg.png)
+  <img src="../../../static/sql-reference/JgXXboDxzoUFPVxND7UcGSFNngg.png" style="zoom: 45%;" />
 
 - `index_def`
 
-    ![](../../../static/sql-reference/L08wbq9zmoF8LLxzTPpcabO9n5c.png)
+  <img src="../../../static/sql-reference/L08wbq9zmoF8LLxzTPpcabO9n5c.png" style="zoom: 53%;" />
 
 - `family_def`
 
-    ![](../../../static/sql-reference/ZIXJbA3ocordY5xlN9Scmj25n9e.png)
+  <img src="../../../static/sql-reference/ZIXJbA3ocordY5xlN9Scmj25n9e.png" style="zoom: 50%;" />
 
 - `table_constraint`
 
-    ![](../../../static/sql-reference/JsQmb5WkMotcY2xOTiNcvodqnTb.png)
+  <img src="../../../static/sql-reference/JsQmb5WkMotcY2xOTiNcvodqnTb.png" style="zoom: 57%;" />
 
 - `constraint_elem`
 
-    ![](../../../static/sql-reference/BEFeb6uvCojNJDx3xoicG6hJnwd.png)
+  <img src="../../../static/sql-reference/BEFeb6uvCojNJDx3xoicG6hJnwd.png" style="zoom: 40%;" />
 
 - `interleave_clause`
 
-    ![](../../../static/sql-reference/create-r-table-interleave.png)
+  <img src="../../../static/sql-reference/create-r-table-interleave.png" style="zoom: 50%;" />
 
 - `partition_by_clause`
 
-    ![](../../../static/sql-reference/create-r-table-partition.png)
+  <img src="../../../static/sql-reference/create-r-table-partition.png" style="zoom: 67%;" />
 
 ### 参数说明
 
 :::warning 说明
-配置可选参数时，必须严格按照 `[<column_def> | <index_def> | <family_def> | <table_constraint>] [<interleave_clause>] [COMMENT [=] <'comment_text'>]` 的顺序，否则系统将会报错。
+配置可选参数时，必须严格按照 `[<column_def> | <index_def> | <family_def> | <table_constraint>] [<interleave_clause>] [<partition_by_clause>] [COMMENT [=] <'comment_text'>]` 的顺序，否则系统将会报错。
 :::
 
 | 参数 | 说明 |
@@ -500,7 +500,7 @@ id: relational-table
 
 ### 语法格式
 
-![](../../../static/sql-reference/M4Blb2aeEo9lnixdVhdclHI2nLb.png)
+<img src="../../../static/sql-reference/M4Blb2aeEo9lnixdVhdclHI2nLb.png" style="zoom: 67%;" />
 
 ### 参数说明
 
@@ -610,7 +610,7 @@ id: relational-table
 
 ### 所需权限
 
-用户拥有指定表的任何权限。
+用户拥有目标表的任何权限。
 
 ### 语法格式
 
@@ -675,15 +675,15 @@ id: relational-table
 
 ### 所需权限
 
-- 在现有表中添加、修改、重命名或删除列：用户拥有目标表的 CREATE 权限。
-- 在现有表中添加、验证、重命名或删除约束：用户拥有目标表的 CREATE 权限。
-- 修改现有表上的主键列：用户拥有目标表的 CREATE 权限。
-- 修改表的区域配置：用户拥有目标表的 CREATE 权限或 ZONECONFIG 权限。
-- 创建表分区：用户拥有目标表的 CREATE 权限。
+- 在现有表中添加、修改、重命名或删除列：用户是 `admin` 角色的成员或者拥有目标表的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
+- 在现有表中添加、验证、重命名或删除约束：用户是 `admin` 角色的成员或者拥有目标表的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
+- 修改现有表上的主键列：用户是 `admin` 角色的成员或者拥有目标表的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
+- 修改表的区域配置：用户是 `admin` 角色的成员或者拥有目标表的 CREATE 权限或 ZONECONFIG 权限。默认情况下，`root` 用户属于 `admin` 角色。
+- 创建表分区：用户是 `admin` 角色的成员或者拥有目标表的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
 - 重命名表：
-  - 重命名当前数据库中的表：用户拥有表所属数据库的 CREATE 权限和原表的 DROP 权限时。当表存在视图依赖时，系统不支持重命名表。
-  - 重命名表并将其迁移表到其他数据库：用户拥有目标数据库的 CREATE 权限。
-- 在表的特定行或范围上创建或移除拆分点: 用户拥有目标表的INSERT权限。
+  - 重命名当前数据库中的表：用户是 `admin` 角色的成员或者拥有所属数据库的 CREATE 权限和原表的 DROP 权限。默认情况下，`root` 用户属于 `admin` 角色。当表存在视图依赖时，系统不支持重命名表。
+  - 重命名表并将其迁移表到其他数据库：用户是 `admin` 角色的成员或者拥有目标数据库的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
+- 在表的特定行或范围上创建或移除拆分点: 用户是 `admin` 角色的成员或者拥有目标表的 INSERT 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -816,7 +816,7 @@ id: relational-table
 
 ### 所需权限
 
-- 用户拥有目标表的 DROP 权限。
+- 用户是 `admin` 角色的成员或者拥有目标表的 DROP 权限。默认情况下，`root` 用户属于 `admin` 角色。
 - 当目标表存在关联的外键约束或与其他交错表关联，用户还需要拥有关联表的 REFERENCES 权限。
 - 当目标表存在视图等依赖关系，用户还需要拥有所有依赖此表视图的 DROP 权限。
 

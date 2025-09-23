@@ -17,7 +17,7 @@ id: use-kaiwudb-kdc
 
 **前提条件**：
 
-用户为 `admin` 用户或 `admin` 角色成员。
+用户是 `admin` 角色的成员。默认情况下，`root` 用户属于 `admin` 角色。
 
 **步骤**：
 
@@ -35,7 +35,7 @@ id: use-kaiwudb-kdc
 
 **前提条件**：
 
-用户为 `admin` 用户、`admin` 角色成员或拥有 `TABLE CREATE` 或 `ALL` 权限。
+用户是 `admin` 角色的成员或者拥有所属数据库的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 **步骤**：
 
@@ -57,7 +57,7 @@ id: use-kaiwudb-kdc
 
 **前提条件**：
 
-用户为 `admin` 用户、`admin` 角色成员或拥有目标表的 `INSERT` 权限。
+用户是 `admin` 角色的成员或者拥有目标表的 INSERT 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 **步骤**:
 
@@ -73,7 +73,7 @@ id: use-kaiwudb-kdc
 
 **前提条件**：
 
-用户为 `admin` 用户、`admin` 角色成员或拥有目标表的 SELECT 权限。
+用户是 `admin` 角色的成员或者拥有目标表的 SELECT 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 **步骤**：
 
@@ -87,7 +87,7 @@ id: use-kaiwudb-kdc
 
 **前提条件**：
 
-用户为 `admin` 用户或 `admin` 角色成员。
+用户是 `admin` 角色的成员。默认情况下，`root` 用户属于 `admin` 角色。
 
 **步骤**：
 
@@ -104,7 +104,7 @@ id: use-kaiwudb-kdc
 
 **前提条件**：
 
-用户为 `admin` 用户、`admin` 角色成员或拥有 `TABLE CREATE` 或 `ALL` 权限。
+用户是 `admin` 角色的成员或者拥有所属数据库的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 **步骤**：
 
@@ -137,7 +137,7 @@ id: use-kaiwudb-kdc
 
 **前提条件**：
 
-用户为 `admin` 用户、`admin` 角色成员或拥有目标表的 `INSERT` 权限。
+用户是 `admin` 角色的成员或者拥有目标表的 INSERT 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 **步骤**：
 
@@ -152,7 +152,7 @@ id: use-kaiwudb-kdc
 
 **前提条件**：
 
-用户为 `admin` 用户、`admin` 角色成员或拥有目标表的 SELECT 权限。
+用户是 `admin` 角色的成员或者拥有目标表的 SELECT 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 **步骤**：
 
@@ -166,7 +166,7 @@ KaiwuDB 开发者中心支持使用 SQL 编辑器完成 KWDB 跨模查询操作�
 
 **前提条件**：
 
-用户为 `admin` 用户、`admin` 角色成员或拥有目标表的 SELECT 权限。
+用户是 `admin` 角色的成员或者拥有目标表的 SELECT 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 **步骤**：
 

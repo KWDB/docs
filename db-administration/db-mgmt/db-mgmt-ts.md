@@ -9,7 +9,7 @@ id: db-mgmt-ts
 
 ### 前提条件
 
-用户具有 Admin 角色。默认情况下，root 用户具有 Admin 角色。创建成功后，用户拥有该数据库的全部权限。
+用户是 `admin` 角色的成员。默认情况下，`root` 用户属于 `admin` 角色。创建成功后，用户拥有该数据库的全部权限。
 
 ### 语法格式
 
@@ -173,10 +173,10 @@ CREATE TS DATABASE tsdb1 RETENTIONS 10d;
 --2. 查看已创建的 tsdb1 数据库。
 
 SHOW CREATE DATABASE tsdb1;
-  database_name |          create_statement
-----------------+-------------------------------------
+  database_name |       create_statement
+----------------+-------------------------------
   tsdb1         | CREATE TS DATABASE tsdb1
-                |      retentions 0s
+                |      retentions 864000s
                 |      partition interval 10d
 (1 row)
 ```
@@ -214,13 +214,13 @@ KWDB 支持修改数据库的名称、生命周期和区域配置。
 ### 前提条件
 
 - 修改数据库的名称
-  - 用户为 Admin 用户或者 Admin 角色成员。
+  - 用户是 `admin` 角色的成员。默认情况下，`root` 用户属于 `admin` 角色。
   - 目标数据库不是当前数据库。
 - 修改数据库生命周期
-  - 用户为 Admin 用户或者 Admin 角色成员。
+  - 用户是 `admin` 角色的成员。默认情况下，`root` 用户属于 `admin` 角色。
 - 修改数据库区域设置
-  - 修改系统数据库区域配置：用户为 Admin 用户或 Admin 角色成员。
-  - 修改其他数据库区域配置：用户拥有目标数据库的 CREATE 或 ZONECONFIG 权限。
+  - 修改系统数据库区域配置：用户是 `admin` 角色的成员。默认情况下，`root` 用户属于 `admin` 角色。
+  - 修改其他数据库区域配置：用户是 `admin` 角色的成员或者拥有目标数据库的 CREATE 或 ZONECONFIG 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -277,7 +277,7 @@ KWDB 支持修改数据库的名称、生命周期和区域配置。
 
 - 修改数据库的区域配置。
   
-    以下示例将 `tsdb` 数据库的副本数改为5个，将数据在垃圾回收前保留的时间改为100000秒。
+    以下示例将 `tsdb` 数据库的副本数改为 5 个，将数据在垃圾回收前保留的时间改为 100000 秒。
 
     ```SQL
     -- 1. 修改区域配置
@@ -286,15 +286,15 @@ KWDB 支持修改数据库的名称、生命周期和区域配置。
 
     -- 2. 查看修改是否成功
     > SHOW ZONE CONFIGURATION FOR DATABASE tsdb;
-    zone_name |               config_sql                 
-    +-----------+-----------------------------------------+
-    tsdb       | ALTER DATABASE tsdb CONFIGURE ZONE USING  
-              |     range_min_bytes = 268435456,          
-              |     range_max_bytes = 536870912,          
-              |     gc.ttlseconds = 100000,              
-              |     num_replicas = 5,                    
-              |     constraints = '[]',                  
-              |     lease_preferences = '[]'             
+        target     |              raw_config_sql
+    ----------------+-------------------------------------------
+      DATABASE tsdb | ALTER DATABASE tsdb CONFIGURE ZONE USING
+                    |     range_min_bytes = 134217728,
+                    |     range_max_bytes = 536870912,
+                    |     gc.ttlseconds = 100000,
+                    |     num_replicas = 5,
+                    |     constraints = '[]',
+                    |     lease_preferences = '[]'
     (1 row)
     ```
 
@@ -308,7 +308,7 @@ KWDB 支持修改数据库的名称、生命周期和区域配置。
 
 ### 前提条件
 
-- 用户拥有目标数据库及对象的 DROP 权限。删除成功后，所有用户针对目标数据库和其对象的所有权限均被删除。
+- 用户是 `admin` 角色的成员或者拥有目标数据库及对象的 DROP 权限。默认情况下，`root` 用户属于 `admin` 角色。删除成功后，所有用户针对目标数据库和其对象的所有权限均被删除。
 - 目标数据库不能是当前数据库。如需删除当前数据库，使用 `USE <database_name>` 语句将当前数据库切换成其他数据库，再进行删除。
 
 ### 语法格式

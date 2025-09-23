@@ -112,6 +112,7 @@ SHOW INDEXES FROM temperature;
 
 | 参数 | 说明 |
 | --- | --- |
+| `database_name` | 待删除索引所在的数据库名。|
 | `table_name` | 待删除索引所在的表名。|
 | `index_name` | 待删除索引的名称。|
 

@@ -37,29 +37,29 @@ KWDB 支持在查询中对列类型为时间戳、时间戳常量以及结果类
 
 ## 所需权限
 
-用户拥有目标表的 SELECT 权限。
+用户是 `admin` 角色的成员或者拥有目标表的 SELECT 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 ## 语法格式
 
 - 简单查询
 
-    ![](../../../static/sql-reference/Y2Sxbc38ko3CvsxIbV0cO5QNnOh.png)
+  <img src="../../../static/sql-reference/Y2Sxbc38ko3CvsxIbV0cO5QNnOh.png" style="zoom: 75%;" />
 
   - `target_elem`
 
-    ![](../../../static/sql-reference/WFPub5gPWoWhmHxP9RccqVKtnAe.png)
+      <img src="../../../static/sql-reference/WFPub5gPWoWhmHxP9RccqVKtnAe.png" style="zoom: 75%;" />
 
   - `table_ref`
 
-    ![](../../../static/sql-reference/Q7sGbKFmSoOm2zx1Ls0c5FmvnRb.png)
+      <img src="../../../static/sql-reference/Q7sGbKFmSoOm2zx1Ls0c5FmvnRb.png" style="zoom: 75%;" />
 
   - `a_expr`
 
-    ![](../../../static/sql-reference/DAEkbRTVjoKWGuxus2PcOxSbnnd.png)
+      <img src="../../../static/sql-reference/DAEkbRTVjoKWGuxus2PcOxSbnnd.png" style="zoom: 60%;" />
 
   - `window_definition`
 
-    ![](../../../static/sql-reference/CUFbb9ql8oAYJExjoUrcYwIpnR5.png)
+      <img src="../../../static/sql-reference/CUFbb9ql8oAYJExjoUrcYwIpnR5.png" style="zoom: 60%;" />
 
 - 复杂查询
 
@@ -67,23 +67,23 @@ KWDB 支持在查询中对列类型为时间戳、时间戳常量以及结果类
 
   - `select_clause`
 
-    ![](../../../static/sql-reference/PU0XbsDmmoMHOtxUreJcuH9Vnzc.png)
+      <img src="../../../static/sql-reference/PU0XbsDmmoMHOtxUreJcuH9Vnzc.png" style="zoom: 80%;" />
 
   - `ordedr_by_clause`
 
-    ![](../../../static/sql-reference/ZxttbHJ9NoJE80xiASbcrUE9nOf.png)
+      <img src="../../../static/sql-reference/ZxttbHJ9NoJE80xiASbcrUE9nOf.png" style="zoom: 60%;" />
 
   - `for_locking_clause`
 
-    ![](../../../static/sql-reference/SXW4bgXN0oMtYnxwQpnca9lOnMb.png)
+      <img src="../../../static/sql-reference/SXW4bgXN0oMtYnxwQpnca9lOnMb.png" style="zoom: 70%;" />
 
   - `limit_clause`
 
-    ![](../../../static/sql-reference/RUGmb2jlsoMkjIxfujncQQzlned.png)
+      <img src="../../../static/sql-reference/RUGmb2jlsoMkjIxfujncQQzlned.png" style="zoom: 70%;" />
 
   - `offset_clause`
 
-    ![](../../../static/sql-reference/RISqbrHJIo1dehxboztc6Ooqnoh.png)
+      <img src="../../../static/sql-reference/RISqbrHJIo1dehxboztc6Ooqnoh.png" style="zoom: 70%;" />
 
 ## 参数说明
 

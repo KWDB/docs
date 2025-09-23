@@ -316,6 +316,7 @@ id: functions-ts-db
 | first_row(val: varbytes) →varbytes        | 获取条件范围内时间戳最小的一条数据（可以是空值 NULL）。   |
 | first_row(val: varchar) →varchar          | 获取条件范围内时间戳最小的一条数据（可以是空值 NULL）。   |
 | first_row(*) →any element                 | 获取条件范围内时间戳最小的一条数据（可以是空值 NULL）。   |
+| interpolate(method, mode)                                                                                     |  补值函数，需要与 `time_bucket_gapfill()` 配合使用，补值结果类型与原始值类型一致。参数说明：<br >- method：补值算法，只支持聚合函数，且数据类型为数字。 <br >- mode：补值模式，取值包括常量值、`prev`（前值）、`next`（后值）、`linear`（线性）、`null`（null）。                  |
 | last(val: float4) → float4                | 获取条件范围内时间戳最大的一条数据（不包含空值 NULL）。<br> 支持在子查询、关联查询（JOIN）、嵌套查询（FROM 子查询）、WHERE、GROUP BY、HAVING、ORDER BY 等多种查询场景中使用，支持与 KWDB 现有的聚合函数联合使用。 <br> **当前限制**：<br>- 仅支持在 SELECT 列表中使用，不可作为普通列进行计算；<br>- 仅支持单列作为参数，传入数值常量、操作符、表达式或函数将触发语法错误；<br>- 仅限于时序表数据处理，不适用于临时表或关系型查询场景。   |
 | last(val:  float8) →  float8              | 获取条件范围内时间戳最大的一条数据（不包含空值 NULL）。<br> 支持在子查询、关联查询（JOIN）、嵌套查询（FROM 子查询）、WHERE、GROUP BY、HAVING、ORDER BY 等多种查询场景中使用，支持与 KWDB 现有的聚合函数联合使用。 <br> **当前限制**：<br>- 仅支持在 SELECT 列表中使用，不可作为普通列进行计算；<br>- 仅支持单列作为参数，传入数值常量、操作符、表达式或函数将触发语法错误；<br>- 仅限于时序表数据处理，不适用于临时表或关系型查询场景。   |
 | last(val: INT2) → INT2                    | 获取条件范围内时间戳最大的一条数据（不包含空值 NULL）。<br> 支持在子查询、关联查询（JOIN）、嵌套查询（FROM 子查询）、WHERE、GROUP BY、HAVING、ORDER BY 等多种查询场景中使用，支持与 KWDB 现有的聚合函数联合使用。 <br> **当前限制**：<br>- 仅支持在 SELECT 列表中使用，不可作为普通列进行计算；<br>- 仅支持单列作为参数，传入数值常量、操作符、表达式或函数将触发语法错误；<br>- 仅限于时序表数据处理，不适用于临时表或关系型查询场景。   |
