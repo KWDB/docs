@@ -67,7 +67,7 @@ id: db-upgrade
 
 4. 修改 `docker-compose.yml` 文件，更新镜像版本。
 
-5. 启动新版本 KaiwuDB。
+5. 启动新版本 KWDB。
 
    ```bash
    docker-compose up

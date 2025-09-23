@@ -11,7 +11,7 @@ id: ts-table
 
 ### 所需权限
 
-用户拥有 DATABASE CREATE 权限。
+用户是 `admin` 角色的成员或者拥有数据库的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -22,7 +22,8 @@ id: ts-table
 :::warning 说明
 
 - 目前，时序表名、列名和标签名称不支持中文字符。
-- 配置可选参数时，必须严格按照 `[RETENTIONS <keep_duration>] [DICT ENCODING] [COMMENT [=] <'comment_text'>] [WITH HASH(hash_value)]` 的顺序，否则系统将会报错。
+- 配置可选参数时，必须严格按照 `[RETENTIONS <keep_duration>] [DICT ENCODING] [COMMENT [=] <'comment_text'>] [WITH HASH(<hash_value>)]` 的顺序，否则系统将会报错。
+- 3.0.0 版本中，表活跃时间和分区间隔的配置不会生效。
 
 :::
 
@@ -62,13 +63,16 @@ id: ts-table
       table_name  |                        create_statement
     --------------+-----------------------------------------------------------------
       sensor_data | CREATE TABLE sensor_data (
-                  |     k_timestamp TIMESTAMPTZ NOT NULL,
+                  |     k_timestamp TIMESTAMPTZ(3) NOT NULL,
                   |     temperature FLOAT8 NOT NULL,
                   |     humidity FLOAT8 NULL,
                   |     pressure FLOAT8 NULL
                   | ) TAGS (
                   |     sensor_id INT4 NOT NULL,
                   |     sensor_type VARCHAR(30) NOT NULL ) PRIMARY TAGS(sensor_id)
+                  |     retentions 864000s
+                  |     activetime 1d
+                  |     partition interval 10d
     (1 row)
     ```
 
@@ -122,7 +126,7 @@ id: ts-table
 
 ### 所需权限
 
-用户拥有指定表的任何权限。
+用户拥有目标表的任何权限。
 
 ### 语法格式
 
@@ -203,7 +207,7 @@ id: ts-table
 
 ### 所需权限
 
-用户拥有指定表的任何权限。
+用户拥有目标表的任何权限。
 
 ### 语法格式
 
@@ -233,11 +237,13 @@ id: ts-table
       table_name |              create_statement
     -------------+----------------------------------------------
       t3         | CREATE TABLE t3 (
-                |     ts TIMESTAMPTZ NOT NULL,
+                |     ts TIMESTAMPTZ(3) NOT NULL,
                 |     a INT4 NULL
                 | ) TAGS (
                 |     ptag INT4 NOT NULL ) PRIMARY TAGS(ptag)
                 |     retentions 0s
+                |     activetime 1d
+                |     partition interval 30d
     (1 row)
     ```
 
@@ -260,7 +266,9 @@ id: ts-table
                     | ) TAGS (
                     |     site INT4 NOT NULL ) PRIMARY TAGS(site)
                     |     retentions 0s
-    (1 row)
+                    |     activetime 1d
+                    |     partition interval 30d
+        (1 row)
     ```
 
 ## 修改表
@@ -285,11 +293,11 @@ id: ts-table
 
 ### 所需权限
 
-- 重命名表：用户拥有目标表的 DROP 权限及所在数据库的 CREATE 权限。
-- 添加、修改、删除、重命名列或标签：用户拥有目标表的 CREATE 权限。
-- 设置表的数据生命周期：用户拥有目标表的 CREATE 权限。
-- 修改表的区域配置：用户拥有目标表的 CREATE 或 ZONECONFIG 权限。
-- 创建表分区：用户拥有目标表的 CREATE 权限。
+- 重命名表：用户是 `admin` 角色的成员或者拥有目标表的 DROP 权限及所在数据库的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
+- 添加、修改、删除、重命名列或标签：用户是 `admin` 角色的成员或者拥有目标表的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
+- 设置表的数据生命周期：用户是 `admin` 角色的成员或者拥有目标表的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
+- 修改表的区域配置：用户是 `admin` 角色的成员或者拥有目标表的 CREATE 权限或 ZONECONFIG 权限。默认情况下，`root` 用户属于 `admin` 角色。
+- 创建表分区：用户是 `admin` 角色的成员或者拥有目标表的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -411,7 +419,7 @@ ALTER TABLE ts_table ALTER color TYPE VARCHAR(50);
 
 ### 所需权限
 
-用户拥有目标表的 DROP 权限。删除成功后，所有用户针对目标表的所有权限均被删除。
+用户是 `admin` 角色的成员或者拥有目标表的 DROP 权限。默认情况下，`root` 用户属于 `admin` 角色。删除成功后，所有用户针对目标表的所有权限均被删除。
 
 ### 语法格式
 

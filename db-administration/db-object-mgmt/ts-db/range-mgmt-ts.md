@@ -5,6 +5,10 @@ id: range-mgmt-ts
 
 # 数据分片管理
 
+KWDB 将所有用户数据和几乎所有系统数据存储在排序的键值对映射中。这个键空间被划分为多个键空间中的连续块，即数据分片（range）。每个键始终可以在单个数据分片内找到。 从 SQL 的角度来看，时序表最初会映射到单个数据分片，数据分片中的每个键值对对应表中的一行。数据分片的大小达到 512 MiB后，系统会自动将其拆分为两个数据分片。随着表的增长，新生成的数据分片也会继续进行类似的拆分操作。当用户数据减少时，数据分片会自动合并。注意：由于 KWDB 采用标记删除的方式处理数据删除，数据分片不会立即合并，只有在垃圾回收过程中实际删除数据后，数据分片才会合并。
+
+每个数据分片都隶属于一个特定的副本区域（zone）。集群在重新平衡数据分片时，会考虑副本区域的配置，以确保遵守所有约束条件。副本区域更多信息见[副本区域](./zone-mgmt-ts.md)。
+
 KWDB 支持用户使用 `SELECT * from kwdb_internal.ranges` 语句查看时序库、表的数据分片信息，使用 `ALTER RANGE` 语句修改、移除数据分片的区域配置或对数据分片进行手动均衡。
 
 ## 修改数据分片
@@ -26,7 +30,7 @@ KWDB 支持用户使用 `SELECT * from kwdb_internal.ranges` 语句查看时序�
 
 ### 所需权限
 
-用户为 Admin 用户或者 Admin 角色成员。默认情况下，root 用户具有 Admin 角色。
+用户是 `admin` 角色的成员。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -49,7 +53,7 @@ ALTER RANGE <range_name> CONFIGURE ZONE [USING <variable> = [COPY FROM PARENT | 
 
 - 修改系统数据分片的区域配置
 
-  以下示例将 `meta` 数据分片的副本数改为7个。
+  以下示例将 `meta` 数据分片的副本数改为 7 个。
 
   ```SQL
   ALTER RANGE meta CONFIGURE ZONE USING num_replicas=7;

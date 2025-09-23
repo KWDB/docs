@@ -276,7 +276,7 @@ id: faqs
         SET CLUSTER SETTING sql.stats.ts_automatic_collection.enabled = FALSE;
         ```
 
-  5. （KaiwuDB 2.x 版本）关闭数据压缩功能，减少写入时的计算开销，适用于对空间占用不敏感的场景。
+  5. （KWDB 2.x 版本）关闭数据压缩功能，减少写入时的计算开销，适用于对空间占用不敏感的场景。
 
         ```SQL
         ALTER SCHEDULE scheduled_table_compress F Recurring '0 0 1 1 ？2099';

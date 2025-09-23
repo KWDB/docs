@@ -116,6 +116,12 @@ SHOW INDEXES FROM temperature;
 ### 语法格式
 
 ```sql
+DROP INDEX <database_name>.<index_name>;
+```
+
+或
+
+```sql
 DROP INDEX <table_name>@<index_name>;
 ```
 
@@ -123,6 +129,7 @@ DROP INDEX <table_name>@<index_name>;
 
 | 参数 | 说明 |
 | --- | --- |
+| `database_name` | 待删除索引所在的数据库名。|
 | `table_name` | 待删除索引所在的表名。|
 | `index_name` | 待删除索引的名称。|
 

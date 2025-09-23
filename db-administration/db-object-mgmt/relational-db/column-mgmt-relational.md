@@ -11,7 +11,7 @@ KWDB 支持在创建表时创建列，也支持使用 `ALTER TABLE ... ADD COLUM
 
 ### 前提条件
 
-用户拥有目标表的 CREATE 权限。
+用户是 `admin` 角色的成员或者拥有目标表的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -195,7 +195,7 @@ KWDB 支持使用 `ALTER TABLE ... ALTER COLUMN` 语句执行以下操作。`ALT
 
 ### 前提条件
 
-用户拥有目标表的 CREATE 权限。
+用户是 `admin` 角色的成员或者拥有目标表的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -333,7 +333,7 @@ KWDB 支持使用 `ALTER TABLE ... RENAME COLUMN` 语句修改列名。
 
 ### 前提条件
 
-用户拥有目标表的 CREATE 权限。
+用户是 `admin` 角色的成员或者拥有目标表的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -387,7 +387,7 @@ KWDB 支持使用 `ALTER TABLE ... DROP COLUMN` 语句删除列。`DROP COLUMN` 
 
 ### 前提条件
 
-用户拥有目标表的 CREATE 权限。
+用户是 `admin` 角色的成员或者拥有目标表的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 

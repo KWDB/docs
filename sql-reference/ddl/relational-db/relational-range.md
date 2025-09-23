@@ -17,7 +17,7 @@ KWDB 支持用户使用 SHOW RANGES 语句查看关系库、关系表和索引�
 
 ### 所需权限
 
-用户为 Admin 用户或者 Admin 角色成员。默认情况下，root 用户具有 Admin 角色。
+用户是 `admin` 角色的成员。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -85,3 +85,57 @@ KWDB 支持用户使用 SHOW RANGES 语句查看关系库、关系表和索引�
       orders_seq | NULL      | NULL    |      183 |      0.000114 |            1 |                       | {1}      | {""}
     (3 rows)
     ```
+
+## 修改数据分片
+
+`ALTER RANGE` 语句用于修改数据分片的副本区域配置。 除了用户可见的数据库和表之外，KaiwuDB 在以下系统数据分片内存储了部分内部数据，进行了副本区域配置：
+
+- `meta`：包含集群中所有数据的位置信息，副本数设置为 5，以提高容错性，`gc.ttlseconds` 设置低于默认值，以保持数据分片大小适中，确保性能稳定。
+- `liveness`：包含给定时间活动节点的信息，副本数设置为 5，以提高容错性，`gc.ttlseconds` 设置低于默认值，以保持数据分片大小适中。
+- `system`：包括分配新表ID所需的信息以及追踪集群节点状态，副本数设置为5，以提高容错性。
+- `timeseries`：包含集群监控数据。
+
+::: warning 注意
+修改系统数据分片的区域配置可能导致部分或全部集群停止工作，因此需要格外谨慎。
+:::
+
+### 所需权限
+
+用户是 `admin` 角色的成员。默认情况下，`root` 用户属于 `admin` 角色。
+
+### 语法格式
+
+![img](../../../static/sql-reference/alter-range-rdb.png)
+
+### 参数说明
+
+| 参数 | 说明 |
+| --- | --- |
+| `range_name` | 待修改的数据分片名称，包括：<br>-  `default`：默认副本设置<br>- `meta`：所有数据的位置信息<br>- `liveness`：给定时间活动节点的信息 <br>- `system`：分配新表ID所需的信息以及追踪集群节点状态<br>- `timeseries`：集群监控数据|
+| `variable` | 待修改的变量名，关系库支持修改以下变量：<br> - `range_min_bytes`：数据分片的最小大小，单位为字节。数据分片小于该值时，KWDB 会将其与相邻数据分片合并。默认值：256 MiB，设置值应大于 1 MiB（1048576 字节），小于数据分片的最大大小。<br> - `range_max_bytes`：数据分片的最大大小，单位为字节。数据分片大于该值时，KWDB 会将其切分到两个数据分片。默认值： 512 MiB。设置值不得小于 5 MiB（5242880 字节）。<br> - `gc.ttlseconds`：数据在垃圾回收前保留的时间，单位为秒。默认值为 `90000`（25 小时）。设置值建议不小于 600 秒（10 分钟），以免影响长时间运行的查询。设置值较小时可以节省磁盘空间，设置值较大时会增加 `AS OF SYSTEM TIME` 查询的时间范围。另外，由于每行的所有版本都存储在一个永不拆分的单一数据分片内，不建议将该值设置得太大，以免单行的所有更改累计超过 64 MiB，导致内存不足或其他问题。<br>- `num_replicas`：副本数量。默认值为 3。`system` 数据库、`meta`、`liveness` 和 `system` 数据分片的默认副本数为 5。 **注意**：集群中存在不可用节点时，副本数量不可缩减。<br>- `constraints`：副本位置的必需（+）和/或禁止（-）约束。例如 `constraints = '{"+region=NODE1": 1, "+region=NODE2": 1, "+region=NODE3": 1}'` 表示在节点 1、2 和 3 上必须各放置 1 个副本。目前只支持 `region=NODEx` 格式<br>- `lease_preferences`：主副本位置的必需（+）和/或禁止（-）约束的有序列表。例如 `lease_preferences = '[[+region=NODE1]]'` 表示倾向将主副本放置在节点 1。如果不能满足首选项，KWDB 将尝试下一个优先级。如果所有首选项都无法满足，KWDB 将使用默认的租约分布算法，基于每个节点已持有的租约数量来决定租约位置，尝试平衡租约分布。列表中的每个值可以包含多个约束。|
+| `value` | 变量值。 |
+|`COPY FROM PARENT`| 使用父区域的设置值。|
+|`DISCARD` | 移除区域配置，采用默认值。|
+
+### 语法示例
+
+- 修改系统数据分片的区域配置
+  
+  以下示例将 `meta` 系统数据分片的副本数改为 7 个。
+
+  ```SQL
+  > ALTER RANGE meta CONFIGURE ZONE USING num_replicas=7;
+  ALTER RANGE 
+
+  > SHOW ZONE CONFIGURATION FOR RANGE meta;
+      target   |            raw_config_sql
+  -------------+----------------------------------------
+    RANGE meta | ALTER RANGE meta CONFIGURE ZONE USING
+              |     range_min_bytes = 134217728,
+              |     range_max_bytes = 536870912,
+              |     gc.ttlseconds = 3600,
+              |     num_replicas = 7,
+              |     constraints = '[]',
+              |     lease_preferences = '[]'
+  (1 row)
+  ```

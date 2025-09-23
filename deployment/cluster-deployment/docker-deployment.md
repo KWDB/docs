@@ -22,7 +22,7 @@ id: docker-deployment
 
     ::: warning 提示
 
-    如果采用跨机器安全模式部署，需要使用 `./kwbase cert create-node <node_ip>` 命令为所有节点创建证书和密钥，并将 CA 证书和密钥、节点证书和密钥传输至所有节点；如果需要在其它节点上运行 KaiwuDB 客户端命令，还需要将 `root` 用户的证书和密钥复制到该节点。只有拥有 `root` 用户证书和密钥的节点，才能够访问集群。
+    如果采用跨机器安全模式部署，需要使用 `./kwbase cert create-node <node_ip>` 命令为所有节点创建证书和密钥，并将 CA 证书和密钥、节点证书和密钥传输至所有节点；如果需要在其它节点上运行 KWDB 客户端命令，还需要将 `root` 用户的证书和密钥复制到该节点。只有拥有 `root` 用户证书和密钥的节点，才能够访问集群。
 
     :::
 
@@ -43,9 +43,9 @@ id: docker-deployment
     - `-w /kaiwudb/bin`：将容器内的工作目录设置为 `/kaiwudb/bin`。
     - `kwdb_image`：容器镜像，需填入实际的镜像名以及标签, 例如 `kwdb:2.2.0`。
     - `bash -c`：在容器中执行后面的证书创建命令, 其中：
-      - `./kwbase cert create-ca`: 创建证书颁发机构(CA)，生成 CA 证书和密钥。
-      - `./kwbase cert create-client root`: 为 `root` 用户创建客户端证书和密钥。
-      - `./kwbase cert create-node 127.0.0.1 localhost 0.0.0.0`: 创建节点服务器证书和密钥，支持通过三种网络标识符访问：本地回环地址 (`127.0.0.1`)、本地主机名 (`localhost`) 和所有网络接口 (`0.0.0.0`)。
+      - `./kwbase cert create-ca`：创建证书颁发机构(CA)，生成 CA 证书和密钥。
+      - `./kwbase cert create-client root`：为 `root` 用户创建客户端证书和密钥。
+      - `./kwbase cert create-node 127.0.0.1 localhost 0.0.0.0`：创建节点服务器证书和密钥，支持通过三种网络标识符访问：本地回环地址 (`127.0.0.1`)、本地主机名 (`localhost`) 和所有网络接口 (`0.0.0.0`)。
       - 所有命令均使用 `--certs-dir=<certs_dir>` 指定证书存储目录，使用 `--ca-key=<certs_dir>/ca.key` 指定 CA 密钥路径。
 
 2. 启动三个及以上数据库实例。
@@ -152,7 +152,7 @@ id: docker-deployment
     - `--ipc shareable`：允许其他容器共享此容器的IPC命名空间。
     - `-w /kaiwudb/bin`：将容器内的工作目录设置为 `/kaiwudb/bin`。
     - `kwdb_image`：容器镜像变量，需替换为实际的镜像名称及标签, 例如 `kwdb:2.2.0`。
-    - `./kwbase start`: 容器内运行的数据库启动命令, 根据安全模式和非安全模式有所不同:
+    - `./kwbase start`：容器内运行的数据库启动命令, 根据安全模式和非安全模式有所不同:
       - `--insecure`：（仅非安全模式）以非安全模式运行。
       - `--certs-dir=<certs_dir>`：（安全模式）证书目录位置。
       - `--listen-addr=0.0.0.0:26257`：数据库监听的地址和端口。

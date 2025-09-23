@@ -181,7 +181,7 @@ KWDB 支持通过以下方式获取容器镜像：
       - `kaiwudb_port`：KWDB 服务端口，默认为 `26257`。
       - `brpc_port`：KWDB 时序引擎间的 brpc 通信端口，用于节点间通信。单节点部署时可不指定，指定后系统会自动忽略该设置。
       - `data_root`：数据目录，默认为 `/var/lib/kaiwudb`。
-      - `cpu`: 可选参数，用于指定 KWDB 服务占用当前节点服务器 CPU 资源的比例，默认无限制。取值范围为 `[0,1]`，最大精度为小数点后两位。
+      - `cpu`：可选参数，用于指定 KWDB 服务占用当前节点服务器 CPU 资源的比例，默认无限制。取值范围为 `[0,1]`，最大精度为小数点后两位。
     - `local`：本地节点配置
       - `node_addr`：本地节点对外提供服务的 IP 地址，监听地址为 `0.0.0.0`，端口为 KWDB 服务端口。
 
@@ -346,9 +346,9 @@ KWDB 支持通过以下方式获取容器镜像：
     - `-w /kaiwudb/bin`：将容器内的工作目录设置为 `/kaiwudb/bin`。
     - `kwdb_image`：容器镜像，需填入实际的镜像名以及标签, 例如 `kwdb:2.2.0`。
     - `bash -c`：在容器中执行后面的证书创建命令, 其中：
-      - `./kwbase cert create-ca`: 创建证书颁发机构(CA)，生成 CA 证书和密钥。
-      - `./kwbase cert create-client root`: 为 `root` 用户创建客户端证书和密钥。
-      - `./kwbase cert create-node 127.0.0.1 localhost 0.0.0.0`: 创建节点证书和密钥，支持通过三种网络标识符访问：本地回环地址 (`127.0.0.1`)、本地主机名 (`localhost`) 和所有网络接口 (`0.0.0.0`)。
+      - `./kwbase cert create-ca`：创建证书颁发机构(CA)，生成 CA 证书和密钥。
+      - `./kwbase cert create-client root`：为 `root` 用户创建客户端证书和密钥。
+      - `./kwbase cert create-node 127.0.0.1 localhost 0.0.0.0`：创建节点证书和密钥，支持通过三种网络标识符访问：本地回环地址 (`127.0.0.1`)、本地主机名 (`localhost`) 和所有网络接口 (`0.0.0.0`)。
       - 所有命令均使用 `--certs-dir=<certs_dir>` 指定证书存储目录，使用 `--ca-key=<certs_dir>/ca.key` 指定密钥路径。
 
 2. 启动基于 Docker 的 KWDB 数据库节点。
@@ -372,7 +372,7 @@ KWDB 支持通过以下方式获取容器镜像：
           --store=/kaiwudb/deploy/kwdb-container
       ```
 
-    - TLS 安全模式
+    - 安全模式
 
         ```bash
       docker run -d --privileged --name kwdb \
@@ -399,12 +399,12 @@ KWDB 支持通过以下方式获取容器镜像：
     - `--ulimit memlock=-1`：取消容器内存大小限制。
     - `--ulimit nofile=$max_files`：设置容器内进程可以打开的最大文件数。
     - `-p $db_port:26257`：将容器的 26257 端口(数据库主端口)映射到主机的指定端口。
-    - `-p $http_port:8080`: 将容器的 8080 端口(HTTP 端口)映射到主机的指定端口。
+    - `-p $http_port:8080`：将容器的 8080 端口(HTTP 端口)映射到主机的指定端口。
     - `-v`：将主机的 `/var/lib/kaiwudb` 目录挂载到容器内的 `/kaiwudb/deploy/kwdb-container` 目录，用于持久化数据存储。安全模式下，将主机的 `/etc/kaiwudb/certs` 目录挂载到容器内的 `<certs_dir>` 目录，用于存放证书和密钥。
     - `--ipc shareable`：允许其他容器共享此容器的IPC命名空间。
     - `-w /kaiwudb/bin`：将容器内的工作目录设置为 `/kaiwudb/bin`。
     - `kwdb_image`：容器镜像变量，需替换为实际的镜像名称及标签, 例如 `kwdb:2.2.0`。
-    - `./kwbase start`: 容器内运行的数据库启动命令, 根据安全模式和非安全模式有所不同:
+    - `./kwbase start`：容器内运行的数据库启动命令, 根据安全模式和非安全模式有所不同:
       - `--insecure`：（仅非安全模式）指定以非安全模式运行。
       - `--certs-dir=<certs_dir>`：（安全模式）指定证书目录位置。
       - `--listen-addr=0.0.0.0:26257`：指定数据库监听的地址和端口。

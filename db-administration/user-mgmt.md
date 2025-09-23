@@ -172,7 +172,7 @@ SHOW USERS;
 
 ### 前提条件
 
-用户拥有 Admin（ALL）权限或者具有创建角色（CREATEROLE）的权限。
+用户具备创建角色（CREATEROLE）的权限或者是 `admin` 角色的成员。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 

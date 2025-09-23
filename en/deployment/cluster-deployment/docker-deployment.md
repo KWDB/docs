@@ -5,7 +5,7 @@ id: docker-deployment
 
 # Deploy Using Docker
 
-This section describes how to deploy a KaiwuDB cluster on a single machine using the Docker Run commands.
+This section describes how to deploy a KWDB cluster on a single machine using the Docker Run commands.
 
 **Note**: For production environments, it is recommended to deploy only one node per machine to improve availability and reduce the risk of data loss.
 

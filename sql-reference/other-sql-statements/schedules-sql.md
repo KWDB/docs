@@ -27,7 +27,7 @@ KWDB 每 `60` 秒扫描一次定时任务列表，随机找出应该执行的 `1
 
 ### 所需权限
 
-用户具有 Admin 角色。默认情况下，root 用户具有 Admin 角色。
+用户是 `admin` 角色的成员。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -171,7 +171,7 @@ CREATE SCHEDULE s1 FOR SQL 'INSERT INTO tsdb.t2 SELECT * FROM tsdb.t1' RECURRING
 
 ### 所需权限
 
-用户具有 Admin 角色。默认情况下，root 用户具有 Admin 角色。
+用户是 `admin` 角色的成员。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -226,7 +226,7 @@ CREATE SCHEDULE s1 FOR SQL 'INSERT INTO tsdb.t2 SELECT * FROM tsdb.t1' RECURRING
 
 ### 所需权限
 
-用户具有 Admin 角色。默认情况下，root 用户具有 Admin 角色。
+用户是 `admin` 角色的成员。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -256,7 +256,7 @@ ALTER SCHEDULE scheduled_table_statistics RECURRING '@hourly';
 
 ### 所需权限
 
-用户具有 Admin 角色。默认情况下，root 用户具有 Admin 角色。
+用户是 `admin` 角色的成员。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -282,7 +282,7 @@ PAUSE SCHEDULE scheduled_table_statistics;
 
 ### 所需权限
 
-用户具有 Admin 角色。默认情况下，root 用户具有 Admin 角色。
+用户是 `admin` 角色的成员。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -308,7 +308,7 @@ RESUME SCHEDULE scheduled_table_statistics;
 
 ### 所需权限
 
-用户具有 Admin 角色。默认情况下，root 用户具有 Admin 角色。
+用户是 `admin` 角色的成员。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 

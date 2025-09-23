@@ -50,31 +50,32 @@ KWDB 支持在查询中对列类型为时间戳、时间戳常量以及结果类
 
 ### 所需权限
 
-用户拥有目标表的 SELECT 权限。
+用户是 `admin` 角色的成员或者拥有目标表的 SELECT 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
-![](../../../static/sql-reference/ts-select.png)
+<img src="../../../static/sql-reference/ts-select.png" style="zoom: 80%;" />
 
 - `select_clause`
 
-    ![](../../../static/sql-reference/ts-group-window.png)
+  <img src="../../../static/sql-reference/ts-group-window.png" style="zoom: 55%;" />
 
 - `a_expr`
 
-    ![](../../../static/sql-reference/ts-a-expr.png)
+  <img src="../../../static/sql-reference/ts-a-expr.png" style="zoom: 55%;" />
 
 - `target_elem`
 
-    ![](../../../static/sql-reference/ts-target-elem.png)
+  <img src="../../../static/sql-reference/ts-target-elem.png" style="zoom: 75%;" />
 
 - `alias_clause`
 
-    ![](../../../static/sql-reference/ts-alias-clause.png)
+  <img src="../../../static/sql-reference/ts-alias-clause.png" style="zoom: 75%;" />
 
 - `as_of_clause`
 
-    ![](../../../static/sql-reference/ts-as-of-clause.png)
+  <img src="../../../static/sql-reference/ts-as-of-clause.png" style="zoom: 75%;" />
+
 
 ### 参数说明
 
@@ -248,7 +249,7 @@ KWDB 支持基于特定条件（如时间间隔、数据行数或状态信息等
 
 ### 所需权限
 
-用户拥有目标表的 SELECT 权限。
+用户是 `admin` 角色的成员或者拥有目标表的 SELECT 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -414,7 +415,7 @@ KWDB 支持以下嵌套查询：
 
 ### 所需权限
 
-用户拥有目标表的 SELECT 权限。
+用户是 `admin` 角色的成员或者拥有目标表的 SELECT 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -499,7 +500,7 @@ KWDB 支持以下嵌套查询：
 
 ### 所需权限
 
-用户拥有目标表的 SELECT 权限。
+用户是 `admin` 角色的成员或者拥有目标表的 SELECT 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -535,7 +536,7 @@ e1  | e1
 
 ### 所需权限
 
-用户拥有目标表的 SELECT 权限。
+用户是 `admin` 角色的成员或者拥有目标表的 SELECT 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 

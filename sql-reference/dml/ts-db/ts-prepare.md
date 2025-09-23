@@ -17,9 +17,9 @@ KWDB 支持用户使用 `PREARE` 和 `EXECUTE` 语句向指定表写入数据、
 
 ## 所需权限
 
-- 写入数据：用户拥有目标表的  INSERT 权限。
-- 查询数据：用户拥有目标表的 SELECT 权限。
-- 删除数据：用户拥有目标表的 SELECT 和 DELETE 权限。
+- 写入数据：用户是 `admin` 角色的成员或者拥有目标表的 INSERT 权限。默认情况下，`root` 用户属于 `admin` 角色。
+- 查询数据：用户是 `admin` 角色的成员或者拥有目标表的 SELECT 权限。默认情况下，`root` 用户属于 `admin` 角色。
+- 删除数据：用户是 `admin` 角色的成员或者拥有目标表的 SELECT 和 DELETE 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 ## 语法格式
 

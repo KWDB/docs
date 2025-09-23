@@ -11,7 +11,7 @@ id: ts-comment
 
 ### 所需权限
 
-用户拥有操作对象的 CREATE 权限。
+用户是 `admin` 角色的成员或者拥有操作对象的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 

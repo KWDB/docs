@@ -13,8 +13,7 @@ id: relational-trigger
 
 ### 所需权限
 
-- 非三权分立模式下，用户是 `admin` 角色的成员或者拥有触发器关联表的 `CREATE` 权限和触发器主体中相关 SQL 操作的权限。默认情况下，`root` 用户属于 `admin` 角色。
-- 三权分立模式下，用户是 `sysadmin` 角色的成员或者是拥有触发器关联表的 `CREATE` 权限和触发器主体中相关 SQL 操作权限的普通用户。默认情况下，`sysroot` 用户属于 `sysadmin` 角色。
+用户是 `admin` 角色的成员或者拥有触发器关联表的 `CREATE` 权限和触发器主体中相关 SQL 操作的权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -105,8 +104,7 @@ SHOW TRIGGERS FROM orders;
 
 ### 所需权限
 
-- 非三权分立模式下，用户是 `admin` 角色的成员或者拥有触发器关联表的 `DROP` 权限。默认情况下，`root` 用户属于 `admin` 角色。
-- 三权分立模式下，用户是 `sysadmin` 角色的成员或者是拥有触发器关联表的 `DROP` 权限的普通用户。默认情况下，`sysroot` 用户属于 `sysadmin` 角色。
+用户是 `admin` 角色的成员或者拥有触发器关联表的 `DROP` 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -134,8 +132,7 @@ ALTER TRIGGER my_trigger ON orders RENAME TO trigger_test;
 
 ### 所需权限
 
-- 非三权分立模式下，用户是 `admin` 角色的成员或者拥有触发器关联表的 `DROP` 权限。默认情况下，`root` 用户属于 `admin` 角色。
-- 三权分立模式下，用户是 `sysadmin` 角色的成员或者是拥有触发器关联表的 `DROP` 权限的普通用户。默认情况下，`sysroot` 用户属于 `sysadmin` 角色。
+用户是 `admin` 角色的成员或者拥有触发器关联表的 `DROP` 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 

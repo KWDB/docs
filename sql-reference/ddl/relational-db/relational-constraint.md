@@ -18,7 +18,7 @@ id: relational-constraint
 
 ### 所需权限
 
-用户拥有目标表的 CREATE 权限。
+用户是 `admin` 角色的成员或者拥有目标表的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -172,7 +172,7 @@ SHOW CONSTRAINTS FROM orders;
 
 ### 所需权限
 
-用户拥有目标表的 CREATE 权限。
+用户是 `admin` 角色的成员或者拥有目标表的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -217,7 +217,7 @@ SHOW CONSTRAINTS FROM orders;
 
 ### 所需权限
 
-用户拥有约束所属表的 CREATE 权限。
+用户是 `admin` 角色的成员或者拥有目标表的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 

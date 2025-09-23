@@ -9,7 +9,7 @@ id: sequence-mgmt-relational
 
 ### 前提条件
 
-用户拥有新建序列所属数据库的 CREATE 权限。
+用户是 `admin` 角色的成员或者拥有所属数据库的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -180,7 +180,7 @@ SHOW SEQUENCES;
 
 ### 前提条件
 
-用户拥有序列所属数据库的 CREATE 权限。
+用户是 `admin` 角色的成员或者拥有序列所属数据库的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -290,7 +290,7 @@ ALTER SEQUENCE [IF EXISTS] <seq_name>
 
 ### 前提条件
 
-用户拥有序列所属数据库的 CREATE 权限。
+用户是 `admin` 角色的成员或者拥有序列所属数据库的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -353,7 +353,7 @@ ALTER SEQUENCE [IF EXISTS] <current_name> RENAME TO <new_name>;
 
 ### 前提条件
 
-用户拥有目标序列的 DROP 权限。
+用户是 `admin` 角色的成员或者拥有目标序列的 DROP 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 

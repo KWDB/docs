@@ -78,7 +78,7 @@ KWDB 支持在以下服务器操作系统进行安装部署。
 目前 KWDB 开源仓库提供了以下系统与架构的 [DEB 或 RPM 安装包](https://gitee.com/kwdb/kwdb/releases/)，如需其它系统或架构的安装包，请联系 [KWDB 技术支持](https://www.kaiwudb.com/support/)：
 
 - Ubuntu V20.04 x86_64
-- Ubuntu V22.04 x86_64
+- Ubuntu V20.04 ARM_64
 - Kylin V10_2403 x86_64
 - Kylin V10_2403 ARM_64
 

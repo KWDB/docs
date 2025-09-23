@@ -30,7 +30,7 @@ KWDB 支持用户使用 `SELECT * from kwdb_internal.ranges` 语句查看时序�
 
 ### 所需权限
 
-用户为 Admin 用户或者 Admin 角色成员。默认情况下，root 用户具有 Admin 角色。
+用户是 `admin` 角色的成员。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 

@@ -11,7 +11,7 @@ id: ts-data-query
 
 ### 前提条件
 
-用户拥有目标表的 SELECT 权限。
+用户是 `admin` 角色的成员或者拥有目标表的 SELECT 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -146,7 +146,7 @@ SELECT time_bucket_gapfill (time, 86400) AS a, max(c1) FROM t1 GROUP BY a;
 
 ### 前提条件
 
-用户拥有目标表的 SELECT 权限。
+用户是 `admin` 角色的成员或者拥有目标表的 SELECT 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -328,7 +328,7 @@ KWDB 的最值上下文查询功能允许用户在使用 `min` 或 `max` 聚合�
 
 ### 前提条件
 
-用户拥有目标表的 SELECT 权限。
+用户是 `admin` 角色的成员或者拥有目标表的 SELECT 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 

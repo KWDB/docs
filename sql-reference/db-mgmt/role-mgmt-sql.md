@@ -336,7 +336,7 @@ SHOW ROLES;
 
 ::: warning 说明
 
-KWDB 不支持将 `root` 用户从 Admin 角色中删除。
+KWDB 不支持将 `root` 用户从 `admin` 角色中删除。
 
 :::
 
