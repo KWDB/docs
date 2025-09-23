@@ -169,7 +169,7 @@ The user must have been granted the `CREATE` privilege on the specified table(s)
 
 ## SHOW INDEX
 
-The `SHOW INDEX` statement shows index information for a table or database.
+The `SHOW INDEX` statement shows index information for a table，a database, or a materialized view.
 
 ### Privileges
 
@@ -177,7 +177,7 @@ The user must have any privilege on the specified database(s), table(s) or mater
 
 ### Syntax
 
-![](../../../../static/sql-reference/JqAZb5LxgobpPoxA8uWcblTmnnf.png)
+![](../../../../static/sql-reference/showindex.png)
 
 ### Parameters
 
@@ -185,6 +185,7 @@ The user must have any privilege on the specified database(s), table(s) or mater
 | --- | --- |
 | `table_name` | The name of the table for which to show indexes. |
 | `database_name` | The name of the database for which to show indexes. |
+| `mview_name` | The name of the materialized view for which to show indexes. |
 | `WITH COMMENT` | Optional. Show an index's comments. By default, the index's comment is set to `NULL`. |
 
 ### Responses
@@ -202,29 +203,59 @@ The user must have any privilege on the specified database(s), table(s) or mater
 
 ### Examples
 
-This example lists all indexes on the `re_users` table.
+- List all indexes on a specified table.
 
-```sql
-SHOW INDEX FROM re_users;
-```
+    This example lists all indexes on the `re_users` table.
 
-If you succeed, you should see an output similar to the following:
+    ```sql
+    SHOW INDEX FROM re_users;
+    ```
 
-```sql
-  table_name |        index_name        | non_unique | seq_in_index | column_name | direction | storing | implicit
--------------+--------------------------+------------+--------------+-------------+-----------+---------+-----------
-  re_users   | primary                  |   false    |            1 | city        | ASC       |  false  |  false
-  re_users   | primary                  |   false    |            2 | id          | ASC       |  false  |  false
-  re_users   | re_users_city_idx        |    true    |            1 | city        | ASC       |  false  |  false
-  re_users   | re_users_city_idx        |    true    |            2 | id          | ASC       |  false  |   true
-  re_users   | re_users_city_name_idx   |    true    |            1 | city        | ASC       |  false  |  false
-  re_users   | re_users_city_name_idx   |    true    |            2 | name        | ASC       |  false  |  false
-  re_users   | re_users_city_name_idx   |    true    |            3 | id          | ASC       |  false  |   true
-  re_users   | re_users_credit_card_key |   false    |            1 | credit_card | ASC       |  false  |  false
-  re_users   | re_users_credit_card_key |   false    |            2 | city        | ASC       |  false  |   true
-  re_users   | re_users_credit_card_key |   false    |            3 | id          | ASC       |  false  |   true
-(10 rows)
-```
+    If you succeed, you should see an output similar to the following:
+
+    ```sql
+      table_name |        index_name        | non_unique | seq_in_index | column_name | direction | storing | implicit
+    -------------+--------------------------+------------+--------------+-------------+-----------+---------+-----------
+      re_users   | primary                  |   false    |            1 | city        | ASC       |  false  |  false
+      re_users   | primary                  |   false    |            2 | id          | ASC       |  false  |  false
+      re_users   | re_users_city_idx        |    true    |            1 | city        | ASC       |  false  |  false
+      re_users   | re_users_city_idx        |    true    |            2 | id          | ASC       |  false  |   true
+      re_users   | re_users_city_name_idx   |    true    |            1 | city        | ASC       |  false  |  false
+      re_users   | re_users_city_name_idx   |    true    |            2 | name        | ASC       |  false  |  false
+      re_users   | re_users_city_name_idx   |    true    |            3 | id          | ASC       |  false  |   true
+      re_users   | re_users_credit_card_key |   false    |            1 | credit_card | ASC       |  false  |  false
+      re_users   | re_users_credit_card_key |   false    |            2 | city        | ASC       |  false  |   true
+      re_users   | re_users_credit_card_key |   false    |            3 | id          | ASC       |  false  |   true
+    (10 rows)
+    ```
+
+- List all indexes on a specified materialized view.
+
+    This example lists all indexes on the `small_order` materialized view.
+
+    ```sql
+    -- List all tables in the current database.
+    SHOW TABLES;
+      table_name  |    table_type
+    --------------+--------------------
+      accounts    | BASE TABLE
+      small_order | MATERIALIZED VIEW
+    (2 rows)
+
+    -- List all indexes on the specified materialized view.
+    SHOW INDEX FROM small_order;
+    ```
+
+    If you succeed, you should see an output similar to the following:
+
+    ```sql
+      table_name  | index_name | non_unique | seq_in_index | column_name | direction | storing | implicit
+    --------------+------------+------------+--------------+-------------+-----------+---------+-----------
+      small_order | primary    |   false    |            1 | rowid       | ASC       |  false  |  false
+      small_order | idx1       |    true    |            1 | id          | ASC       |  false  |  false
+      small_order | idx1       |    true    |            2 | rowid       | ASC       |  false  |   true
+    (3 rows)
+    ```
 
 ## ALTER INDEX
 
