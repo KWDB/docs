@@ -25,6 +25,8 @@ id: overview
     - [列](./ddl/ts-db/ts-column.md)
     - [标签](./ddl/ts-db/ts-label.md)
     - [索引](./ddl/ts-db/ts-index.md)
+    - [数据分片](./ddl/ts-db/ts-range.md)
+    - [分区](./ddl/ts-db/ts-partition.md)
     - [区域配置](./ddl/ts-db/ts-zone.md)
     - [注释](./ddl/ts-db/ts-comment.md)
   - 关系数据
@@ -38,8 +40,10 @@ id: overview
     - [约束](./ddl/relational-db/relational-constraint.md)
     - [序列](./ddl/relational-db/relational-sequence.md)
     - [数据分片](./ddl/relational-db/relational-range.md)
+    - [分区](./ddl/relational-db/relational-partition.md)    
     - [区域配置](./ddl/relational-db/relational-zone.md)
     - [注释](./ddl/relational-db/relational-comment.md)
+    - [存储过程](./ddl/relational-db/relational-procedure.md)
     - [触发器](./ddl/relational-db/relational-trigger.md)
 - DML 语句
   - 时序数据
@@ -73,6 +77,9 @@ id: overview
   - [定时任务](./other-sql-statements/schedules-sql.md)
   - [会话](./other-sql-statements/sessions-sql.md)
   - [集群设置](./other-sql-statements/cluster-settings-sql.md)
+  - [声明](./other-sql-statements/declare-sql.md)
+  - [游标](./other-sql-statements/cursor-sql.md)
+  - [分隔符](./other-sql-statements/delimiter-sql.md)
   - [流计算](./other-sql-statements/stream-sql.md)
 - [系统视图](./system-view-sql.md)
 - [NULL 值管理](./null-value-mgmt.md)

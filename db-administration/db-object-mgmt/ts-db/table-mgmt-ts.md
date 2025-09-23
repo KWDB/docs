@@ -21,7 +21,8 @@ CREATE TABLE <table_name> (<column_list>)
 PRIMARY [TAGS|ATTRIBUTES] (<primary_tag_list>) 
 [RETENTIONS <keep_duration>]
 [DICT ENCODING]
-[COMMENT [=] <'comment_text'>];
+[COMMENT [=] <'comment_text'>]
+[WITH HASH(<hash_value>)];
 ```
 
 ### 参数说明
@@ -40,6 +41,7 @@ PRIMARY [TAGS|ATTRIBUTES] (<primary_tag_list>)
 | `keep_duration` | 可选参数，设置表的数据生命周期。数据超过此时长后将被系统自动清除。<br>默认值： `0s`（永久保留）<br>时间单位：<br>- 秒：`s` 或 `second`<br>- 分钟：`m` 或 `minute`<br>- 小时：`h` 或 `hour`<br>- 天：`d` 或 `day`<br>- 周：`w` 或 `week`<br>- 月：`mon` 或 `month`<br>- 年：`y` 或 `year`<br>取值范围:正整数，上限为 1000 年<br>**说明：**<br>- 表级设置优先于库级设置。<br>- 保留时长越长，存储空间占用越大，请根据业务需求合理配置。<br>- 如果待写入的数据已超过生命周期限制，系统会直接丢弃该数据，不予写入。|
 | `DICT ENCODING`| 可选参数，启用字符串的字典编码功能，提升字符串数据的压缩能力。表中存储的字符串数据重复率越高，压缩优化效果越明显。该功能只适用于 CHAR 和 VARCHAR 长度小于等于 `1023` 的字符串，且只能在建表时开启。开启后不支持禁用。 |
 | `[COMMENT [=] <'comment_text'>` | 可选项，定义表的注释信息。 |
+| `hash_value`| 可选参数，用于定义分布式集群中 HASH 环的大小，决定最大 Range 分片数量。例如 HASH(100) 表示最多可产生 100 个不同的 Range 分片。<br><br>默认值为 2000，表示最多可产生 2000 个 Range 分片。支持设置范围为 [1,50000]。<br><br>性能影响：HASH 值过小时将导致多个设备的数据集中在少数 Range 中，形成写入热点，HASH 值过大时则会导致 Range 数量过多，增加管理开销。<br><br>推荐配置：建议根据预期设备数量选择合适的 HASH 值：<br>- 设备数 ≤ 1,000：HASH 值 < 20<br>- 设备数 ≤ 50,000：HASH 值 < 2,000<br>- 设备数 ≤ 1,000,000：HASH 值 < 10,000 <br><br>最佳实践：建议配合集群参数 `SET CLUSTER SETTING sql.ts_create.leaseholder_auto_relocated.enabled = true;`使用，可在建表时自动将 Range 分片和 Leaseholder 均匀分布到各节点，从源头避免热点问题。 |
 
 ### 语法示例
 
@@ -110,6 +112,14 @@ PRIMARY [TAGS|ATTRIBUTES] (<primary_tag_list>)
     ```sql
     CREATE TABLE device_info (create_time TIMESTAMPZ NOT NULL, device_id INT COMMENT 'device ID' NOT NULL, install_date TIMESTAMPZ, warranty_period INT2) TAGS (plant_code INT2 NOT NULL COMMENT = 'plant code', workshop VARCHAR(128) NOT NULL, device_type CHAR(1023) NOT NULL, manufacturer NCHAR(254) NOT NULL) PRIMARY TAGS(plant_code, workshop, device_type, manufacturer) COMMENT = 'table for device information';
     CREATE 
+    ```
+
+- 创建时序表并设置 HASH 环大小。
+
+    以下示例创建一个名为 `sensors` 的时序表并将 HASH 环大小设置为 20。
+
+    ```sql
+    CREATE TABLE sensors (ts TIMESTAMP NOT NULL, value FLOAT) TAGS (sensor_id INT NOT NULL) PRIMARY TAGS (sensor_id) WITH HASH(20);
     ```
 
 ## 查看表
@@ -269,6 +279,8 @@ SHOW CREATE [TABLE] [<database_name>.] <table_name>;
 - 修改表的数据生命周期
 - 添加列、修改列名、列的数据类型或宽度、设置列的默认值、删除列的默认值
 - 添加标签、修改标签名、标签的数据类型或宽度、删除标签
+- 修改表的区域配置
+- 创建表分区
 
 ::: warning 说明
 
@@ -283,6 +295,8 @@ SHOW CREATE [TABLE] [<database_name>.] <table_name>;
 
 - 重命名表：用户拥有目标表的 DROP 权限及所在数据库的 CREATE 权限。
 - 其它修改表操作：用户拥有目标表的 CREATE 权限。
+- 修改表的区域配置：用户拥有目标表的 CREATE 权限或 ZONECONFIG 权限。
+- 创建表分区：用户拥有目标表的 CREATE 权限。
 
 ### 语法格式
 
@@ -292,8 +306,10 @@ ALTER TABLE <table_name>
 |ADD [TAG | ATTRIBUTE] <tag_name> <tag_type>
 |ALTER [COLUMN] <colunm_name> [SET DATA] TYPE <new_type> [SET DEFAULT <default_expr> | DROP DEFAULT ]
 |ALTER [TAG | ATTRIBUTE] <tag_name> [SET DATA] TYPE <new_type>
+| CONFIGURE ZONE [USING <variable> = [COPY FROM PARENT | <value>], <variable> = [COPY FROM PARENT | <value>] ... | USING REBALANCE | DISCARD]
 |DROP [COLUMN] [IF EXISTS] <colunm_name>
 |DROP [TAG | ATTRIBUTE] <tag_name>
+|<partition_by_clause>
 |RENAME TO <new_table_name> 
 |RENAME COLUMN <old_name> TO <new_name>
 |RENAME [TAG | ATTRIBUTE] <old_name> TO <new_name>
@@ -315,11 +331,13 @@ ALTER TABLE <table_name>
     - `SET DEFAULT <default_expr>`：必选关键字。系统写入表数据时写入指定的默认值，从而不需要显式定义该列的值。对于非时间类型的数据列，默认值只能是常量。对于时间类型的列（TIMESTAMPTZ 或 TIMESTAMP），默认值可以是常量，也可以是 `now()` 函数。如果默认值类型与列类型不匹配，设置默认值时，系统报错。支持默认值设置为 NULL。
     - `DROP DEFAULT`：必选关键字。删除已定义的列的默认值，删除后将不再写入默认值。
   - `ALTER TAG/ATTRITBUTE`：修改标签的数据类型或宽度，其中 `SET DATA` 为可选关键字，是否使用不影响修改标签的数据类型和宽度，不支持修改主标签的数据类型和宽度。**注意**：如果待修改的标签列已创建索引，必须先删除该索引，再进行修改。
+- `CONFIGURE ZONE`：修改表的区域配置，更多详细信息，参见[区域配置](./zone-mgmt-ts.md)。
 - DROP
   - `DROP COLUMN`: 删除列，需指定列名。
     - `COLUMN`：可选关键字，如未使用，默认添加列。
     - `IF EXISTS`：可选关键字。当使用 `IF EXISTS` 关键字时，如果列名存在，系统删除列。如果列名不存在，系统删除列失败，但不会报错。当未使用 `IF EXISTS` 关键字时，如果列名存在，系统删除列。如果列名不存在，系统报错，提示列名不存在。
   - `DROP TAG/ATTRITBUTE`：删除标签，需指定标签名称。不支持删除主标签。如果待删除的标签列已创建索引，删除该标签时，需要先删除标签列关联的索引。
+- PARTITION BY: 创建表分区，更多详细信息，参见[分区管理](./partition-mgmt-ts.md)。
 - RENAME
   - `RENAME TO`: 修改表的名称。
   - `RENAME COLUMN`：修改列的名称。

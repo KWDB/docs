@@ -48,6 +48,10 @@ KWDB 集群启动后，分片副本均匀分布在所有节点上，确保数据
 
 节点离线超过 1 分钟后，系统会将其标记为异常节点。节点离线时间达到设定值（默认为 30 分钟）后，系统会将该节点标记为不可用节点。如果剩余节点数量仍大于副本数，如图示中剩余 4 节点，但集群副本数为 3，此时系统自动补足缺失的副本，确保数据的高可用性。副本补足期间，数据查询、DDL 和 DML 操作均不受影响。
 
+用户也可通过相关参数关闭副本自动补足功能，在系统负载较低时重新启用。
+
+::: warning 提示 如果之前通过 CONFIGURE ZONE 语句设置了副本约束，且约束规则中包含异常节点，可能会影响副本补足功能的正常运行。此时需要重新配置约束规则，将异常节点从规则中移除，副本补足功能即可恢复正常。 :::
+
 <img src="../static/db-operation/dead.png" alt="img" style="zoom:67%;" />
 
 异常节点或不可用节点恢复后，系统会自动进行数据同步或数据补齐。节点恢复期间，数据查询、DDL 和 DML 操作均不受影响。
@@ -56,7 +60,7 @@ KWDB 集群启动后，分片副本均匀分布在所有节点上，确保数据
 
 ##### 依次故障
 
-如果两个节点依次发生故障，当第二个节点发生故障前系统已完成副本补足，则第二个节点发生故障后，系统仍支持正常运行。
+如果两个节点依次发生故障，当第二个节点故障前系统已完成副本补足，则第二个节点故障后，系统仍可正常运行。注意：在 5 节点三副本集群中禁用副本自动补足功能后，将无法承受连续的节点故障。
 
 <img src="../static/db-operation/recover.png" alt="img" style="zoom:75%;" />
 
@@ -88,6 +92,16 @@ SET CLUSTER SETTING server.time_until_store_dead = <value>;
 
 设置时间建议不小于 75s。注意：延长节点判定时间，可以减少节点故障对集群性能的长时间影响，但可能会影响集群的高可用性功能和 DDL 相关操作。
 
+### 控制节点死亡后是否自动迁移补齐副本
+
+系统将离线节点标记为不可用节点后，如果剩余节点数量仍大于副本数，系统将自动补足缺失的副本，确保数据的高可用性。用户也可以通过以下 SQL 命令关闭自动补足副本功能：
+
+```SQL
+SET CLUSTER SETTING kv.allocator.ts_store_dead_rebalance.enabled = false;
+```
+
+注意：在 5 节点三副本集群中禁用该功能后，将无法承受连续节点故障。
+
 #### 查看节点状态
 
 使用 `kwbase` 命令查询节点状态:
@@ -107,3 +121,7 @@ SET CLUSTER SETTING server.time_until_store_dead = <value>;
       sum((metrics->>'ranges.underreplicated')::DECIMAL)::INT As ranges_underreplicated
   FROM kwdb_internal.kv_store_status;
   ```
+
+### 查看副本同步状态
+
+  通过导入[分布式面板](https://gitee.com/kwdb/kwdb/blob/master/kwbase/monitoring/grafana-dashboards/6.KaiwuDB_Console_Replication.json)查看副本同步情况。

@@ -118,7 +118,7 @@ CREATE TABLE t(ts timestamptz(3), ts1 timestamp, ts2 timestamp(6), ts3 timestamp
 
 -- 2. 查看创建的表。
 
-SHOW CREATE TABLE t； 
+SHOW CREATE TABLE t;
   table_name |              create_statement
 -------------+----------------------------------------------
   t          | CREATE TABLE t (

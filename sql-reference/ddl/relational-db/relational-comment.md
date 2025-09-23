@@ -7,7 +7,7 @@ id: relational-comment
 
 ## 添加注释
 
-`COMMENT ON` 语句用于为数据库、表、列或索引添加注释。
+`COMMENT ON` 语句用于为数据库、表、列、索引、存储过程添加注释。
 
 ### 所需权限
 
@@ -15,7 +15,7 @@ id: relational-comment
 
 ### 语法格式
 
-![](../../../static/sql-reference/LSAGbM0XloqkSOxxyijc8q0hnjh.png)
+![](../../../static/sql-reference/addcomment.png)
 
 ### 参数说明
 
@@ -25,6 +25,7 @@ id: relational-comment
 | `table_name` | 表的名称。 |
 | `column_name` |列的名称。 |
 | `index_name` | 索引的名称。 |
+| `proc_name` | 存储过程的名称。|
 | `comment_text` | 注释内容。 |
 
 ### 语法示例
@@ -113,4 +114,22 @@ id: relational-comment
       orders     | orders_customer_id_key_rename |   false    |            1 | customer_id | ASC       |  false  |  false   | NULL
       orders     | orders_customer_id_key_rename |   false    |            2 | id          | ASC       |  false  |   true   | NULL
     (3 rows)
+    ```
+
+- 为存储过程添加注释。
+
+    以下示例为 `proc1` 存储过程添加注释。
+
+    ```sql
+    -- 1. 添加注释。
+
+    ALTER PROCEDURE proc1 COMMENT IS 'test query sql and if else logical';
+
+    -- 2. 查看存储过程的注释信息。
+
+    SHOW PROCEDURES WITH COMMENT;
+    procedure_name |              comment
+    -----------------+-------------------------------------
+    proc1           | test query sql and if else logical
+    (1 row)
     ```

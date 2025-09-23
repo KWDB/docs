@@ -110,3 +110,96 @@ KWDB 集群中，每个数据分片都隶属于一个特定的副本区域（zon
                     |     lease_preferences = '[]'
      (1 row)
      ```
+
+## 修改区域配置
+
+`ALTER CONFIGURE ZONE` 语句用于修改或移除数据库、表、数据分片的副本区域配置。
+
+### 所需权限
+
+- 修改系统数据库或系统数据分片：用户为 Admin 用户或 Admin 角色成员。
+- 修改其他库或其他库下的数据分片或表：用户拥有目标对象的 CREATE 或 ZONECONFIG 权限。
+
+### 语法格式
+
+```sql
+ALTER [DATABASE <database_name> | TABLE <table_name> | RANGE <range_name> | PARTITION <partition_name> OF TABLE <table_name> ] CONFIGURE ZONE [USING <variable> = [COPY FROM PARENT | <value>], <variable> = [<value> | COPY FROM PARENT], ... | DISCARD];
+```
+
+### 参数说明
+
+| 参数 | 说明 |
+| --- | --- |
+| `database_name` | 待修改的数据库名。|
+| `table_name` | 待修改的表名。|
+| `range_name` | 待修改的数据分片名，包括：<br>-  `default`：默认副本设置<br>- `meta`：所有数据的位置信息<br>- `liveness`：给定时间活动节点的信息 <br>- `system`：分配新表ID所需的信息以及追踪集群节点状态<br>- `timeseries`：集群监控数据|
+| `partition_name` | 待修改的表分区名。|
+| `variable` | 待修改的变量名，关系库支持修改以下变量：<br> - `range_min_bytes`：数据分片的最小大小，单位为字节。数据分片小于该值时，KWDB 会将其与相邻数据分片合并。默认值：256 MiB，设置值应大于 1 MiB（1048576 字节），小于数据分片的最大大小。<br> - `range_max_bytes`：数据分片的最大大小，单位为字节。数据分片大于该值时，KWDB 会将其切分到两个数据分片。默认值： 512 MiB。设置值不得小于 5 MiB（5242880 字节）。<br> - `gc.ttlseconds`：数据在垃圾回收前保留的时间，单位为秒。默认值为 `90000`（25 小时）。设置值建议不小于 600 秒（10 分钟），以免影响长时间运行的查询。设置值较小时可以节省磁盘空间，设置值较大时会增加 `AS OF SYSTEM TIME` 查询的时间范围。另外，由于每行的所有版本都存储在一个永不拆分的单一数据分片内，不建议将该值设置得太大，以免单行的所有更改累计超过 64 MiB，导致内存不足或其他问题。<br>- `num_replicas`：副本数量。默认值为 3。`system` 数据库、`meta`、`liveness` 和 `system` 数据分片的默认副本数为 5。 **注意**：集群中存在不可用节点时，副本数量不可缩减。<br>- `constraints`：副本位置的必需（+）和/或禁止（-）约束。例如 `constraints = '{+region=node1: 1, +region=node2: 1, +region=node3: 1}'` 表示在 `node1`、`node2`、`node3` 上必须各放置 1 个副本。目前只支持 `region=nodex` 格式。 <br> - `lease_preferences`：主副本位置的必需（+）和/或禁止（-）约束的有序列表。例如 `lease_preferences = '[[+region=node1]]'` 表示倾向将主副本放置在 `node1`。如果不能满足首选项，KWDB 将尝试下一个优先级。如果所有首选项都无法满足，KWDB 将使用默认的租约分布算法，基于每个节点已持有的租约数量来决定租约位置，尝试平衡租约分布。列表中的每个值可以包含多个约束。<br><br>**注意**：<br>- 租约偏好不必与 `constraints` 字段共享，用户可以单独定义 `lease_preferences`<br>- 设置 `constraints` 时需要同步设置 `num_replicas`，且 `constraints` 数量需要小于等于 `num_replicas` 数量。`constraints` 中的顺序无影响 |
+| `value` | 变量值。 |
+|`COPY FROM PARENT`| 使用父区域的设置值。|
+|`DISCARD` | 移除区域配置，采用默认值。|
+
+### 语法示例
+
+- 修改数据库的区域配置
+  
+     以下示例将 `db3` 数据库的副本数改为5个，将数据在垃圾回收前保留的时间改为100000秒。
+
+     ```SQL
+     > ALTER DATABASE db3 CONFIGURE ZONE USING num_replicas = 5, gc.ttlseconds = 100000;
+     CONFIGURE ZONE 1
+
+     > SHOW ZONE CONFIGURATION FOR DATABASE db3;
+     zone_name |               config_sql                 
+     +-----------+-----------------------------------------+
+     db3       | ALTER DATABASE db3 CONFIGURE ZONE USING  
+               |     range_min_bytes = 268435456,          
+               |     range_max_bytes = 536870912,          
+               |     gc.ttlseconds = 100000,              
+               |     num_replicas = 5,                    
+               |     constraints = '[]',                  
+               |     lease_preferences = '[]'             
+     (6 rows)
+     ```
+
+- 修改表的区域配置
+  
+     以下示例将 `orders` 表的副本数改为3个，将数据在垃圾回收前保留的时间改为100000秒。
+
+     ```SQL
+     > ALTER TABLE orders CONFIGURE ZONE USING num_replicas = 3, gc.ttlseconds = 100000;
+     CONFIGURE ZONE 1
+
+     > show zone configuration for table orders;
+          target    |             raw_config_sql
+     ---------------+------------------------------------------
+     TABLE orders | ALTER TABLE orders CONFIGURE ZONE USING
+                    |     range_min_bytes = 268435456,
+                    |     range_max_bytes = 536870912,
+                    |     gc.ttlseconds = 100000,
+                    |     num_replicas = 3,
+                    |     constraints = '[]',
+                    |     lease_preferences = '[]'
+     (1 row)
+     ```
+
+- 移除表的区域配置
+  
+     以下示例移除了 `orders` 表的自定义设置，改为使用默认数据分片设置。
+
+     ```SQL
+     > alter table orders configure zone discard;
+     CONFIGURE ZONE 1
+
+     > show zone configuration for table orders;
+          target     |              raw_config_sql
+     ----------------+-------------------------------------------
+     RANGE default | ALTER RANGE default CONFIGURE ZONE USING
+                    |     range_min_bytes = 268435456,
+                    |     range_max_bytes = 536870912,
+                    |     gc.ttlseconds = 90000,
+                    |     num_replicas = 3,
+                    |     constraints = '[]',
+                    |     lease_preferences = '[]'
+     (1 row)
+     ```
