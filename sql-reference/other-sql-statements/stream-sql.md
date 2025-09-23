@@ -111,7 +111,7 @@ SHOW STREAM test_stream;
 用户是 `admin` 角色的成员或者流计算的创建者。默认情况下，`root` 用户属于 `admin` 角色。
 
 ::: warning 说明
-如果创建流计算的用户被删除后，只有  `admin` 角色成员或 `sysadmin` 用户可以修改流计算。
+如果创建流计算的用户被删除后，只有 `admin` 角色成员可以修改流计算。
 :::
 
 ### 语法格式
@@ -151,7 +151,7 @@ ALTER STREAM cpu_stream SET enable = 'off';
 用户是 `admin` 角色的成员或者流计算的创建者。默认情况下，`root` 用户属于 `admin` 角色。
 
 ::: warning 说明
-如果创建流计算的用户被删除后，只有  `admin` 角色成员或 `sysadmin` 用户可以删除流计算。
+如果创建流计算的用户被删除后，只有 `admin` 角色成员可以删除流计算。
 :::
 
 ### 语法格式
