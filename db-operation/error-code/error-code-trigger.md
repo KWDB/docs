@@ -1,6 +1,6 @@
 ---
 title: 触发器错误码
-id: error-code-ts-functions
+id: error-code-trigger
 ---
 
 # 触发器错误码

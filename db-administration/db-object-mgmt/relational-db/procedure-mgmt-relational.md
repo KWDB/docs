@@ -54,7 +54,7 @@ KWDB 关系引擎支持创建、修改、查看、删除、执行存储过程。
 | `opt_loop_label` | 存储过程体的标签，格式为 `LABEL label_name:`。|
 | `opt_proc_body` | 存储过程体，包括在过程调用的时候必须执行的 SQL 语句。存储过程体以 `BEGIN` 关键字开始，以 `END` 关键字结束。<br >**说明** <br >如果使用 KaiwuDB JDBC 创建存储过程，需要使用双美元符号（`$$`）将 `BEGIN ...END` 语句包裹起来。|
 | `select_stmt`| 选择语句，用于读取数据。 |
-| `insert_stmt`| 插入语句，用于向表中写入一行或多行数据|
+| `insert_stmt`| 插入语句，用于向表中写入一行或多行数据。|
 | `update_stmt`| 更新语句，用于更新目标表中某行数据，格式为 `UPDATE .... RETURNING target_list INTO select_into_targets`。 |
 | `upsert_stmt`| 更新插入语句，用于更新、插入数据。 |
 | `delete_stmt`| 删除语句，用于删除目标表中的行数据，格式为 `DELETE FROM .... RETURNING target_list INTO select_into_targets`。|
@@ -260,7 +260,7 @@ ALTER PROCEDURE proc1 COMMENT IS 'test query sql and if else logical';
     SHOW CREATE PROCEDURE proc1;
     procedure_name |                    procedure_body
     -----------------+-------------------------------------------------------
-    test           | CREATE PROCEDURE proc1()
+    proc1           | CREATE PROCEDURE proc1()
                     | BEGIN
                     |     DECLARE a INT4;
                     |     DECLARE b INT4;
