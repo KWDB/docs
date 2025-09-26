@@ -889,6 +889,7 @@ KWDB 允许 CLOB 与以下数据类型相互转换。当数据符合规则时，
 以下示例创建具有 CLOB 列的表 `clobs` 并向表中写入数据。
 
 ```sql
+-- 1. 创建表。
 CREATE TABLE clobs (c1 INT, c2 CLOB);
 CREATE TABLE
 
