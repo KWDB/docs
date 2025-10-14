@@ -328,10 +328,10 @@ VARBYTES 类型的数据基于二进制值进行存储和排序。
 
 #### 示例
 
-以下示例创建一个名为 `verbytes` 的表，包括具有 VARBYTES 字符类型的列。
+以下示例创建一个名为 `varbytes` 的表，包括具有 VARBYTES 字符类型的列。
 
 ```sql
--- 1. 创建表 verbytes。
+-- 1. 创建表 varbytes。
 
 create table varbytes(ts timestamp not null,c1 varbytes,c2 varbytes(65536)) tags (tag1 int not null) primary tags (tag1);
 CREATE TABLE
