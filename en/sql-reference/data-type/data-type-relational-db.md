@@ -467,7 +467,7 @@ VARBYTES-typed values are stored and sorted based on binary values.
 
 #### Examples
 
-This example creates a table with VERBYTES-typed columns and then inserts data into the table.
+This example creates a table with VARBYTES-typed columns and then inserts data into the table.
 
 ```sql
 -- 1. Create a table named varbytes.
