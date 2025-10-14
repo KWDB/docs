@@ -148,7 +148,6 @@ id: ts-zone
 | `value` | 变量值。 |
 |`COPY FROM PARENT`| 使用父区域的设置值。|
 |`DISCARD` | 移除区域配置，采用默认值。|
-|`USING REBALANCE` | 手动触发数据库、表、或数据分片的区域重新分配和负载均衡。<br><br>适用于以下场景：<br>- 关闭自动均衡后的主动调优<br>- 负载不均时的人工干预<br><br>KWDB 默认自动执行后台数据分片均衡，用户通过 `SET CLUSTER SETTING kv.allocator.ts_consider_rebalance.enabled = false;` 关闭自动均衡功能后，可在系统低负载时段进行手动均衡。<br><br>注意：<br>- 该功能仅适用于用户数据分片，不适用于系统数据分片<br>- 建议在业务低峰期执行，避免影响正常业务性能。 |
 
 ### 语法示例
 
@@ -214,11 +213,3 @@ id: ts-zone
                     |     lease_preferences = '[]'
      (1 row)
      ```
-
-- 手动均衡指定时序表的数据分片
-
-  以下示例将时序表 `sensor` 的数据分片进行了手动均衡。
-
-  ```SQL
-  ALTER TABLE sensor CONFIGURE ZONE USING REBALANCE;
-  ```
