@@ -54,6 +54,8 @@ KWDB 支持在以下服务器操作系统进行安装部署。
 | GEOS | v3.3.8+ | 可选依赖 |
 | xz-libs | v5.2.0+ | N/A |
 | libgcc | v7.3.0+ | N/A |
+| libgflags | 系统默认 | N/A |
+| libkrb5 | 系统默认 | N/A |
 
 ## 端口
 
