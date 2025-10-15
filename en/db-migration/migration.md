@@ -1,31 +1,17 @@
 ---
-title: DataX
-id: datax
+title: Database Migration 
+id: migration
 ---
 
-# DataX
-
-[DataX](https://github.com/alibaba/DataX) is a powerful data ETL (Extract, Transform, Load) tool that facilitates data transfer between various heterogeneous data sources including [MySQL](https://www.mysql.com/), [SQL Server](https://www.microsoft.com/zh-cn/sql-server/), [Oracle](https://www.oracle.com/), [PostgreSQL](https://www.postgresql.org/), [Hadoop HDFS](https://hadoop.apache.org/), [Apache Hive](https://hive.apache.org/), [Apache HBase](https://hbase.apache.org/), [OTS](https://www.aliyun.com/product/ots), and many others.
+# Database Migration
 
 ## Overview
+
+[DataX](https://github.com/alibaba/DataX) is a powerful data ETL (Extract, Transform, Load) tool that facilitates data transfer between various heterogeneous data sources including [MySQL](https://www.mysql.com/), [SQL Server](https://www.microsoft.com/zh-cn/sql-server/), [Oracle](https://www.oracle.com/), [PostgreSQL](https://www.postgresql.org/), [Hadoop HDFS](https://hadoop.apache.org/), [Apache Hive](https://hive.apache.org/), [Apache HBase](https://hbase.apache.org/), [OTS](https://www.aliyun.com/product/ots), and many others.
 
 DataX simplifies data migration by abstracting different data sources into a plugin architecture: reader plugins extract data from the source and writer plugins load data into the target. This approach enables seamless data transfer between different systems without requiring complex technical knowledge.
 
 KWDB extends the DataX framework by providing dedicated KaiwuDBWriter and KaiwuDBReader plugins, allowing efficient data exchange between KWDB and various database systems.
-
-### Data Type Mapping
-
-The following table outlines the mapping between DataX data types and KWDB data types:
-
-| DataX | KWDB   |
-|----------------|---------------------------------------------------|
-| INT            | TINYINT、SMALLINT、INT                              |
-| LONG           | TINYINT、SMALLINT、INT、BIGINT、TIMESTAMP、TIMESTAMPTZ |
-| DOUBLE         | FLOAT、REAL、DOUBLE、DECIMAL                         |
-| BOOL           | BOOL、BIT                                          |
-| DATE           | DATE、TIME、TIMESTAMP、TIMESTAMPTZ                   |
-| BYTES          | BYTES、VARBYTES                                    |
-| STRING         | CHAR、NCHAR、VARCHAR、NVARCHAR、TIMESTAMP、TIMESTAMPTZ |
 
 ### KaiwuDBWriter
 
@@ -1003,6 +989,20 @@ You can create the required databases and tables using the following SQL command
 | `splitIntervalS` | (Optional) The time interval in seconds for partitioning data retrieval tasks. Default is `60` seconds. Recommendation: Set this parameter based on data volume to target approximately 100,000 records per task for optimal performance. Not required if `querySql` is specified. |
 | `tsColumn`       | The timestamp column name used for time-based data filtering with `beginDateTime` and `endDateTime`. Not required if `querySql` is specified. |
 | `querySql`       | (Optional) Custom SQL query for complex data retrieval requirements. When specified, the following parameters are ignored: `table`, `column`, `where`, `tsColumn`, `beginDateTime`, `endDateTime`, and `splitIntervalS`. For example, to transfer data from a multi-table join, you can use a query like `SELECT a, b FROM table_a JOIN table_b ON table_a.id = table_b.id`. |
+
+### Data Type Mapping
+
+The following table outlines the mapping between DataX data types and KWDB data types:
+
+| DataX | KWDB   |
+|----------------|---------------------------------------------------|
+| INT            | TINYINT、SMALLINT、INT                              |
+| LONG           | TINYINT、SMALLINT、INT、BIGINT、TIMESTAMP、TIMESTAMPTZ |
+| DOUBLE         | FLOAT、REAL、DOUBLE、DECIMAL                         |
+| BOOL           | BOOL、BIT                                          |
+| DATE           | DATE、TIME、TIMESTAMP、TIMESTAMPTZ                   |
+| BYTES          | BYTES、VARBYTES                                    |
+| STRING         | CHAR、NCHAR、VARCHAR、NVARCHAR、TIMESTAMP、TIMESTAMPTZ |
 
 ### Error Messages
 
