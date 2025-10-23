@@ -85,7 +85,7 @@ Use pre-compiled installation packages or compile from source code as needed.
 Obtain the appropriate installation package for your system environment, copy the package to the target machine and then decompress it.
 
 ::: warning Note
-Tthe KWDB repository provides [DEB or RPM installation packages](https://gitee.com/kwdb/kwdb/releases/) for the following systems and architectures. For installation packages for other systems or architectures, please contact [KWDB Technical Support](https://www.kaiwudb.com/support/).
+The KWDB repository provides [DEB or RPM installation packages](https://gitee.com/kwdb/kwdb/releases/) for the following systems and architectures. For installation packages for other systems or architectures, please contact [KWDB Technical Support](https://www.kaiwudb.com/support/).
 
 - Ubuntu V20.04 x86_64
 - Ubuntu V22.04 x86_64

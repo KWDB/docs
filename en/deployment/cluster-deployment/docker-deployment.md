@@ -48,7 +48,7 @@ This section describes how to deploy a KWDB cluster on a single machine using th
     | `--privileged` | Grants extended privileges to the container. |
     | `-v` | Mounts the host's `/etc/kaiwudb/certs` directory to the container's `<certs_dir>` directory for certificate and key storage. |
     | `-w /kaiwudb/bin` | Sets the working directory inside the container to `/kaiwudb/bin`. |
-    | `kaiwudb_image` | Container image name and tag (e.g., `kaiwudb:3.0.0`). |
+    | `kwdb_image` | Container image name and tag (e.g., `kwdb:3.0.0`). |
     | `bash -c` | Executes the following certificate creation commands within the container:<br>- `./kwbase cert create-ca`: Creates a certificate authority (CA), generating CA certificates and keys.<br>- `./kwbase cert create-client root`: Creates client certificates and keys for the `root` user.<br>- `./kwbase cert create-node 127.0.0.1 localhost 0.0.0.0`: Creates node server certificates and keys, supporting access through three network identifiers: local loopback address (`127.0.0.1`), local hostname (`localhost`), and all network interfaces (`0.0.0.0`).<br>- `--certs-dir=<certs_dir>`: Specifies the certificate storage directory.<br>- `--ca-key=<certs_dir>/ca.key`: Specifies the CA key path.|
 
 2. Start three or more database instances.
@@ -149,7 +149,7 @@ This section describes how to deploy a KWDB cluster on a single machine using th
     | `-v` | Sets up volume mounts:<br>- Mounts host's `/var/lib/kaiwudb` directory to container's `/kaiwudb/deploy/kwdb-container` directory for persistent data storage.<br>- In secure mode, mounts host's `/etc/kaiwudb/certs` directory to container's `<certs_dir>` directory for certificate and key storage. |
     | `--ipc shareable` | Allows other containers to share this container's IPC namespace. |
     | `-w /kaiwudb/bin` | Sets the working directory inside the container to `/kaiwudb/bin`. |
-    | `kaiwudb_image` | Container image variable (replace with actual image name and tag, e.g., `kaiwudb:3.0.0`). |
+    | `kwdb_image` | Container image variable (replace with actual image name and tag, e.g., `kwdb:3.0.0`). |
     | `./kwbase start` | Database startup command with different flags for different modes:<br>- `--insecure`: (Insecure mode only) Runs in insecure mode.<br>- `--certs-dir=<certs_dir>`: (Secure mode) Specifies certificate directory location.<br>- `--listen-addr=0.0.0.0:26257`: Address and port the database listens on.<br>- `--advertise-addr=${host}:2625X`: Address and port the database uses to communicate with other cluster nodes.<br>- `--brpc-addr=:2725X`: brpc port for inter-node communication between KaiwuDB time-series engines.<br>- `--http-addr=0.0.0.0:8080`: Address and port the HTTP interface.<br>- `--store=/kaiwudb/deploy/kwdb-container`: Specifies data storage location.<br>- `--join ${host}:26257`: Address for the node to connect to the cluster (can specify one or more cluster nodes).|
 
 3. Initialize the cluster:
