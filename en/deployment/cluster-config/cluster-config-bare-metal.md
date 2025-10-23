@@ -1,9 +1,9 @@
 ---
-title: Configure Bare-Metal Clusters
+title: Configure Bare-Metal Deployment
 id: cluster-config-bare-metal
 ---
 
-# Configure Bare-Metal Clusters
+# Configure Bare-Metal Deployment
 
 After deploying KWDB with script in a bare-metal environment, the system generates two essential configuration files:
 
@@ -18,17 +18,17 @@ After deploying KWDB with script in a bare-metal environment, the system generat
 
 ## Configure Startup Flags
 
-While KWDB provides reasonable default settings, you can customize its behavior by modifying the startup flags. Your custom settings will override the default values. For a list of all supported parameters, see [Cluster Parameter Configuration](../../db-operation/cluster-settings-config.md).
+While KWDB provides reasonable default settings, you can customize its behavior by modifying the startup flags. Your custom settings will override the default values. For a list of all supported parameters, see [Cluster Parameters](../../db-operation/cluster-settings-config.md#cluster-parameters).
 
 To modify startup flags:
 
-1. Stop the KWDB service.
+1. Stop the KWDB service:
 
     ```shell
     systemctl stop kaiwudb
     ```
 
-2. Navigate to the `/etc/kaiwudb/script` directory and open the configuration file.
+2. Navigate to the `/etc/kaiwudb/script` directory and open the configuration file:
 
     ```shell
     cd /etc/kaiwudb/script
@@ -43,13 +43,13 @@ To modify startup flags:
     KAIWUDB_START_ARG="--cache=10000"
     ```
 
-4. Reload the systemd daemon configuration.
+4. Reload the systemd daemon configuration:
 
     ```shell
     systemctl daemon-reload
     ```
 
-5. Restart the KWDB service.
+5. Restart the KWDB service:
 
     ```shell
     systemctl restart kaiwudb

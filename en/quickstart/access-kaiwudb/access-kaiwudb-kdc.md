@@ -13,22 +13,22 @@ The KaiwuDB Developer Center interface is currently available in Chinese only.
 
 ## Install KaiwuDB Developer Center
 
-### Preparation
+### Prerequisites
 
 Before installing the KaiwuDB Developer Center, ensure your system meets these requirements:
 
-- **Compatible Operating Systems**
+- **Operating Systems**
   - Windows: Version 7 or later (64-bit)
   - Linux: Kernel 2.6 or later
   - macOS: All supported versions
 - **Hardware Requirements**
-  - Memory: 1GB RAM or more
-  - Storage: 10GB free disk space or more
+  - Memory: Minimum 1 GB RAM
+  - Storage: Minimum 10 GB free disk space
 - **Software Requirements**
   - KWDB: Version 2.0 or later
   - OpenJRE: Version 8 or later
 
-The interface may differ slightly across OS versions, but the functionality remains the same.
+The interface may differ slightly across OS versions, but the functionality remains consistent.
 
 ### Steps
 
@@ -42,7 +42,7 @@ Follow these steps to install KaiwuDB Developer Center:
 
    :::
 
-2. Extract the installation packages to your preferred location. The extracted file structure will look like this:
+2. Extract the installation packages to your preferred location. The extracted file structure should look like this:
 
    ![](../../static/quickstart/kdc-package.png)
 
@@ -62,26 +62,29 @@ Follow these steps to create your first connection:
 
    <img src="../../static/quickstart/create-connect-01.png" style="width: 67%; height: auto;" />
 
-2. In the **常规 (General)** tab, enter the host address, port number, database name, username, and password (no password is required when using non-secure deployment mode).
+2. In the **常规 (General)** tab, enter the enter the connection details:
+   - host address
+   - port number
+   - database name
+   - username
+   - password (not required for insecure deployment mode)
 
-   <img src="../../static/quickstart/create-connect-02.png" style="width: 67%; height: auto;" />
+   <img src="../../../static/kdc/create-connect-02.png" style="zoom: 67%;" />
 
-3. (Optional) Click **测试链接 (Test Connection)** to verify your settings. A success message appears if the connection is properly configured.
+3. (Optional) Click **测试链接 (Test Connection)** to verify your configuration. A success message appears if the connection settings are correct.
 
-   <img src="../../static/quickstart/license.png" style="width: 67%; height: auto;" />
-
-4. Click **确定 (OK)**. The database navigation panel will refresh, showing all the databases you have permission to access.
+4. Click **确定 (OK)**. The database navigation panel refreshes to display all databases you have permission to access.
 
    ![](../../static/quickstart/kdc-navigation.png)
 
-### Other Collection Methods
+### Additional Connection Methods
 
-To create a new connection at any time, you can use one of the following methods:
+You can create new connections at any time using either of these methods:
 
-- **Using the Toolbar:** Click the **New Connection** button on the toolbar or the database navigation toolbar.
+- **Toolbar:** Click the **New Connection** button on the toolbar or the database navigation toolbar.
 
    <img src="../../static/quickstart/kdc-connection-button.png" style="width: 50%; height: auto;" />
 
-- **Using the Menu:** From the menu bar, click **数据库 (Database)**, then select **新建连接 (New Connection)** from the dropdown.
+- **Menu:** Select **数据库 (Database)** from the menu bar, then click **新建连接 (New Connection)**.
 
    <img src="../../static/quickstart/kdc-connection-menu.png" style="width: 50%; height: auto;" />

@@ -25,11 +25,11 @@ KWDB 支持基于 DRBD 块设备复制的开源软件方案，实现主备节点
 
 下表列出部署 KWDB 所需的硬件规格。
 
-| 项目       | 要求                                                                                                                               |
-| ---------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| CPU 和内存 | 单节点配置建议不低于 4 核 8G。对于数据量大、复杂的工作负载、高并发和高性能场景，建议配置更高的 CPU 和内存资源以确保系统的高效运行。  |
-| 磁盘       | - 推荐使用 SSD 或者 NVMe 设备，尽量避免使用 NFS、CIFS、CEPH 等共享存储。<br > - 磁盘必须能够实现 500 IOPS 和 30 MB/s 处理效率。 <br> - KWDB 系统自身启动不会占用过多磁盘容量（低于 1G）。实际所需磁盘大小主要取决于用户的业务量。 |
-| 文件系统   | 建议使用 ext4 文件系统。                                                                                                           |
+| 项目       | 要求                                                         |
+| ---------- | ------------------------------------------------------------ |
+| CPU 和内存 | 单节点配置建议不低于 4 核 8G。对于数据量大、复杂的工作负载、高并发和高性能场景，建议配置更高的 CPU 和内存资源以确保系统的高效运行。 |
+| 磁盘       | - 推荐使用 SSD 或者 NVMe 设备，尽量避免使用 NFS、CIFS、CEPH 等共享存储。<br > - 磁盘必须能够实现 500 IOPS 和 30 MB/s 处理效率。 <br>- 使用 HDD 硬盘部署单机版本时，避免设备数过多或每秒写入测点数过高，否则数据写入性能将显著下降。<br> - KWDB 系统自身启动不会占用过多磁盘容量（低于 1G）。实际所需磁盘大小主要取决于用户的业务量。 |
+| 文件系统   | 建议使用 ext4 文件系统。                                     |
 
 ### 操作系统
 
@@ -254,7 +254,7 @@ KWDB 支持通过以下方式获取容器镜像：
     ```shell
     [ADD USER COMPLETED]:User creation completed.
     ```
-  
+
 ### 使用 YAML 文件部署 KWDB
 
 **前提条件**：
@@ -282,7 +282,7 @@ KWDB 支持通过以下方式获取容器镜像：
     version: '3.3'
     services:
       kwdb-container:
-        image: "kwdb/kwdb:2.2.0"
+        image: "kwdb/kwdb:3.0.0"
         container_name: kaiwudb-experience
         hostname: kaiwudb-experience
         ports:
@@ -290,8 +290,6 @@ KWDB 支持通过以下方式获取容器镜像：
           - 26257:26257
         ulimits:
           memlock: -1
-        volumes:
-          - /dev:/dev
         networks: 
           - default
         restart: on-failure
@@ -344,7 +342,7 @@ KWDB 支持通过以下方式获取容器镜像：
     - `--privileged`：给予容器扩展权限。
     - `-v`：设置容器目录映射, 将主机的 `/etc/kaiwudb/certs` 目录挂载到容器内的 `<certs_dir>` 目录，用于存放证书和密钥。
     - `-w /kaiwudb/bin`：将容器内的工作目录设置为 `/kaiwudb/bin`。
-    - `kwdb_image`：容器镜像，需填入实际的镜像名以及标签, 例如 `kwdb:2.2.0`。
+    - `kwdb_image`：容器镜像，需填入实际的镜像名以及标签, 例如 `kwdb:3.0.0`。
     - `bash -c`：在容器中执行后面的证书创建命令, 其中：
       - `./kwbase cert create-ca`：创建证书颁发机构(CA)，生成 CA 证书和密钥。
       - `./kwbase cert create-client root`：为 `root` 用户创建客户端证书和密钥。
@@ -390,7 +388,7 @@ KWDB 支持通过以下方式获取容器镜像：
           --listen-addr=0.0.0.0:26257 \
           --http-addr=0.0.0.0:8080 \
           --store=/kaiwudb/deploy/kwdb-container
-        ```
+      ```
 
     参数说明：
     - `-d`：后台运行容器并返回容器 ID。
@@ -403,7 +401,7 @@ KWDB 支持通过以下方式获取容器镜像：
     - `-v`：将主机的 `/var/lib/kaiwudb` 目录挂载到容器内的 `/kaiwudb/deploy/kwdb-container` 目录，用于持久化数据存储。安全模式下，将主机的 `/etc/kaiwudb/certs` 目录挂载到容器内的 `<certs_dir>` 目录，用于存放证书和密钥。
     - `--ipc shareable`：允许其他容器共享此容器的IPC命名空间。
     - `-w /kaiwudb/bin`：将容器内的工作目录设置为 `/kaiwudb/bin`。
-    - `kwdb_image`：容器镜像变量，需替换为实际的镜像名称及标签, 例如 `kwdb:2.2.0`。
+    - `kwdb_image`：容器镜像变量，需替换为实际的镜像名称及标签, 例如 `kwdb:3.0.0`。
     - `./kwbase start`：容器内运行的数据库启动命令, 根据安全模式和非安全模式有所不同:
       - `--insecure`：（仅非安全模式）指定以非安全模式运行。
       - `--certs-dir=<certs_dir>`：（安全模式）指定证书目录位置。

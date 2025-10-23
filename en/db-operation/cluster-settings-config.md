@@ -139,7 +139,7 @@ To modify cluster startup flags, follow these steps:
             - /bin/bash
             - -c
             - |
-              /kaiwudb/bin/kwbase  start-single-node --certs-dir=/kaiwudb/certs --listen-addr=0.0.0.0:26257 --advertise-addr=your-host-ip:port --store=/kaiwudb/deploy/kaiwudb-container --cache=25%
+              /kaiwudb/bin/kwbase start-single-node --certs-dir=<certs_dir> --listen-addr=0.0.0.0:26257 --advertise-addr=your-host-ip:port --store=/kaiwudb/deploy/kwdb-container --cache=25%
         ```
 
 5. After saving the configuration, restart the KWDB service.

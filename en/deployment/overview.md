@@ -5,31 +5,33 @@ id: overview
 
 # Cluster Deployment Overview
 
-KWDB offers flexible deployment options. You can choose between two main cluster types based on your specific needs:
+KWDB supports the following cluster deployment types:
 
-| Feature | Multi-Replica Cluster | Single-Replica Cluster |
-|---------|----------------------|----------------------|
-| **Basic Architecture** | Distributes three copies (default) of each dataset across multiple nodes within a data center. | Maintains a single copy of data across multiple nodes within a data center. |
-| **Performance** | - Write operations are optimized for reliability over speed.<br>- Read performance varies:<br> • Simple queries: slightly lower than single-node deployments.<br>  • Complex queries: comparable to single-replica clusters. | - Faster writes compared to multi-replica setup.<br> - Read performance varies:<br>  • Simple queries: slightly lower than single-node deployments.<br>  • Complex queries: comparable to multiple-replica clusters. |
-| **High Availability** | - Full high-availability support, including automatic failover.<br>- Ensures strong data consistency.<br>- For more information, see [High Availability](../../en/db-operation/ha/cluster-ha.md). | - No high-availability features.<br>- Node failures may disrupt read, write and DDL operations.<br>- Cluster stops if more than 50% of nodes fail. |
+| Category | Multi-Replica Cluster | Single-Replica Cluster |
+| -------- | --------------------- | ---------------------- |
+| **Definition** | KWDB runs on multiple nodes within the same data center. Each data range has 3 replicas by default, distributed across different nodes. | KWDB runs on multiple nodes within the same data center. Each data range has only one replica; all data storage and update operations are handled by that single replica. |
+| **Performance** | - **Writes:** Lower than single node and single-replica clusters<br>- **Reads:**<br>  • Simple queries: slightly lower than single node<br>  • Complex queries: same as single-replica clusters<br><br>**Tip**: You can optimize write performance with the following parameters:<br>- `ts.raft_log.sync_period`: Extends the disk flush cycle for time-series data raft logs<br>- `ts.raftlog_combine_wal.enabled`: Enables merging of time-series data raft logs and WAL<br>For more information, see [Cluster Parameters](../db-operation/cluster-settings-config.md#cluster-parameters).<br>**Note**: After enabling these optimizations, unflushed data may be lost if a node crashes unexpectedly. | - **Writes:** Higher than multi-replica clusters but slightly lower than single node<br>- **Reads:**<br>  • Simple queries: slightly lower than single node<br>  • Complex queries: same as multi-replica clusters |
+| **Cluster Scaling** | Supports cluster scale-out and scale-in. For more information, see [Cluster Scaling](../db-operation/cluster-scale.md#multi-replica-cluster). | Supports only cluster scale-out. For more information, see [Cluster Scaling](../db-operation/cluster-scale.md#single-replica-cluster). |
+| **High Availability** | Supports high availability with automatic failover and strong data consistency. For more information, see [Cluster High Availability](../db-operation/ha/cluster-ha.md).<br><br>**Note**: After extending the disk flush cycle for time-series data raft logs, unflushed data may be lost if a node crashes unexpectedly. | - Does not support high availability.<br>- When cluster nodes fail, write operations, queries, and DDL statements may fail.<br>- When the number of failed nodes exceeds half of the total nodes, all operations will be suspended. |
+| **Data Balancing** | Supports automatic data balancing after scaling operations. | Does not support automatic data balancing after scaling out the cluster. |
 
-For single-node deployment, see [Single-Node Deployment](../../en/quickstart/overview.md) for specific requirements and commands.
+single-node deployment differs slightly from cluster deployment. For more information, see [Single-node Deployment](../quickstart/overview.md).
 
 This section includes the following documents:
 
-- [Workflow](./deploy-workflow.md)
+- [Deployment Workflow](./deploy-workflow.md)
 - Preparation
-  - [Prepare for Bare-Metal Clusters](./prepare/before-deploy-bare-metal.md)
-  - [Prepare for Container Clusters](./prepare/before-deploy-docker.md)
-- Deployment
+  - [Prepare for Bare-Metal Deployment](./prepare/before-deploy-bare-metal.md)
+  - [Prepare for Container Deployment](./prepare/before-deploy-docker.md)
+- Cluster Deployment
   - [Deploy Using Scripts](./cluster-deployment/script-deployment.md)
   - [Deploy Using kwbase CLI](./cluster-deployment/kwbase-cli-deployment.md)
-  - [Deploy Using Docker](./cluster-deployment/docker-deployment.md)
+  - [Deploy Using Docker Run Command](./cluster-deployment/docker-deployment.md)
 - Cluster Configuration
   - [Create Users](./user-config.md)
-  - Configure Cluster
-    - [Configure Bare-Metal Clusters](./cluster-config/cluster-config-bare-metal.md)
-    - [Configure Container Clusters](./cluster-config/cluster-config-docker.md)
+  - Configure Cluster Settings
+    - [Bare-Metal Deployment](./cluster-config/cluster-config-bare-metal.md)
+    - [Container Deployment](./cluster-config/cluster-config-docker.md)
 - Cluster Management
-  - [Start and Stop KWDB](./local-start-stop.md)
+  - [Start and Stop KWDB Service](./local-start-stop.md)
   - [Uninstall Clusters](./uninstall-cluster.md)

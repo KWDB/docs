@@ -300,7 +300,7 @@ This table lists the operators that look like built-in functions but have specia
 | Function → Returns             | Description                                                                                                                                                  |
 | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
 | experimental_uuid_v4() → bytes | Return a UUID.                                                                                                                                       |
-| gen_random_uuid() → uuid       | Generate a random UUID and return it as a value of Tthe UUID type.                                                                                                         |
+| gen_random_uuid() → uuid       | Generate a random UUID and return it as a value of the UUID type.                                                                                                         |
 | unique_rowid() → int8          | Return a unique ID used by KWDB to generate unique row IDs if a primary key isn't defined for the table. The value is a combination of the insert timestamp and the ID of the node executing the statement, which guarantees this combination is globally unique.  |
 | uuid_v4() → bytes              | Return a UUID.                                                                                                                                       |
 
