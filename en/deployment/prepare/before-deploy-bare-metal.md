@@ -1,9 +1,9 @@
 ---
-title: Prepare for Bare-Metal Clusters 
+title: Prepare for Bare-Metal Deployment 
 id: before-deploy-bare-metal
 ---
 
-# Prepare for Bare-Metal Clusters 
+# Prepare for Bare-Metal Deployment 
 
 ## Hardware
 
@@ -13,58 +13,51 @@ KWDB uses cross-node replication to maintain data redundancy across multiple nod
 
 :::
 
-The following table outlines the hardware requirements for deploying KWDB.
+The following specifications are required for KWDB deployment:
 
 | Item  | Requirements  |
 | ---------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| CPU and Memory | - Minimum: 4 CPU cores and 8GB RAM per node <br> - For high-volume data, complex workloads, high concurrency, or performance-critical applications, allocate additional resources accordingly |
-| Disk       | - Recommended: SSD or NVMe devices<br>- Minimum performance: 500 IOPS and 30 MB/s throughput<br>- Storage: <1GB for KWDB system, additional space needed based on data volume and enabled features like compression that reduce disk usage. For production environments, plan hardware resources according to your business scale and performance requirements. For more information, see [Estimate Disk Usage](../../db-operation/cluster-planning.md#estimate-disk-usage).<br>- Avoid using shared storage (NFS, CIFS, CEPH). <br> - When deploying the standalone version on HDDs, avoid excessive device count and high write loads, as concurrent writes can significantly degrade performance. Additionally, HDDs are not recommended for distributed cluster deployments.|
+| CPU and Memory | - Minimum: 4 CPU cores and 8 GB RAM per node <br> - For high-volume data, complex workloads, high concurrency, or performance-critical applications, allocate additional resources accordingly |
+| Disk       | - Recommended: SSD or NVMe devices<br>- Minimum performance: 500 IOPS and 30 MB/s throughput<br>- Storage: <1 GB for KWDB system, with additional space needed based on data volume<br>- Avoid shared storage (NFS, CIFS, CEPH)<br> - HDDs not recommended for distributed cluster deployments |
 | File System | ext4 recommended for optimal performance |
 
 ## Operating System and CPU Architectures
 
 KWDB can be deployed on the following operating systems:
 
-| **Operating System** | **Version**                     | **Architecture** |
-| :------------------- | :----------------------------- | :--------------- |
-| Anolis       | 8.6                          | ARM_64   |
-|              | 8.6                          | x86_64   |
-| KylinOS      | V10 SP3 2403                 | [ARM_64](https://gitee.com/kwdb/kwdb/releases/)   |
-|              | V10 SP3 2303                 | ARM_64   |
-|              | V10 SP3 2403                 | [x86_64](https://gitee.com/kwdb/kwdb/releases/)   |
-|              | V10 SP3 2303                 | x86_64   |
-| Ubuntu       | V18.04                       | x86_64   |
-|              | V20.04                       | ARM_64   |
-|              | V20.04                       | [x86_64](https://gitee.com/kwdb/kwdb/releases/)   |
-|              | V22.04                       | ARM_64   |
-|              | V22.04                       | [x86_64](https://gitee.com/kwdb/kwdb/releases/)   |
-|              | V24.04                       | ARM_64   |
-|              | V24.04                       | x86_64   |
-| UOS          | 1060e                        | x86_64   |
-|              | 1060e                        | ARM_64   |
+| Operating System | Version                   | ARM_64 | x86_64 |
+| :----------- | :--------------------------- | :--------- | :--------- |
+| Anolis       | 8                          | ✓          | ✓          |
+| KylinOS      | V10 SP2                      | ✓          | ✓          |
+|              | V10 SP3 2403                 | ✓          | ✓          |
+| Ubuntu       | V20.04                       | ✓          | ✓          |
+|              | V22.04                       | ✓          | ✓          |
+|              | V24.04                       | ✓          | ✓          |
+| UOS          | 1070e                        | ✓          | ✓          |
+| Windows Server  | WSL2                      |           | ✓          |
 
 ::: warning Note
 
 - Operating systems or versions not listed here **may** work with KWDB but are not officially supported.
-- For installation packages not available on the download page, contact [KWDB Technical Support](https://www.kaiwudb.com/support/).
+- For installation packages not available on the [download page](https://gitee.com/kwdb/kwdb/releases/), contact [KWDB Technical Support](https://www.kaiwudb.com/support/).
 :::
+
 
 ## Software Dependencies
 
 The following table lists the required dependencies:
 
-| Dependency | Version    | Remarks |
-|------------|------------|-------------|
-| OpenSSL    | v1.1.1+    | N/A         |
-| libprotobuf   | v3.6.1+    | The default version of libprotobuf included in Ubuntu 18.04 is lower than the required version. Before deployment, install the required version in advance (versions 3.6.1 and 3.12.4 are recommended).    |
-| GEOS       | v3.3.8+    | Optional    |
-| xz-libs    | v5.2.0+    | N/A         |
-| squashfs-tools | any    | N/A         |
-| libgcc     | v7.3.0+    | N/A         |
-| mount      | any        | N/A         |
-| squashfuse | any        | Optional    |
+| Dependency    | Version   | Remarks |
+| ------------- | --------- | ----------- |
+| OpenSSL       | v1.1.1+   | N/A         |
+| libprotobuf      | v3.6.1+   | The default version of libprotobuf included in Ubuntu 18.04 is lower than the required version. Before deployment, install the required version in advance (versions 3.6.1 and 3.12.4 are recommended).       |
+| GEOS          | v3.3.8+   | Optional    |
+| xz-libs       | v5.2.0+   | N/A         |
+| libgcc        | v7.3.0+   | N/A         |
+| libgflags | System default | N/A |
+| libkrb5 | System default | N/A |
 
-During installation, KWDB checks for required dependencies. If any are missing, the installation will stop and prompt you to install the missing dependencies. If the target machine is not connected to the internet, download the required dependencies from a machine with internet access and then transfer the files to the target machine.
+During installation, KWDB verifies the necessary dependencies. If any are missing, the installation process will halt and prompt you to install them. If the target machine is offline, you will need to download the required dependencies from an internet-connected device and then transfer the files to the target machine.
 
 ## Ports
 
@@ -74,12 +67,13 @@ Ensure these default ports are available and not blocked by firewalls. Port sett
 | ----------- | ----------- |
 | `8080`      | Port for HTTP requests and web services |
 | `26257`     | Port for connections from clients, applications, and other nodes |
+|`27257`| Port for inter-node brpc communication between KWDB time-series engines|
 
 ## Installation Packages and Compiled Versions
 
 Use pre-compiled installation packages or compile from source code as needed.
 
-### Obtaining Installation Packages
+### Installation Package
 
 Obtain the DEB or RPM installation package for your system environment, copy the package to the target machine, and then decompress it.
 
@@ -94,18 +88,18 @@ The KWDB repository currently provides [DEB or RPM installation packages](https:
 :::
 
 ```shell
-tar -zxvf <package_name>
+tar -zxvf <install_package_name>
 ```
 
-The directory generated after extraction contains the following files and folders:
+The extracted `kwdb_install` directory contains the following files and folders:
 
-| File/Folder              | Description                                               |
+| File/Folder         | Description                                               |
 |-------------------|-----------------------------------------------------------|
 | `add_user.sh`     | Script for creating KWDB users after installation and startup.           |
 | `deploy.cfg`      | Configuration file for node IP addresses, ports, and other options. |
-| `deploy.sh`       | Script for KWDB installation, uninstallation, start, status check, shutdown, and restart. |
-| `packages`        | Stores DEB or RPM packages.                                    |
-| `utils`           | Stores utility scripts.                                             |
+| `deploy.sh`       | Script for KWDB installation, uninstallation, start, status check, and stop operations. |
+| `packages`  | Stores DEB and RPM packages.                                    |
+| `utils`      | Stores utility scripts.                                             |
 
 ### Source Code Compilation
 

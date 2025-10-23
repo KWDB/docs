@@ -15,14 +15,14 @@ Before installing the KaiwuDB JDBC Driver, ensure you have the following:
 
 - [openJDK](https://openjdk.org/install/): Version 1.8 or higher.
 - [Maven](https://maven.apache.org/install.html): Version 3.6 or higher.
-- KWDB: KWDB is deployed and running.
+- KWDB: A deployed and running KWDB instance.
   - For bare-metal deployment, see [Deploy KWDB Using Bare-Metal Installation Package](../install-kaiwudb/quickstart-bare-metal.md).
   - For container-based deployment, see [Deploy KWDB Using YAML or Container Installation Package](../install-kaiwudb/quickstart-docker.md).
-- KaiwuDB JDBC Driver: The KaiwuDB JDBC Driver package is obtained.
+- KaiwuDB JDBC Driver: Downloaded and available.
 
 ### Steps
 
-1. Add the following dependency to your `pom.xml` file to include the KaiwuDB JDBC Driver in your Java project.
+1. Add the following dependency to your `pom.xml` file to include the KaiwuDB JDBC Driver in your Java project:
 
    ```xml
    <dependency>
@@ -32,7 +32,7 @@ Before installing the KaiwuDB JDBC Driver, ensure you have the following:
    </dependency>
    ```
 
-2. If the dependency is not loaded correctly, manually install the KaiwuDB JDBC Driver into your local Maven repository.
+2. If the dependency fails to load automatically, manually install the KaiwuDB JDBC Driver into your local Maven repository:
 
    ```shell
    mvn install:install-file "-Dfile=../kaiwudb-jdbc-2.2.0.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=2.2.0" "-Dpackaging=jar"
@@ -42,19 +42,21 @@ Before installing the KaiwuDB JDBC Driver, ensure you have the following:
 
 To connect to KWDB, write Java code that includes the following components:
 
-- **Driver**: The driver handles communication with the database server. For KWDB, load the driver class as shown below:
+- **Driver**: The driver handles communication with the database server. Load the KaiwuDB driver class as follows:
 
   ```java
   Class.forName("com.kaiwudb.Driver");
   ```
 
-- **Database Connection**: Use the `DriverManager.getConnection()` method to establish a connection to KWDB. KWDB supports the following connection methods:
+- **Database Connection**: Use the `DriverManager.getConnection()` method to establish a connection. KWDB supports the following connection methods:
 
   - `Connection conn = DriverManager.getConnection(url)`
   - `Connection conn = DriverManager.getConnection(url, props)`
   - `Connection conn = DriverManager.getConnection(url, user, password)`
 
 **Example**
+
+The following example demonstrates how to establish a connection to KWDB:
 
 ```java
 public Connection getConnection() throws Exception {

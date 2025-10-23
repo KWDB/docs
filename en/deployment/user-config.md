@@ -15,8 +15,8 @@ KWDB provides the `add_user.sh` script in the installation package. After instal
 
 ::: tip
 
-* To create multiple users, execute the `add_user.sh` script multiple times.
-* If the installation user is root or a regular user configured with passwordless `sudo`, no password input is required when executing the script. Regular users without passwordless `sudo` configuration must enter a password for privilege escalation.
+- To create multiple users, execute the `add_user.sh` script multiple times.
+- If the installation user is root or a regular user configured with passwordless `sudo`, no password input is required when executing the script. Regular users without passwordless `sudo` configuration must enter a password for privilege escalation.
 
 :::
 
@@ -56,7 +56,7 @@ KWDB provides the `add_user.sh` script in the installation package. After instal
 
 ### Prerequisites
 
-* KWDB is installed and running.
+- KWDB is installed and running
 
 ### Steps
 
@@ -64,32 +64,32 @@ KWDB provides the `add_user.sh` script in the installation package. After instal
 
    - **Deployment using kwbase CLI:**
 
-        * Non-secure mode (without password):
+        - Insecure mode (without password):
 
             ```bash
-            ./kwbase sql --host=127.0.0.1:<local_port> --insecure \
-            -e "create user <username>; \
-                grant admin to <username> with admin option;"
+            ./kwbase sql --host=127.0.0.1:$(local_port) --insecure \
+            -e "create user $username; \
+                grant admin to $username with admin option;"
             ```
 
-        * Secure mode (with password):
+        - Secure mode (with password):
 
             ```bash
-            ./kwbase sql --certs-dir=<cert_dir> --host=127.0.0.1:<local_port> \
-            -e "create user <username> with password \"<user_password>\"; \
-                grant admin to <username> with admin option;"
+            ./kwbase sql --certs-dir=$cert_path --host=127.0.0.1:$(local_port) \
+            -e "create user $username with password \"$user_password\"; \
+                grant admin to $username with admin option;"
             ```
 
     - **Deployment using Docker:**
 
-        * Non-secure mode (without password):
+        - Insecure mode (without password):
 
             ```bash
-            docker exec kwdb-container bash -c "./kwbase sql --insecure --host=<host_ip> -e \"create user <username>;grant admin to <username> with admin option;\""
+            docker exec kaiwudb-container bash -c "./kwbase sql --insecure --host=$host_ip -e \"create user $username;grant admin to $username with admin option;\""
             ```
 
-        * Secure mode (with password):
+        - Secure mode (with password):
 
             ```bash
-            docker exec kwdb-container bash -c "./kwbase sql --host=<host_ip> --certs-dir=<cert_dir> -e \"create user <username> with password \\\"<user_password>\\\";grant admin to <username> with admin option;\""
+            docker exec kaiwudb-container bash -c "./kwbase sql --host=$host_ip --certs-dir=$cert_path -e \"create user $username with password \\\"$user_password\\\";grant admin to $username with admin option;\""
             ```

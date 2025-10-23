@@ -23,7 +23,7 @@ id: script-deployment
   - 未配置 `sudo` 免密的普通用户在执行部署脚本时，需要输入密码进行提权。
 - 容器部署的安装用户为非 root 用户时，需要通过 `sudo usermod -aG docker $USER` 命令将用户添加到 `docker` 组。
 
-## 部署步骤
+## 步骤
 
 1. 登录待部署节点，编辑安装包目录下的 `deploy.cfg` 配置文件，设置安全模式、管理用户、服务端口等信息，并添加其他节点信息。
 
@@ -37,6 +37,7 @@ id: script-deployment
     brpc_port=27257
     kaiwudb_port=26257
     data_root=/var/lib/kaiwudb
+    cpu=1
 
     [local]
     node_addr= local_node_ip

@@ -157,4 +157,4 @@ Running a cluster in non-secure mode exposes you to serious security risks:
 - **No authentication**: Users can connect without a password, and any user can log in as `root`, gaining full read/write access to all data.
 - **Unencrypted communication**: Data is transmitted without encryption, leaving it vulnerable to interception and tampering.
 
-To avoid these risks, KWDB strongly recommends deploying your cluster in **secure mode** using **TLS** or **TLCP** encryption. This ensures that both nodes and clients are properly authenticated, and all data transfers are securely encrypted, protecting against unauthorized access and data manipulation.
+To avoid these risks, KWDB strongly recommends deploying your cluster in **secure mode** using **TLS** encryption. This ensures that both nodes and clients are properly authenticated, and all data transfers are securely encrypted, protecting against unauthorized access and data manipulation.

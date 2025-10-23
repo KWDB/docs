@@ -609,24 +609,24 @@ DRBD 镜像数据具有以下特点：
       ::: warning 提示
       如果主备节点采用非安全部署方式则无需执行本步骤操作。
       :::
-      1. 删除`/etc/kaiwudb/certs`目录下已有的`node.crt`和`node.key`文件。
+      1. 删除`/etc<certs_dir>`目录下已有的`node.crt`和`node.key`文件。
 
       2. 执行证书生成命令，允许备节点和虚拟IP地址访问主节点证书。
 
          ```Shell
-         kwbase cert create-node <primary_node_ip> <secondary_node_ip> <virtual_ip> 127.0.0.1 0.0.0.0 localhost --certs-dir=/etc/kaiwudb/certs --ca-key=ca.key
+         kwbase cert create-node <primary_node_ip> <secondary_node_ip> <virtual_ip> 127.0.0.1 0.0.0.0 localhost --certs-dir=/etc<certs_dir> --ca-key=ca.key
          ```
 
          示例：
 
          ```Shell
-         kwbase cert create-node <primary_node_ip> <secondary_node_ip> <virtual_ip> 127.0.0.1 0.0.0.0 localhost  --certs-dir=/etc/kaiwudb/certs --ca-key=ca.key
+         kwbase cert create-node <primary_node_ip> <secondary_node_ip> <virtual_ip> 127.0.0.1 0.0.0.0 localhost  --certs-dir=/etc<certs_dir> --ca-key=ca.key
          ```
 
-      3. 将主节点`/etc/kaiwudb/certs/*`中的证书文件复制到备节点相同目录。
+      3. 将主节点`/etc<certs_dir>/*`中的证书文件复制到备节点相同目录。
 
          ```Shell
-         scp /etc/kaiwudb/certs/* ha-node02:/etc/kaiwudb/certs/
+         scp /etc<certs_dir>/* ha-node02:/etc<certs_dir>/
          ```
 
 8. 在任一节点的 Pacemaker 集群中定义 KWDB 数据库资源以及与其它资源的依赖关系。

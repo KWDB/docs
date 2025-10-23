@@ -5,92 +5,79 @@ id: uninstall-cluster
 
 # Uninstall KWDB Cluster
 
-This section provides comprehensive uninstallation procedures for KWDB clusters across different deployment methods. Choose the appropriate uninstallation approach based on your original deployment method.
+This section describes how to uninstall KWDB clusters for different deployment scenarios, including script deployment, kwbase CLI deployment, and container image deployment. Choose the appropriate uninstallation method based on your deployment approach.
 
-## Script Deployment
+## Uninstall Script Deployment
+
+For KWDB deployed using the installation script, perform the following steps:
 
 1. Log in to the initial deployment node.
 2. Transfer the `kwdb_install` directory to all other cluster nodes.
-    1. Create the required directory on remote nodes.
+    1. Log in to remote nodes and create the required directory:
 
         ```shell
         ssh <username>@<node2_address> "mkdir -p ~/kwdb_install"
         ssh <username>@<node3_address> "mkdir -p ~/kwdb_install"
-        # Repeat for additional nodes...
+        ...
         ```
 
-    2. Transfer the installation directory to remote nodes.
+    2. Transfer the `kwdb_install` directory to the target nodes:
 
         ```shell
         scp -r kwdb_install <username>@<node2_address>:~/kwdb_install/
         scp -r kwdb_install <username>@<node3_address>:~/kwdb_install/
-        # Repeat for additional nodes...  
+        ...  
         ```
 
-3. Uninstall on each node.
-    1. Stop KWDB.
+3. Execute the following operations on each node in the cluster:
+    1. Stop the KWDB service:
 
         ```shell
         systemctl stop kaiwudb
         ```
 
-    2. Change to the `kwdb_install` directory.
-
-    3. Run the uninstallation command.
+    2. Run the uninstallation command in the `kwdb_install` directory:
 
         ```shell
         ./deploy.sh uninstall 
         ```
 
-    4. When prompted, decide whether to keep or remove data.
+    3. When prompted, choose whether to delete the data directory:
 
-        ```shell
-        When uninstalling KaiwuDB, you can either delete or keep all user data. Please confirm your choice: Do you want to delete the data? (y/n): 
-        ```
+         ```shell
+         When uninstalling KaiwuDB, you can either delete or keep all user data. Please confirm your choice: Do you want to delete the data? (y/n): 
+         ```
 
-        - Enter `y` to delete the data directory and unmount the loop device.
-        - Enter `n` to keep the data directory for future use.
+         - Enter `y`: Delete the data directory.
+         - Enter `n`: Keep the data directory for future use.
 
+## Uninstall kwbase CLI Deployment
 
-## CLI Deployment
+For KWDB deployed using kwbase CLI, perform the following steps on each node to be uninstalled:
 
-For clusters deployed using the kwbase CLI, execute these steps on **each node**:
-
-::: warning  
+::: warning
 
 Before proceeding, ensure all important data has been backed up. These operations will permanently delete all KWDB data and configurations.
 
 :::
 
-1. Stop KWDB.
+1. Stop the KWDB service.
 
-2. Check and unmount loop devices:
-
-   ```bash
-   # List active loop devices
-   losetup -a
-   
-   # Unmount the appropriate device
-   sudo umount /dev/loop<device_number>
-   ```
-
-3. Remove custom certificate directory:
+2. Remove the custom certificate directory:
 
    ```bash
    sudo rm -rf <cert_path>
    ```
 
-4. Delete data directory:
+3. Delete the data directory:
 
    ```bash
    sudo rm -rf <data_path>
    ```
 
-5. Delete the complied libraries and binaries.
+## Uninstall Container Image Deployment
 
-## Docker Deployment
-
-For clusters deployed using Docker images, execute these steps on **each node**:
+For KWDB deployed using a container image, perform the following steps on each node to be uninstalled:
 
 ::: warning
 
@@ -100,15 +87,15 @@ Before proceeding, ensure all important data has been backed up. These operation
 
 1. Stop the KWDB container:
 
+   ::: tip
+
+   The container name is the name specified in the `--name` parameter when running the container.
+
+   :::
+
    ```bash
    docker stop kwdb-container
    ```
-
-   ::: tip  
-
-   Replace `kwdb-container` with the actual container name specified using the `--name` parameter during container creation.
-
-   :::
 
 2. Remove the container:
 
@@ -119,32 +106,21 @@ Before proceeding, ensure all important data has been backed up. These operation
 3. Delete the Docker image:
 
    ```bash
-   # Retrieve the image name
+   # Get the image name
    docker ps -a --filter name=kwdb-container --format "{{.Image}}"
    
    # Remove the image
    docker rmi ${image_name}
    ```
 
-4. Check and unmount loop devices:
-
-   ```bash
-   # List active loop devices
-   losetup -a
-   
-   # Unmount the appropriate device
-   sudo umount /dev/loop<device_number>
-   ```
-
-5. Remove custom certificate directory:
+4. Remove custom certificate directory:
 
    ```bash
    sudo rm -rf <cert_path>
    ```
 
-6. Delete data directory:
+5. Delete the data directory (default location: `/var/lib/kaiwudb`):
 
    ```bash
-   # Default data directory is /var/lib/kaiwudb
    sudo rm -rf <data_path>
    ```

@@ -5,182 +5,183 @@ id: use-kaiwudb-kdc
 
 # Manage KWDB Using KaiwuDB Developer Center
 
-This section explains how to use the [KaiwuDB Developer Center](../../kaiwudb-developer-center/overview.md)’s graphical interface to create and manage databases and database objects in KWDB.
+This section demonstrates how to use the [KaiwuDB Developer Center](../../kaiwudb-developer-center/overview.md)’s graphical interface  to manage the KWDB multi-model database, including:
 
-::: warning Note
-The KaiwuDB Developer Center interface is currently available in Chinese only.
-:::
+- **Relational Data Operations**: Manage relatively static data, such as device information and user profiles
+- **Time-Series Data Operations**: Process dynamic time-series data, such as sensor readings and monitoring metrics
+- **Cross-Model Queries**: Perform queries across relational and time-series databases for comprehensive data analysis
 
-## Interface Components
-
-The user interface includes the following components:
-
-- Menu bar
-- Toolbar
-- Database Navigator
-- Object window
-- Result window
-- Status bar
-
-![](../../static/quickstart/kdc-ui.png)
-
-## Time-Series Data
-
-### Creating a Time-Series Database
-
-**Prerequisites**:
-
-Administrator privileges
-
-**Steps**:
-
-1. In the Database Navigator, right-click **时序数据库 (Time-Series Databases)** and select **新建时序数据库 (Create Time-Series Database)**.
-
-   <img src="../../static/quickstart/kdc-create-tsdb.png" style="zoom:80%;" />
-
-2. In the **创建时序数据库 (Create Time-Series Database)** window, enter the database name, set the lifecycle (default: 0 days - never expires) and partition interval (default: 10 days). Click **确定（OK）**.
-
-   <img src="../../static/quickstart/create-ts-db.png" style="zoom:80%;" />
-
-   The new database will appear in the Database Navigator and inherit KWDB role and user settings.
-
-### Creating a Time-Series Table
-
-**Prerequisites**:
-
-Administrator privileges or `TABLE CREATE`/`ALL` privileges.
-
-**Steps**:
-
-1. Select the target database and schema in the Database Navigator.
-2. Right-click **时序表 (Time-Series Tables)** and select **新建时序表 (Create Time-Series Table)**. A default table named `newtable` will be created.
-
-   <img src="../../static/quickstart/ts-table-create.png" style="zoom: 80%;" />
-
-3. In the **属性 (Properties)** tab of the Object window, fill in the table name (max 128 bytes), active time (default: 1 day), lifecycle (default: 0 days - never expires), partition interval (default: 10 days), and description (optional).
-4. In the **字段 (Fields)** section, create at least two fields. For each field, specify the name, data type, length (if applicable), null/not null, default value(optional), and description(optional). The first field must be `timestamp` or `timestamptz` and not null. Supported precision: 3 (milliseconds), 6 (microseconds), or 9 (nanoseconds). Default is 3 (milliseconds).
-
-    <img src="../../static/quickstart/ts-table-create-01.png" style="zoom:67%;" />
-
-5. In the **标签 (Tags)** section, add at least one non-null primary tag. Tag names must be a maximum of 128 bytes and only support English characters. Once the tags are added, click **保存 (Save)**.
-    <img src="../../static/quickstart/ts-table-create-02.png" style="zoom:67%;" />
-
-6. In the **执行修改 (Persist Changes)** window, verify the SQL statement and click **执行 (Execute)**.
-
-### Writing Time-Series Data
-
-**Prerequisites**:
-
-Administrator privileges or `INSERT` privileges on the target table.
-
-::: warning Note
-
-- You can specify values for all columns or only for specific ones. For unspecified columns, if the column accepts `NULL`, the system will automatically use `NULL` as the default value. If the column does not accept `NULL`, the system will prompt: `Null value in column %s violates null-null constraints.`
-- When entering `TIMESTAMP` or `TIMESTAMPTZ` data, use hyphens (`-`), spaces, or slashes (`/`) as the date separator and colons (`:`) as the time separator. Precision is up to microseconds (e.g., `2023-01-25 10:10:10.123`, `2023 01 25 10:10:10.123`, or `2023/01/25 10:10:10.123`).
-- By default, newer data overwrites existing data with the same timestamp. You can modify this behavior using `SET CLUSTER SETTING ts.dedup.rule=[ merge | override | discard]` SQL statement. For more information, see [Cluster Settings Configuration](../../db-operation/cluster-settings-config.md).
-
-:::
-
-**Steps**:
-
-1. Right-click the target table in the Database Navigator and select **编辑数据 (Edit Data)**.
-2. Go to the **数据 (Data)** tab add click the **添加新行 (Add New Row)** button to add new data.
-   ![](../../static/quickstart/kdc-ts-addnewrow.png)
-
-3. To view the generated SQL, click **生成SQL语句 (Generate SQL)** and then **执行 (Execute)**, or click **保存 (Save)** without SQL preview.
-
-### Querying Time-Series Data
-
-Double-click the target table in the Database Navigator to view the table properties and data.
-
-::: tip
-When working with tables containing many rows, use the toolbar to manage your view:
-
-- See the total row count at a glance
-- Adjust rows displayed per page (default: 100)
-- Navigate between pages using the First, Previous, Next, and Last page buttons
-
-Note: After changing the rows per page setting, click any page button to apply and refresh the pagination display.
-:::
-
-![](../../static/quickstart/ts-page.png)
-
-## Relational Data
+## Relational Data Operations
 
 ### Creating a Relational Database
 
-**Prerequisites**:
+**Prerequisites**
 
-Administrator privileges.
+User must be a member of the `admin` role. By default, the `root` user belongs to the `admin` role.
 
-**Steps**:
+**Steps**
 
-1. Right-click **关系数据库 (Relational Databases)** in the Database Navigator and select **新建关系数据库 (Create Relational Database)**.
+1. In the Database Navigator, right-click **关系数据库 (Relational Databases)** and select **新建关系数据库 (Create Relational Database)**.
 
-   <img src="../../static/quickstart/kdc-create-rdb.png" style="zoom:67%;" />
+   <img src="../../../static/quickstart/create-r-db-0.png" style="zoom:67%;" />
 
-2. In the **创建数据库 (Create Database)** window, enter the database name and click **确定 (OK)**.
+2. In the **创建数据库 (Create Database)** dialog, enter the database name and click **确定 (OK)**.
 
-   <img src="../../static/quickstart/kdc-create-rdb-01.png" style="zoom:67%;" />
+   <img src="../../../static/quickstart/create-r-db.png" style="zoom:67%;" />
 
-   The new database will appear in the Database Navigator and inherit KWDB's role and user settings.
+   After successful creation, the new database will automatically appear in the Database Navigator and inherit KWDB's role and user settings.
 
 ### Creating a Relational Table
 
-**Prerequisites**:
+**Prerequisites**
 
-Administrator privileges or `TABLE CREATE`/`ALL` privileges.
+User must be a member of the `admin` role or have CREATE privileges on the target database. By default, the `root` user belongs to the `admin` role.
 
-**Steps**:
+**Steps**
 
-1. Select the target database and schema in the Database Navigator.
+1. In the Database Navigator, select the target database and schema.
 
-2. Right-click **表 (Tables)** and select **新建表 (Create Table)**. A default table named `newtable` will be created.
+2. Right-click **表 (Tables)** and select **新建表 (Create Table)**.
 
-   <img src="../../static/quickstart/kdc-create-rtable.png" style="zoom:67%;" />
+   <img src="../../../static/quickstart/create-r-table.png" style="zoom:67%;" />
 
-3. In the **属性 (Properties)** tab of the Object window, fill in the table name, description (optional), add fields, and click **保存 (Save)**.
+   The system will automatically create a table named `newtable` and open the Object window.
 
-   <img src="../../static/quickstart/kdc-create-rdb-01.png" style="zoom:67%;" />
+3. In the Object window, enter the table name, add fields, and click **保存 (Save)**.
 
-4. In the **执行修改 (Persist Changes)** window, verify the SQL statement and click **执行 (Execute)**.
+   <img src="../../../static/quickstart/create-r-table-1.png" style="zoom:67%;" />
 
-### Writing Relational Data
+4. In the **执行修改 (Persist Changes)** dialog, review the SQL statement and click **执行 (Execute)**.
 
-**Prerequisites**:
+### Writing Data
 
-Administrator privileges or `INSERT` privileges on the target table.
+**Prerequisites**
 
-**Steps**:
+User must be a member of the `admin` role or have INSERT privileges on the target table. By default, the `root` user belongs to the `admin` role.
 
-1. Right-click the target table in the Database Navigator and select **编辑表 (Edit Table)**.
+**Steps**
 
-   <img src="../../static/quickstart/kdc-write-rtable.png" style="zoom:67%;" />
+1. In the Database Navigator, double-click the table you want to modify.
 
-2. In the **数据 (Data)** tab, click the **添加新行 (Add New Row)** button to add new data.
+2. In the **数据 (Data)** tab, click the **添加新行 (Add New Row)** button at the bottom to add new data.
 
-   <img src="../../static/quickstart/kdc-r-addnewrow.png" style="zoom:67%;" />
+   <img src="../../../static/quickstart/insert-r-data.png" style="zoom:67%;" />
 
-3. To view the generated SQL, click **生成 SQL 语句 (Generate SQL)** and then **执行 (Execute)**, or click **保存 (Save)** without SQL preview.
+3. Click **保存 (Save)**.
 
-### Querying Relational Data
+### Querying Data
 
-Double-click the target table in the Database Navigator to view its properties, data, and ER diagram.
+**Prerequisites**
 
-| Tab | Description                                                       |
-| ----- | ---------------------------------------------------------- |
-| Properties  | Table name, description, fields, constraints, foreign keys, indexes, permissions, and CREATE TABLE statement|
-| Data  | View table data in grid or text format                             |
-| ER Diagram | Graphical representation of entities, attributes, and relationships    |
+User must be a member of the `admin` role or have SELECT privileges on the target table. By default, the `root` user belongs to the `admin` role.
 
-::: tip
-When working with tables containing many rows, use the toolbar to manage your view:
+**Steps**
 
-- See the total row count at a glance
-- Adjust rows displayed per page (default: 100)
-- Navigate between pages using the First, Previous, Next, and Last page buttons
+1. In the Database Navigator, double-click the table you want to view. The table data will be displayed in the **数据 (Data)** tab.
 
-Note: After changing the rows per page setting, click any page button to apply and refresh the pagination display.
-:::
+   <img src="../../../static/quickstart/view-r-data.png" style="zoom:67%;" />
 
-![](../../static/quickstart/ts-page.png)
+## Time-Series Data Operations
+
+### Creating a Time-Series Database
+
+**Prerequisites**
+
+User must be a member of the `admin` role. By default, the `root` user belongs to the `admin` role.
+
+**Steps**
+
+1. In the Database Navigator, right-click **时序数据库 (Time-Series Databases)** and select **新建时序数据库 (Create Time-Series Database)**.
+
+   <img src="../../../static/quickstart/create-ts-database.png" style="zoom:67%;" />
+
+2. In the **创建时序数据库 (Create Time-Series Database)** dialog, enter the database name and click **确定 (OK)**.
+
+   <img src="../../../static/quickstart/create-ts-database-1.png" style="zoom:67%;" />
+
+   After successful creation, the new database will automatically appear in the Database Navigator and inherit KWDB's role and user settings.
+
+### Creating a Time-Series Table
+
+**Prerequisites**
+
+User must be a member of the `admin` role or have CREATE privileges on the target database. By default, the `root` user belongs to the `admin` role.
+
+**Steps**
+
+1. In the Database Navigator, select the target database and schema.
+
+2. Right-click **时序表 (Time-Series Tables)** and select **新建时序表 (Create Time-Series Table)**.
+
+   <img src="../../../static/quickstart/create-ts-table.png" style="zoom:67%;" />
+
+   The system will automatically create a table named `newtable` and open the Object window.
+
+3. In the **属性 (Properties)** tab, enter the table name.
+
+4. In the **字段 (Fields)** tab, modify or create fields by specifying the field name, data type, length, null/not null constraint, default value, and description. Note that the first field must be of type `timestamp` or `timestamptz` and cannot be null.
+
+   <img src="../../../static/quickstart/create-ts-table-1.png" style="zoom:67%;" />
+
+5. In the **标签 (Tags)** tab, modify or add tags by specifying the tag name, data type, length, primary tag, not null constraint, and description. Then click **保存 (Save)**.
+
+   ::: warning Note
+
+   - Each time-series table must have at least one primary tag, and primary tags cannot be null.
+   - Tag names do not currently support Chinese characters and have a maximum length of 128 bytes.
+
+   :::
+
+    <img src="../../../static/quickstart/create-ts-table-2.png" style="zoom:67%;" />
+
+6. In the **执行修改 (Persist Changes)** dialog, review the SQL statement and click **执行 (Execute)**.
+
+### Writing Data
+
+**Prerequisites**
+
+User must be a member of the `admin` role or have INSERT privileges on the target table. By default, the `root` user belongs to the `admin` role.
+
+**Steps**
+
+1. In the Database Navigator, right-click the table you want to edit and select **编辑数据 (Edit Data)**.
+
+2. In the **数据 (Data)** tab, click the **添加新行 (Add New Row)** button at the bottom to add new data to the table.
+
+   <img src="../../../static/quickstart/insert-ts-table.png" style="zoom:67%;" />
+
+3. Click **保存 (Save)**.
+
+### Querying Data
+
+**Prerequisites**
+
+User must be a member of the `admin` role or have SELECT privileges on the target table. By default, the `root` user belongs to the `admin` role.
+
+**Steps**
+
+1. In the Database Navigator, double-click the table you want to view. The table data will be displayed in the **数据 (Data)** tab.
+
+   <img src="../../../static/quickstart/view-ts-table.png" style="zoom:67%;" />
+
+## Cross-Model Queries
+
+KaiwuDB Developer Center supports using the SQL Editor to perform cross-model queries in KWDB.
+
+**Prerequisites**
+
+User must be a member of the `admin` role or have SELECT privileges on the target tables. By default, the `root` user belongs to the `admin` role.
+
+**Steps**
+
+1. Click **SQL 编辑器 (SQL Editor)** in the Menu bar and select **新建 SQL 编辑器 (New SQL Editor)**.
+
+   <img src="../../../static/quickstart/create-sql-editor.png" style="zoom:67%;" />
+
+2. In the new SQL Editor page, enter your cross-model query statement.
+
+   <img src="../../../static/quickstart/insert-data.png" style="zoom:67%;" />
+
+3. Click the **执行 SQL 语句 (Execute SQL Statement)** button on the left to run the query and retrieve the results.
+
+   <img src="../../../static/quickstart/cmq.png" style="zoom:67%;" />

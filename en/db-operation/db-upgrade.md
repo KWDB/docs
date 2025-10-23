@@ -96,7 +96,7 @@ During the upgrade process, compression and lifecycle operations on the upgraded
    1. Check node status.
 
       ```Shell
-      <kwbase_path>/kwbase node status [--host=<ip:port>] [--insecure | --certs-dir=<path> [--tlcp]]
+      <kwbase_path>/kwbase node status [--host=<ip:port>] [--insecure | --certs-dir=<path>
       ```
 
    2. Check replica status.

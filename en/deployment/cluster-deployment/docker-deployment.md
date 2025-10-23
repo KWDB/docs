@@ -11,7 +11,6 @@ This section describes how to deploy a KWDB cluster on a single machine using th
 
 ## Prerequisites
 
-- The [KWDB image](../prepare/before-deploy-docker.md#obtaining-container-images) is obtained.
 - The hardware, operating system, software dependencies, and ports of the nodes to be deployed meet the [deployment requirements](../prepare/before-deploy-docker.md#hardware).
 - One of the following user permissions:
   - Root user access
@@ -19,6 +18,7 @@ This section describes how to deploy a KWDB cluster on a single machine using th
     - Users with passwordless `sudo` won't need to enter passwords during installation.
     - Users without passwordless `sudo` will be prompted for passwords when needed.
     - Regular users must be in the docker group (add with `sudo usermod -aG docker $USER`).
+- The [KWDB image](../prepare/before-deploy-docker.md#obtaining-container-images) is obtained.
 
 ## Steps
 
@@ -41,136 +41,134 @@ This section describes how to deploy a KWDB cluster on a single machine using th
     ```
 
     Parameters:
-    - `--rm`: Automatically removes the container after it stops.
-    - `--privileged`: Grants extended privileges to the container.
-    - `-v`: Mounts the host's `/etc/kaiwudb/certs` directory to the container's `<certs_dir>` directory for certificate and key storage.
-    - `-w /kaiwudb/bin`: Sets the working directory inside the container to `/kaiwudb/bin`.
-    - `kwdb_image`: Container image name and tag (e.g., `kwdb:2.2.0`)
-    - `bash -c`: Executes the following certificate creation commands within the container:
-      - `./kwbase cert create-ca`: Creates a certificate authority (CA), generating CA certificates and keys.
-      - `./kwbase cert create-client root`: Creates client certificates and keys for the `root` user.
-      - `./kwbase cert create-node 127.0.0.1 localhost 0.0.0.0`: Creates node server certificates and keys, supporting access through three network identifiers: local loopback address (`127.0.0.1`), local hostname (`localhost`), and all network interfaces (`0.0.0.0`).
-      - `--certs-dir=<certs_dir>`: Specifies the certificate storage directory.
-      - `--ca-key=<certs_dir>/ca.key`: Specifies the CA key path.
+  
+    | Parameter | Description |
+    |---|---|
+    | `--rm` | Automatically removes the container after it stops. |
+    | `--privileged` | Grants extended privileges to the container. |
+    | `-v` | Mounts the host's `/etc/kaiwudb/certs` directory to the container's `<certs_dir>` directory for certificate and key storage. |
+    | `-w /kaiwudb/bin` | Sets the working directory inside the container to `/kaiwudb/bin`. |
+    | `$kaiwudb_image` | Container image name and tag (e.g., `kaiwudb:3.0.0`). |
+    | `bash -c` | Executes the following certificate creation commands within the container:<br>- `./kwbase cert create-ca`: Creates a certificate authority (CA), generating CA certificates and keys.<br>- `./kwbase cert create-client root`: Creates client certificates and keys for the `root` user.<br>- `./kwbase cert create-node 127.0.0.1 localhost 0.0.0.0`: Creates node server certificates and keys, supporting access through three network identifiers: local loopback address (`127.0.0.1`), local hostname (`localhost`), and all network interfaces (`0.0.0.0`).<br>- `--certs-dir=<certs-dir>`: Specifies the certificate storage directory.<br>- `--ca-key=<certs-dir>/ca.key`: Specifies the CA key path.|
 
 2. Start three or more database instances.
 
-    - Non-secure Mode
+    - Insecure mode
 
       ```shell
-      # Start the first container
       docker run -d --name kwdb1 --privileged \
         --ulimit memlock=-1 --ulimit nofile=1048576 \
-        -p 26257:26257 -p 8080:8080 \
+        -p 26257:26257 \
+        -p 27257:27257 \
+        -p 8080:8080 \
         -v /var/lib/kwdb1:/kaiwudb/deploy/kwdb-container \
         --ipc shareable -w /kaiwudb/bin \
-        <kwdb_image> \
+        ${kaiwudb_image} \
         ./kwbase start --insecure --listen-addr=0.0.0.0:26257 \
-        --advertise-addr=<host1>:26257 --http-addr=0.0.0.0:8080 \
-        --store=/kaiwudb/deploy/kwdb-container --join <host1>:26257
+        --advertise-addr=${host}:26257 --brpc-addr=:27257 --http-addr=0.0.0.0:8080 \
+        --store=/kaiwudb/deploy/kwdb-container --join ${host}:26257
 
-      # Start the second container
       docker run -d --name kwdb2 --privileged \
         --ulimit memlock=-1 --ulimit nofile=1048576 \
-        -p 26258:26257 -p 8081:8080 \
-        -v /var/lib/kaiwudb2:/kaiwudb/deploy/kwdb-container \
+        -p 26258:26257 \
+        -p 27258:27258 \
+        -p 8081:8080 \
+        -v /var/lib/kwdb2:/kaiwudb/deploy/kwdb-container \
         --ipc shareable -w /kaiwudb/bin \
-        <kwdb_image> \
+        ${kaiwudb_image} \
         ./kwbase start --insecure --listen-addr=0.0.0.0:26257 \
-        --advertise-addr=<host2>:26258 --http-addr=0.0.0.0:8080 \
-        --store=/kaiwudb/deploy/kwdb-container --join <host1>:26257
+        --advertise-addr=${host}:26258 --brpc-addr=:27258 --http-addr=0.0.0.0:8080 \
+        --store=/kaiwudb/deploy/kwdb-container --join ${host}:26257
 
-      # Start the third container
       docker run -d --name kwdb3 --privileged \
         --ulimit memlock=-1 --ulimit nofile=1048576 \
-        -p 26259:26257 -p 8082:8080 \
-        -v /var/lib/kaiwudb3:/kaiwudb/deploy/kwdb-container \
+        -p 26259:26257 \
+        -p 27259:27259 \
+        -p 8082:8080 \
+        -v /var/lib/kwdb3:/kaiwudb/deploy/kwdb-container \
         --ipc shareable -w /kaiwudb/bin \
-        <kwdb_image> \
+        ${kaiwudb_image} \
         ./kwbase start --insecure --listen-addr=0.0.0.0:26257 \
-        --advertise-addr=<host3>:26259 --http-addr=0.0.0.0:8080 \
-        --store=/kaiwudb/deploy/kwdb-container --join <host1>:26257
+        --advertise-addr=${host}:26259 --brpc-addr=:27259 --http-addr=0.0.0.0:8080 \
+        --store=/kaiwudb/deploy/kwdb-container --join ${host}:26257
       ```
 
-    - Secure Mode
+    - Secure mode
 
       ```shell
-      # Start the first container
       docker run -d --name kwdb1 --privileged \
         --ulimit memlock=-1 --ulimit nofile=1048576 \
-        -p 26257:26257 -p 8080:8080 \
-        -v /etc/kaiwudb/certs:<certs_dir> \
+        -p 26257:26257 \
+        -p 27257:27257 \
+        -p 8080:8080 \
+        -v /etc/kaiwudb/certs:<certs-dir> \
         -v /var/lib/kwdb1:/kaiwudb/deploy/kwdb-container \
         --ipc shareable -w /kaiwudb/bin \
-        <kwdb_image> \
-        ./kwbase start --certs-dir=<certs_dir> --listen-addr=0.0.0.0:26257 \
-        --advertise-addr=<host1>:26257 --http-addr=0.0.0.0:8080 \
-        --store=/kaiwudb/deploy/kwdb-container --join <host1>:26257
+        ${kaiwudb_image} \
+        ./kwbase start --certs-dir=<certs-dir> --listen-addr=0.0.0.0:26257 \
+        --advertise-addr=${host}:26257 --brpc-addr=:27257 --http-addr=0.0.0.0:8080 \
+        --store=/kaiwudb/deploy/kwdb-container --join ${host}:26257
 
-      # Start the second container
       docker run -d --name kwdb2 --privileged \
         --ulimit memlock=-1 --ulimit nofile=1048576 \
-        -p 26258:26257 -p 8081:8080 \
-        -v /etc/kaiwudb/certs:<certs_dir> \
-        -v /var/lib/kaiwudb2:/kaiwudb/deploy/kwdb-container \
+        -p 26258:26257 \
+        -p 27258:27258 \
+        -p 8081:8080 \
+        -v /etc/kaiwudb/certs:<certs-dir> \
+        -v /var/lib/kwdb2:/kaiwudb/deploy/kwdb-container \
         --ipc shareable -w /kaiwudb/bin \
-        <kwdb_image> \
-        ./kwbase start --certs-dir=<certs_dir> --listen-addr=0.0.0.0:26257 \
-        --advertise-addr=<host2>:26258 --http-addr=0.0.0.0:8080 \
-        --store=/kaiwudb/deploy/kwdb-container --join <host1>:26257
+        ${kaiwudb_image} \
+        ./kwbase start --certs-dir=<certs-dir> --listen-addr=0.0.0.0:26257 \
+        --advertise-addr=${host}:26258 --brpc-addr=:27258 --http-addr=0.0.0.0:8080 \
+        --store=/kaiwudb/deploy/kwdb-container --join ${host}:26257
 
-      # Start the third container
       docker run -d --name kwdb3 --privileged \
         --ulimit memlock=-1 --ulimit nofile=1048576 \
-        -p 26259:26257 -p 8082:8080 \
-        -v /etc/kaiwudb/certs:<certs_dir> \
-        -v /var/lib/kaiwudb3:/kaiwudb/deploy/kwdb-container \
+        -p 26259:26257 \
+        -p 27259:27259 \
+        -p 8082:8080 \
+        -v /etc/kaiwudb/certs:<certs-dir> \
+        -v /var/lib/kwdb3:/kaiwudb/deploy/kwdb-container \
         --ipc shareable -w /kaiwudb/bin \
-        <kwdb_image> \
-        ./kwbase start --certs-dir=<certs_dir> --listen-addr=0.0.0.0:26257 \
-        --advertise-addr=<host3>:26259 --http-addr=0.0.0.0:8080 \
-        --store=/kaiwudb/deploy/kwdb-container --join <host1>:26257
+        ${kaiwudb_image} \
+        ./kwbase start --certs-dir=<certs-dir> --listen-addr=0.0.0.0:26257 \
+        --advertise-addr=${host}:26259 --brpc-addr=:27259 --http-addr=0.0.0.0:8080 \
+        --store=/kaiwudb/deploy/kwdb-container --join ${host}:26257
       ```
 
     Parameters:
-    - `-d`: Runs the container in the background and returns the container ID.
-    - `--name`: Specifies the container name for easier management.
-    - `--privileged`: Grants extended privileges to the container.
-    - `--ulimit memlock=-1`: Removes container memory size limit.
-    - `--ulimit nofile=1048576`: Sets the maximum number of files that processes inside the container can open.
-    - `-p`: Maps ports between host and container (database service port 26257 and HTTP port 8080).
-    - `-v`: Sets up volume mounts:
-      - Mounts host's `/var/lib/kaiwudb` directory to container's `/kaiwudb/deploy/kwdb-container` directory for persistent data storage.
-      - In secure mode, mounts host's `/etc/kaiwudb/certs` directory to container's `<certs_dir>` directory for certificate and key storage.
-    - `--ipc shareable`: Allows other containers to share this container's IPC namespace.
-    - `-w /kaiwudb/bin`: Sets the working directory inside the container to `/kaiwudb/bin`.
-    - `kwdb_image`: Container image variable (replace with actual image name and tag, e.g., `kwdb:2.2.0`)
-    - `./kwbase start`: Database startup command with different parameters for different modes:
-      - `--insecure`: (Non-secure mode only) Runs in non-secure mode.
-      - `--certs-dir=<certs_dir>`: (secure mode) Specifies certificate directory location.
-      - `--listen-addr=0.0.0.0:26257`: Address and port the database listens on.
-      - `--advertise-addr=<hostx>:2625X`: Address and port the database uses to communicate with other cluster nodes.
-      - `--http-addr=0.0.0.0:8080`: Address and port the HTTP interface.
-      - `--store=/kaiwudb/deploy/kwdb-container`: Specifies data storage location.
-      - `--join <host1>:26257`: Address for the node to connect to the cluster (can specify one or more cluster nodes)
+
+    | Parameter | Description |
+    |---|---|
+    | `-d` | Runs the container in the background and returns the container ID. |
+    | `--name` | Specifies the container name for easier management. |
+    | `--privileged` | Grants extended privileges to the container. |
+    | `--ulimit memlock=-1` | Removes container memory size limit. |
+    | `--ulimit nofile=1048576` | Sets the maximum number of files that processes inside the container can open. |
+    | `-p` | Port mapping for the database service port (26257), brpc port, and HTTP port (8080). **Note:** The brpc port must be the same on both the host and container. |
+    | `-v` | Sets up volume mounts:<br>- Mounts host's `/var/lib/kaiwudb` directory to container's `/kaiwudb/deploy/kwdb-container` directory for persistent data storage.<br>- In secure mode, mounts host's `/etc/kaiwudb/certs` directory to container's `<certs_dir>` directory for certificate and key storage. |
+    | `--ipc shareable` | Allows other containers to share this container's IPC namespace. |
+    | `-w /kaiwudb/bin` | Sets the working directory inside the container to `/kaiwudb/bin`. |
+    | `$kaiwudb_image` | Container image variable (replace with actual image name and tag, e.g., `kaiwudb:3.0.0`). |
+    | `./kwbase start` | Database startup command with different flags for different modes:<br>- `--insecure`: (Insecure mode only) Runs in insecure mode.<br>- `--certs-dir=<certs-dir>`: (Secure mode) Specifies certificate directory location.<br>- `--listen-addr=0.0.0.0:26257`: Address and port the database listens on.<br>- `--advertise-addr=${host}:2625X`: Address and port the database uses to communicate with other cluster nodes.<br>- `--brpc-addr=:2725X`: brpc port for inter-node communication between KaiwuDB time-series engines.<br>- `--http-addr=0.0.0.0:8080`: Address and port the HTTP interface.<br>- `--store=/kaiwudb/deploy/kwdb-container`: Specifies data storage location.<br>- `--join ${host}:26257`: Address for the node to connect to the cluster (can specify one or more cluster nodes).|
 
 3. Initialize the cluster:
 
-    - Non-secure Mode
+    - Insecure mode
 
         ```shell
-        docker exec kwdb1 ./kwbase init --insecure --host=<host1>:26257
+        docker exec kwdb1 ./kwbase init --insecure --host=$host:26257
         ```
 
-    - Secure Mode
+    - Secure mode
 
         ```shell
-        docker exec kwdb1 ./kwbase init --certs-dir=<certs_dir> --host=<host1>:26257
+        docker exec kwdb1 ./kwbase init --certs-dir=<certs-dir> --host=$host:26257
         ```
 
     Parameters:
-    - `docker exec kwdb1`: Executes commands inside the container named `kwdb1`.
-    - `./kwbase init`: Executes the cluster initialization command.
-      - `--insecure`: (Non-secure mode only) Enables non-secure mode.
-      - `--certs-dir=<certs_dir>`: (Secure mode only) Specify certificate directory location.
-      - `--host=<host1>:26257`: Specifies the host address and port to connect to.
+
+    | Parameter | Description |
+    |---|---|
+    | `docker exec kwdb1` | Executes commands inside the container named `kwdb1`. |
+    | `./kwbase init` | Executes the cluster initialization command:<br>- `--insecure`: (Insecure mode only) Enables insecure mode.<br>- `--certs-dir=<certs-dir>`: (Secure mode) Specify certificate directory location.<br>- `--host=$host:26257`: Specifies the host address and port to connect to.|
