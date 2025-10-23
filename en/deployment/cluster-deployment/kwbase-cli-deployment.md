@@ -71,7 +71,7 @@ This section describes how to deploy a KWDB cluster on a single machine using th
 
             ./kwbase start-single-replica --insecure \
                 --listen-addr=0.0.0.0:26257 \
-                --advertise-addr=$<host2>:26258 \
+                --advertise-addr=<host2>:26258 \
                 --brpc-addr=:27258 \
                 --http-addr=0.0.0.0:8080 \
                 --store=/var/lib/kaiwudb \
@@ -79,7 +79,7 @@ This section describes how to deploy a KWDB cluster on a single machine using th
 
             ./kwbase start-single-replica --insecure \
                 --listen-addr=0.0.0.0:26257 \
-                --advertise-addr=$<host3>:26259 \
+                --advertise-addr=<host3>:26259 \
                 --brpc-addr=:27259 \
                 --http-addr=0.0.0.0:8080 \
                 --store=/var/lib/kaiwudb \
@@ -101,7 +101,7 @@ This section describes how to deploy a KWDB cluster on a single machine using th
             ./kwbase start-single-replica \
                 --certs-dir=<certs_dir> \
                 --listen-addr=0.0.0.0:26257 \
-                --advertise-addr=$<host2>:26258 \
+                --advertise-addr=<host2>:26258 \
                 --brpc-addr=:27258 \
                 --http-addr=0.0.0.0:8080 \
                 --store=/var/lib/kaiwudb \
@@ -110,7 +110,7 @@ This section describes how to deploy a KWDB cluster on a single machine using th
             ./kwbase start-single-replica \
                 --certs-dir=<certs_dir> \
                 --listen-addr=0.0.0.0:26257 \
-                --advertise-addr=$<host3>:26259 \
+                --advertise-addr=<host3>:26259 \
                 --brpc-addr=:27259 \
                 --http-addr=0.0.0.0:8080 \
                 --store=/var/lib/kaiwudb \
@@ -132,7 +132,7 @@ This section describes how to deploy a KWDB cluster on a single machine using th
 
             ./kwbase start --insecure \
                 --listen-addr=0.0.0.0:26257 \
-                --advertise-addr=$<host2>:26258 \
+                --advertise-addr=<host2>:26258 \
                 --brpc-addr=:27258 \
                 --http-addr=0.0.0.0:8080 \
                 --store=/var/lib/kaiwudb \
@@ -140,7 +140,7 @@ This section describes how to deploy a KWDB cluster on a single machine using th
 
             ./kwbase start --insecure \
                 --listen-addr=0.0.0.0:26257 \
-                --advertise-addr=$<host3>:26259 \
+                --advertise-addr=<host3>:26259 \
                 --brpc-addr=:27259 \
                 --http-addr=0.0.0.0:8080 \
                 --store=/var/lib/kaiwudb \
@@ -160,7 +160,7 @@ This section describes how to deploy a KWDB cluster on a single machine using th
 
             ./kwbase start --certs-dir=<certs_dir> \
                 --listen-addr=0.0.0.0:26257 \
-                --advertise-addr=$<host2>:26258 \
+                --advertise-addr=<host2>:26258 \
                 --brpc-addr=:27258 \
                 --http-addr=0.0.0.0:8080 \
                 --store=/var/lib/kaiwudb \
@@ -168,7 +168,7 @@ This section describes how to deploy a KWDB cluster on a single machine using th
 
             ./kwbase start --certs-dir=<certs_dir> \
                 --listen-addr=0.0.0.0:26257 \
-                --advertise-addr=$<host3>:26259 \
+                --advertise-addr=<host3>:26259 \
                 --brpc-addr=:27259 \
                 --http-addr=0.0.0.0:8080 \
                 --store=/var/lib/kaiwudb \
