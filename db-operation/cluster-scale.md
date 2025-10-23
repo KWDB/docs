@@ -18,7 +18,7 @@ KWDB 多副本集群和单副本集群均支持集群扩容操作。
 
 ### 多副本集群扩容
 
-KWDB 多副本集群扩容操作简单，只需将新节点加入现有集群即可。集群默认会自动完成数据重分布。用户也可通过 `kv.allocator.ts_consider_rebalance.enabled` 参数关闭自动重分布功能，选择在系统负载较低时重新启用该参数进行数据重分布，或使用 `ALTER ... CONFIGURE ZONE` 命令对指定表、库或数据分片进行手动均衡。
+KWDB 多副本集群扩容操作简单，只需将新节点加入现有集群即可。集群默认会自动完成数据重分布。用户也可通过 `kv.allocator.ts_consider_rebalance.enabled` 参数关闭自动重分布功能，选择在系统负载较低时重新启用该参数进行数据重分布。
 
 在扩容期间，由于数据迁移，集群所需的磁盘总容量可能会增加。一旦扩容完成，集群所需的磁盘总容量将会回落到扩容前的水平，仅有细微差异。
 
@@ -53,12 +53,12 @@ KWDB 多副本集群扩容操作简单，只需将新节点加入现有集群即
    - 非安全模式
 
       ```Shell
-      <kwbase_path>/kwbase start --insecure --store=<data_dir> --brpc-addr=:27257 --listen-addr=<node4_address>:26257 --http-addr=<new_node>:<rest_port> --join=<node_address_list> --background
+      <kwbase_path>/kwbase start --insecure --store=<data_dir> --brpc-addr=:27257 --listen-addr=<new_node>:26257 --http-addr=<new_node>:<rest_port> --join=<node_address_list> --background
       ```
 
    参数说明：
 
-   - `kwbase_path`：kwbase 二进制文件所在目录，裸机部署默认目录为 `/usr/local/kaiwudb/bin`， 容器部署默认目录为 `/kaiwudb/bin`。
+   - `<kwbase_path>`：kwbase 二进制文件所在目录，裸机部署默认目录为 `/usr/local/kaiwudb/bin`， 容器部署默认目录为 `/kaiwudb/bin`。
 
    - `<cert_path>`：指定存放证书和密钥的文件夹，默认存储位置为 `/etc/kaiwudb/certs`。
 
@@ -68,7 +68,7 @@ KWDB 多副本集群扩容操作简单，只需将新节点加入现有集群即
 
    - `<new_node>:<rest_port>`：可选参数，用于指定新节点地址以及 RESTful 的端口，默认端口为 `8080`。
 
-   - `<node_address_list>`：必选参数，待连接的集群节点列表，支持指定一个或多个节点地址，节点地址间使用逗号隔开。
+   - `<node_address_list>`：待连接的集群节点列表，支持指定一个或多个节点地址，节点地址间使用逗号隔开。
 
    - `--background`：可选参数，在后台运行。
 
@@ -88,7 +88,7 @@ KWDB 多副本集群扩容操作简单，只需将新节点加入现有集群即
 
     参数说明：
 
-   - `kwbase_path`：kwbase 二进制文件所在目录，裸机部署默认目录为 `/usr/local/kaiwudb/bin`， 容器部署默认目录为 `/kaiwudb/bin`。
+   - `<kwbase_path>`：kwbase 二进制文件所在目录，裸机部署默认目录为 `/usr/local/kaiwudb/bin`， 容器部署默认目录为 `/kaiwudb/bin`。
    - `cert_path`：证书目录，默认存储位置为 `/etc/kaiwudb/certs`。
    - `--host=<address_of_any_alive_node>`：可选参数，用于指定执行命令的节点，该节点必须为健康节点，地址格式为 `<ip>:<port>`, 不指定时默认使用 `127.0.0.1:26257`。
   
@@ -123,7 +123,7 @@ KWDB 单副本集群的扩容非常简单，只需要将待扩容节点加入到
    - 非安全模式
 
       ```Shell
-      <kwbase_path>/kwbase start-single-replica --insecure --store=<data_dir> --brpc-addr=:27257 --listen-addr=<node4_address>:26257 --http-addr=<new_node>:<rest_port> --join=<node_address_list> --background
+      <kwbase_path>/kwbase start-single-replica --insecure --store=<data_dir> --brpc-addr=:27257 --listen-addr=<new_node>:26257 --http-addr=<new_node>:<rest_port> --join=<node_address_list> --background
       ```
 
 4. 检查集群节点状态。
@@ -144,7 +144,7 @@ KWDB 单副本集群的扩容非常简单，只需要将待扩容节点加入到
 
 目前，单副本集群不支持集群缩容操作。
 
-在多副本集群中，用户主动移除节点时，KWDB 会允许节点完成正在执行的请求，拒绝任何新的请求，同时将该节点上的分区副本和分区租约迁移到其他节点，以确保数据的平稳迁移。移除后的节点可以根据实际需求选择永久移除，以最大程度地保障系统的可用性和数据的完整性。
+在多副本集群中，用户主动移除节点时，KWDB 会允许节点完成正在执行的请求，拒绝任何新的请求，同时将该节点上的分片副本和分片租约迁移到其他节点，以确保数据的平稳迁移。移除后的节点可以根据实际需求选择永久移除，以最大程度地保障系统的可用性和数据的完整性。
 
 ::: warning 注意
 
@@ -179,7 +179,7 @@ KWDB 单副本集群的扩容非常简单，只需要将待扩容节点加入到
 
 - 已获得待退役节点的 ID。
 
-- 没有不可用分区和副本不足分区：
+- 没有不可用分片和副本不足分片：
 
     ```SQL
     SELECT sum((metrics->>'ranges.unavailable')::DECIMAL)::INT AS ranges_unavailable,

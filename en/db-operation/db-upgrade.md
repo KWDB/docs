@@ -5,233 +5,20 @@ id: db-upgrade
 
 # Database Upgrade
 
-This section covers upgrade procedures for KWDB database across different deployment scenarios, including upgrades using deployment scripts and container images. Before upgrading, review all precautions carefully and select the appropriate upgrade method based on your deployment configuration.
+This section covers upgrade procedures for KWDB database across different deployment scenarios, including upgrades using deployment scripts and container images.
+
+Before upgrading, carefully review all precautions and select the appropriate upgrade method based on your deployment approach.
 
 ## Upgrade Using Deployment Scripts
 
-Script-based upgrades are the most common method for KWDB instances installed through deployment scripts. Upgrade procedures vary based on your deployment topology: standalone instances, multi-replica clusters, and single-replica clusters each require different approaches.
+Due to major architectural refactoring in v3.0.0, v1.x and v2.x **cannot be directly upgraded** to v3.0.0.
 
-::: warning Note
+**Recommended upgrade approach:**
 
-- Direct downgrades to the previous version are not supported after an upgrade. To perform a downgrade, you must first uninstall the current version, then install the original version of KWDB. Afterward, restore the data from the backup created before uninstallation. For instructions see [Uninstall Standalone Databases](../quickstart/uninstall-kaiwudb/uninstall-db.md) and [Uninstall Clusters](../deployment/uninstall-cluster.md).
-- KWDB supports import-export upgrade for any versions, see [Data Export](../db-administration/import-export-data/export-data.md) and [Data Import](../db-administration/import-export-data/import-data.md).
-:::
+1. Deploy a new v3.0.0 version.
+2. Migrate data using the export and import functionality.
 
-### Standalone Upgrade
-
-This section explains how to upgrade standalone deployments from 2.2.x to 2.2.2 using the script.
-
-If any of the following errors occur during the upgrade process—such as KWDB not being installed, KWDB still running, incorrect version, or incorrect deployment method—the upgrade will be aborted, and the system will display the relevant error messages.
-
-If the upgrade fails due to issues with importing the new version, the system will retain the data directory, certificates, and configuration files, while removing the new version installation files from the node. You can then choose to manually install either the new or the old version.
-
-#### Prerequisites
-
-- KWDB is installed on the target node.
-- The data directory has been backed up.
-- The new version installation package has been obtained.
-- One of the following user permissions:
-  - Root user access
-  - Regular user with `sudo` privileges:
-    - Users with passwordless `sudo` won't need to enter passwords during upgrade.
-    - Users without passwordless `sudo` will be prompted for passwords when needed.
-  - For container deployment: Regular users must be in the `docker` group (add with `sudo usermod -aG docker $USER`).
-
-#### Steps
-
-1. Copy the new version installation package to the target node and extract the contents.
-
-2. Check if KWDB is stopped. If the service is still running, execute `systemctl stop kaiwudb` to stop it.
-
-   ```Shell
-   systemctl status kaiwudb
-   ```
-
-3. Navigate to the directory of the new version installation package.
-
-4. Execute the local upgrade command.
-
-   ```Shell
-   ./deploy.sh upgrade -l
-   ```
-
-   or
-
-   ```Shell
-   ./deploy.sh upgrade --local
-   ```
-
-   If the upgrade is successful, the console will display:
-
-   ```Shell
-   UPGRADE COMPLETED: KaiwuDB has been upgraded successfully! 
-   ```
-
-5. Start KWDB.
-
-   ```Shell
-   systemctl start kaiwudb
-   ```
-
-6. After starting, verify that the service is running.
-
-   ```Shell
-   systemctl status kaiwudb
-   ```
-
-### Multi-Replica Cluster Upgrade
-
-This section explains how to upgrade multi-replica clusters from 2.2.x to 2.2.2, node by node, using the script.
-
-During the upgrade process, compression and lifecycle operations on the upgraded nodes may fail temporarily but will resume once the upgrade is complete. If an error occurs during the upgrade—such as KWDB not being installed, KWDB still running, suspect node status, incorrect version, or incorrect deployment method—the upgrade will be aborted, and the system will display the relevant error messages.
-
-#### Preparation
-
-**Steps**
-
-1. Ensure that the client communicates with multiple nodes to avoid communication interruption when upgrading a single node.
-
-2. Check the cluster status:
-
-   1. Check node status.
-
-      ```Shell
-      <kwbase_path>/kwbase node status [--host=<ip:port>] [--insecure | --certs-dir=<path>
-      ```
-
-   2. Check replica status.
-
-         ```SQL
-      SELECT sum((metrics->>'ranges.unavailable')::DECIMAL)::INT AS ranges_unavailable,
-         sum((metrics->>'ranges.underreplicated')::DECIMAL)::INT As ranges_underreplicated
-      FROM kwdb_internal.kv_store_status;
-         ```
-
-3. Check for ongoing schema changes or bulk import jobs using the `SHOW JOBS` SQL command.
-
-4. Use the `SELECT * FROM kwdb_internal.ranges` SQL command to check if leaseholders and replicas are evenly distributed across the nodes in the cluster.
-
-5. Backup the cluster. If the upgrade fails, you can restore the cluster from the backup.
-
-#### Node-by-Node Upgrade
-
-Perform the upgrade on each node in the cluster, one at a time. After each node rejoins the cluster and its version and status are verified, proceed to upgrade the next node.
-
-**Prerequisites**
-
-- KWDB is installed on the target node.
-- The node is available (both `is_available` and `is_live` are `true`).
-- The user data directory has been backed up.
-- The new version installation package has been obtained.
-- One of the following user permissions:
-  - Root user access
-  - Regular user with `sudo` privileges:
-    - Users with passwordless `sudo` won't need to enter passwords during upgrade.
-    - Users without passwordless `sudo` will be prompted for passwords when needed.
-  - For container deployment: regular users must be in the `docker` group (add with `sudo usermod -aG docker $USER`)
-
-**Steps**
-
-1. Copy the new version installation package to the target node and extract the contents.
-
-2. Check if KWDB is stopped. If the service is still running, execute `systemctl stop kaiwudb` to stop it.
-
-   ```Shell
-   systemctl status kaiwudb
-   ```
-
-3. Navigate to the directory of the new version installation package.
-4. Run the local upgrade command.
-
-   ```Shell
-   ./deploy.sh upgrade -l
-   ```
-
-   or
-
-   ```Shell
-   ./deploy.sh upgrade --local
-   ```
-
-   If the upgrade is successful, the console will display:
-
-   ```Shell
-   UPGRADE COMPLETED: KaiwuDB has been upgraded successfully!
-   ```
-
-5. Start KWDB.
-
-   ```Shell
-   systemctl start kaiwudb
-   ```
-
-6. After startup, verify that the service is running.
-
-   ```Shell
-   systemctl status kaiwudb
-   ```
-
-### Single-Replica Cluster Upgrade
-
-This section explains how to upgrade single-replica clusters from 2.2.x to 2.2.2 using the upgrade script.
-
-If an error occurs during the upgrade—such as KWDB not being installed, KWDB still running, incorrect version, or incorrect deployment method—the upgrade will be aborted, and the system will display the relevant error messages.
-
-If the upgrade fails due to issues with importing the new version, the system will retain the data directory, certificates, and configuration files, while removing the new version installation files from the node. You can then choose to manually install either the new or the old version.
-
-#### Prerequisites
-
-- KWDB is installed on all target nodes.
-- The data directory has been backed up.
-- The new version installation package has been obtained.
-- One of the following user permissions:
-  - Root user access
-  - Regular user with `sudo` privileges:
-    - Users with passwordless `sudo` won't need to enter passwords during upgrade.
-    - Users without passwordless `sudo` will be prompted for passwords when needed.
-  - For container deployment: regular users must be in the `docker` group (add with `sudo usermod -aG docker $USER`).
-
-#### Steps
-
-1. Stop KWDB on all nodes.
-
-   ```Shell
-   systemctl stop kaiwudb
-   ```
-
-2. Upgrade each node:
-   1. Copy the new version installation package to the node and extract the contents.
-   2. Navigate to the directory of the new version installation package.
-   3. Execute the local upgrade command.
-
-      ```Shell
-      ./deploy.sh upgrade -l
-      ```
-
-      or
-
-      ```Shell
-      ./deploy.sh upgrade --local
-      ```
-
-      If the upgrade is successful, the console will display:
-
-      ```Shell
-      UPGRADE COMPLETED: KaiwuDB has been upgraded successfully! 
-      ```
-
-3. After all nodes are upgraded, start KWDB on each node.
-   1. Start KWDB.
-
-      ```Shell
-      systemctl start kaiwudb
-      ```
-
-   2. After startup, verify that the service is running.
-
-      ```Shell
-      systemctl status kaiwudb
-      ```
+For instructions, see [Data Export](../db-administration/import-export-data/export-data.md) and [Data Import](../db-administration/import-export-data/import-data.md).
 
 ## Upgrade for Source Code Compilation
 
@@ -251,7 +38,7 @@ For KWDB instances installed by compiling from source code, you can upgrade by c
 
 ## Upgrade for Container Image Deployment
 
-For KWDB deployed using Docker container images, upgrades are performed by updating the container image. 
+For KWDB deployed using Docker container images, upgrades are performed by updating the container image.
 
 This section covers two upgrade methods:
 
@@ -290,7 +77,7 @@ This section covers two upgrade methods:
 5. Start KWDB with the new version:
 
    ```bash
-   docker-compose up
+   docker-compose up -d
    ```
 
 ### Upgrade Using Docker Commands
@@ -365,4 +152,4 @@ This section covers two upgrade methods:
          --listen-addr=0.0.0.0:26257 \
          --http-addr=0.0.0.0:8080 \
          --store=/kaiwudb/deploy/kwdb-container
-      ```
+     ```

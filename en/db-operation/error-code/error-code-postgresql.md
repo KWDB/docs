@@ -15,6 +15,7 @@ Some PGcodes may correspond to multiple messages. While these messages may vary 
 
 :::
 
+
 | Error Code | Message                                           | Suggested Action                                      |
 | ---------- | ------------------------------------------------- | ----------------------------------------------------- |
 | 08P01      | ProtocolViolation                                  | Contact support                                      |
