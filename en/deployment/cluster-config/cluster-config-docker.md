@@ -39,7 +39,7 @@ To modify startup flags:
           - /bin/bash
           - -c
           - |
-            /kaiwudb/bin/kwbase  start-single-node --certs-dir=/kaiwudb/certs --listen-addr=0.0.0.0:26257 --advertise-addr=your-host-ip:port --store=/kaiwudb/deploy/kaiwudb-container --cache=25%
+            /kaiwudb/bin/kwbase  start-single-node --certs-dir=<certs_dir> --listen-addr=0.0.0.0:26257 --advertise-addr=your-host-ip:port --store=/kaiwudb/deploy/kwdb-container --cache=25%
     ```
 
 3. Start KWDB with the new configuration.
@@ -59,7 +59,7 @@ To adjust CPU allocation:
 - Using the `docker update` command:
 
     ```shell
-    docker update --cpus <value> kaiwudb-container
+    docker update --cpus <value> kwdb-container
     ```
 
 - Using the `docker-compose.yml` file:

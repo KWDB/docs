@@ -67,17 +67,17 @@ KWDB provides the `add_user.sh` script in the installation package. After instal
         - Insecure mode (without password):
 
             ```bash
-            ./kwbase sql --host=127.0.0.1:$(local_port) --insecure \
-            -e "create user $username; \
-                grant admin to $username with admin option;"
+            ./kwbase sql --host=127.0.0.1:<local_port> --insecure \
+            -e "create user <username>; \
+                grant admin to <username> with admin option;"
             ```
 
         - Secure mode (with password):
 
             ```bash
-            ./kwbase sql --certs-dir=$cert_path --host=127.0.0.1:$(local_port) \
-            -e "create user $username with password \"$user_password\"; \
-                grant admin to $username with admin option;"
+            ./kwbase sql --certs-dir=$cert_path --host=127.0.0.1:<local_port> \
+            -e "create user <username> with password \"<user_password>\"; \
+                grant admin to <username> with admin option;"
             ```
 
     - **Deployment using Docker:**
@@ -85,11 +85,11 @@ KWDB provides the `add_user.sh` script in the installation package. After instal
         - Insecure mode (without password):
 
             ```bash
-            docker exec kaiwudb-container bash -c "./kwbase sql --insecure --host=$host_ip -e \"create user $username;grant admin to $username with admin option;\""
+            docker exec kwdb-container bash -c "./kwbase sql --insecure --host=$host_ip -e \"create user <username>;grant admin to <username> with admin option;\""
             ```
 
         - Secure mode (with password):
 
             ```bash
-            docker exec kaiwudb-container bash -c "./kwbase sql --host=$host_ip --certs-dir=$cert_path -e \"create user $username with password \\\"$user_password\\\";grant admin to $username with admin option;\""
+            docker exec kwdb-container bash -c "./kwbase sql --host=$host_ip --certs-dir=$cert_path -e \"create user <username> with password \\\"<user_password>\\\";grant admin to <username> with admin option;\""
             ```
