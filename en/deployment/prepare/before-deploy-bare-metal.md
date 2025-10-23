@@ -98,7 +98,7 @@ The extracted `kwdb_install` directory contains the following files and folders:
 | `add_user.sh`     | Script for creating KWDB users after installation and startup.           |
 | `deploy.cfg`      | Configuration file for node IP addresses, ports, and other options. |
 | `deploy.sh`       | Script for KWDB installation, uninstallation, start, status check, and stop operations. |
-| `packages`  | Stores DEB and RPM packages.                                    |
+| `packages`  | Stores DEB or RPM packages.                                    |
 | `utils`      | Stores utility scripts.                                             |
 
 ### Source Code Compilation
