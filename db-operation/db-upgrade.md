@@ -70,7 +70,7 @@ id: db-upgrade
 5. 启动新版本 KWDB。
 
    ```bash
-   docker-compose up
+   docker-compose up -d
    ```
 
 ### Docker Run 升级
