@@ -1,9 +1,9 @@
 ---
-title: Configure Container Clusters
+title: Configure Container Deployment
 id: cluster-config-docker
 ---
 
-# Configure Container Clusters
+# Configure Container Deployment
 
 After deploying KWDB with script in a container environment, the system generates the `docker-compose.yml` configuration file which can be used to control the startup flags and CPU resource allocation for KWDB.
 
@@ -15,7 +15,7 @@ After deploying KWDB with script in a container environment, the system generate
 
 ## Configure Startup Flags
 
-While KWDB provides reasonable default settings, you can customize its behavior by modifying the startup flags.  Your custom settings will override the default values. For a list of all supported parameters, see [Cluster Parameter Configuration](../../db-operation/cluster-settings-config.md).
+While KWDB provides reasonable default settings, you can customize its behavior by modifying the startup flags. Your custom settings will override the default values. For a list of all supported parameters, see [Cluster Parameters](../../db-operation/cluster-settings-config.md#cluster-parameters).
 
 To modify startup flags:
 

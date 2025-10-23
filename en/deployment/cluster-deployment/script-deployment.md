@@ -20,6 +20,7 @@ All deployment activities are logged in the `log` directory within `kwdb_install
   - Ports: All required ports are open and accessible.
   - Network latency between machines: Less than 50 ms.
   - Clock synchronization between nodes: less than 500 ms.
+- The bare-metal or container installation package is obtained.
 
 **User Access Requirements**:
 
@@ -43,7 +44,9 @@ All deployment activities are logged in the `log` directory within `kwdb_install
     management_user=kaiwudb
     rest_port=8080
     kaiwudb_port=26257
+    brpc_port=27257    
     data_root=/var/lib/kaiwudb
+    cpu=1
 
     [local]
     node_addr= local_node_ip
@@ -56,22 +59,19 @@ All deployment activities are logged in the `log` directory within `kwdb_install
 
     Parameters:
 
-    - `global`: Global settings.
-        - `secure_mode`: Defines the security mode. Options include:
-            - `insecure`: Enables non-secure mode.
-            - `tls`: (Default) Enable TLS mode. This generates TLS certificates for clients or application connections, stored in `/etc/kaiwudb/certs`.
-        - `management_user`: The user account for managing KWDB, set to `kaiwudb` by default. After installation, KWDB creates this user and a user group with the same name.
-        - `rest_port`: Port for web services (default: `8080`).
-        - `kaiwudb_port`: Port for client, application and node connections (default: `26257`).
-        - `data_root`: Data directory (default: `/var/lib/kaiwudb`).
-        - `cpu`: (Optional) Specifies CPU usage for KWDB on the node. The default is unlimited. The value range is `[0,1]`, with a precision of up to two decimal places. After deployment, you can also adjust the CPU resource limit. For instructions, see [Configure Bare-Metal Cluster](../cluster-config/cluster-config-bare-metal.md) or [Configure Container Cluster](../cluster-config/cluster-config-docker.md).
-        **Note:** For bare-metal deployment, if the environment is Ubuntu 18.04, you need to modify the `CPUQuota` value in the `kaiwudb.service` file after the deployment is complete. Specifically, change any decimal values to integers (e.g., change `180.0%` to `180%`) to ensure the setting takes effect. For instructions, see [Manage CPU Resources](../cluster-config/cluster-config-bare-metal.md#manage-cpu-resources).
-    - `local`: Local node configuration.
-        - `node_addr`: The IP address for client and application connection. The default listening address is `0.0.0.0`, meaning the node will listen on `kaiwudb_port` across all IP addresses on the host.
-    - `cluster`: Cluster configuration.
-        - `cluster_node_ips`: The IP addresses of remote nodes. The IP addresses of each node should be separated by commas (`,`), and there must be at least two remote nodes.
-        - `ssh_port`: The SSH port used for remote node access; it must be identical across all nodes.
-        - `ssh_user`: The SSH username for remote node login; it must be identical across all nodes.
+    | Configuration Level | Parameter | Description |
+    |---|---|---|
+    | **global** | `secure_mode` | Defines the security mode. Options include:<br>- `insecure`: Enables insecure mode.<br>- `tls`: (Default) Enable secure mode. This generates TLS certificates for clients or application connections, stored in `/etc/kaiwudb/certs`.|
+    | | `management_user` | The user account for managing KWDB, set to `kaiwudb` by default. After installation, KWDB creates this user and a user group with the same name. |
+    | | `rest_port` | Port for web services (default: `8080`). |
+    | | `kaiwudb_port` | Port for client, application and node connections (default: `26257`). |
+    | | `brpc_port` | The brpc communication port between KWDB time-series engines, used for inter-node communication (default: `27257`). |
+    | | `data_root` | Data directory (default: `/var/lib/kaiwudb`). |
+    | | `cpu` | (Optional) Specifies CPU usage for KWDB on the node. The default is unlimited. The value range is [0,1], with a precision of up to two decimal places. After deployment, you can also adjust the CPU resource limit for KWDB. For more information, see [Configure Bare-Metal Cluster](../cluster-config/cluster-config-bare-metal.md) or [Configure Container Deployment](../cluster-config/cluster-config-docker.md).<br>**Note:** For bare-metal deployment, if the environment is Ubuntu 18.04, you need to modify the `CPUQuota` value in the `kaiwudb.service` file after the deployment is complete. Specifically, change any decimal values to integers (e.g., change `180.0%` to `180%`) to ensure the setting takes effect. For instructions, see [CPU usage configuration](../cluster-config/cluster-config-bare-metal.md#manage-cpu-resources). |
+    | **local** | `local_node_ip` | The IP address for client and application connection. The default listening address is `0.0.0.0`, meaning the node will listen on `kaiwudb_port` across all IP addresses on the host. |
+    | **cluster** | `cluster_node_ips` | The IP addresses of remote nodes. The IP addresses of each node should be separated by commas (`,`), and there must be at least two remote nodes. |
+    | | `ssh_port` | The SSH port used for remote node access; it must be identical across all nodes. |
+    | | `ssh_user` | The SSH username for remote node login; it must be identical across all nodes. |
 
 2. Grant execution permission to the `deploy.sh` script.
 
@@ -137,7 +137,7 @@ All deployment activities are logged in the `log` directory within `kwdb_install
     | `build`       | The KWDB version running on the node.                                                                                                                                                   |
     | `started_at`  | The date and time when the node was started.                                                                                                                                             |
     | `updated_at`  | The date and time when the node's status was last updated. When the node is healthy, a new status is recorded approximately every 10 seconds. If the node is unhealthy, the recorded status may be older.|
-    | `locality`    | The geographical location of the node, such as the country, data center, or rack.             |
+    | `locality`    | Node ID.                        |
     | `start_mode`  | The startup mode of the node.                                                                                                                                                       |
     | `is_available`<br>`is_live` | Node health indicators: <br> - If both are `true`, the node is considered healthy. <br> - If both are `false`, the node is considered non-functional.                                                               |
 
@@ -145,7 +145,7 @@ All deployment activities are logged in the `log` directory within `kwdb_install
 
     ::: warning Note
 
-    KWDB startup may fail after system reboot if node time differs by >500ms from other nodes. Ensure clock synchronization before manually starting KWDB if automatic startup fails.
+    KWDB startup may fail after system reboot if node time differs by >500 ms from other nodes. Ensure clock synchronization before manually starting KWDB if automatic startup fails.
 
     :::
 

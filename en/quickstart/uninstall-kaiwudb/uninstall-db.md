@@ -42,29 +42,19 @@ Before proceeding, ensure all important data has been backed up. These operation
 
 1. Stop KWDB.
 
-2. Check and unmount loop devices:
-
-   ```bash
-   # List active loop devices
-   losetup -a
-   
-   # Unmount the appropriate device
-   sudo umount /dev/loop<device_number>
-   ```
-
-3. Remove custom certificate directory:
+2. Remove custom certificate directory:
 
    ```bash
    sudo rm -rf <cert_path>
    ```
 
-4. Delete data directory:
+3. Delete data directory:
 
    ```bash
    sudo rm -rf <data_path>
    ```
 
-5. Delete the complied binary and library.
+4. Delete the complied binary and library.
 
 ## Docker Deployment
 
@@ -102,23 +92,13 @@ Before proceeding, ensure all important data has been backed up. These operation
    docker rmi ${image_name}
    ```
 
-4. Check and unmount loop devices:
-
-   ```bash
-   # List active loop devices
-   losetup -a
-   
-   # Unmount the appropriate device
-   sudo umount /dev/loop<device_number>
-   ```
-
-5. Remove custom certificate directory:
+4. Remove custom certificate directory:
 
    ```bash
    sudo rm -rf <cert_path>
    ```
 
-6. Delete data directory. Default data directory is `/var/lib/kaiwudb`.
+5. Delete data directory. Default data directory is `/var/lib/kaiwudb`.
 
    ```bash
    sudo rm -rf <data_path>

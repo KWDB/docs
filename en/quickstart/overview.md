@@ -14,7 +14,6 @@ This section walks you through setting up KWDB on a single machine. For instruct
   - [Bare-Metal Deployment](./install-kaiwudb/quickstart-bare-metal.md): Deploy KWDB directly on your operating system
   - [Container Deployment](./install-kaiwudb/quickstart-docker.md): Deploy KWDB using Docker containers
 
-
 - **Connecting to and Managing KWDB**
 
   Once deployed, you can connect to KWDB and perform data operations using any of the following methods:

@@ -1,64 +1,50 @@
 ---
-title: Workflow
+title: Deployment Workflow
 id: deploy-workflow
 ---
 
-# Workflow
-
-This section outlines the steps for deploying, configuring, and maintaining your KWDB cluster in both bare-metal and container environments.
+# Deployment Workflow
 
 ## Preparation
 
-Before deploying your KWDB cluster, ensure that all target nodes meet the hardware and software requirements outlined in:
+Before deploying a KWDB cluster, verify that the hardware and software environment of the nodes meets the requirements:
 
-- [Prepare for Bare-Metal Clusters](./prepare/before-deploy-bare-metal.md)
-- [Prepare for Container Clusters](./prepare/before-deploy-docker.md)
+- [Prepare for Bare-Metal Deployment](./prepare/before-deploy-bare-metal.md)
+- [Prepare for Container Deployment](./prepare/before-deploy-docker.md)
 
-## Deployment
+## Cluster Deployment
 
-KWDB supports three deployment methods to accommodate different use cases and technical preferences:
+Choose from the following deployment methods:
 
-- **[Deploy using scripts (Recommended)](./cluster-deployment/script-deployment.md)**: The most streamlined deployment approach that requires only a few commands to set up a complete cluster. This method provides built-in fault detection, automated node recovery, and optimal configuration for both test and production environments.
-
-- **[Deploy using kwbase CLI](./cluster-deployment/kwbase-cli-deployment.md)**: Suitable for users who compile and deploy from source code. This method is ideal for:
-
-  - Users with technical expertise who need fine-grained control
-  - Scenarios requiring deep customization of the deployment process
-
-- **[Deploy using Docker](./cluster-deployment/docker-deployment.md)**: Container-based deployment suitable for:
-
-  - Users who prefer containerization technology
-  - Containerized test environments
-  - Lightweight development scenarios
+| Method | Description | Best For | Requirements |
+|--------|-------------|----------|--------------|
+| **[Deploy Using Scripts (Recommended)](./cluster-deployment/script-deployment.md)** | Automated deployment with a few commands. Includes built-in fault detection and node recovery. | Quick setup of test or production environments | - |
+| **[Deploy Using kwbase CLI](./cluster-deployment/kwbase-cli-deployment.md)** | Manual deployment using kwbase CLI commands with full customization control. | Advanced users needing fine-grained configuration | - |
+| **[Deploy Using Docker Run Command](./cluster-deployment/docker-deployment.md)** | Container-based deployment. | Lightweight containerized development and testing | Docker installed |
 
 ## Cluster Configuration
 
-After deployment, perform the following post-deployment operations:
+After the cluster is deployed and started, complete the following operations:
 
-- **Create Database Users (Optional)**: Create database users using either
-  - The `add_user.sh` script located in the installation directory
-  - kwbase CLI commands
+**1. Create Database Users (Optional)**: Create database users using the `add_user.sh` script in the installation package directory or using kwbase CLI, then use the credentials to connect and operate the database. For details, see [Create Users](./user-config.md).
 
-  For instructions, see [Create Users](./user-config.md).
+**2. Configure Cluster Parameters (Optional)**: Configuration methods vary depending on your deployment type:
 
-- **Configure Cluster Parameters (Optional)**:
+- Script Deployment: using the following files to set startup flags and CPU resource usage:
+  - Bare Metal: `kaiwudb_env` and `kaiwudb.service`. For details, see  [Configure Bare-Metal Deployments](./cluster-config/cluster-config-bare-metal.md).
+  - Container: `docker-compose.yml`. For details, see [Configure Container Deployments](./cluster-config/cluster-config-docker.md).
 
-  - **For deployment using scripts:**
-  
-    - Bare metal: The system generates `kaiwudb_env` and `kaiwudb.service` files for configuring startup flags and resource allocation. For instructions, see [Configure Bare Metal Clusters](./cluster-config/cluster-config-bare-metal.md).
-    - Container: The system creates a Docker Compose configuration file (`docker-compose.yml`) in `/etc/kaiwudb/script/` for flag configuration and resource allocation. For instructions, see [Configure Container Clusters](./cluster-config/cluster-config-docker.md).
+- kwbase CLI and Docker Run Deployment: set cluster startup flags through the following commands:
+  - [`kwbase start`](../tool-command-reference/client-tool/kwbase-sql-reference.md#kwbase-start) for multi-replica clusters
+  - [`kwbase start-single-replica`](../tool-command-reference/client-tool/kwbase-sql-reference.md#kwbase-start-single-replica) for for single-replica clusters
 
-  - **For Deployment using kwbase CLI or Docker**: You can configure startup flags using `kwbase start` or `kwbase start-single-replica` commands. For instructions, see [kwbase start](../tool-command-reference/client-tool/kwbase-sql-reference.md#kwbase-start) and [kwbase start-single-replica](../tool-command-reference/client-tool/kwbase-sql-reference.md#kwbase-start-single-replica).
+**3. Connect to Cluster**: Connect to the cluster for data operations using any of the following methods:
 
-- **Connect to KWDB**: You can interact with your KWDB cluster through multiple interfaces:
-
-  - [kwbase CLI tool](../../en/quickstart/access-kaiwudb/access-kaiwudb-cli.md)
-  - Supported [connectors](../../en/development/overview.md)
-  - [KaiwuDB Developer Center](../../en/kaiwudb-developer-center/overview.md)
+- [`kwbase` CLI tool](../quickstart/access-kaiwudb/access-kaiwudb-cli.md)
+- [KaiwuDB Developer Center](../kaiwudb-developer-center/overview.md)
+- [Connectors](../development/overview.md) supported by KWDB
 
 ## Cluster Management
 
-For cluster management operations, see:
-
-- [Start and Stop KWDB](./local-start-stop.md) for node management
-- [Uninstall Clusters](./uninstall-cluster.md) for complete cluster removal
+- To stop or restart a single node in the cluster, see [Start and Stop KWDB Services](./local-start-stop.md).
+- To uninstall the cluster, see [Uninstall Cluster](./uninstall-cluster.md).

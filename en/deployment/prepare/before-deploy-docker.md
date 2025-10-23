@@ -1,9 +1,9 @@
 ---
-title: Prepare for Container Clusters
+title: Prepare for Container Deployment
 id: before-deploy-docker
 ---
 
-#  Prepare for Container Clusters
+#  Prepare for Container Deployment
 
 ## Hardware
 
@@ -17,37 +17,31 @@ The following specifications are required for KWDB deployment:
 
 | Item  | Requirements  |
 | ---------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| CPU and Memory | - Minimum: 4 CPU cores and 8GB RAM per node <br> - For high-volume data, complex workloads, high concurrency, or performance-critical applications, allocate additional resources accordingly |
-| Disk       | - Recommended: SSD or NVMe devices<br>- Minimum performance: 500 IOPS and 30 MB/s throughput<br>- Storage: <1GB for KWDB system, additional space needed based on data volume and enabled features like compression that reduce disk usage. For production environments, plan hardware resources according to your business scale and performance requirements. For more information, see [Estimate Disk Usage](../../db-operation/cluster-planning.md#estimate-disk-usage).<br>- Avoid using shared storage (NFS, CIFS, CEPH) <br> - When deploying the standalone version on HDDs, avoid excessive device count and high write loads, as concurrent writes can significantly degrade performance. Additionally, HDDs are not recommended for distributed cluster deployments.|
+| CPU and Memory | - Minimum: 4 CPU cores and 8 GB RAM per node <br> - For high-volume data, complex workloads, high concurrency, or performance-critical applications, allocate additional resources accordingly |
+| Disk       | - Recommended: SSD or NVMe devices<br>- Minimum performance: 500 IOPS and 30 MB/s throughput<br>- Storage: <1 GB for KWDB system, with additional space needed based on data volume<br>- Avoid shared storage (NFS, CIFS, CEPH)<br> - HDDs not recommended for distributed cluster deployments |
 | File System | ext4 recommended for optimal performance |
 
 ## Operating Systems and CPU Architectures
 
 KWDB can be deployed on the following operating systems with Docker installed:
 
-| Operating System | Version                  | CPU Architecture |
-| :----------- | :--------------------------- | :------- |
-| Anolis       | 7.9                          | ARM_64   |
-|              | 7.9                          | x86_64   |
-|              | 8.6                          | ARM_64   |
-|              | 8.6                          | x86_64   |
-| CentOS       | 7                            | x86_64   |
-|              | 8                            | x86_64   |
-| Debian       | V11                          | ARM_64   |
-| KylinOS      | V10 SP3 2403<br>V10 SP3 2303 | ARM_64   |
-|              | V10 SP3 2403<br>V10 SP3 2303 | x86_64   |
-| openEuler    | 22.03                        | x86_64   |
-| Ubuntu       | V18.04                       | x86_64   |
-|              | V20.04                       | ARM_64   |
-|              | V20.04                       | x86_64   |
-|              | V22.04                       | ARM_64   |
-|              | V22.04                       | x86_64   |
-|              | V24.04                       | ARM_64   |
-|              | V24.04                       | x86_64   |
-| UOS          | 1050e                        | x86_64   |
-|              | 1060e                        | x86_64   |
-|              | 1060e                        | ARM_64   |
-|              | 1070e                        | x86_64   |
+| Operating System | Version                  | **ARM_64** | **x86_64** |
+| :----------- | :--------- | :--------- | :--------- |
+| Anolis       | 7        | ✓          | ✓          |
+|              | 8       | ✓          | ✓          |
+| CentOS       | 7          |            | ✓          |
+|              | 8          |            | ✓          |
+| Debian       | V11        | ✓          |            |
+| KylinOS      | V10 SP2    | ✓          | ✓          |
+|              | V10 SP3 2403    | ✓          | ✓          |
+| openEuler    | 24.03      |            | ✓          |
+| Ubuntu       | V20.04     | ✓          | ✓          |
+|              | V22.04     | ✓          | ✓          |
+|              | V24.04     | ✓          | ✓          |
+| UOS          | 1050e      | ✓           | ✓          |
+|              | 1060e      | ✓          | ✓          |
+|              | 1070e      | ✓          | ✓          |
+| Windows Server  | WSL2     |           | ✓          |
 
 ::: warning Note
 
@@ -70,7 +64,7 @@ To install Docker Compose via the command line:
 sudo apt-get install docker-compose
 ```
 
-## Port Requirements
+## Ports
 
 Ensure these default ports are available and not blocked by firewalls. Port settings can be modified during installation.
 
@@ -78,12 +72,13 @@ Ensure these default ports are available and not blocked by firewalls. Port sett
 | ----------- | ----------- |
 | `8080`      | Port for HTTP requests and web services |
 | `26257`     | Port for connections of clients, applications, and other nodes |
+|`27257`| Port for inter-node brpc communication between KWDB time-series engines|
 
 ## Installation Packages and Images
 
 Use pre-compiled installation packages or container images as needed.
 
-### Obtaining Installation Packages
+### Installation Package
 
 Obtain the [installation package](https://gitee.com/kwdb/kwdb/releases) for your system environment, copy the package to the target machine, and then decompress it.
 
@@ -101,7 +96,7 @@ The extracted `kwdb_install` directory contains the following files and folders:
 |-------------------|-----------------------------------------------------------|
 | `add_user.sh`     | Script for creating KWDB users after installation and startup.           |
 | `deploy.cfg`      | Configuration file for node IP addresses, ports, and other options. |
-| `deploy.sh`       | Script for KWDB installation, uninstallation, start, status check, shutdown, and restart. |
+| `deploy.sh`       | Script for KWDB installation, uninstallation, start, status check, stop, start, and restart. |
 | `packages`   | Stores image packages.                                    |
 | `utils`      | Stores utility scripts.                                             |
 
