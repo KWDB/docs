@@ -29,14 +29,14 @@ KWDB maintains several types of logs to help you monitor and troubleshoot your d
 
 - Log Level: Includes `D` (DEBUG), `I` (INFO), `W` (WARNING), `E` (ERROR), and `F` (FATAL).
   - DEBUG: detailed information about code execution, used for on-site analysis and development debugging.
-  - INFO: important user operations, system events, and state changes (default level).
+  - INFO (default level): important user operations, system events, and state changes.
   - WARNING: Issues requiring attention but not affecting core operations.
   - ERROR: Problems that prevent specific operations from completing.
   - FATAL: Critical issues requiring immediate action.
 - Date: The date when the event occurs.
 - Timestamp: Format `[yymmdd HH:MM:SS.usec]`.
 - Thread ID: Thread identifier.
-- File and Line Number: Format `filename:line`.
+- File and Line Number: Format `filename:loc`.
 - Custom Log Information: Engine-specific operational data.
 
 **Example:**
@@ -92,8 +92,8 @@ Exception time(UTC):2024-11-02 13:33:22signal:Segmentation fault(11)pid=109818 t
 KWDB provides several startup flags to control how logs are generated, stored, and managed. You can set these flags using any of the following methods:
 
 - The `kwbase start` command
-- The `kaiwudb_env` file (for bare-metal deployments).
-- The `docker-compose.yml` file (for container deployments).
+- The `kaiwudb_env` file (bare-metal deployments).
+- The `docker-compose.yml` file (container deployments).
 
 For instructions, see [Cluster Settings](./cluster-scale.md).
 

@@ -1,6 +1,6 @@
 ---
 title: KWDB Specific Error Codes
-id: error-code-KWDB
+id: error-code-kwdb
 ---
 
 # KWDB Specific Error Codes
@@ -83,7 +83,7 @@ Error codes are grouped into categories based on their type. The prefix indicate
 | KW601      | Metadata(%s) verification failed   | Check metadata and retry. If the issue persists, contact support. |
 | KW602      | Parameter(%s) verification error   | Check parameters and retry. If the issue persists, contact support. |
 
-## Permission-related Error Codes (KW701-KW773)
+## Privilege-related Error Codes (KW701-KW773)
 
 | Error Code | Message                                      | Suggested Action                                      |
 |------------|---------------------------------------------|-------------------------------------------------------|

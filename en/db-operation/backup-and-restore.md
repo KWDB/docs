@@ -7,65 +7,60 @@ id: backup-and-restore
 
 ## Disaster Recovery
 
-KWDB implements Write-Ahead Logging (WAL) as its primary mechanism for ensuring data durability and recovery capabilities. The WAL system records all schema modifications and data changes for time-series tables, offering robust disaster recovery capabilities while maintaining data consistency and atomicity.
+KWDB implements disaster recovery for time-series data through Write-Ahead Logging (WAL) technology, which records schema changes and data modifications at the Virtual Group(VGroup) level, ensuring data consistency and atomicity.
 
-### WAL Operation
+### WAL Operation Mechanism
 
-The WAL system operates through the following process:
+WAL ensures data safety through three core steps:
 
-1. Database operations are first recorded in the WAL cache.
-2. A background thread performs the following tasks every 5 minutes:
-
-   - Writes cached log entries to WAL files.
-   - Updates the checkpoint log sequence number (`CHECKPOINT_LSN`) in both WAL and data files.
-   - Writes WAL checkpoint.
-   - Synchronizes data files to disk.
-
-### Recovery Process
-
-- **Normal Shutdown**: During a controlled shutdown, KWDB proactively synchronizes all data files to disk and updates the `CHECKPOINT_LSN`.
-- **Crash Recovery**: Following an unexpected shutdown, KWDB automatically initiates recovery by replaying all logs from the latest `CHECKPOINT_LSN`, ensuring data integrity.
-
-### Supported WAL Operations
-
-KWDB's WAL system supports the following operation types:
-
-| Operation Type      | Description                                    |
-| ------------------ | ---------------------------------------------- |
-| `INSERT`           | Records new time-series data insertions         |
-| `UPDATE`           | Tracks modifications to existing time-series data           |
-| `DELETE`           | Documents data deletion operations              |
-| `CHECKPOINT`       | Records system checkpoint states                |
-| `TSBEGIN`          | Marks the start of a time-series transaction    |
-| `TSCOMMIT`         | Records successful transaction completion       |
-| `TSROLLBACK`       | Tracks transaction rollback operations          |
-| `DDL_CREATE`       | Logs time-series table creation                 |
-| `DDL_DROP`         | Documents table deletion operations             |
-| `DDL_ALTER_COLUMN` | Records schema modification operations          |
+1. **Write-ahead logging**: All time-series data modification operations must be written to the WAL log before execution, ensuring complete data recovery even in the event of an abnormal system shutdown.
+2. **Periodic checkpoints**: The system periodically writes in-memory data to disk in the background to ensure data safety. The default execution interval is 1 minute, configurable via the `ts.wal.checkpoint_interval` parameter.
+3. **Crash recovery**: Upon system restart, the system automatically checks the last shutdown status, replays incomplete WAL operations, and rolls back failed transactions to ensure data integrity.
 
 ### WAL File Management
 
-KWDB organizes WAL files into a log file group with the following characteristics:
+KWDB employs a **dual-file rotation strategy** for efficient WAL file management:
 
-- **Default Configuration**:
+- **current_file**: The currently active WAL file, with size dynamically adjusted based on system load and configuration parameters.
+- **checkpoint_file**: A temporary file converted from current_file during checkpoint execution, automatically deleted after data synchronization completes.
 
-  - 3 log files per group
-  - 64 MiB size per file
-  - Files stored in the `wal` subdirectory alongside time-series table data
-  - File naming convention: `kwdb_wal<number>`
+The rotation process works as follows:
 
-- **Log Rotation Process**:
+1. Under normal operation, all WAL operations are recorded in current_file.
+2. When a checkpoint is triggered, the current current_file is renamed to checkpoint_file.
+3. The system immediately creates a new current_file to continue receiving WAL writes.
+4. After data synchronization completes, the checkpoint_file is safely deleted.
 
-  1. System initially writes to `kwdb_wal0`.
-  2. When current file reaches capacity, system moves to next sequential file.
-  3. After filling all files in the group, system cycles back to `kwdb_wal0`.
-  4. This circular process continues throughout database operation.
+### WAL Configuration
 
-## Backup
+You can adjust WAL behavior through the following parameters:
+
+| Parameter | Description | Default Value |
+|----------------|-------------|---------------|
+| `ts.wal.wal_level` | WAL write level, controlling data persistence strategy:<br>- `0` (`off`): Disables WAL; restores data state through time-series storage engine interface upon restart<br>- `1` (`sync`): Writes logs to disk in real-time with forced persistence, providing the highest safety with relatively lower performance<br>- `2` (`flush`): Writes logs to file system buffer, balancing performance and safety<br>- `3` (`byrl`): Ensures data consistency based on raft Log, with WAL responsible only for metadata consistency | `1` |
+| `ts.wal.checkpoint_interval` | Checkpoint execution interval, controlling the frequency of persisting time-series data from memory to disk | `1m` |
+
+::: warning Note
+
+- Dynamic switching from `2` (`flush`) or `1` (`sync`) to `0` (`off`) / `3` (`byrl`) is supported. The switching process will cause brief blocking, with duration depending on the current checkpoint execution time.
+- Instance-level DDL operations are not affected by `ts.wal.wal_level` and always have WAL enabled with real-time persistence.
+:::
+
+Example:
+
+```sql
+-- Set WAL to synchronous mode for highest data safety
+SET cluster setting ts.wal.wal_level = 1;
+
+-- Adjust checkpoint interval to 5 minutes
+SET cluster setting ts.wal.checkpoint_interval = '5m';
+```
+
+## Backup and Restore
 
 KWDB currently supports two levels of data backup:
 
 - **Database-level Backup**: Complete database export and import.
 - **Table-level Backup**: Individual table export and import.
 
-For more information, see [Data Import](../../en/db-administration/import-export-data/import-data.md) and [Data Export](../../en/db-administration/import-export-data/export-data.md).
+For more information, see [Data Import](../../db-administration/import-export-data/import-data.md) and [Data Export](../../db-administration/import-export-data/export-data.md).

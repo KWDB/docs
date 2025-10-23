@@ -8,11 +8,12 @@ id: operation-overview
 This section covers essential topics for KWDB database administrators and application developers. It includes the following topics:
 
 - [Cluster Planning](./cluster-planning.md)
-- [Storage Management](./storage-mgmt.md)
 - [Cluster Configuration](./cluster-settings-config.md)
+- [Storage Management](./storage-mgmt.md)
 - [Log Management](./log-mgmt.md)
 - [Timezone Management](./timezone-mgmt.md)
-- [High Availability](./ha/cluster-ha.md)
+- [Cluster Scaling](./cluster-scale.md)
+- [High Availability](./cluster-ha.md)
 - [Disaster Recovery and Backup](./backup-and-restore.md)
 - [Database Upgrade](./db-upgrade.md)
 - Error Codes

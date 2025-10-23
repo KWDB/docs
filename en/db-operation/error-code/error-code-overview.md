@@ -5,7 +5,7 @@ id: error-code-overview
 
 # Error Code Overview
 
-When you connect to KWDB using the JDBC connector or execute SQL queries, KWDB returns error codes when something goes wrong. This section lists three types of error codes provided by KWDB, each consisting of five characters:
+When you connect to KWDB using the JDBC connector or execute SQL queries, KWDB returns error codes when something goes wrong. This section lists all types of error codes provided by KWDB, each consisting of five characters:
 
 - **[KWDB Specific Error Codes](./error-code-kaiwudb.md)**: These error codes are related to issues within KWDB itself, including database handling, storage, and query operations. They start with `KW`.
 - **[PostgreSQL Error Codes](./error-code-postgresql.md)**: These error codes are part of KWDB’s PostgreSQL compatibility, identifying issues related to PostgreSQL-compatible operations.
