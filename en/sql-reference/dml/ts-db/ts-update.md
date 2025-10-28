@@ -7,10 +7,6 @@ id: ts-update
 
 The `UPDATE` statement updates tag values in a table.
 
-::: tip
-In a distributed cluster, if a device's data is distributed across multiple nodes and a node fails ​during a tag value update, it may result in ​inconsistent tag values​ across nodes. To resolve this, you can re-update the tag values to ensure consistent tag values across the cluster.
-:::
-
 ## Privileges
 
 The user must have been granted the `UPDATE` and `SELECT` privileges on the specified table(s).

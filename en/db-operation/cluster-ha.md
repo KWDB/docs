@@ -78,7 +78,6 @@ If two or more nodes fail simultaneously, and the remaining node count is less t
 
 - High availability features may be affected when upgrading from KWDB 2.0 to 2.0.4 using the import/export method.
 - Multiple node failures and rejoins may result in slower data writes.
-- Inconsistencies when querying regular tags on different nodes due to `update tag` failures can be resolved through retry mechanisms.
 
 :::
 

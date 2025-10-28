@@ -150,7 +150,6 @@ In a multi-replica cluster, when you actively remove a node, KWDB will allow the
 
 - When removing a node, you must ensure that other nodes are available to take over the range replicas from that node. If no other nodes are available, the removal operation will hang indefinitely.
 - KWDB clusters use a three-replica mechanism with a minimum cluster node count of 3. Further scale-down is not allowed.
-- During scale-down, restarting the node being scaled down may cause downtime.
 - If replica constraints have been previously set through the `CONFIGURE ZONE` statement and the constraint rules include the node to be scaled down, this may affect the normal operation of cluster scale-down. In this case, the constraint rules need to be reconfigured to remove the node being scaled down from the rules before cluster scale-down can resume normally.
 
 :::
