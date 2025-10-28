@@ -123,7 +123,7 @@ COMMENT ON [DATABASE <database_name> | TABLE <table_name> | COLUMN <column_name>
     ```sql
     -- 1. 添加注释。
 
-    ALTER PROCEDURE proc1 COMMENT IS 'test query sql and if else logical';
+    COMMENT ON PROCEDURE proc1 IS 'test query sql and if else logical';
 
     -- 2. 查看存储过程的注释信息。
 

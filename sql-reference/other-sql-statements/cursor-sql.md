@@ -55,7 +55,7 @@ END \\
 
 ## 获取游标
 
-`FETCH` 语句用于获取一行数据的值赋值到指定的变量中。当赋值到指定的变量时，`FETCH` 语句中指定的输出变量的数量必须与声明游标时 `SELECT` 语句检索的列数保持一致。用户可以通过 `CONTINUE HANDLER` 语句结束游标获取，或通过其他方式退出 `FETCH` 循环。如未正确结束游标获取，导致无法获取数据的值，系统报错 `the fetch cursor has no more data`。
+`FETCH` 语句用于获取一行数据的赋值到指定的变量中。当赋值到指定的变量时，`FETCH` 语句中指定的输出变量的数量必须与声明游标时 `SELECT` 语句检索的列数保持一致。用户可以通过 `CONTINUE HANDLER` 语句结束游标获取，或通过其他方式退出 `FETCH` 循环。如未正确结束游标获取，导致无法获取数据的值，系统报错 `the fetch cursor has no more data`。
 
 ### 所需权限
 

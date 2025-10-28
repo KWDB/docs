@@ -26,7 +26,7 @@ KWDB 支持在存储过程中声明自定义变量。
 
 无
 
-### 语法结构
+### 语法格式
 
 ![](../../static/sql-reference/declare_var.png)
 
@@ -151,7 +151,7 @@ CREATE PROCEDURE example_while()
 | 参数 | 说明 |
 | --- | --- |
 | `cursor_name` | 待声明游标的名称。游标名称必须唯一。|
-| `select_stmt` | `SELECT` 查询子句。<br> 说明： <br> 该 `SELECT` 语句不能包含 `INTO` 子句。|
+| `select_stmt` | `SELECT` 查询子句。<br> **说明**<br> 该 `SELECT` 语句不能包含 `INTO` 子句。|
 
 ### 语法示例
 

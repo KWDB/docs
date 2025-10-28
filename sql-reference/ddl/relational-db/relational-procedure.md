@@ -27,7 +27,7 @@ KWDB 关系引擎支持创建、修改、查看、删除、执行存储过程。
 - 不支持显式事务调用存储过程。
 - 不支持 `EXPLAIN`（`ANALYZE`）语句中显示存储过程的执行计划。
 - 存储过程内部不支持引用除关系表、时序表之外的数据库对象，例如视图、序列等。
-- 存储过程不支持设置设置传参方式，如 `IN`、`OUT`、`INOUT`，所有参数都作为输入参数处理。
+- 存储过程不支持设置传参方式，如 `IN`、`OUT`、`INOUT`，所有参数都作为输入参数处理。
 - 存储过程中如果有多个结果集，其中部分结果集为空，则不显示空结果集。
 - 在使用驱动连接数据库时，`PREPARE` 模式下只支持正常输出一个结果集。
 
@@ -79,7 +79,7 @@ KWDB 关系引擎支持创建、修改、查看、删除、执行存储过程。
 | `opt_proc_body` | 存储过程体，包括在过程调用的时候必须执行的 SQL 语句。存储过程体以 `BEGIN` 关键字开始，以 `END` 关键字结束。<br >**说明** <br >如果使用 KaiwuDB JDBC 创建存储过程，需要使用双美元符号（`$$`）将 `BEGIN ...END` 语句包裹起来。|
 | `opt_label` | 存储过程体的标签，与 `opt_loop_label` 参数成对出现，格式为 `label_name`。|
 | `select_stmt`| 选择语句，用于读取数据。 |
-| `insert_stmt`| 插入语句，用于向表中写入一行或多行数据|
+| `insert_stmt`| 插入语句，用于向表中写入一行或多行数据。|
 | `update_stmt`| 更新语句，用于更新目标表中某行数据，格式为 `UPDATE .... RETURNING target_list INTO select_into_targets`。 |
 | `upsert_stmt`| 更新插入语句，用于更新、插入数据。 |
 | `delete_stmt`| 删除语句，用于删除目标表中的行数据，格式为 `DELETE FROM .... RETURNING target_list INTO select_into_targets`。|
@@ -277,7 +277,7 @@ ALTER PROCEDURE proc1 COMMENT IS 'test query sql and if else logical';
     SHOW CREATE PROCEDURE proc1;
     procedure_name |                    procedure_body
     -----------------+-------------------------------------------------------
-    test           | CREATE PROCEDURE proc1()
+    proc1           | CREATE PROCEDURE proc1()
                     | BEGIN
                     |     DECLARE a INT4;
                     |     DECLARE b INT4;
