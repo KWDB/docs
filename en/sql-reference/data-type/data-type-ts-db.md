@@ -69,6 +69,26 @@ Currently, KWDB supports inserting a timestamp using any of the following ways:
 
 KWDB supports addition and substraction operations of time in queries for timestamp-typed columns or timestamp constants, and for functions and expressions whose result is timestamp. KWDB supports comparing the operation results using the greater than sign (`>`), the less than sign (`<`), the equals sign (`=`), the greater than or equal to sign (`>=`), and the less than or equal to sign (`<=`). For details, see [Simple Query](../dml/ts-db/ts-select.md).
 
+### Data Type Conversions and Casts
+
+TIMESTAMP-typed values can be cast to any of the following data types.
+
+| Type | Description |
+| --- | --- |
+| INT | The system returns an error if the value is NaN or +/- Inf. |
+| FLOAT | Convert to milliseconds since Jan. 1, 1970. |
+| STRING | - |
+| TIMESTAMPZ | - |
+
+TIMESTAMPZ-typed values can be cast to any of the following data types.
+
+| Type | Description |
+| --- | --- |
+| INT | The system returns an error if the value is NaN or +/- Inf. |
+| FLOAT | Convert to milliseconds since Jan. 1, 1970. |
+| STRING | - |
+| TIMESTAMP | - |
+
 ### Examples
 
 - Create a table with TIMESTAMP-typed and TIMESTAMPTZ-typed columns.
@@ -132,6 +152,18 @@ KWDB supports various signed integer data types.
 A constant value of an integer type can be entered as a numeric literal. For example, `42`, `-1234` or `0xCAFE`.
 :::
 
+#### Data Type Conversions and Casts
+
+INTEGER-typed values can be cast to any of the following data types.
+
+| Type | Description |
+| --- | --- |
+| BOOL | `0` converts to `false`. All other values convert to `true`. |
+| FLOAT | - |
+| STRING | Convert the INTEGER-typed value to the corresponding STRING-typed value and truncate it based on the converted STRING type. |
+| TIMESTAMP | Convert to milliseconds since Jan. 1, 1970.|
+| TIMESTAMPZ | Convert to milliseconds since Jan. 1, 1970.|
+
 #### Examples
 
 This example creates a table with INTEGER-typed columns.
@@ -176,6 +208,16 @@ Floating-point types are handled internally using the standard double-precision 
 A FLOAT-typed column supports values up to 8 bytes in width, but the total storage size is likely to be larger due to KWDB metadata.
 
 To limit a FLOAT-typed column, use `CAST(column as DECIMAL(precision, scale))`, where `precision` is the maximum count of digits both to the left and right of the decimal point and `scale` is the exact count of digits to the right of the decimal point. The `precision` must not be smaller than the `scale`. Using `DECIMAL(precision)` is equivalent to `DECIMAL(precision, 0)`.
+
+#### Data Type Conversions and Casts
+
+Floating-point-typed values can be cast to any of the following data types.
+
+| Type | Description |
+| --- | --- |
+| BOOL | `0` converts to `false`. All other values convert to `true`. |
+| FLOAT | Lose precision when converting the floating-point-typed value to the corresponding FLOAT4-typed value.|
+| STRING | Convert the floating-point-typed value to the corresponding STRING-typed value and truncate it based on the converted STRING type. |
 
 #### Examples
 
@@ -237,6 +279,16 @@ A boolean value can be obtained by coercing a numeric value. Zero is coerced to 
 
 - `CAST(0 AS BOOL) (false)`
 - `CAST(119 AS BOOL) (true)`
+
+### Data Type Conversions and Casts
+
+BOOL-typed values can be cast to any of the following data types.
+
+| Type | Description |
+| --- | --- |
+| INT | Convert `true` to `1`, `false` to `0`.|
+| FLOAT | Convert `true` to `1`, `false` to `0`.|
+| STRING | - |
 
 ### Examples
 

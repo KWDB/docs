@@ -64,6 +64,7 @@ This document describes data types, functions, operators, and SQL statements sup
   - [Audit Management](./db-mgmt/audit-mgmt-sql.md)
 - Other Statements
   - [User-defined Functions](./other-sql-statements/self-defined-functions-sql.md)
+  - [User-defined Variables](./other-sql-statements/user-defined-variables-sql.md)
   - [Queries](./other-sql-statements/query-sql.md)
   - [Transactions](./other-sql-statements/transactions-sql.md)
   - [Statistics](./other-sql-statements/statistics-sql.md)

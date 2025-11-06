@@ -15,11 +15,11 @@ The user must have been granted the `CREATE` privilege on the specified database
 
 ### Syntax
 
-![](../../../../static//sql-reference/MyQMbjRVxoQSZBxD7kjcF9c9nS3.png)
+![](../../../../static//sql-reference/createtable_relational.png)
 
 - `column_def`
 
-    ![](../../../../static//sql-reference/Sok2bpkxboqrHYxHRs5c69j3nSd.png)
+    ![](../../../../static//sql-reference/column_def_relational.png)
 
 - `col_qualification`
 
@@ -55,15 +55,20 @@ The user must have been granted the `CREATE` privilege on the specified database
 
 ### Parameters
 
+:::warning Note
+The optional parameters must be configured in an order of `[<column_def> | <index_def> | <family_def> | <table_constraint>] [<interleave_clause>] [PARTITION INTERVAL <interval>] [COMMENT [=] <'comment_text'>]`. Otherwise, the system returns an error.
+:::
+
 | Parameter | Description |
 | --- | --- |
 | `IF NOT EXISTS` | Optional. <br>- When the `IF NOT EXISTS` keyword is used, the system creates a new table only if a table of the same name does not already exist. Otherwise, the system fails to create a new table without returning an error. <br>- When the `IF NOT EXISTS` keyword is not used, the system creates a new table only if a table of the same name does not already exist. Otherwise, the system fails to create a new table and returns an error.<br > **Note** <br > `IF NOT EXISTS` checks the table name only. It does not check if an existing table has the same columns, indexes, constraints, etc., of the new table.|
 | `table_name` | The name of the table to create, which must be unique within its database and follow these [Identifier Rules](../../../sql-reference/sql-identifiers.md). You can use `<database_name>.<table_name>` to specify a table in another database. If not specified, use the table in the current database. |
-| `column_def` | A comma-separated list of column definitions. Each column requires a name and data type. Column names must be unique within the table but can have the same name as indexes or constraints. You can also specify a column qualification (a column-level constraint) in the format of `<column_name> <typename> [col_qual_list]`. Any PRIMARY KEY, UNIQUE, and CHECK constraints defined at the column level are moved to the table-level as part of the table's creation. Use the `SHOW CREATE TABLE` statement to view them at the table level. |
+| `column_def` | A comma-separated list of column definitions. Each column requires a name and data type. Column names must be unique within the table but can have the same name as indexes or constraints. You can also specify a column qualification (a column-level constraint) in the format of `<column_name> <typename> [COMMENT [=] 'commonent_text'] [col_qual_list]`. Support adding comments to data columns after the data type. The comment can be placed in any order relative to other constraints of the data column. Any PRIMARY KEY, UNIQUE, and CHECK constraints defined at the column level are moved to the table-level as part of the table's creation. Use the `SHOW CREATE TABLE` statement to view them at the table level.  <br> To implement row-level MAC, you need to specify the name of the label column with a data type of `STRING(4000)`. KWDB supports up to one label column and you cannot specify the default values for the label column. |
 | `index_def` | Optional. A comma-separated list of index definitions. For each index, the column(s) to index must be specified. Or, a name can be specified. Index names must be unique within the table and follow these [Identifier Rules](../../sql-identifiers.md). For details about how to create an index, see [CREATE INDEX](./relational-index.md#create-index).|
 | `family_def` | Optional. A comma-separated list of column family definitions in the format of `FAMILY [family_name] (name_list)`. Column family names must be unique within the table but can have the same name as columns, constraints, or indexes. A column family is a group of columns that are stored as a single key-value pair in the underlying key-value store. KWDB automatically groups columns into families to ensure efficient storage and performance. However, you can also manually assign columns to families.|
 | `table_constraint` | Optional. A comma-separated list of table-level constraints in the format of `CONSTRAINT <constraint_name> <constraint_elem>`. Constraint names must be unique within the table but can have the same name as columns, column families, or indexes.|
 | `interleave_clause` | Optional. KWDB supports optimizing query performance using interleaving indexes in the format of `INTERLEAVE IN PARENT <table_name> (<name_list>)`. This may changes how KWDB stores data. |
+| `comment_text` | Optional. Specify the comment to be associated to the table.|
 
 ### Examples
 
@@ -473,6 +478,15 @@ The user must have been granted the `CREATE` privilege on the specified database
     c4803c2e-c2e2-49bf-b912-80072229d785|    |Lola      |McDog    |Lola McDog   |       |           |  
     f363db85-dfd5-40b8-a68e-f12ca8a4b84f|    |Carl      |Kimball  |Carl Kimball |       |           |  
     (3 rows)
+    ```
+
+- Create a table and associate comments to the data columns and the table.
+
+    This example creates a table named `student` and associates comments to the data columns and the table.
+
+    ```sql
+    CREATE TABLE student (student_id UUID PRIMARY KEY DEFAULT, city STRING COMMENT = 'city for students', first_name STRING, last_name STRING, full_name STRING, address STRING, credit_card STRING) COMMENT = 'table for students';
+    CREATE TABLE
     ```
 
 ## SHOW TABLES

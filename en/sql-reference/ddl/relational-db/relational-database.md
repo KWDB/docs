@@ -15,9 +15,13 @@ The user must be a member of the `admin` role. By default, the `root` user belon
 
 ### Syntax
 
-![](../../../../static//sql-reference/Bcilb9o3lo05ZzxPWancZzZFnxe.png)
+![](../../../../static//sql-reference/createdb_relational.png)
 
 ### Parameters
+
+:::warning Note
+The optional parameters must be configured in an order of `[ENCODING [=] <'code_name'>] [COMMENT [=] <'comment_text'>]`. Otherwise, the system returns an error.
+:::
 
 | Parameter | Description |
 | --- | --- |
@@ -25,6 +29,7 @@ The user must be a member of the `admin` role. By default, the `root` user belon
 | `db_name` | The name of the database to create, which must be unique and follow these [Identifier Rules](../../sql-identifiers.md). |
 | `WITH` | Optional. Whether or not using the keyword does not affect the creation of the database. |
 | `ENCODING` | Optional. Specify the encoding method. Currently, KWDB only supports UTF-8 and its alias (UTF8 and UNICODE). Values should be enclosed in single quotes (`' '`) and are case-insensitive, such as `CREATE DATABASE bank ENCODING = 'UTF-8'`. |
+| `COMMENT` | Optional. Specify the comment to be associated to the database. |
 
 ### Examples
 
@@ -37,13 +42,21 @@ The user must be a member of the `admin` role. By default, the `root` user belon
     CREATE DATABASE
     ```
 
-- Create a database using the `IF NOT EXISITS` keyword.
+- Create a database using the `IF NOT EXISTS` keyword.
 
     This example creates a database named `db1`, which has already exists. The system fails to create the database without returning an error.
 
     ```sql
     CREATE DATABASE IF NOT EXISTS db1;
     CREATE DATABASE
+    ```
+
+- Create a database and specify comments for the database.
+
+    This example creates a database named `db_student` and associates the comment text `database for student statistics` to the database.
+
+    ```sql
+    CREATE DATABASE db_student COMMENT = 'database for student statistics';
     ```
 
 ## SHOW DATABASES

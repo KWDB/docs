@@ -42,9 +42,9 @@ id: relational-database
     CREATE DATABASE
     ```
 
-- 使用 `IF NOT EXISITS` 关键字创建关系数据库。
+- 使用 `IF NOT EXISTS` 关键字创建关系数据库。
 
-    以下示例使用 `IF NOT EXISITS` 关键字创建一个已经存在的 `db1` 关系数据库。系统创建数据库失败，但不报错。
+    以下示例使用 `IF NOT EXISTS` 关键字创建一个已经存在的 `db1` 关系数据库。系统创建数据库失败，但不报错。
 
     ```sql
     CREATE DATABASE IF NOT EXISTS db1;

@@ -194,6 +194,13 @@ The user must have been granted the `CREATE` privilege on the specified table(s)
   - `DROP STORED`: Convert a computed column to a regular column.
 - `SET DATA TYPE`: Modify the data type of the column. `SET DATA` is optional. Whether or not using the `SET DATA` keyword does not affect modifying the data type of the column.
 
+    ::: warning Note
+
+    - For character-typed and bytes-typed data, if the original data does not have a length limit, the converted data can only be modified to unlimited length (i.e., no length limit on the converted data).
+    - When modifying a column's data type, character-typed data can be converted to bytes-typed data. However, bytes-typed data cannot be converted to character-typed data. For details about the data type, default width, maximum width, and convertible data types, see [Relational Data Types](../../data-type/data-type-relational-db.md).
+
+    :::
+
 ### Parameters
 
 | Parameter | Description |

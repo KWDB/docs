@@ -17,25 +17,29 @@ The user must have been granted the `CREATE` privilege on the specified database
 
 ### Syntax
 
-![](../../../../static/sql-reference/create-ts-table.png)
+![](../../../../static/sql-reference/create_table_ts.png)
 
 ### Parameters
 
 :::warning Note
-Currently, the table name, column name, and tag name do not support Chiese characters.
-Configure optional parameters in an order of `[RETENTIONS <keep_duration>][ACTIVETIME <active_duration>] [DICT ENCODING] [PARTITION INTERVAL <interval>]`. Otherwise, the system returns an error.
+
+- Currently, the table name, column name, and tag name do not support Chiese characters.
+- The optional parameters must be configured in an order of `[RETENTIONS <keep_duration>] [DICT ENCODING] [COMMENT [=] <'comment_text'>]`. Otherwise, the system returns an error.
+- In version 3.0.0, the `activetime` and `partition interval` configurations are ignored.
+
 :::
 
 | Parameter | Description |
 | --- | --- |
 | `table_name`| The name of the table to create, which must be unique within its database and follow these [Identifier Rules](../../sql-identifiers.md). The table name supports up to 128 bytes. |
-| `column_list`| A comma-separated list of columns. You can specify two or more columns. Each column requires a name, data type and default value. Each table supports up to 4096 columns. <br > The column name supports up to 128 bytes. You can set the data type to NOT NULL. By default, the data type is set to NULL. For non-TIMESTAMP data columns, the default value must be a constant. For TIMESTAMP-typed columns, the default value can either be a constant or the `now()` function. If the data type of the default value is not matched with that of the column, the system returns an error. KWDB supports setting NULL as the default value. |
-| `tag_list`| A comma-separated list of tags. You can specify one or more tags. Each table supports up to 128 tags. Each tag requires a name and data type. The tag name supports up to 128 bytes. You can set the data type to NOT NULL. By default, the data type is set to NULL. KWDB does not support setting TIMESTAMP, TIMESTAMPTZ, NVARCHAR or GEOMETRY data types for time-series tables. |
+| `column_list`| A comma-separated list of columns. You can specify two or more columns. Each column requires a name, data type, and default value. Each table supports up to 4096 columns. <br > The column name supports up to 128 bytes. You can set the data type to NOT NULL. By default, the data type is set to NULL. For non-TIMESTAMP data columns, the default value must be a constant. For TIMESTAMP-typed columns, the default value can either be a constant or the `now()` function. If the data type of the default value is not matched with that of the column, the system returns an error. KWDB supports setting NULL as the default value. <br > Support adding comments to data columns after the data type. |
+| `tag_list`| A comma-separated list of tags. You can specify one or more tags. Each table supports up to 128 tags. Each tag requires a name and data type. The tag name supports up to 128 bytes. You can set the data type to NOT NULL. By default, the data type is set to NULL. KWDB does not support setting TIMESTAMP, TIMESTAMPTZ, NVARCHAR or GEOMETRY data types for time-series tables.  <br > Support adding comments to tag columns after the nullable condition.  |
 | `primary_tag_list`| A comma-separated list of primary tags. You can specify one or more primary tags. Each table supports up to 4 primary tags. Primary tags must be included in the list of tags and set to NOT NULL. Currently, primary tags does not support floating-point and variable-length data types, except for the VARCHAR data type. By default, a VARCHAR-typed data length is `64` bytes. The maximum of a VARCHAR-typed data length is `128` bytes. |
 | `keep_duration`| Optional. Specify the retention of the table. By default, it is set to `0d`, which means not deleting the table after expiration. Support the following units: second (S or SECOND), minute (M or MINUTE), hour (H or HOUR), day (D or DAY), week (W or WEEK), month (M or MONTH), and year (Y or YEAR). The value must be an integer and the maximum value must not exceed `1000` years. <br > **Note** <br >- The retention configuration does not apply to the current partition. The data is stored in the current partition. When the value of the retention is less than the partition interval, you can still query the data even if the retention of the table has expired. <br >- When all data in a partition exceeds the retention (`now() - retention time`), the system attempts to delete the data in that partition. If you are reading or writing the data in the partition at this time, or the system is compressing or making statistcs on the partition, the system cannot delete the data in the partition immediately. The system tries to delete the data again at the next retention. (By default, the system schedules data every hour.) <br >- The retention and partition interval settings are closely related to the storage space of the system. The longer the retention and the larger the partition interval, the more storage space the system requires. For the formula for calculating the storage space, see [Estimate Disk Usage](../../../db-operation/cluster-planning.md#estimate-disk-usage). <br >- When you individually specify or modify the retention or partition interval of a time-series table within the database, the configuration applies only to that time-series table.|
 | `active_duration`| Optional. Specify the active duration of the data. After it expires, the system automatically compress data with a table. By default, it is set to `0d`, which means compressing partitions made one day before. Support the following units: second (S or SECOND), minute (M or MINUTE), hour (H or HOUR), day (D or DAY), week (W or WEEK), month (M or MONTH), and year (Y or YEAR). The value must be an integer and the maximum value must not exceed `1000` years. If it is set to `0`, it means not compressing data. |
 | `DICT ENCODING`| Optional. Enable dictionary encoding to improve the compression capability of STRING-typed data. The higher the repetition rate of the STRING-typed data is, the better the data is compressed. This function is only applied to CHAR- and VARCHAR-typed data whose length is less than or equal to `1023`. You can only enable it when creating a table. Once enabled, you cannot disable it. |
-| `interval`| Optional. Specify a partition interval for a table. By default, it is set to `10d`, which means making a partition every 10 days. Support the following units: day (D or DAY), week (W or WEEK), month (M or MONTH), and year (Y or YEAR). The value must be an integer and the maximum value must not exceed `1000` years.|
+| `comment_text` | Optional. Specify the comment to be associated to the table.|
+| `hash_value`| Optional. Defines the HASH ring size in a distributed cluster, which determines the maximum number of data ranges. For example, `HASH(100)` allows up to 100 distinct ranges.<br><br>Default: 2000 (up to 2000 ranges)<br>Valid range: [1, 50000]<br><br>Performance considerations:<br>- Too small: Data from multiple devices concentrates in fewer ranges, causing write hotspots<br>- Too large: Excessive ranges increase management overhead<br><br>Recommended values based on device count:<br>- ≤ 1,000 devices: `hash_value` < 20<br>- ≤ 50,000 devices: `hash_value` < 2,000<br>- ≤ 1,000,000 devices: `hash_value` < 10,000|
 
 ### Examples
 
@@ -98,6 +102,22 @@ Configure optional parameters in an order of `[RETENTIONS <keep_duration>][ACTIV
     ```sql
     CREATE TABLE water (ts TIMESTAMP NOT NULL, value FLOAT) TAGS (sensor_id INT NOT NULL) PRIMARY TAGS (sensor_id) DICT ENCODING;
     ```
+
+- Create a table and associate comments to the data columns, the tag columns and the table.
+
+    This example creates a table named `device_info` and associates comments to the data columns, the tag columns and the table.
+
+    ```sql
+    CREATE TABLE device_info (create_time TIMESTAMPZ NOT NULL, device_id INT COMMENT 'device ID' NOT NULL, install_date TIMESTAMPZ, warranty_period INT2) TAGS (plant_code INT2 NOT NULL COMMENT = 'plant code', workshop VARCHAR(128) NOT NULL, device_type CHAR(1023) NOT NULL, manufacturer NCHAR(254) NOT NULL) PRIMARY TAGS(plant_code, workshop, device_type, manufacturer) COMMENT = 'table for device information';
+    ```
+
+- Create a time-series table with a custom HASH ring size.
+  
+  This example creates a time-series table named `sensors` with a HASH ring size of 20.
+
+  ```sql
+  CREATE TABLE sensors (ts TIMESTAMP NOT NULL, value FLOAT) TAGS (sensor_id INT NOT NULL) PRIMARY TAGS (sensor_id) WITH HASH(20);
+  ```
 
 ## SHOW TABLES
 

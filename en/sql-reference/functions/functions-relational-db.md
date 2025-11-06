@@ -54,8 +54,8 @@ This table lists the operators that look like built-in functions but have specia
 | `COALESCE(...)`      | First non-NULL expression with short circuit    |
 | `EXISTS(...)`        | Existence test on the result of subqueries      |
 | `IF(...)`            | Conditional evaluation                          |
-| `IFNULL(...)`        | Alias for `COALESCE` restricted to two operands |
-| `NULLIF(...)`        | Return NULL conditionally                       |
+| `IFNULL(...)`        | Alias for `COALESCE` restricted to two operands  <br >**Note** <br >- When both operands are explicitly declared, they must have the same type. ​Otherwise, the system cannot evaluate them. <br >- When one operand is explicitly declared and the other operand is a constant, the system converts the constant to the specified data type and then evaluates them. If failed to convert, the system returns an error.<br >- When both operands are constants, the system evaluates the operands if they have the same type (numeric or string type). If one operand is a numeric constant and the other one is a string-typed constant, the system converts the string-typed constant to the numeric-typed constant and then evaluates them. If failed to convert, the system returns an error.  |
+| `NULLIF(...)`       | Return NULL conditionally <br >**Note** <br >- When both operands are explicitly declared, they must have the same type. ​Otherwise, the system cannot evaluate them. <br >- When one operand is explicitly declared and the other operand is a constant, the system converts the constant to the specified data type and then evaluates them. If failed to convert, the system returns an error.<br >- When both operands are constants, the system evaluates the operands if they have the same type (numeric or string type). If one operand is a numeric constant and the other one is a string-typed constant, the system converts the string-typed constant to the numeric-typed constant and then evaluates them. If failed to convert, the system returns an error. |
 | `ROW(...)`           | Tuple constructor                               |
 
 ## Buit-in Functions

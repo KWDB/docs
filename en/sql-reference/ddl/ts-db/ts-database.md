@@ -17,15 +17,23 @@ The user must be the Admin user or a member of the `admin` role.
 
 ### Syntax
 
-![](../../../../static/sql-reference/PZsmbxjlxoqNSAxnrAAc2IYanmf.png)
+![](../../../../static/sql-reference/create-db-ts.png)
 
 ### Parameters
+
+:::warning Note
+
+- The optional parameters must be configured in an order of `[RETENTIONS <keep_duration>] [COMMENT [=] <'comment_text'>]`. Otherwise, the system returns an error.
+- Version 3.0.0 only supports a 10-day database partition interval. Other configuration values are not valid.
+
+:::
 
 | Parameter | Description |
 | --- | --- |
 | `database_name` | The name of the database to create, which must be unique and follow these [Identifier Rules](../../sql-identifiers.md). Currently, the name does not support Chinese characters and supports up to 63 bytes.|
 | `keep_duration` | Optional. Specify the retention of the database. By default, it is set to `0d`, which means not deleting the database after expiration. Support the following units: second (S or SECOND), minute (M or MINUTE), hour (H or HOUR), day (D or DAY), week (W or WEEK), month (M or MONTH), and year (Y or YEAR), such as `RETENTIONS 10 DAY`. The value must be an integer and the maximum value must not exceed `1000` years. |
 | `interval` | Optional. Specify a partition interval for a database. By default, it is set to `10d`, which means making a partition every 10 days. Support the following units: day (D or DAY), week (W or WEEK), month (M or MONTH), and year (Y or YEAR). The value must be an integer and the maximum value must not exceed `1000` years.|
+| `comment_text` | Optional. Specify the comment to be associated to the database.|
 
 :::warning Note
 
@@ -72,6 +80,20 @@ The user must be the Admin user or a member of the `admin` role.
 
     ```sql
     CREATE TS DATABASE iot RETENTIONS 50d PARTITION INTERVAL 2d;
+    ```
+
+    If you succeed, you should see an output similar to the following:
+
+    ```sql
+    CREATE TS DATABASE
+    ```
+
+- Create a database and specify comments for the database.
+
+    This example creates a database named `ts_db_power` and associates the comment text `database for power statistics` to the database.
+
+    ```sql
+    CREATE TS DATABASE ts_db_power COMMENT = 'database for power statistics';
     ```
 
     If you succeed, you should see an output similar to the following:
