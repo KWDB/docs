@@ -46,6 +46,22 @@ KWDB supports various signed integer data types.
 
 :::
 
+#### Data Type Conversions and Casts
+
+INTEGER-typed values can be cast to any of the following data types.
+
+| Type | Description |
+| --- | --- |
+| BIT | Convert the INTEGER-typed value to the corresponding binary value, and truncate or pad it according to the length of the converted BIT type. If the INTEGER type is shorter than the BIT type, add zero padding to the front of the data.  |
+| BOOL | `0` converts to `false`. All other values convert to `true`. |
+| FLOAT | - |
+| DECIMAL | - |
+| STRING | Convert the INTEGER-typed value to the corresponding STRING-typed value and truncate it based on the converted STRING type. |
+| DATE | Convert to days since Jan. 1, 1970. |
+| TIMESTAMP | Convert to milliseconds since Jan. 1, 1970.|
+| TIMESTAMPZ | Convert to milliseconds since Jan. 1, 1970. |
+| INTERVAL | Convert to seconds since Jan. 1, 1970. |
+
 #### Examples
 
 This example creates a table with INTEGER-typed columns.
@@ -100,6 +116,19 @@ For example,
 - `FLOAT '+Inf'`
 - `'-Inf'::FLOAT`
 - `CAST('NaN' AS FLOAT)`
+
+#### Data Type Conversions and Casts
+
+Floating-point-typed values can be cast to any of the following data types.
+
+| Type | Description |
+| --- | --- |
+| BOOL | `0` converts to `false`. All other values convert to `true`. |
+| INT | The system returns an error if the value is NaN or +/- Inf.|
+| FLOAT | Lose precision when converting the floating-point-typed value to the corresponding FLOAT4-typed value.|
+| DECIMAL | Convert the floating-point-typed value to the corresponding DECIMAL-typed value and truncate it based on the converted DECIMAL type. |
+| STRING | Convert the floating-point-typed value to the corresponding STRING-typed value and truncate it based on the converted STRING type.|
+| INTERVAL | - |
 
 #### Examples
 
@@ -167,6 +196,18 @@ When inserting a DECIMAL value:
 - If digits to the left and right of the decimal point exceed the column's `precision`, KWDB returns an error.
 - If the column's `precision` and `scale` are identical, the inserted value must round to less than 1.
 :::
+
+#### Data Type Conversions and Casts
+
+DECIMAL-typed values can be cast to any of the following data types.
+
+| Type | Description |
+| --- | --- |
+| BOOL | `0` converts to `false`. All other values convert to `true`. |
+| INT | The system returns an error if the value is NaN or +/- Inf.|
+| FLOAT | Lose precision when converting the DECIMAL-typed value to the corresponding FLOAT4-typed value.|
+| STRING | Convert the DECIMAL-typed value to the corresponding STRING-typed value and truncate it based on the converted STRING type.|
+| INTERVAL | - |
 
 #### Examples
 
@@ -264,6 +305,17 @@ A boolean value can be obtained by coercing a numeric value. Zero is coerced to 
 - `CAST(0 AS BOOL) (false)`
 - `CAST(119 AS BOOL) (true)`
 
+### Data Type Conversions and Casts
+
+BOOL-typed values can be cast to any of the following data types.
+
+| Type | Description |
+| --- | --- |
+| INT | Convert `true` to `1`, `false` to `0`.|
+| FLOAT | Convert `true` to `1`, `false` to `0`.|
+| DECIMAL | Convert `true` to `1`, `false` to `0`. |
+| STRING | - |
+
 ### Examples
 
 This example creates a table with BOOL-typed columns and then inserts data into the table.
@@ -313,6 +365,16 @@ The BIT data type stores fixed-length bit arrays. Bit array constants are expres
 | BIT(N) | N bits       |
 
 For BIT and BIT(N) types, the value must match exactly the specified size. Otherwise, KWDB returns an error. The effective size of a BIT value is larger than its logical number of bits by a bounded constant factor. Internally, KWDB stores bit arrays in increments of 64 bits plus an extra integer value to encode the length. The total size of a BIT value can be arbitrarily large, but it is recommended to keep values under 1 MB to ensure performance. Above that threshold, write amplification and other considerations may cause significant performance degradation.
+
+#### Data Type Conversions and Casts
+
+BIT-typed values can be cast to any of the following data types.
+
+| Type | Description |
+| --- | --- |
+| VARBIT | Convert the BIT-typed value to the corresponding VARBIT-typed value, and truncate or pad it according to the length of the converted VARBIT type. If the BIT type is shorter than the VARBIT type, add zero padding to the end of the data.  |
+| INT | Convert the BIT-typed value to the corresponding INTEGER-typed value and get the value of the BIT type according to the length of the converted INTEGER type. |
+| STRING | Convert the BIT-typed value to the corresponding STRING-typed value and truncate it based on the converted STRING type. |
 
 #### Examples
 
@@ -414,6 +476,15 @@ The byte array constant is a syntax that is used to express fixed byte arrays. T
 In addition to the above syntaxes, KWDB also supports using string literals, including the syntax `'...'`, `e'...'` and `x'....'` in contexts for a byte array.
 
 The size of a BYTES value is variable, but it is recommended to keep values under 1 MB to ensure performance. Above that threshold, write amplification and other considerations may cause significant performance degradation.
+
+#### Data Type Conversions and Casts
+
+BYTES-typed values can be cast to any of the following data types.
+
+| Type | Description |
+| --- | --- |
+| STRING | Convert the BYTES-typed value to the corresponding STRING-typed value and truncate it based on the converted STRING type.|
+| UUID | - |
 
 #### Examples
 
@@ -772,6 +843,94 @@ Jinan
 (3 rows)
 ```
 
+### BLOB
+
+#### Basic Information
+
+A BLOB (Binary Large Object) is a binary large object that can hold a variable amount of non-textual byte stream data (such as programs, images, audio, and video). The size of a BLOB value is variable, but it is recommended to keep values under 64 MB to ensure performance.
+
+BLOB values can be converted to the following data types. When data conforms to the rules, the system converts the data. Otherwise, the system returns an error.
+
+| BLOB | STRING | UUID |
+| --- | --- | --- |
+| BLOB | - STRING <br >- NAME <br >- CHAR <br >- NCHAR <br >- VARCHAR <br >- NVARCHAR <br >- GEOMETRY <br >- BYTES <br > - VARBYTES | UUID |
+
+#### Examples
+
+This example creates a table with BLOB-typed columns and then inserts data into the table.
+
+```sql
+-- 1. Create a table.
+CREATE TABLE blobs (e1 INT4, e2 BLOB);
+CREATE TABLE
+
+-- 2. Insert data into the table.
+INSERT INTO blobs VALUES ('1','a')；
+INSERT 1
+
+-- 3. Check data of the table.
+SELECT * FROM blobs;
+  e1 |  e2
+-----+-------
+  1  | \x61
+(1 row)
+
+-- 4. Check the SQL statement that creates the table.
+SHOW CREATE blobs;
+  table_name |           create_statement
+-------------+---------------------------------------
+  blobs      | CREATE TABLE blobs (
+             |     e1 INT4 NULL,
+             |     e2 BLOB NULL,
+             |     FAMILY "primary" (e1, e2, rowid)
+             | )
+(1 row)
+```
+
+### CLOB
+
+#### Basic Information
+
+A CLOB (Character Large Object) is associated with character sets and used for storing text-based data (such as historical archives and large-volume publications). The size of a CLOB value is variable, but it is recommended to keep values under 64 MB to ensure performance.
+
+CLOB values can be converted to the following data types. When data conforms to the rules, the system converts the data. Otherwise, the system returns an error.
+
+| CLOB | Numeric | BOOL | STRING | Date and time | JSONB | INET | UUID |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| CLOB | - INT2 <br >- INT4 <br >- INT8 <br >- FLOAT4 <br >- FLOAT8 <br >- DECIMAL | BOOL | - STRING <br >- NAME <br >- CHAR <br >- NCHAR <br >- VARCHAR <br >- NVARCHAR <br >- BIT <br >- VARBIT <br >- GEOMETRY <br >- BYTES <br > - VARBYTES | - TIME <br >- TIMEZ <br >- TIMESTAMP <br >- TIMESTAMPZ <br >- INTERVAL | JSONB | INET | UUID |
+
+#### Examples
+
+This example creates a table with CLOB-typed columns and then inserts data into the table.
+
+```sql
+-- 1. Create a table.
+CREATE TABLE clobs (c1 INT, c2 CLOB);
+CREATE TABLE
+
+-- 2. Insert data into the table.
+INSERT INTO clobs VALUES ('1','adh')；
+INSERT 1
+
+-- 3. Check data of the table.
+SELECT * FROM clobs;
+  c1 |  c2
+-----+-------
+  1  | adh
+(1 row)
+
+-- 4. Check the SQL statement that creates the table.
+SHOW CREATE clobs;
+  table_name |           create_statement
+-------------+---------------------------------------
+  clobs      | CREATE TABLE clobs (
+             |     c1 INT  NULL,
+             |     c2 CLOB NULL,
+             |     FAMILY "primary" (c1, c2, rowid)
+             | )
+(1 row)
+```
+
 ## Date and Time Types
 
 ### TIMESTAMP
@@ -797,6 +956,20 @@ TIMESTAMP constants respresent specific date and time. In general, the TIMESTAMP
 :::
 
 KWDB supports addition and substraction operations of time in queries for timestamp-typed columns or timestamp constants, and for functions and expressions whose result is timestamp. KWDB supports comparing the operation results using the greater than sign (`>`), the less than sign (`<`), the equals sign (`=`), the greater than or equal to sign (`>=`), and the less than or equal to sign (`<=`). For details, see [Simple Query](../dml/relational-db/relational-select.md).
+
+#### Data Type Conversions and Casts
+
+TIMESTAMP-typed values can be cast to any of the following data types.
+
+| Type | Description |
+| --- | --- |
+| INT | The system returns an error if the value is NaN or +/- Inf. |
+| FLOAT | Convert to milliseconds since Jan. 1, 1970. |
+| DECIMAL | Convert to seconds since Jan. 1, 1970. |
+| STRING | - |
+| DATE | Convert to the date portion (`YYYY-MM-DD`) of the timestamp. |
+| TIME | Convert to the time portion (`HH:MM:SS`) of the timestamp. |
+| TIMESTAMPZ | - |
 
 #### Examples
 
@@ -837,6 +1010,18 @@ c1|c2                 |c3
 #### Basic Information
 
 The DATE data type stores a year, month, and day. You can express a constant value of the DATE type using an interpreted literal, or a string literal annotated with the DATE type or coerced to the DATE type. KWDB also supports using uninterpreted string literals to express a DATE value. By default, KWDB parses the `YYYY-MM-DD` string format for dates, such as `DATE '2016-12-23'`. A DATE-typed column supports values up to 16 bytes in width, but the total storage size is likely to be larger due to KWDB metadata.
+
+#### Data Type Conversions and Casts
+
+DATE-typed values can be cast to any of the following data types.
+
+| Type | Description |
+| --- | --- |
+| INT | The system returns an error if the value is NaN or +/- Inf. |
+| FLOAT | - |
+| DECIMAL | - |
+| STRING | - |
+| TIMESTAMPZ/TIMESTAMPZ | - |
 
 #### Examples
 
@@ -895,6 +1080,15 @@ The TIME data type stores the time of day in UTC.
 
 A constant value of the TIME type can be expressed using an interpreted literal, or a string literal annotated with the TIME type or coerced to the TIME type. KWDB also supports using uninterpreted string literals to express a TIME value. The string format for TIME is `HH:MM:SS.SSSSSS`, such as `TIME '05:40:00.000001'`. The fractional portion is optional and is rounded to microseconds (i.e., six digits after the decimal). A TIME-typed column supports values up to 8 bytes in width, but the total storage size is likely to be larger due to KWDB metadata.
 
+#### Data Type Conversions and Casts
+
+TIME-typed values can be cast to any of the following data types.
+
+| Type | Description |
+| --- | --- |
+| STRING | - |
+| INTERVAL | - |
+
 #### Examples
 
 This example creates a table with TIME-typed columns and then inserts data into the table.
@@ -951,6 +1145,18 @@ INTERVAL constants can be expressed using the following formats:
 - ISO 8601: `INTERVAL 'P1Y2M3DT4H5M6S'`
 
 An INTERVAL-typed column supports values up to 24 bytes in width, but the total storage size is likely to be larger due to KWDB metadata. Intervals are stored internally as months, days, and microseconds. Therefore, a value parsed from a string value or converted from a floating-point or DECIMAL value is rounded to the nearest microsecond. Any operations (addition, subtraction, multiplication, division) performed on an INTERVAL value will also be rounded to the nearest microsecond.
+
+#### Data Type Conversions and Casts
+
+INTERVAL-typed values can be cast to any of the following data types.
+
+| Type | Description |
+| --- | --- |
+| INT | The system returns an error if the value is NaN or +/- Inf. |
+| FLOAT | Convert to seconds since Jan. 1, 1970. |
+| DECIMAL | Convert to seconds since Jan. 1, 1970. |
+| STRING | - |
+| TIME | Convert to the time portion (`HH:MM:SS`) after the midnight. |
 
 #### Examples
 
@@ -1013,6 +1219,10 @@ There are six types of JSONB values:
 - Number: a value with arbitrary precision, including intergers and decimals, but not limited to INT64
 - Array: an ordered sequence of JSONB values
 - Object: a mapping from strings to JSONB values, such as `'{"type": "account creation", "username": "harvestboy93"}'` or `'{"first_name": "Ernie", "status": "Looking for treats", "location": "Brooklyn"}'`. If duplicate keys are included in the input, only the last value is kept.
+
+### Data Type Conversions and Casts
+
+JSONB-typed values can be cast to STRING-typed values.
 
 ### Examples
 
@@ -1262,6 +1472,16 @@ You can express UUID values using the following formats:
 - URN: a URN (Uniform Resource Name) specified as `"urn:uuid:"` followed by the RFC4122 format, such as `urn:uuid:63616665-6630-3064-6465-616462656564`.
 
 A UUID value is 128 bits in width, but the total storage size is likely to be larger due to KWDB metadata.
+
+### Data Type Conversions and Casts
+
+UUID-typed values can be cast to any of the following data types.
+
+| Type | Description |
+| --- | --- |
+| DECIMAL | - |
+| STRING | Convert the UUID-typed value to the corresponding STRING-typed value and truncate it based on the converted STRING type. |
+| BYTES | - |
 
 ### Examples
 
