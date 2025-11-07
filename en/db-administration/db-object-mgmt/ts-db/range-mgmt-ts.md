@@ -5,6 +5,12 @@ id: range-mgmt-ts
 
 # Ranges
 
+KWDB stores all user data and almost all system data in a sorted map of key-value pairs. This keyspace is divided into contiguous chunks called ranges. Therefore, you can find every key in one range.
+
+From a SQL perspective, a table initially maps to a single range, where each key-value pair in the range represents a single row in the table. As soon as the size of a range reaches 512 MiB, it is split into two ranges. This process continues for these new ranges as the table continues growing. When the table decreases, the ranges will be automatically merged. Note that KWDB supports Mark-Sweep. Therefore, ranges are not merged immediately after the data is removed. Ranges are merged only when the removed data is garbage collected.
+
+Each range belongs to a specific zone. When rebalancing ranges in a cluster, the system will consider zone configurations to ensure all constraints are complied with. For details about zones, see [Zones](./zone-mgmt-ts.md).
+
 KWDB supports using the `SELECT * from kwdb_internal.ranges` statement to check ranges about a time-series database and table.
 
 ## ALTER RANGE

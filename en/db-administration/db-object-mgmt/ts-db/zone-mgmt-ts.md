@@ -5,6 +5,10 @@ id: zone-mgmt-ts
 
 # Zones
 
+In a KWDB cluster, each data range belongs to a specific replica zone. When rebalancing data ranges in a cluster, the system considers zone configurations to ensure all constraints are met.
+
+When being initiated, KWDB automatically generates pre-configured zones and the `default` zone. Pre-configured zones are suitable for internal system data while the `default` zone applies to other data in the cluster. You can use or adjust these zones, or set zones separately for specified databases, tables, or partitions.
+
 ## SHOW ZONE CONFIGURATION
 
 The `SHOW ZONE CONFIGURATION` statement shows details about zones of a specified object. The `SHOW ZONE CONFIGURATIONS` and `SHOW ALL ZONE CONFIGURATIONS` statements show all system ranges of a KWDB cluster or details about replicas of the system database and system table.
@@ -103,7 +107,7 @@ N/A
 
 ## CONFIGURE ZONE
 
-The `ALTER RANGE ... CONFIGURE ZONE` statement modifies or removes zones for a database, table, range or partition.
+The `ALTER ... CONFIGURE ZONE` statement modifies or removes zones for a database, table, range or partition.
 
 ### Privileges
 

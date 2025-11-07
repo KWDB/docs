@@ -5,6 +5,12 @@ id: range-mgmt-relational
 
 # Ranges
 
+KWDB stores all user data (tables, indexes, etc.) and almost all system data in a sorted map of key-value pairs. This keyspace is divided into contiguous chunks called ranges. Therefore, you can find every key in one range.
+
+From a SQL perspective, a relational table and its secondary indexes initially map to a single range, where each key-value pair in the range represents a single row in the table (also called the primary index) or a single row in a secondary index. As soon as the size of a range reaches 512 MiB, it is split into two ranges. This process continues for these new ranges as the table and its indexes continue growing. When the table and its indexes decrease, the ranges will be automatically merged. Note that KWDB supports Mark-Sweep. Therefore, ranges are not merged immediately after the data is removed. Ranges are merged only when the removed data is garbage collected.
+
+KWDB supports using the `SHOW RANGES` statement to view range information for databases, tables, and indexes, and using the `ALTER RANGE` statement to modify the replica zone configuration of ranges.
+
 ## SHOW RANGES
 
 The `SHOW RANGES` statement shows information about the ranges that comprise the data for a table, index, or database. This information is useful for verifying how SQL data maps to underlying ranges, and where the replicas for those ranges are located.

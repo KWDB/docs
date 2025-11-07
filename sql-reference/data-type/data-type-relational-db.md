@@ -59,7 +59,7 @@ KWDB 支持有符号的整数数据类型。
 | STRING | 根据转换后的 STRING 类型的长度进行截断。 |
 | DATE | 转换为自 1970 年以来的天数。 |
 | TIMESTAMP | 按照毫秒数进行转换。|
-| TIMESTAMPZ | 按照毫秒数进行转换。 |
+| TIMESTAMPTZ | 按照毫秒数进行转换。 |
 | INTERVAL | 按照秒数进行转换。 |
 
 #### 示例
@@ -882,7 +882,7 @@ KWDB 允许 CLOB 与以下数据类型相互转换。当数据符合规则时，
 
 | CLOB | 数值类型 | 布尔类型 | 字符类型 | 日期和时间类型 | JSONB 类型 | INET 类型 | UUID 类型 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| CLOB | - INT2 <br >- INT4 <br >- INT8 <br >- FLOAT4 <br >- FLOAT8 <br >- DECIMAL | BOOL | - STRING <br >- NAME <br >- CHAR <br >- NCHAR <br >- VARCHAR <br >- NVARCHAR <br >- BIT <br >- VARBIT <br >- GEOMETRY <br >- BYTES <br > - VARBYTES | - TIME <br >- TIMEZ <br >- TIMESTAMP <br >- TIMESTAMPZ <br >- INTERVAL | JSONB | INET | UUID |
+| CLOB | - INT2 <br >- INT4 <br >- INT8 <br >- FLOAT4 <br >- FLOAT8 <br >- DECIMAL | BOOL | - STRING <br >- NAME <br >- CHAR <br >- NCHAR <br >- VARCHAR <br >- NVARCHAR <br >- BIT <br >- VARBIT <br >- GEOMETRY <br >- BYTES <br > - VARBYTES | - TIME <br >- TIMEZ <br >- TIMESTAMP <br >- TIMESTAMPTZ <br >- INTERVAL | JSONB | INET | UUID |
 
 #### 示例
 
@@ -954,9 +954,9 @@ TIMESTAMP 类型的数据可以转换为以下任何一种数据类型。
 | STRING | - |
 | DATE | 获取日期部分的取值。 |
 | TIME | 获取时间部分的取值。 |
-| TIMESTAMPZ | - |
+| TIMESTAMPTZ | - |
 
-TIMESTAMPZ 类型的数据可以转换为以下任何一种数据类型。
+TIMESTAMPTZ 类型的数据可以转换为以下任何一种数据类型。
 
 | 类型 | 描述 |
 | --- | --- |
@@ -1018,7 +1018,7 @@ DATE 类型的数据可以转换为以下任何一种数据类型。
 | FLOAT | - |
 | DECIMAL | - |
 | STRING | - |
-| TIMESTAMPZ/TIMESTAMPZ | - |
+| TIMESTAMPTZ/TIMESTAMPTZ | - |
 
 #### 示例
 

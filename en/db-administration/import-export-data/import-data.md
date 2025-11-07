@@ -267,9 +267,9 @@ KWDB does not support importing the user data of all tables only.
 
 ### Privileges
 
-: the user must be a member of the `admin` role. By default, the `root` user belongs to the `admin` role.
+The user must be a member of the `admin` role. By default, the `root` user belongs to the `admin` role.
 
-- The directory to be imported must have `.csv` files and `.sql` files.
+The directory to be imported must have `.csv` files and `.sql` files.
 
 ### Syntax
 
@@ -439,7 +439,7 @@ The imported user information does not include the passwords. When an import com
 
 ### Privileges
 
-: the user must be a member of the `admin` role. By default, the `root` user belongs to the `admin` role.
+The user must be a member of the `admin` role. By default, the `root` user belongs to the `admin` role.
 
 
 ### Syntax
@@ -487,7 +487,7 @@ If the `clustersetting.sql` file does not exist or any error occurs during an im
 
 ### Privileges
 
-: the user must be a member of the `admin` role. By default, the `root` user belongs to the `admin` role.
+The user must be a member of the `admin` role. By default, the `root` user belongs to the `admin` role.
 
 
 ### Syntax

@@ -81,6 +81,8 @@ id: overview
   - [游标](./other-sql-statements/cursor-sql.md)
   - [分隔符](./other-sql-statements/delimiter-sql.md)
   - [流计算](./other-sql-statements/stream-sql.md)
-- [系统视图](./system-view-sql.md)
+- 系统视图
+  - [kwdb_internal](./system-view/kwdb_internal.md)
+  - [pg_catalog](./system-view/pg_catalog.md)
 - [NULL 值管理](./null-value-mgmt.md)
 - [查看 SQL 语句](./sql-help.md)

@@ -287,7 +287,7 @@ The `ALTER INDEX` statement changes the name of an index or applies a range spli
 | `new_name` | The new name of the index. The index name must be unique within the database and must follow these [Identifier Rules](../../sql-identifiers.md).|
 | `SPLIT AT` | Force a range split at the specified row in the index.|
 | `select_stmt` | A `SELECT` query statement that produces one or more rows at which to split the index.|
-| `a_expr` | The expiration of the split enforcement on the index. Available options are `DECIMAL`, `INTERVAL`, `TIMESTAMP`, or `TIMESTAMPZ`.|
+| `a_expr` | The expiration of the split enforcement on the index. Available options are `DECIMAL`, `INTERVAL`, `TIMESTAMP`, or `TIMESTAMPTZ`.|
 
 ### Examples
 

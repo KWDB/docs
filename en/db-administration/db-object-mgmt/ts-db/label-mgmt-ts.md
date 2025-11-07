@@ -125,6 +125,12 @@ If you succeed, you should see an output similar to the following:
 
 The `ALTER TABLE ... ALTER TAG` statement changes the data type or width of tags. `ALTER TAG` is an online operation, which does not block reading from or writing data into the database. When the new data type is not matched with that of the existing data, you can still successfully change the data type. Values that do not meet the new data type will be displayed as `NULL`.
 
+::: warning Note
+
+If an index exists for the tag to be altered, you must delete the index first.
+
+:::
+
 ### Privileges
 
 The user must be a member of the `admin` role or have been granted the `CREATE` privilege on the specified table(s). By default, the `root` user belongs to the `admin` role.

@@ -20,15 +20,6 @@ The `EXPORT` statement exports the following table data:
 - The specified user data for both time-series and relational tables, exported in `.csv` format.
 - Privilege information tables, exported in `.csv` format.
 
-For relational tables, KWDB performs operations based on whether the target table contains label columns and data columns:
-
-- When the target table contains both label columns and data columns:
-  - If the target table contains no data for data columns or label columns: KWDB exports the table structure with empty label columns.
-  - If the target table contains data for both data columns and label columns: KWDB exports all data, including label column data.
-  - If the target table contains data only for data columns: KWDB exports the data with empty label columns.
-  - If the target table contains data only for label columns: KWDB exports the data with empty data columns.
-- When the target table contains only data columns: KWDB exports data without label columns.
-
 If an export fails due to an unreachable destination, KWDB returns an error. For export failures caused by other reasons, KWDB will keep exported files in the destination.
 
 ### Privileges
@@ -247,7 +238,7 @@ KWDB supports exporting the metadata, user data, and privilege information of al
 
 ### Privileges
 
-: the user must be a member of the `admin` role. By default, the `root` user belongs to the `admin` role.
+The user must be a member of the `admin` role. By default, the `root` user belongs to the `admin` role.
 
 
 ### Syntax
@@ -408,8 +399,7 @@ KWDB supports exporting all non-system user information in the current cluster, 
 
 ### Privileges
 
-: the user must be a member of the `admin` role. By default, the `root` user belongs to the `admin` role.
-
+The user must be a member of the `admin` role. By default, the `root` user belongs to the `admin` role.
 
 ### Syntax
 
@@ -481,8 +471,7 @@ CSV files currently do not support re-importing into KWDB database.
 
 ### Privileges
 
-: the user must be a member of the `admin` role. By default, the `root` user belongs to the `admin` role.
-
+The user must be a member of the `admin` role. By default, the `root` user belongs to the `admin` role.
 
 ### Syntax
 

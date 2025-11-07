@@ -41,7 +41,7 @@ KWDB time-series databases support TIMESTAMP and TIMESTAMPTZ time types.
 
 ### Basic Information
 
-The TIMESTAMP data type has TIMESTAMP and TIMESTAMPZ variants. The TIMESTAMP-typed values support a nacoseconds precision level.
+The TIMESTAMP data type has TIMESTAMP and TIMESTAMPTZ variants. The TIMESTAMP-typed values support a nacoseconds precision level.
 
 TIMESTAMP constants represent specific date and time. In general, the TIMESTAMP constants cannot be modified. You can express TIMESTAMP constants using the `timestamp 'YYYY-MM-DD HH:MM:SS.SSS'` format, such as `timestamp '2023-10-19 15:30:00'`.
 
@@ -53,9 +53,9 @@ TIMESTAMP constants represent specific date and time. In general, the TIMESTAMP 
 ::: warning note
 
 - TIMESTAMPTZ does not store any time zone data.
-- By default, KWDB adopts UTC. Therefore, the default value for TIMESTAMPZ is identical to that of TIMESTAMP.
-- When the first column of a time-series table is specified as a TIMESTAMP-typed column, it adopts the same processing logic as a TIMESTAMPZ-typed column.
-- KWDB does not support changing the precision level of a TIMESTAMP-typed or TIMESTAMPZ-typed column using the `ALTER COLUMN ... SET DATA TYPE` statement.
+- By default, KWDB adopts UTC. Therefore, the default value for TIMESTAMPTZ is identical to that of TIMESTAMP.
+- When the first column of a time-series table is specified as a TIMESTAMP-typed column, it adopts the same processing logic as a TIMESTAMPTZ-typed column.
+- KWDB does not support changing the precision level of a TIMESTAMP-typed or TIMESTAMPTZ-typed column using the `ALTER COLUMN ... SET DATA TYPE` statement.
 
 :::
 
@@ -78,9 +78,9 @@ TIMESTAMP-typed values can be cast to any of the following data types.
 | INT | The system returns an error if the value is NaN or +/- Inf. |
 | FLOAT | Convert to milliseconds since Jan. 1, 1970. |
 | STRING | - |
-| TIMESTAMPZ | - |
+| TIMESTAMPTZ | - |
 
-TIMESTAMPZ-typed values can be cast to any of the following data types.
+TIMESTAMPTZ-typed values can be cast to any of the following data types.
 
 | Type | Description |
 | --- | --- |
@@ -98,9 +98,9 @@ TIMESTAMP-typed values can be cast to any of the following data types.
 | INT | The system returns an error if the value is NaN or +/- Inf. |
 | FLOAT | Convert to milliseconds since Jan. 1, 1970. |
 | STRING | - |
-| TIMESTAMPZ | - |
+| TIMESTAMPTZ | - |
 
-TIMESTAMPZ-typed values can be cast to any of the following data types.
+TIMESTAMPTZ-typed values can be cast to any of the following data types.
 
 | Type | Description |
 | --- | --- |
@@ -182,7 +182,7 @@ INTEGER-typed values can be cast to any of the following data types.
 | FLOAT | - |
 | STRING | Convert the INTEGER-typed value to the corresponding STRING-typed value and truncate it based on the converted STRING type. |
 | TIMESTAMP | Convert to milliseconds since Jan. 1, 1970.|
-| TIMESTAMPZ | Convert to milliseconds since Jan. 1, 1970.|
+| TIMESTAMPTZ | Convert to milliseconds since Jan. 1, 1970.|
 
 #### Examples
 

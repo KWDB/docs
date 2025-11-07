@@ -31,7 +31,7 @@ This section describes data types, functions, operators, and SQL statements supp
     - [Comments](./ddl/ts-db/ts-comment.md)
   - Relational Data
     - [Databases](./ddl/relational-db/relational-database.md)
-    - [Schema](./ddl/relational-db/relational-schema.md)
+    - [Schemas](./ddl/relational-db/relational-schema.md)
     - [Tables](./ddl/relational-db/relational-table.md)
     - [Columns](./ddl/relational-db/relational-column.md)
     - [Views](./ddl/relational-db/relational-view.md)
@@ -41,7 +41,7 @@ This section describes data types, functions, operators, and SQL statements supp
     - [Sequences](./ddl/relational-db/relational-sequence.md)
     - [Ranges](./ddl/relational-db/relational-range.md)
     - [Partitions](./ddl/relational-db/relational-partition.md)
-    - [Zone](./ddl/relational-db/relational-zone.md)
+    - [Zones](./ddl/relational-db/relational-zone.md)
     - [Comments](./ddl/relational-db/relational-comment.md)
     - [Stored Procedures](./ddl/relational-db/relational-procedure.md)
     - [Triggers](./ddl/relational-db/relational-trigger.md)

@@ -104,7 +104,7 @@ The user must be a member of the `admin` role or have been granted the `CREATE` 
     This example creates a table named `device_info` and associates comments to the data columns, the tag columns and the table.
 
     ```sql
-    CREATE TABLE device_info (create_time TIMESTAMPZ NOT NULL, device_id INT COMMENT 'device ID' NOT NULL, install_date TIMESTAMPZ, warranty_period INT2) TAGS (plant_code INT2 NOT NULL COMMENT = 'plant code', workshop VARCHAR(128) NOT NULL, device_type CHAR(1023) NOT NULL, manufacturer NCHAR(254) NOT NULL) PRIMARY TAGS(plant_code, workshop, device_type, manufacturer) COMMENT = 'table for device information';
+    CREATE TABLE device_info (create_time TIMESTAMPTZ NOT NULL, device_id INT COMMENT 'device ID' NOT NULL, install_date TIMESTAMPTZ, warranty_period INT2) TAGS (plant_code INT2 NOT NULL COMMENT = 'plant code', workshop VARCHAR(128) NOT NULL, device_type CHAR(1023) NOT NULL, manufacturer NCHAR(254) NOT NULL) PRIMARY TAGS(plant_code, workshop, device_type, manufacturer) COMMENT = 'table for device information';
     ```
 
 - Create a time-series table with a custom HASH ring size.

@@ -59,7 +59,7 @@ INTEGER-typed values can be cast to any of the following data types.
 | STRING | Convert the INTEGER-typed value to the corresponding STRING-typed value and truncate it based on the converted STRING type. |
 | DATE | Convert to days since Jan. 1, 1970. |
 | TIMESTAMP | Convert to milliseconds since Jan. 1, 1970.|
-| TIMESTAMPZ | Convert to milliseconds since Jan. 1, 1970. |
+| TIMESTAMPTZ | Convert to milliseconds since Jan. 1, 1970. |
 | INTERVAL | Convert to seconds since Jan. 1, 1970. |
 
 #### Examples
@@ -897,7 +897,7 @@ CLOB values can be converted to the following data types. When data conforms to 
 
 | CLOB | Numeric | BOOL | STRING | Date and time | JSONB | INET | UUID |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| CLOB | - INT2 <br >- INT4 <br >- INT8 <br >- FLOAT4 <br >- FLOAT8 <br >- DECIMAL | BOOL | - STRING <br >- NAME <br >- CHAR <br >- NCHAR <br >- VARCHAR <br >- NVARCHAR <br >- BIT <br >- VARBIT <br >- GEOMETRY <br >- BYTES <br > - VARBYTES | - TIME <br >- TIMEZ <br >- TIMESTAMP <br >- TIMESTAMPZ <br >- INTERVAL | JSONB | INET | UUID |
+| CLOB | - INT2 <br >- INT4 <br >- INT8 <br >- FLOAT4 <br >- FLOAT8 <br >- DECIMAL | BOOL | - STRING <br >- NAME <br >- CHAR <br >- NCHAR <br >- VARCHAR <br >- NVARCHAR <br >- BIT <br >- VARBIT <br >- GEOMETRY <br >- BYTES <br > - VARBYTES | - TIME <br >- TIMEZ <br >- TIMESTAMP <br >- TIMESTAMPTZ <br >- INTERVAL | JSONB | INET | UUID |
 
 #### Examples
 
@@ -939,7 +939,7 @@ KWDB relational databases support TIMESTAMP and TIMESTAMPTZ time types.
 
 #### Basic Information
 
-The TIMESTAMP data type has TIMESTAMP and TIMESTAMPZ variants.
+The TIMESTAMP data type has TIMESTAMP and TIMESTAMPTZ variants.
 
 TIMESTAMP constants represent specific date and time. In general, the TIMESTAMP constants cannot be modified. You can express TIMESTAMP constants using the `timestamp 'YYYY-MM-DD HH:MM:SS.SSS'` format, such as `timestamp '2020-02-12 07:23:25.123'`.
 
@@ -951,7 +951,7 @@ TIMESTAMP constants represent specific date and time. In general, the TIMESTAMP 
 ::: warning note
 
 - TIMESTAMPTZ does not store any time zone data.
-- By default, KWDB adopts UTC. Therefore, the default value for TIMESTAMPZ is identical to that of TIMESTAMP.
+- By default, KWDB adopts UTC. Therefore, the default value for TIMESTAMPTZ is identical to that of TIMESTAMP.
 
 :::
 
@@ -969,11 +969,11 @@ TIMESTAMP-typed values can be cast to any of the following data types.
 | STRING | - |
 | DATE | Convert to the date portion (`YYYY-MM-DD`) of the timestamp. |
 | TIME | Convert to the time portion (`HH:MM:SS`) of the timestamp. |
-| TIMESTAMPZ | - |
+| TIMESTAMPTZ | - |
 
 #### Data Type Conversions and Casts
 
-TIMESTAMP-typed values can be cast to any of the following data types.
+TIMESTAMPTZ-typed values can be cast to any of the following data types.
 
 | Type | Description |
 | --- | --- |
@@ -983,7 +983,7 @@ TIMESTAMP-typed values can be cast to any of the following data types.
 | STRING | - |
 | DATE | Convert to the date portion (`YYYY-MM-DD`) of the timestamp. |
 | TIME | Convert to the time portion (`HH:MM:SS`) of the timestamp. |
-| TIMESTAMPZ | - |
+| TIMESTAMP | - |
 
 #### Examples
 
@@ -1035,7 +1035,7 @@ DATE-typed values can be cast to any of the following data types.
 | FLOAT | - |
 | DECIMAL | - |
 | STRING | - |
-| TIMESTAMPZ/TIMESTAMPZ | - |
+| TIMESTAMPTZ/TIMESTAMPTZ | - |
 
 #### Examples
 

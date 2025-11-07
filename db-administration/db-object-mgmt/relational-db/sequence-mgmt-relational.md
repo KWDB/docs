@@ -286,7 +286,11 @@ ALTER SEQUENCE [IF EXISTS] <seq_name>
 
 ## 重命名序列
 
-`ALTER SEQUENCE` 语句用于修改序列的名称。
+`ALTER SEQUENCE` 语句用于修改序列的名称或者将序列移动到其他数据库。
+
+::: warning 说明
+KWDB 不支持重命名表中正在使用的序列。如需重命名表中正在使用的序列，需要先删除引用该序列的 `DEFAULT` 表达式，然后再重命名序列，最后再添加 `DEFAULT` 表达式。
+:::
 
 ### 前提条件
 
