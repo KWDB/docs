@@ -798,7 +798,7 @@ The `ALTER TABLE` statement performs the following operations:
 
 ## DROP TABLE
 
-The `DROP TABLE` statement removes a table and all its indexes from a database.
+The `DROP TABLE` statement removes a table and all its indexes and associated triggers from a database.
 
 ### Privileges
 

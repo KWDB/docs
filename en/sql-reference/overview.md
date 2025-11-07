@@ -40,6 +40,8 @@ This document describes data types, functions, operators, and SQL statements sup
     - [Ranges](./ddl/relational-db/relational-range.md)
     - [Zone Configurations](./ddl/relational-db/relational-zone.md)
     - [Comments](./ddl/relational-db/relational-comment.md)
+    - [Stored Procedures](./ddl/relational-db/relational-procedure.md)
+    - [Triggers](./ddl/relational-db/relational-trigger.md)
 - DML Statements
   - Time-Series Data
     - [SELECT](./dml/ts-db/ts-select.md)
@@ -74,7 +76,9 @@ This document describes data types, functions, operators, and SQL statements sup
   - [Pipes](./other-sql-statements/pipe-sql.md)
   - [Sessions](./other-sql-statements/sessions-sql.md)
   - [Cluster Settings](./other-sql-statements/cluster-settings-sql.md)
-  - [License](./other-sql-statements/license-sql.md)
+  - [Declarations](./other-sql-statements/declare-sql.md)
+  - [Cursors](./other-sql-statements/cursor-sql.md)
+  - [Delimiter](./other-sql-statements/delimiter-sql.md)
 - [System Views](./system-view-sql.md)
 - [NULL Value Handling](./null-value-mgmt.md)
 - [View SQL Statements](./sql-help.md)

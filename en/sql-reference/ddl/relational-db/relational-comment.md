@@ -7,7 +7,7 @@ id: relational-comment
 
 ## COMMENT ON
 
-The `COMMENT ON` statement associates comments to databases, tables, columns, or indexes.
+The `COMMENT ON` statement associates comments to databases, tables, columns, indexes, or stored procedures.
 
 ### Privileges
 
@@ -15,7 +15,7 @@ The user must have the `CREATE` privilege on the object they are commenting on.
 
 ### Syntax
 
-![](../../../../static/sql-reference/LSAGbM0XloqkSOxxyijc8q0hnjh.png)
+![](../../../../static/sql-reference/addcomment.png)
 
 ### Parameters
 
@@ -25,6 +25,7 @@ The user must have the `CREATE` privilege on the object they are commenting on.
 | `table_name`    | The name of the table to comment on.        |
 | `column_name`   | The name of the column to comment on.       |
 | `index_name`    | The name of the index to comment on.        |
+| `proc_name`     | The name of the stored procedure to comment on. |
 | `comment_text`  | The comment to be associated to the object. |
 
 ### Examples
@@ -105,4 +106,20 @@ The user must have the `CREATE` privilege on the object they are commenting on.
       orders     | orders_customer_id_key_rename |   false    |            1 | customer_id | ASC       |  false  |  false   | NULL
       orders     | orders_customer_id_key_rename |   false    |            2 | id          | ASC       |  false  |   true   | NULL
     (3 rows)
+    ```
+
+- Add a comment to a stored procedure.
+
+    ```sql
+    -- 1. Add a comment to the proc1 stored procedure.
+
+    COMMENT ON PROCEDURE proc1 IS 'test query sql and if else logical';
+
+    -- 2. Check the stored procedure's comments.
+
+    SHOW PROCEDURES WITH COMMENT;
+    procedure_name |              comment
+    -----------------+-------------------------------------
+    proc1           | test query sql and if else logical
+    (1 row)
     ```

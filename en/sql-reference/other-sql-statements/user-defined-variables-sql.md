@@ -5,7 +5,7 @@ id: user-defined-variables-sql
 
 # User-defined Variables
 
-You can store a value in a user-defined variable in one statement and refer to it later in another statement. This enables you to pass values from one statement to another. A user-defined variable is written as `@var_name`. KaiwuDB supports user-defined variables, which enables you to assign values, reference variables, and calculate values in SQL statements. User-defined variables are session specific. A user variable defined by one client cannot be seen or used by other clients. All variables for a given client session are lost when that client exits.
+You can store a value in a user-defined variable in one statement and refer to it later in another statement. This enables you to pass values from one statement to another. A user-defined variable is written as `@var_name`. KWDB supports user-defined variables, which enables you to assign values, reference variables, and calculate values in SQL statements. User-defined variables are session specific. A user variable defined by one client cannot be seen or used by other clients. All variables for a given client session are lost when that client exits.
 
 User-defined variables are mainly used in the following scenarios:
 
@@ -24,7 +24,7 @@ User-defined variables are mainly used in the following scenarios:
 
 :::
 
-KaiwuDB supports initializing user-defined variables, updating their values, and querying both their values and data types. The data type of a user-defined variable is determined by its initial value. This table lists the data types supported by user-defined variables.
+KWDB supports initializing user-defined variables, updating their values, and querying both their values and data types. The data type of a user-defined variable is determined by its initial value. This table lists the data types supported by user-defined variables.
 
 | Data Type | Description |
 | --- | --- |
@@ -32,7 +32,7 @@ KaiwuDB supports initializing user-defined variables, updating their values, and
 | BOOL | BOOL |
 | STRING | STRING, CHAR, VARCHAR, BYTES, VARBYTES |
 
-KaiwuDB does not limit the data type width of user-defined variables. After user-defined variables are initialized, you cannot modify their data types. Their subsequent values must match with the initial data type. Otherwise, the system returns an error. For example, the system returns an error if a floating-point value is assigned to a user-defined variable that was initially defined as an integer. Since both INT4 and INT8 are the integer type, assigning an INT8 value to an INT4 user-defined variable will not cause an error. You can also use the `SET @var = <var_value>::<data_type>` statement to assign a value with a specified data type to a user-defined variable.
+KWDB does not limit the data type width of user-defined variables. After user-defined variables are initialized, you cannot modify their data types. Their subsequent values must match with the initial data type. Otherwise, the system returns an error. For example, the system returns an error if a floating-point value is assigned to a user-defined variable that was initially defined as an integer. Since both INT4 and INT8 are the integer type, assigning an INT8 value to an INT4 user-defined variable will not cause an error. You can also use the `SET @var = <var_value>::<data_type>` statement to assign a value with a specified data type to a user-defined variable.
 
 ::: warning Note
 
