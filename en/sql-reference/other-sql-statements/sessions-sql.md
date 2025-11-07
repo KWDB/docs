@@ -104,7 +104,7 @@ Only the `root` user can cancel any currently active sessions. Other users can o
 - Cancel multiple sessions.
 
     ```sql
-    CANCEL SESSIONS (SELECT session_id FROM [SHOW SESSIONS] WHERE user_name = 'kaiwudb');
+    CANCEL SESSIONS (SELECT session_id FROM [SHOW SESSIONS] WHERE user_name = 'KWDB');
     CANCEL SESSIONS 2
     ```
 

@@ -29,7 +29,7 @@ KWDB supports creating, modifying, checking, removing, and calling stored proced
 - Do not support referencing other database objects except for relational and time-series tables within a stored procedure.
 - Do not support setting how to pass the values of parameters, such as `IN`, `OUT`, or `INOUT`. All parameters are passed as input parameters.
 - If there are multiple results sets within a stored procedure and some result sets are empty, the empty result sets are not displayed.
-- When connecting KWDB through the KWDB JDBC Driver, only one result set is output in `PREPARE` mode.
+- When connecting KWDB through the KaiwuDB JDBC Driver, only one result set is output in `PREPARE` mode.
 
 :::
 
@@ -52,7 +52,7 @@ For details, see [CREATE PROCEDURE](../../../sql-reference/ddl/relational-db/rel
 | `proc_name` | The name of the stored procedure to create. |
 | `parameter_list` | A comma-separated list of input parameter definitions of the stored procedure, in a format of `var_name var_type`. <br>- `var_name`: the name of the variables. <br>- `var_type`: the data type of the variables. Available options are INT2, INT4, INT8, FLOAT4, FLOAT8, DECIMAL, STRING, TEXT, CHAR, VARCHAR, TIMESTAMP, TIMESTAMPTZ. If not specified, it is set to NULL by default. |
 | `opt_loop_label` | The label of the stored procedure body, in a format of `LABEL label_name:`. |
-| `opt_proc_body` | The stored procedure body, including the SQL statements that must be executed when calling the stored procedure. The stored procedure body starts with the `BEGIN` keyword and ends with the `END` keyword. <br >**Note** <br >If you use KWDB JDBC Driver to create a stored procedure, you should use the double dollars sign (`$$`) to wrap the `BEGIN ...END` statement.|
+| `opt_proc_body` | The stored procedure body, including the SQL statements that must be executed when calling the stored procedure. The stored procedure body starts with the `BEGIN` keyword and ends with the `END` keyword. <br >**Note** <br >If you use KaiwuDB JDBC Driver to create a stored procedure, you should use the double dollars sign (`$$`) to wrap the `BEGIN ...END` statement.|
 | `opt_label` | The label of the stored procedure body, in a format of `label_name`. The `opt_loop_label` and `opt_label` parameters must come in pairs.|
 | `select_stmt`| The `SELECT` statement to read data from the database. |
 | `insert_stmt`| The `INSERT` statement to insert one or more rows of data into tables.|

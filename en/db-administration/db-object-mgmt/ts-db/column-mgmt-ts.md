@@ -12,7 +12,7 @@ The `ALTER TABLE ... ADD COLUMN` statement adds columns to existing tables. `ADD
 ::: warning Note
 
 - Currently, KWDB does not support adding multiple columns at once.
-- When adding a column to an existing table, KWDB will check whether the current table is referenced by the real-time data feed service. If yes, the system returns an error and lists all pipes that reference the specified table. In this case, you should stop the real-time data feed service and then add the column. For details about how to stop the real-time data feed service, see [ALTER PIPE](../../../../en/sql-reference/other-sql-statements/pipe-sql.md#alter-pipe).
+- When adding a column to an existing table, KWDB will check whether the current table is referenced by any stream. If yes, the system ruturns an error and lists all streams that reference the specified table. In this case, you should remove the stream and then add the column. For details about how to remove the stream, see [DROP STREAM](../../../../en/sql-reference/other-sql-statements/stream-sql.md#drop-stream).
 
 :::
 

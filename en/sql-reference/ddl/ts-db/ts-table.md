@@ -273,7 +273,7 @@ The `ALTER TABLE` statement performs the following operations:
 - When removing a column from a table, you must ensure that there are at lease data columns in the table. In addition, you can not remove the first column (TIMESTAMP-typed column).
 - Currently, KWDB does not support adding, removing, or renaming primary tags.
 - Currently, KWDB does not support adding or removing multiple columns at once.
-- When altering a table, KWDB will check whether the current table is referenced by the real-time data feed service. If yes, the system returns an error and lists all pipes that reference the specified table. In this case, you should stop the real-time data feed service and then alter the table. For details about how to stop the real-time data feed service, see [ALTER PIPE](../../../../en/sql-reference/other-sql-statements/pipe-sql.md#alter-pipe).
+- When altering a table, KWDB will check whether the current table is referenced by any stream. If yes, the system ruturns an error and lists all streams that reference the specified table. In this case, you should remove the stream and then alter the table. For details about how to remove the stream, see [DROP STREAM](../../../../en/sql-reference/other-sql-statements/stream-sql.md#drop-stream).
 
 :::
 
@@ -403,7 +403,7 @@ ALTER TABLE ts_table ALTER color TYPE VARCHAR(50);
 The `DROP TABLE` statement removes all tables from a database. After deletion, all privileges on the tables are also removed.
 
 ::: warning Note
-When removing a table, KWDB will check whether the current table is referenced by the real-time data feed service. If yes, the system returns an error and lists all pipes that reference the specified table. In this case, you can use the `CASCADE` keyword to remove the specified table and its dependent objects.
+When removing a table, KWDB will check whether the current table is referenced by any stream. If yes, the system ruturns an error and lists all streams that reference the specified table. In this case, you can use the `CASCADE` keyword to remove the specified table and its dependent objects.
 :::
 
 ### Privileges

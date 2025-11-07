@@ -168,9 +168,3 @@ CREATE TABLE
     10|450    
     (2 rows)
     ```
-
-- Insert data for label column.
-
-    ```sql
-    INSERT INTO accounts(c_label, id) VALUES ('30:comp1,comp2', 1);
-    ```

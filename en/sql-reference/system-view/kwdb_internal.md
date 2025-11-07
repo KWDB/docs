@@ -87,23 +87,6 @@ The `kwdb_internal.gossip_nodes` system view describes information about nodes i
 | `ranges`                | INT8      | The number of data ranges.           |
 | `leases`                | INT8      | The number of leases.                |
 
-## kwdb_internal.kwdb_license
-
-The `kwdb_internal.kwdb_license` system view describes the license.
-
-| Column Name       | Data Type | Description                                     |
-|-------------------|-----------|-------------------------------------------------|
-| `product`         | STRING    | The product name.                               |
-| `version`         | STRING    | The product version.                            |
-| `edition`         | STRING    | The product edition.                            |
-| `customer`        | STRING    | The name of the customer.                       |
-| `expiration_time` | TIMESTAMP | The expiration time of the license.             |
-| `endpoint_limit`  | INT8      | The maximum number of endpoints allowed by the license. A value of `-1` indicates no limit. |
-| `endpoint_used`   | INT8      | The number of endpoints currently in use in the cluster.   |
-| `node_limit`      | INT8      | The maximum number of nodes allowed by the license.     |
-| `node_used`       | INT8      | The number of nodes currently in use in the cluster.        |
-| `serial_number`   | STRING    | The serial number of the license.               |
-
 ## kwdb_internal.metrics_metadata
 
 The `kwdb_internal.metrics_metadata` system view describes metadata of monitoring metrics.
@@ -182,24 +165,6 @@ The `kwdb_internal.role_options` system view describes user options.
 | `username`  | STRING | The user name.             |
 | `option`    | STRING | The user option.      |
 | `value`     | STRING          | The value of the user option. |
-
-## kwdb_internal.stat_replication
-
-## kwdb_internal.stat_replication
-
-The `kwdb_internal.stat_replication` system view provides replication lag information for the most recent 100 records on a secondary node in a primary-secondary replication setup. This view can only be queried from the secondary node. Querying from the primary node returns no results.
-
-| Column Name    | Data Type | Description                                                                                                                                        |
-| -------------- | --------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `sent_lsn`     | STRING    | The WAL position sent by the WAL sender process.                                                                                            |
-| `active_addr`  | STRING    | The IP address of the primary node.                                                                                                                |
-| `standby_addr` | STRING    | The IP address of the secondary node.                                                                                                              |
-| `state`        | STRING    | WAL sender state:<br> - `startup`: Initializing<br> - `catchup`: Secondary node is catching up<br> - `streaming`: Secondary node is synchronized |
-| `apply_lag`    | TIMESTAMP | Time elapsed since the WAL entry was applied on the primary node.                                                                                            |
-| `write_lag`    | TIMESTAMP | Time elapsed since the WAL was sent from the primary node and acknowledged as written by the secondary node.                                                      |
-| `flush_lag`    | TIMESTAMP | Time elapsed since the WAL entry was flushed to disk on the secondary node.                                                                              |
-| `replay_lag`   | TIMESTAMP | Time elapsed since the WAL entry was replayed on the secondary node.                                                                                        |
-| `sync_state`   | STRING    | The synchronization mode: `async` indicates asynchronous replication.                                                                                 |
 
 ## kwdb_internal.table_columns
 

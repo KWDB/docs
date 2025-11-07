@@ -300,7 +300,7 @@ This table lists the operators that look like built-in functions but have specia
 | Function → Returns             | Description                                                                                                                                                  |
 | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
 | experimental_uuid_v4() → bytes | Return a UUID.                                                                                                                                       |
-| gen_random_uuid() → uuid       | Generate a random UUID and return it as a value of Tthe UUID type.                                                                                                         |
+| gen_random_uuid() → uuid       | Generate a random UUID and return it as a value of the UUID type.                                                                                                         |
 | unique_rowid() → int8          | Return a unique ID used by KWDB to generate unique row IDs if a primary key isn't defined for the table. The value is a combination of the insert timestamp and the ID of the node executing the statement, which guarantees this combination is globally unique.  |
 | uuid_v4() → bytes              | Return a UUID.                                                                                                                                       |
 
@@ -1159,12 +1159,3 @@ This table lists the operators that look like built-in functions but have specia
 | percent_rank() → FLOAT8                                             | Calculate the relative rank of the current row: (rank - 1) / (total rows - 1).                                                                                     |
 | rank() → INT8                                                       | Calculate the rank of the current row with gaps. Same as the `row_number` of its first peer.                                                                             |
 | row_number() → INT8                                                 | Calculate the number of the current row within its partition, counting from 1.                                                                                        |
-
-## Encryption and Decryption Functions
-
-| Function → Returns                                | Description                                                                                                                                        |
-|---------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
-| aes_encrypt(plaintext: string, key: Any) → bytes  | Perform Advanced Encryption Standard (AES) encryption, the function takes the plaintext and the encryption key as input and yields the ciphertext. |
-| aes_decrypt(ciphertext: bytes, key: Any) → string | Perform AES decryption, the function takes the ciphertext and the decryption key as input and returns the plaintext.                               |
-| sm4_encrypt(plaintext: string, key: Any) → bytes  | Perform SM4 encryption, the function takes the plaintext and the encryption key as input and yields the ciphertext.                                |
-| sm4_decrypt(ciphertext: bytes, key: Any) → string | Perform SM4 decryption, the function takes the ciphertext and the decryption key as input and returns the plaintext.                               |

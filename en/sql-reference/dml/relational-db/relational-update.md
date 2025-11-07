@@ -241,9 +241,3 @@ SELECT * FROM accounts;
       1
     (1 row)
     ```
-
-- Update data for a label column.
-
-    ```sql
-    UPDATE accounts SET c_label = '30:comp1,comp4' where 1=1;
-    ```
