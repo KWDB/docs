@@ -33,7 +33,7 @@ KWDB 支持监控和记录包括管理员在内的所有用户操作，提供三
 | SCHEMA     | - CREATE SCHEMA <br >- DROP SCHEMA                           | -                                                            |
 | TABLE      | - CREATE TABLE <br >- ALTER TABLE <br >- DROP TABLE <br >- TRUNCATE TABLE <br >- IMPORT <br >- EXPORT | - CREATE TABLE <br >- ALTER TABLE <br >- DROP TABLE <br >- IMPORT <br >- EXPORT |
 | VIEW       | - CREATE VIEW <br >- ALTER VIEW <br >- DROP VIEW             | -                                                            |
-| INDEX      | - CREATE INDEX <br >- ALTER INDEX <br >- DROP INDEX          | -                                                            |
+| INDEX      | - CREATE INDEX <br >- ALTER INDEX <br >- DROP INDEX                                 | - CREATE INDEX <br >- ALTER INDEX <br >- DROP INDEX                 |
 | SEQUENCE   | - CREATE SEQUENCE <br >- ALTER SEQUENCE <br >- DROP SEQUENCE | -                                                            |
 | PRIVILEGE  | - GRANT PRIVILEGE <br >- REVOKE PRIVILEGE                    | - GRANT PRIVILEGE <br >- REVOKE PRIVILEGE                    |
 | AUDIT      | - CREATE AUDIT <br >- ALTER AUDIT <br >- DROP AUDIT          | - CREATE AUDIT <br >- ALTER AUDIT <br >- DROP AUDIT          |

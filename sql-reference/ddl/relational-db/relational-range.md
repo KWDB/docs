@@ -124,11 +124,11 @@ KWDB 支持用户使用 SHOW RANGES 语句查看关系库、关系表和索引�
   以下示例将 `meta` 系统数据分片的副本数改为 7 个。
 
   ```SQL
-  > ALTER RANGE meta CONFIGURE ZONE USING num_replicas=7;
+  ALTER RANGE meta CONFIGURE ZONE USING num_replicas=7;
   ALTER RANGE 
 
-  > SHOW ZONE CONFIGURATION FOR RANGE meta;
-      target   |            raw_config_sql
+  SHOW ZONE CONFIGURATION FOR RANGE meta;
+      target   |            config_sql
   -------------+----------------------------------------
     RANGE meta | ALTER RANGE meta CONFIGURE ZONE USING
               |     range_min_bytes = 134217728,

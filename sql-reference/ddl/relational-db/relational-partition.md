@@ -37,7 +37,7 @@ id: relational-partition
 
 ### 所需权限
 
-- 建表时创建分区：用户是 `admin` 角色成员或拥有数据库的 CREATE 权限。默认情况下，root 用户属于 `admin` 角色。
+- 建表时创建分区：用户是 `admin` 角色成员或拥有数据库的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
 - 修改表时创建分区：用户是 `admin` 角色成员或拥有目标表的 CREATE 权限。默认情况下，root 用户属于 `admin` 角色。
 
 ### 语法格式

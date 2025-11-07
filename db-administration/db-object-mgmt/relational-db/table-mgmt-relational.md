@@ -696,7 +696,7 @@ ALTER TABLE [IF EXISTS] <table_name>
 - RENAME
   - `RENAME TO`: 修改表的名称。
   - `RENAME COLUMN`：修改列的名称。更多详细信息，参见[修改列](./column-mgmt-relational.md#修改列)。
-  - `RENAME TAG/ATTRIBUTE`：修改约束的名称。更多详细信息，参见[重命名约束](./constraint-mgmt-relational.md#重命名约束)。
+  - `RENAME CONSTRAINT`：修改约束的名称。更多详细信息，参见[重命名约束](./constraint-mgmt-relational.md#重命名约束)。
 - `VALIDATE CONSTRAINT`：检查列的值是否与列的约束匹配。
 - `SPLIT AT`：在表的特定行或范围上创建拆分点，便于在数据分布不均匀、存在热点（hotspots）等情况下优化表的性能。`WITH EXPIRATION` 子句用于设置拆分点的过期时间，便于系统在指定时间后自动移除拆分点。
 - `UNSPLIT AT`：移除表的特定行或范围上的拆分点。SELECT子句可用于指定要移除拆分点的位置。

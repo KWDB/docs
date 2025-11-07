@@ -241,12 +241,12 @@ KWDB 不支持修改视图关联的数据库的名称。
   
   ```sql
   -- 1. 修改数据库区域配置
-  > ALTER DATABASE db3 CONFIGURE ZONE USING num_replicas = 5, gc.ttlseconds = 100000;
+  ALTER DATABASE db3 CONFIGURE ZONE USING num_replicas = 5, gc.ttlseconds = 100000;
   CONFIGURE ZONE 1
 
   -- 2. 查看数据库区域配置
 
-  > SHOW ZONE CONFIGURATION FOR DATABASE db3;
+  SHOW ZONE CONFIGURATION FOR DATABASE db3;
         target  |               config_sql
   -------------------+------------------------------------------
     DATABASE db3 | ALTER DATABASE db3 CONFIGURE ZONE USING

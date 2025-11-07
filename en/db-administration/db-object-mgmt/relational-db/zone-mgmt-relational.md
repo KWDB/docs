@@ -140,8 +140,8 @@ ALTER [DATABASE <database_name> | TABLE <table_name> | RANGE <range_name> | PART
     CONFIGURE ZONE 1
 
     SHOW ZONE CONFIGURATION FOR DATABASE db3;
-    target |               config_sql                 
-    +-----------+-----------------------------------------+
+      target |               config_sql                 
+    -----------+-----------------------------------------+
     db3       | ALTER DATABASE db3 CONFIGURE ZONE USING  
               |     range_min_bytes = 268435456,          
               |     range_max_bytes = 536870912,          

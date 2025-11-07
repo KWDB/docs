@@ -154,10 +154,10 @@ The `ALTER ... CONFIGURE ZONE` statement is used for the following operations:
     The following example changes the number of replicas for the `vtx` database to 5 and the data retention time before garbage collection to 100000 seconds.
 
     ```SQL
-    > ALTER DATABASE vtx CONFIGURE ZONE USING num_replicas = 5, gc.ttlseconds = 100000;
+    ALTER DATABASE vtx CONFIGURE ZONE USING num_replicas = 5, gc.ttlseconds = 100000;
     CONFIGURE ZONE 1
 
-    > SHOW ZONE CONFIGURATION FOR DATABASE vtx;
+    SHOW ZONE CONFIGURATION FOR DATABASE vtx;
          target     |              config_sql
     ----------------+-------------------------------------------
     DATABASE vtx   | ALTER DATABASE tsdb CONFIGURE ZONE USING
@@ -175,10 +175,10 @@ The `ALTER ... CONFIGURE ZONE` statement is used for the following operations:
     The following example changes the number of replicas for the `vehicles` table to 3 and the data retention time before garbage collection to 100000 seconds.
 
     ```SQL
-    > ALTER TABLE vehicles CONFIGURE ZONE USING num_replicas = 3, gc.ttlseconds = 100000;
+    ALTER TABLE vehicles CONFIGURE ZONE USING num_replicas = 3, gc.ttlseconds = 100000;
     CONFIGURE ZONE 1
 
-    > SHOW ZONE CONFIGURATION FOR TABLE vehicles;
+    SHOW ZONE CONFIGURATION FOR TABLE vehicles;
          target    |             config_sql
     ---------------+------------------------------------------
     TABLE vehicles | ALTER TABLE vehicles CONFIGURE ZONE USING
@@ -196,10 +196,10 @@ The `ALTER ... CONFIGURE ZONE` statement is used for the following operations:
     The following example restores the default zone configuration for the `vehicles` table.
 
     ```SQL
-    > ALTER TABLE vehicles CONFIGURE ZONE DISCARD;
+    ALTER TABLE vehicles CONFIGURE ZONE DISCARD;
     CONFIGURE ZONE 1
 
-    > SHOW ZONE CONFIGURATION FOR TABLE vehicles;
+    SHOW ZONE CONFIGURATION FOR TABLE vehicles;
          target     |              raw_config_sql
     ----------------+-------------------------------------------
     RANGE default | ALTER RANGE default CONFIGURE ZONE USING

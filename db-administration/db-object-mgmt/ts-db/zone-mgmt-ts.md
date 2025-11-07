@@ -120,7 +120,6 @@ KWDB 集群中，每个数据分片都隶属于一个特定的副本区域（zon
 
 - 修改数据库、表、数据分片和分区的区域配置
 - 移除数据库、表、数据分片和分区的区域配置
-- 对指定数据库、表或数据分片进行手动均衡
 
 ### 所需权限
 
@@ -153,10 +152,10 @@ ALTER [DATABASE <database_name> | TABLE <table_name> | RANGE <range_name> | PART
      以下示例将 `vtx` 数据库的副本数改为 5 个，将数据在垃圾回收前保留的时间改为 100000 秒。
 
      ```SQL
-     > ALTER DATABASE vtx CONFIGURE ZONE USING num_replicas = 5, gc.ttlseconds = 100000;
+     ALTER DATABASE vtx CONFIGURE ZONE USING num_replicas = 5, gc.ttlseconds = 100000;
      CONFIGURE ZONE 1
 
-     > SHOW ZONE CONFIGURATION FOR DATABASE vtx;
+     SHOW ZONE CONFIGURATION FOR DATABASE vtx;
           target     |              raw_config_sql
      ----------------+-------------------------------------------
      DATABASE vtx   | ALTER DATABASE tsdb CONFIGURE ZONE USING
@@ -174,10 +173,10 @@ ALTER [DATABASE <database_name> | TABLE <table_name> | RANGE <range_name> | PART
      以下示例将 `vehicles` 表的副本数改为 3 个，将数据在垃圾回收前保留的时间改为 100000 秒。
 
      ```SQL
-     > ALTER TABLE vehicles CONFIGURE ZONE USING num_replicas = 3, gc.ttlseconds = 100000;
+     ALTER TABLE vehicles CONFIGURE ZONE USING num_replicas = 3, gc.ttlseconds = 100000;
      CONFIGURE ZONE 1
 
-     > SHOW ZONE CONFIGURATION FOR TABLE vehicles;
+     SHOW ZONE CONFIGURATION FOR TABLE vehicles;
           target    |             raw_config_sql
      ---------------+------------------------------------------
      TABLE vehicles | ALTER TABLE vehicles CONFIGURE ZONE USING
@@ -195,10 +194,10 @@ ALTER [DATABASE <database_name> | TABLE <table_name> | RANGE <range_name> | PART
   以下示例恢复了 `vehicles` 表的默认区域配置。
 
      ```SQL
-     > ALTER TABLE vehicles CONFIGURE ZONE DISCARD;
+     ALTER TABLE vehicles CONFIGURE ZONE DISCARD;
      CONFIGURE ZONE 1
 
-     > SHOW ZONE CONFIGURATION FOR TABLE vehicles;
+     SHOW ZONE CONFIGURATION FOR TABLE vehicles;
           target     |              raw_config_sql
      ----------------+-------------------------------------------
      RANGE default | ALTER RANGE default CONFIGURE ZONE USING

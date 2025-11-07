@@ -153,12 +153,12 @@ id: relational-zone
      以下示例将 `db3` 数据库的副本数改为 5 个，将数据在垃圾回收前保留的时间改为 100000 秒。
 
      ```SQL
-     > ALTER DATABASE db3 CONFIGURE ZONE USING num_replicas = 5, gc.ttlseconds = 100000;
+     ALTER DATABASE db3 CONFIGURE ZONE USING num_replicas = 5, gc.ttlseconds = 100000;
      CONFIGURE ZONE 1
 
-     > SHOW ZONE CONFIGURATION FOR DATABASE db3;
-     zone_name |               config_sql                 
-     +-----------+-----------------------------------------+
+     SHOW ZONE CONFIGURATION FOR DATABASE db3;
+       target |               config_sql                 
+     -----------+-----------------------------------------+
      db3       | ALTER DATABASE db3 CONFIGURE ZONE USING  
                |     range_min_bytes = 268435456,          
                |     range_max_bytes = 536870912,          
@@ -174,10 +174,10 @@ id: relational-zone
      以下示例将 `orders` 表的副本数改为 3 个，将数据在垃圾回收前保留的时间改为 100000 秒。
 
      ```SQL
-     > ALTER TABLE orders CONFIGURE ZONE USING num_replicas = 3, gc.ttlseconds = 100000;
+     ALTER TABLE orders CONFIGURE ZONE USING num_replicas = 3, gc.ttlseconds = 100000;
      CONFIGURE ZONE 1
 
-     > show zone configuration for table orders;
+     show zone configuration for table orders;
           target    |             raw_config_sql
      ---------------+------------------------------------------
      TABLE orders | ALTER TABLE orders CONFIGURE ZONE USING
@@ -195,10 +195,10 @@ id: relational-zone
      以下示例恢复了 `orders` 表的默认区域配置。
 
      ```SQL
-     > alter table orders configure zone discard;
+     alter table orders configure zone discard;
      CONFIGURE ZONE 1
 
-     > show zone configuration for table orders;
+     show zone configuration for table orders;
           target     |              raw_config_sql
      ----------------+-------------------------------------------
      RANGE default | ALTER RANGE default CONFIGURE ZONE USING
