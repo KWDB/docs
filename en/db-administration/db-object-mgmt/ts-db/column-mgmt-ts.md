@@ -133,7 +133,7 @@ The `ALTER TABLE ... ALTER COLUMN` statement performs the following operations. 
 - Change a column's data width.
 
 ::: warning Note
-When changing a column, KWDB will check whether the current table is referenced by the real-time data feed service. If yes, the system returns an error and lists all pipes that reference the specified table. In this case, you should stop the real-time data feed service and then change the column. For details about how to stop the real-time data feed service, see [ALTER PIPE](../../../../en/sql-reference/other-sql-statements/pipe-sql.md#alter-pipe).
+When changing a column, KWDB will check whether the current table is referenced by any stream. If yes, the system ruturns an error and lists all streams that reference the specified table. In this case, you should remove the stream and then change the column. For details about how to remove the stream, see [DROP STREAM](../../../../en/sql-reference/other-sql-statements/stream-sql.md#drop-stream).
 :::
 
 
@@ -182,7 +182,7 @@ ALTER TABLE <table_name> ALTER [COLUMN] <colunm_name> [SET DATA] TYPE <new_type>
 The `ALTER TABLE ... RENAME COLUMN` statement changes the name of a column in a table.
 
 ::: warning Note
-When renaming a column to, KWDB will check whether the current table is referenced by the real-time data feed service. If yes, the system returns an error and lists all pipes that reference the specified table. In this case, you should stop the real-time data feed service and then rename the column. For details about how to stop the real-time data feed service, see [ALTER PIPE](../../../../en/sql-reference/other-sql-statements/pipe-sql.md#alter-pipe).
+When renaming a column, KWDB will check whether the current table is referenced by any stream. If yes, the system ruturns an error and lists all streams that reference the specified table. In this case, you should remove the stream and then rename the column. For details about how to remove the stream, see [DROP STREAM](../../../../en/sql-reference/other-sql-statements/stream-sql.md#drop-stream).
 :::
 
 ### Privileges
@@ -219,7 +219,7 @@ The `ALTER TABLE ... DROP COLUMN` statement removes columns from a table. `DROP 
 
 - When removing a column from a table, you must ensure that there are at lease data columns in the table. In addition, you can not remove the first column (TIMESTAMP-typed column).
 - Currently, KWDB does not support removing multiple columns at once.
-- When removing a column from an existing table, KWDB will check whether the current table is referenced by the real-time data feed service. If yes, the system returns an error and lists all pipes that reference the specified table. In this case, you should stop the real-time data feed service and then remove the column. For details about how to stop the real-time data feed service, see [ALTER PIPE](../../../../en/sql-reference/other-sql-statements/pipe-sql.md#alter-pipe).
+- When removing a column, KWDB will check whether the current table is referenced by any stream. If yes, the system ruturns an error and lists all streams that reference the specified table. In this case, you should remove the stream and then remove the column. For details about how to remove the stream, see [DROP STREAM](../../../../en/sql-reference/other-sql-statements/stream-sql.md#drop-stream).
 
 :::
 
