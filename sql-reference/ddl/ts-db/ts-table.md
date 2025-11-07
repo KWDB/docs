@@ -231,7 +231,7 @@ id: ts-table
 
     CREATE TABLE t3(ts timestamp NOT NULL, a int) TAGS(ptag int NOT NULL) PRIMARY TAGS(ptag);
 
-    -- 2. 查看已创建的 t1 时序表。
+    -- 2. 查看已创建的 t3 时序表。
 
     SHOW CREATE TABLE t3;
       table_name |              create_statement

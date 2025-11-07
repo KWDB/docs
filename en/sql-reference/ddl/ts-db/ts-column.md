@@ -12,13 +12,13 @@ The `ALTER TABLE ... ADD COLUMN` statement adds columns to existing tables. `ADD
 ::: warning Note
 
 - Currently, KWDB does not support adding multiple columns at once.
-- When adding a column to an existing table, KWDB will check whether the current table is referenced by any stream. If yes, the system ruturns an error and lists all streams that reference the specified table. In this case, you should remove the stream and then add the column. For details about how to remove the stream, see [DROP STREAM](../../../../en/sql-reference/other-sql-statements/stream-sql.md#drop-stream).
+- When adding a column to an existing table, KWDB will check whether the current table is referenced by the real-time data feed service. If yes, the system returns an error and lists all pipes that reference the specified table. In this case, you should stop the real-time data feed service and then add the column. For details about how to stop the real-time data feed service, see [ALTER PIPE](../../../../en/sql-reference/other-sql-statements/pipe-sql.md#alter-pipe).
 
 :::
 
 ### Privileges
 
-The user must have been granted the `CREATE` privilege on the specified table(s).
+The user must be a member of the `admin` role or have been granted the `CREATE` privilege on the specified table(s). By default, the `root` user belongs to the `admin` role.
 
 ### Syntax
 
@@ -129,12 +129,16 @@ The `ALTER TABLE ... ALTER COLUMN` statement performs the following operations. 
 - Change a column's data width.
 
 ::: warning Note
+<<<<<<< HEAD
 When changing a column, KWDB will check whether the current table is referenced by any stream. If yes, the system ruturns an error and lists all streams that reference the specified table. In this case, you should remove the stream and then change the column. For details about how to remove the stream, see [DROP STREAM](../../../../en/sql-reference/other-sql-statements/stream-sql.md#drop-stream).
+=======
+When changing a column, KWDB will check whether the current table is referenced by the real-time data feed service. If yes, the system returns an error and lists all pipes that reference the specified table. In this case, you should stop the real-time data feed service and then change the column. For details about how to stop the real-time data feed service, see [ALTER PIPE](../../../../en/sql-reference/other-sql-statements/pipe-sql.md#alter-pipe).
+>>>>>>> 7c0a557 (add update)
 :::
 
 ### Privileges
 
-The user must have been granted the `CREATE` privilege on the specified table(s).
+The user must be a member of the `admin` role or have been granted the `CREATE` privilege on the specified table(s). By default, the `root` user belongs to the `admin` role.
 
 ### Syntax
 
@@ -147,7 +151,7 @@ The user must have been granted the `CREATE` privilege on the specified table(s)
 | `table_name` | The name of the table. You can use `<database_name>.<table_name>` to specify a table in another database. If not specified, use the table in the current database. |
 | `column_name` | The name of the column to modify. |
 | `new_type` | The data type and data width of the column to modify. <br > **Note** <br >- The converted data width must be greater than the original data width. For example, INT4 can be converted to INT8 but not to INT2. CHAR(200) can be converted to VARCHAR (254) but not to VARCHAR (100). <br >- CHAR-typed, VARCHAR-typed, NCHAR-typed, and NVARCHAR-typed values can be converted to values of the same data types. But the width cannot be shorter. For example, CHAR(100) can be converted to VARCHAR (200) but not to VARCHAR (50). For details about the data type, default width, maximum width, and convertible data types, see [Time-Series Data Types](../../data-type/data-type-ts-db.md). |
-| `SET DEFAULT <default_expr>` | Required. KWDB writes the default value when inserting a row of data. Therefore, there is no need to explictly specify a value for the column. For non-TIMESTAMP data columns, the default value must be a constant. For TIMESTAMP-typed columns, the default value can either be a constant or the `now()` function. If the data type of the default value is not matched with that of the column, the system returns an error. KWDB supports setting NULL as the default value.|
+| `SET DEFAULT <default_expr>` | Required. KWDB writes the default value when inserting a row of data. Therefore, there is no need to explicitly specify a value for the column. For non-TIMESTAMP data columns, the default value must be a constant. For TIMESTAMP-typed columns, the default value can either be a constant or the `now()` function. If the data type of the default value is not matched with that of the column, the system returns an error. KWDB supports setting NULL as the default value.|
 | `DROP DEFAULT` | Required. Remove the defined default value. No default value is inserted after the defined default value is removed.|
 
 ### Examples
@@ -175,12 +179,16 @@ The user must have been granted the `CREATE` privilege on the specified table(s)
 The `ALTER TABLE ... RENAME COLUMN` statement changes the name of a column in a table.
 
 ::: warning Note
+<<<<<<< HEAD
 When renaming a column, KWDB will check whether the current table is referenced by any stream. If yes, the system ruturns an error and lists all streams that reference the specified table. In this case, you should remove the stream and then rename the column. For details about how to remove the stream, see [DROP STREAM](../../../../en/sql-reference/other-sql-statements/stream-sql.md#drop-stream).
+=======
+When renaming a column to, KWDB will check whether the current table is referenced by the real-time data feed service. If yes, the system returns an error and lists all pipes that reference the specified table. In this case, you should stop the real-time data feed service and then rename the column. For details about how to stop the real-time data feed service, see [ALTER PIPE](../../../../en/sql-reference/other-sql-statements/pipe-sql.md#alter-pipe).
+>>>>>>> 7c0a557 (add update)
 :::
 
 ### Privileges
 
-The user must have been granted the `CREATE` privilege on the specified table(s).
+The user must be a member of the `admin` role or have been granted the `CREATE` privilege on the specified table(s). By default, the `root` user belongs to the `admin` role.
 
 ### Syntax
 
@@ -210,13 +218,17 @@ The `ALTER TABLE ... DROP COLUMN` statement removes columns from a table. `DROP 
 
 - When removing a column from a table, you must ensure that there are at lease data columns in the table. In addition, you can not remove the first column (TIMESTAMP-typed column).
 - Currently, KWDB does not support removing multiple columns at once.
+<<<<<<< HEAD
 - When removing a column, KWDB will check whether the current table is referenced by any stream. If yes, the system ruturns an error and lists all streams that reference the specified table. In this case, you should remove the stream and then remove the column. For details about how to remove the stream, see [DROP STREAM](../../../../en/sql-reference/other-sql-statements/stream-sql.md#drop-stream).
+=======
+- When removing a column from an existing table, KWDB will check whether the current table is referenced by the real-time data feed service. If yes, the system returns an error and lists all pipes that reference the specified table. In this case, you should stop the real-time data feed service and then remove the column. For details about how to stop the real-time data feed service, see [ALTER PIPE](../../../../en/sql-reference/other-sql-statements/pipe-sql.md#alter-pipe).
+>>>>>>> 7c0a557 (add update)
 
 :::
 
 ### Privileges
 
-The user must have been granted the `CREATE` privilege on the specified table(s).
+The user must be a member of the `admin` role or have been granted the `CREATE` privilege on the specified table(s). By default, the `root` user belongs to the `admin` role.
 
 ### Syntax
 

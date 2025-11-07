@@ -9,13 +9,13 @@ A materialized view is a view that stores the results of its underlying query.
 
 ## CREATE MATERIALIZED VIEW
 
-The `CREATE MATERIALIZED VIEW` statement creates a materialized view. The system writes query results into the aterialized view during the creation of the materialized view. You cannot insert into, update, or remove data from a materialized view. When you select from a materialized view, the stored query data that is returned might be out-of-date. To get the latest results from a materialized view, you must manually refresh the materialized view. For details, see [REFRESH MATERIALIZED VIEW](#refresh-materialized-view).
+The `CREATE MATERIALIZED VIEW` statement creates a materialized view. The system writes query results into the materialized view during the creation of the materialized view. You cannot insert into, update, or remove data from a materialized view. When you select from a materialized view, the stored query data that is returned might be out-of-date. To get the latest results from a materialized view, you must manually refresh the materialized view. For details, see [REFRESH MATERIALIZED VIEW](#refresh-materialized-view).
 
 KWDB does not support creating a materialized view based on a temporary table/view, or using an explicit transaction.
 
 ### Privileges
 
-The user must have been granted the `CREATE` privilege on the parent database and the `SELECT` previledge on any table(s) referenced by the materialized view.
+The user must be a member of the `admin` role or have been granted the `CREATE` privilege on the parent database and the `SELECT` privilege on any table(s) referenced by the materialized view. By default, the `root` user belongs to the `admin` role.
 
 ### Syntax
 
@@ -67,7 +67,7 @@ The `ALTER MATERIALIZED VIEW` statement changes the name of a materialized view.
 
 ### Privileges
 
-The user must have been granted the `DROP` privilege on the current materialized view and the `CREATE` privilege on the parent database of the renamed materialized view.
+The user must be a member of the `admin` role or have been granted the `DROP` privilege on the current materialized view and the `CREATE` privilege on the parent database of the renamed materialized view. By default, the `root` user belongs to the `admin` role.
 
 ### Syntax
 
@@ -117,7 +117,7 @@ KWDB does not support materialized views that are refreshed on a explicit transa
 
 ### Privileges
 
-The user must have been granted the `UPDATE` privilege on the specified materialized view(s) or must be a member of the `admin` role. By default, the `root` user belongs to the `admin` role.
+The user must be a member of the `admin` role or have been granted the `UPDATE` privilege on the specified materialized view(s). By default, the `root` user belongs to the `admin` role.
 
 ### Syntax
 
@@ -139,12 +139,12 @@ REFRESH MATERIALIZED VIEW small_orders;
 
 ## DROP MATERIALIZED VIEW
 
-The `DROP MATERIALIZED VIEW` statement removes a meterialized view from a database.
+The `DROP MATERIALIZED VIEW` statement removes a materialized view from a database.
 
 ### Privileges
 
-- Remove a materialized view with no dependency: the user must have been granted the `DROP` privilege on the specified materialized view(s).
-- Remove a materialized view with dependencies: the user must have been granted the `DROP` privilege on the specified materialized view(s) and its dependent objects.
+- Remove a materialized view with no dependency: the user must be a member of the `admin` role or have been granted the `DROP` privilege on the specified materialized view(s). By default, the `root` user belongs to the `admin` role.
+- Remove a materialized view with dependencies: the user must be a member of the `admin` role or have been granted the `DROP` privilege on the specified materialized view(s) and its dependent objects. By default, the `root` user belongs to the `admin` role.
 
 ### Syntax
 

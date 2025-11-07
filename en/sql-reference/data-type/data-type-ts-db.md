@@ -43,7 +43,7 @@ KWDB time-series databases support TIMESTAMP and TIMESTAMPTZ time types.
 
 The TIMESTAMP data type has TIMESTAMP and TIMESTAMPZ variants. The TIMESTAMP-typed values support a nacoseconds precision level.
 
-TIMESTAMP constants respresent specific date and time. In general, the TIMESTAMP constants cannot be modified. You can express TIMESTAMP constants using the `timestamp 'YYYY-MM-DD HH:MM:SS.SSS'` format, such as `timestamp '2023-10-19 15:30:00'`.
+TIMESTAMP constants represent specific date and time. In general, the TIMESTAMP constants cannot be modified. You can express TIMESTAMP constants using the `timestamp 'YYYY-MM-DD HH:MM:SS.SSS'` format, such as `timestamp '2023-10-19 15:30:00'`.
 
 | Name        | Alias                       | Description                                                          |
 |-------------|-----------------------------|----------------------------------------------------------------------|
@@ -67,7 +67,27 @@ Currently, KWDB supports inserting a timestamp using any of the following ways:
 - STRING-typed timestamp: when inserting a STRING-typed timestamp, KWDB converts the value to an INT64-typed value based on the precision level, checks whether the converted value exceeds the time range supported by the precision level, rounds and truncates the time that exceeds the precision level, then inserts the truncated value into the column.
 - INT-typed timestamp: when inserting an INT-typed timestamp, KWDB checks whether the value exceeds the time range supported by the precision level and then inserts the value into the column.
 
-KWDB supports addition and substraction operations of time in queries for timestamp-typed columns or timestamp constants, and for functions and expressions whose result is timestamp. KWDB supports comparing the operation results using the greater than sign (`>`), the less than sign (`<`), the equals sign (`=`), the greater than or equal to sign (`>=`), and the less than or equal to sign (`<=`). For details, see [Simple Query](../dml/ts-db/ts-select.md).
+KWDB supports addition and subtraction operations of time in queries for timestamp-typed columns or timestamp constants, and for functions and expressions whose result is timestamp. KWDB supports comparing the operation results using the greater than sign (`>`), the less than sign (`<`), the equals sign (`=`), the greater than or equal to sign (`>=`), and the less than or equal to sign (`<=`). For details, see [Simple Query](../dml/ts-db/ts-select.md).
+
+### Data Type Conversions and Casts
+
+TIMESTAMP-typed values can be cast to any of the following data types.
+
+| Type | Description |
+| --- | --- |
+| INT | The system returns an error if the value is NaN or +/- Inf. |
+| FLOAT | Convert to milliseconds since Jan. 1, 1970. |
+| STRING | - |
+| TIMESTAMPZ | - |
+
+TIMESTAMPZ-typed values can be cast to any of the following data types.
+
+| Type | Description |
+| --- | --- |
+| INT | The system returns an error if the value is NaN or +/- Inf. |
+| FLOAT | Convert to milliseconds since Jan. 1, 1970. |
+| STRING | - |
+| TIMESTAMP | - |
 
 ### Data Type Conversions and Casts
 
@@ -509,7 +529,7 @@ NVARCHAR-typed values are variable-length strings. The maximum size of NVARCHAR-
 
 NVARCHAR-typed values are stored using the Unicode coding method.
 
-To limit the length of a NVARCHAR-typed value, use `NVARCHAR(n)`, where `n` represents the number of chracters. By default, it is set to `63` characters.
+To limit the length of a NVARCHAR-typed value, use `NVARCHAR(n)`, where `n` represents the number of characters. By default, it is set to `63` characters.
 
 | Name     | Storage Space        |
 |----------|----------------------|

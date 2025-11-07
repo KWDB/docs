@@ -9,7 +9,7 @@ The `INSERT` statement inserts one or more rows into a table. In cases where ins
 
 ## Privileges
 
-The user must have been granted the `INSERT` privilege on the specified table(s). To use the `INSERT ON CONFLICT` and `ON CONFLICT DO UPDATE` clauses, the user must also have been granted the `SELECT` and `UPDATE` privileges on the specified table(s).
+The user must be a member of the `admin` role or have been granted the `INSERT` privilege on the specified table(s). To use the `INSERT ON CONFLICT` and `ON CONFLICT DO UPDATE` clauses, the user must also have been granted the `SELECT` and `UPDATE` privileges on the specified table(s).
 
 ## Syntax
 
@@ -27,7 +27,7 @@ The user must have been granted the `INSERT` privilege on the specified table(s)
 
 | Parameter | Description |
 | --- | --- |
-| `common_table_expr` | You can use it in combination with the `WITH` keyword as the `WITH AS` caluse. It provides an alias for a frequently-performed SQL subquery before it is used in a larger query context. Therefore, the system can directly recall the SQL subquery using the alias. This improves the query performance.|
+| `common_table_expr` | You can use it in combination with the `WITH` keyword as the `WITH AS` clause. It provides an alias for a frequently-performed SQL subquery before it is used in a larger query context. Therefore, the system can directly recall the SQL subquery using the alias. This improves the query performance.|
 | `table_alias_name` | An alias for the table name. When an alias is provided, it completely hides the actual table name.|
 | `column_name` | A comma-separated list of names of columns to populate during the insert. If no column name is specified, insert data into all columns of the table. |
 | `preparable_stmt` | The statement or subquery to use as the common table expression.|
@@ -167,4 +167,10 @@ CREATE TABLE
     8 |700    
     10|450    
     (2 rows)
+    ```
+
+- Insert data for label column.
+
+    ```sql
+    INSERT INTO accounts(c_label, id) VALUES ('30:comp1,comp2', 1);
     ```

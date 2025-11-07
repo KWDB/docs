@@ -11,7 +11,7 @@ The `CREATE SCHEMA` statement creates a new schema.
 
 ### Privileges
 
-The user must have been granted the `CREATE` privilege on the parent database.
+The user must be a member of the `admin` role or have been granted the `CREATE` privilege on the parent database. By default, the `root` user belongs to the `admin` role.
 
 ### Syntax
 
@@ -89,7 +89,7 @@ The `DROP SCHEMA` statement removes a schema. KWDB supports removing multiple sc
 
 ### Privileges
 
-The user must have been granted the `DROP` privilege on the specified schema(s).
+The user must be a member of the `admin` role or have been granted the `DROP` privilege on the specified schema(s). By default, the `root` user belongs to the `admin` role.
 
 ### Syntax
 

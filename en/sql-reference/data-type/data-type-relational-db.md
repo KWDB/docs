@@ -461,7 +461,7 @@ c1|c2
 
 #### Basic Information
 
-The BYTES data type stores fixed-length binary strings. When inserting BYTES values into a relational table, KWDB will check the length of the value based on the chracters.
+The BYTES data type stores fixed-length binary strings. When inserting BYTES values into a relational table, KWDB will check the length of the value based on the characters.
 
 | Name  | Alias | Storage Space  |
 |-------|-------|----------------|
@@ -933,15 +933,15 @@ SHOW CREATE clobs;
 
 ## Date and Time Types
 
-### TIMESTAMP
-
 KWDB relational databases support TIMESTAMP and TIMESTAMPTZ time types.
+
+### TIMESTAMP
 
 #### Basic Information
 
 The TIMESTAMP data type has TIMESTAMP and TIMESTAMPZ variants.
 
-TIMESTAMP constants respresent specific date and time. In general, the TIMESTAMP constants cannot be modified. You can express TIMESTAMP constants using the `timestamp 'YYYY-MM-DD HH:MM:SS.SSS'` format, such as `timestamp '2020-02-12 07:23:25.123'`.
+TIMESTAMP constants represent specific date and time. In general, the TIMESTAMP constants cannot be modified. You can express TIMESTAMP constants using the `timestamp 'YYYY-MM-DD HH:MM:SS.SSS'` format, such as `timestamp '2020-02-12 07:23:25.123'`.
 
 | Name        | Alias                       | Description                                                          |
 |-------------|-----------------------------|----------------------------------------------------------------------|
@@ -955,7 +955,21 @@ TIMESTAMP constants respresent specific date and time. In general, the TIMESTAMP
 
 :::
 
-KWDB supports addition and substraction operations of time in queries for timestamp-typed columns or timestamp constants, and for functions and expressions whose result is timestamp. KWDB supports comparing the operation results using the greater than sign (`>`), the less than sign (`<`), the equals sign (`=`), the greater than or equal to sign (`>=`), and the less than or equal to sign (`<=`). For details, see [Simple Query](../dml/relational-db/relational-select.md).
+KWDB supports addition and subtraction operations of time in queries for timestamp-typed columns or timestamp constants, and for functions and expressions whose result is timestamp. KWDB supports comparing the operation results using the greater than sign (`>`), the less than sign (`<`), the equals sign (`=`), the greater than or equal to sign (`>=`), and the less than or equal to sign (`<=`). For details, see [Simple Query](../dml/relational-db/relational-select.md).
+
+#### Data Type Conversions and Casts
+
+TIMESTAMP-typed values can be cast to any of the following data types.
+
+| Type | Description |
+| --- | --- |
+| INT | The system returns an error if the value is NaN or +/- Inf. |
+| FLOAT | Convert to milliseconds since Jan. 1, 1970. |
+| DECIMAL | Convert to seconds since Jan. 1, 1970. |
+| STRING | - |
+| DATE | Convert to the date portion (`YYYY-MM-DD`) of the timestamp. |
+| TIME | Convert to the time portion (`HH:MM:SS`) of the timestamp. |
+| TIMESTAMPZ | - |
 
 #### Data Type Conversions and Casts
 
@@ -1216,7 +1230,7 @@ There are six types of JSONB values:
 - Null
 - Boolean
 - String
-- Number: a value with arbitrary precision, including intergers and decimals, but not limited to INT64
+- Number: a value with arbitrary precision, including integers and decimals, but not limited to INT64
 - Array: an ordered sequence of JSONB values
 - Object: a mapping from strings to JSONB values, such as `'{"type": "account creation", "username": "harvestboy93"}'` or `'{"first_name": "Ernie", "status": "Looking for treats", "location": "Brooklyn"}'`. If duplicate keys are included in the input, only the last value is kept.
 

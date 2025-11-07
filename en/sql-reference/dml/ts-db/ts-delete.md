@@ -16,7 +16,8 @@ The `DELETE` statement deletes rows from a table.
 
 ## Privileges
 
-The user must have been granted the `SELECT` and `DELETE` privileges on the specified table(s).
+The user must be a member of the `admin` role or have been granted the `SELECT` and `DELETE` privileges on the specified table(s).
+
 
 ## Syntax
 

@@ -5,7 +5,7 @@ id: statistics-sql
 
 # Statistics
 
-KWDB supports mannually creating table statistics or automatically generating table statistics.
+KWDB supports manually creating table statistics or automatically generating table statistics.
 
 - **Manually create table statistics**: you can execute the `CREATE STATISTICS` statement to create statistics for the specified table(s) or column(s).
 
@@ -25,7 +25,7 @@ For the Primary Tag columns of the time-series table, KWDB automatically updates
 
 ::: Warning Note
 
-- When there is no statistics, KWDB automatically creates statistics on tables when the maximum number (the total number of rows in both the time-series table and the relational table) of rows for which statsitcs are concurrently created reaches to `256`. If the number of rows exceeds the specified value, KWDB will take longer time to refresh tables.
+- When there is no statistics, KWDB automatically creates statistics on tables when the maximum number (the total number of rows in both the time-series table and the relational table) of rows for which statistics are concurrently created reaches to `256`. If the number of rows exceeds the specified value, KWDB will take longer time to refresh tables.
 - Refresh triggered by the row count changes: the refresh triggered by the row count changes only supports the update of table statistics triggered by the `INSERT` statement. When the row count changes reaches to the specified threshold, KWDB automatically refreshes tables. For example, before the timer is triggered, the row count changes of all tables are sent to the counter. After the timer is triggered, the row count changes will not be sent to the counter. Therefore, there is a certain probability in the row count changes.
 - Refresh triggered by time: refreshes are triggered by the `INSERT` statement after the triggering rules are met.
 - These refreshing strategies are subject to the system running status.
@@ -46,7 +46,7 @@ Once you create a table and insert data into the table using the `INSERT` or `IM
 
 ### Privileges
 
-The user must have been granted the `SELECT` privilege on the specified table(s).
+The user must be a member of the `admin` role or have been granted the `SELECT` privilege on the specified table(s).
 
 ### Syntax
 

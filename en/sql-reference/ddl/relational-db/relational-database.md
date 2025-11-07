@@ -7,12 +7,11 @@ id: relational-database
 
 ## CREATE DATABASE
 
-The `CREATE DATABASE` statement creates a new relational database.
+The `CREATE DATABASE` statement creates a relational database.
 
 ### Privileges
 
 The user must be a member of the `admin` role. By default, the `root` user belongs to the `admin` role.
-
 ### Syntax
 
 ![](../../../../static//sql-reference/createdb_relational.png)
@@ -44,7 +43,7 @@ The optional parameters must be configured in an order of `[ENCODING [=] <'code_
 
 - Create a database using the `IF NOT EXISTS` keyword.
 
-    This example creates a database named `db1`, which has already exists. The system fails to create the database without returning an error.
+    This example creates a database named `db1`, which has already existed. The system fails to create the database without returning an error.
 
     ```sql
     CREATE DATABASE IF NOT EXISTS db1;
@@ -161,7 +160,7 @@ SHOW CREATE DATABASE reldb1;
 
 ## ALTER DATABASE
 
-The `ALTER DATABASE` statement applies a name or zone configurations to a database.
+The `ALTER DATABASE` statement modifies the database name or zone configuration.
 
 ::: warning Note
 KWDB does not support changing the name of a database which has dependent views.
@@ -169,12 +168,9 @@ KWDB does not support changing the name of a database which has dependent views.
 
 ### Privileges
 
-- Change the name of the database
-  The user must be the Admin user or a member of the `admin` role. By default, the `root` user belongs to the `admin` role.
-- Change the zone configurations of the system database
-  The user must be the Admin user or a member of the `admin` role.
-- Modify zones for other databases
-  The user must have been granted `CREATE` or `ZONECONFIG` privileges on the specified database(s).
+- Modify database name: The user must be a member of the `admin` role. By default, the `root` user belongs to the `admin` role.
+- Modify system database zone configuration: The user must be a member of the `admin` role. By default, the `root` user belongs to the `admin` role.
+- Modify other database zone configuration: The user must be a member of the `admin` role or have CREATE or ZONECONFIG privileges on the target database. By default, the `root` user belongs to the `admin` role.
 
 ### Syntax
 
@@ -186,7 +182,7 @@ KWDB does not support changing the name of a database which has dependent views.
 | --- | --- |
 | `database_name` | The name of the database to change. If the target database is the current database, set the `sql_safe_updates` parameter to `true`. Otherwise, the database cannot be renamed. |
 | `new_name` | The new name of the database, which must be unique and follow these [Identifier Rules](../../sql-identifiers.md).|
-| `variable` | The name of the variable to change. The relational database supports updating the following variables: <br>- `range_min_bytes`: the minimum size in bytes for a range of data in the zone. When a range is less than this size, KWDB will merge it with the adjacent range. By default, it is set to `256 MiB`. The value should be greater then `1 MiB` (1048576 bytes) and smaller than the maximum size of the range. <br>- `range_max_bytes`: the maximum size in bytes for a range of data in the zone. When a range reaches this size, KWDB will split it into two ranges. By default, it is set to `512 MiB`. The value should not be smaller than `5 MiB` (5242880 bytes). <br>- `gc.ttlseconds`: the number of seconds that data will be retained before garbage collection (unit: second). By default, it is set to `90000` (25 hours). It is recommended to set a value that is greater than or equal to 600 seconds (10 minutes) to avoid affecting long-time data queries. A smaller value can save disk space while a greater value will increase the interval allowed for `AS OF SYSTEM TIME` queries. In addition, it is not recommended to set a so great value because all versions of each row are stored in a single, unsplit zone. This can help prevent the updates exceeding 64 MiB, which may cause a memory lack or other issues. <br>- `num_replicas`: the number of replicas in the zone. By default, it is set to `3`. By default, for the `system` database and the `meta`, `liveness`, and `system` ranges, it is set to `5`. **Note**: The number of the replicas cannot be decreased when unavailable nodes are in the KWDB cluster. <br>- `constraints`: an array of required (+) and/or prohibited (-) constraints influencing the location of replicas. <br> - `lease_preferences`: an ordered list of required and/or prohibited (-) constraints influencing the location of leaseholders. Whether each constraint is required or prohibited is expressed with a leading + or -, respectively. Note that lease preference constraints do not have to be shared with the `constraints` field. For example, it's valid for your configuration to define a `lease_preferences` field that does not reference any values from the `constraints` field.  It is also valid to define a `lease_preferences` field with no `constraints` field at all. If the first preference cannot be satisfied, KWDB will attempt to satisfy the second preference, and so on. If none of the preferences can be met, the lease will be placed using the default lease placement algorithm, which is to base lease placement decisions on how many leases each node already has, trying to make all the nodes have around the same amount. Each value in the list can include multiple constraints. For example, the list `[[+zone=us-east-1b, +ssd], [+zone=us-east-1a], [+zone=us-east-1c, +ssd]]` means preferring nodes with an SSD in `us-east-1b`, then any nodes in `us-east-1a`, then nodes in `us-east-1c` with an SSD. <br > Default: no lease location preferences are applied if this field is not specified. |
+| `variable` | The name of the variable to modify. The following variables are supported: <br>- `range_min_bytes`: the minimum size in bytes for a data range. When a range is smaller than this value, KWDB merges it with an adjacent range. Default: 256 MiB. The value must be greater than 1 MiB (1048576 bytes) and smaller than the maximum size of the range. <br>- `range_max_bytes`: the maximum size in bytes for a data range. When a range exceeds this value, KWDB splits it into two ranges. Default: 512 MiB. The value must not be smaller than 5 MiB (5242880 bytes). <br>- `gc.ttlseconds`: the number of seconds data will be retained before garbage collection. Default: `90000` (25 hours). We recommend setting a value of at least 600 seconds (10 minutes) to avoid affecting long-running queries. A smaller value saves disk space while a larger value increases the time range allowed for `AS OF SYSTEM TIME` queries. Additionally, since all versions of each row are stored in a single, unsplit range, avoid setting this value too large to prevent all changes to a single row from exceeding 64 MiB, which may cause memory issues or other problems. <br>- `num_replicas`: the number of replicas. Default: 3. For the `system` database and the `meta`, `liveness`, and `system` ranges, the default number of replicas is 5. **Note**: The number of replicas cannot be reduced when unavailable nodes exist in the cluster. <br>- `constraints`: required (+) and/or prohibited (-) constraints for where replicas can be placed. For example, `constraints = '{"+region=NODE1": 1, "+region=NODE2": 1, "+region=NODE3": 1}'` places one replica on each of nodes 1, 2, and 3. Currently only supports the `region=NODEx` format. <br>- `lease_preferences`: an ordered list of required (+) and/or prohibited (-) constraints for where the leaseholder should be placed. For example, `lease_preferences = '[[+region=NODE1]]'` prefers placing the leaseholder on node 1. If this isn't possible, KWDB tries the next preference in the list. If no preferences can be satisfied, KWDB uses the default lease distribution algorithm, which balances leases across nodes based on their current lease count. Each value in the list can contain multiple constraints.|
 | `value` | The value of the variable to change. |
 |`COPY FROM PARENT`| Use the settings of the parent zone. |
 |`DISCARD` | Remove the zone settings and use the default values. |
@@ -241,7 +237,7 @@ KWDB does not support changing the name of a database which has dependent views.
   -- 2. Check whether the configurations are applied successfully. 
 
   SHOW ZONE CONFIGURATION FOR DATABASE db3;
-        target  |               raw_config_sql
+        target  |               config_sql
   -------------------+------------------------------------------
     DATABASE db3 | ALTER DATABASE db3 CONFIGURE ZONE USING
                 |     range_min_bytes = 134217728,
@@ -259,7 +255,8 @@ The `DROP DATABASE` statement removes a database and all its objects from a KWDB
 
 ### Privileges
 
-The user must have the `DROP` privilege on the specified database and tables in the database.
+: the user must be a member of the `admin` role or have DROP privileges on the target database and objects. By default, the `root` user belongs to the `admin` role.
+
 
 ### Syntax
 

@@ -16,13 +16,13 @@ The `ALTER TABLE ... ADD TAG` statement adds tags to existing tables. `ADD TAG` 
 ::: warning Note
 
 - KWDB does not support adding multiple tags at once.
-- KWDB does not support adding primary tags or non-NULL tags to an exsiting table.
+- KWDB does not support adding primary tags or non-NULL tags to an existing table.
 
 :::
 
 ### Privileges
 
-The user must have been granted the `CREATE` privilege on the specified table(s).
+The user must be a member of the `admin` role or have been granted the `CREATE` privilege on the specified table(s). By default, the `root` user belongs to the `admin` role.
 
 ### Syntax
 
@@ -87,7 +87,7 @@ The `SHOW TAG VALUES` statement shows all tag values of a table.
 
 ### Privileges
 
-The user must have been granted the `SELECT` privilege on the specified table(s).
+The user must be a member of the `admin` role or have been granted the `SELECT` privilege on the specified table(s). By default, the `root` user belongs to the `admin` role.
 
 ### Syntax
 
@@ -123,7 +123,7 @@ The `ALTER TABLE ... ALTER TAG` statement changes the data type or width of tags
 
 ### Privileges
 
-The user must have been granted the `CREATE` privilege on the specified table(s).
+The user must be a member of the `admin` role or have been granted the `CREATE` privilege on the specified table(s). By default, the `root` user belongs to the `admin` role.
 
 ### Syntax
 
@@ -151,7 +151,7 @@ The `ALTER TABLE ... RENAME TAG` statement changes the name of a tag in a table.
 
 ### Privileges
 
-The user must have been granted the `CREATE` privilege on the specified table(s).
+The user must be a member of the `admin` role or have been granted the `CREATE` privilege on the specified table(s). By default, the `root` user belongs to the `admin` role.
 
 ### Syntax
 
@@ -187,7 +187,7 @@ The `ALTER TABLE ... DROP TAG` statement removes tags from a table. `DROP TAG` i
 
 ### Privileges
 
-The user must have been granted the `CREATE` privilege on the specified table(s).
+The user must be a member of the `admin` role or have been granted the `CREATE` privilege on the specified table(s). By default, the `root` user belongs to the `admin` role.
 
 ### Syntax
 

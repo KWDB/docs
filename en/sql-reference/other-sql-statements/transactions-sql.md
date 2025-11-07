@@ -17,13 +17,13 @@ KWDB supports bundling multiple SQL statements into a single all-or-nothing tran
 The transaction guarantees ACID semantics:
 
 - A (Atomicity): all SQL statements are executed as an atomic transaction. Either all statements are executed or none of them is executed.
-- C (Consistency): after the transction is completed, the state of all data remains consistent.
-- I (Isolation): if multiple transactions are executed, any reads or writes performed on the database will not be impacted by other reads of writes of separate transaction occuring on the same database.
+- C (Consistency): after the transactions is completed, the state of all data remains consistent.
+- I (Isolation): if multiple transactions are executed, any reads or writes performed on the database will not be impacted by other reads of writes of separate transaction occurring on the same database.
 - D (Durability): durability ensures that changes to the database that are successfully committed will survive permanently, even in the case of system failure.
 
 KWDB supports both ​implicit and ​explicit transactions, both ensuring data consistency and integrity.
 
-- ​​Implicit transactions are transctions that are automatically created for each operation without using the `BEGIN` or `COMMIT` statement and automatically committed or rollbacked after the operation is completed. ​Implicit transactions provide more simplified codes and higher development efficiency. ​Implicit transactions are suitable for signle-satement operations. If an operation succeeds, the system automatically commits the transaction. Otherwise, the system automatically rollbacks the transaction.
+- ​​Implicit transactions are transactions that are automatically created for each operation without using the `BEGIN` or `COMMIT` statement and automatically committed or rollbacked after the operation is completed. ​Implicit transactions provide more simplified codes and higher development efficiency. ​Implicit transactions are suitable for signle-statement operations. If an operation succeeds, the system automatically commits the transaction. Otherwise, the system automatically rollbacks the transaction.
 - ​Explicit transactions are transactions that are specified by the `BEGIN` or `COMMIT` statement in an application. ​Explicit transactions provide more granular control over multi-statement operations. After the operation are completed, you need to manually commit or rollback the transactions.
 
 ## Isolation Levels
@@ -40,11 +40,11 @@ By default, KWDB uses the Serializable isolation level.
 
 ### Configure Isolation Levels
 
-KWDB supports configuring cluster-level, session-level, and transaction-level isolation levels, where the transaction-level isolation levels are of the highest priority, and the cluser-level isolation levels are of the lowest priority.
+KWDB supports configuring cluster-level, session-level, and transaction-level isolation levels, where the transaction-level isolation levels are of the highest priority, and the cluster-level isolation levels are of the lowest priority.
 
 #### Configure Cluster-level Isolation Levels
 
-The cluster-level isolation level settings take effect only for subsequently innitiated connections. For details, see [Cluster Settings](../../db-operation/cluster-settings-config.md). You can use the `SHOW CLUSTER SETTING sql.txn.cluster_transaction_isolation` statement to view cluster-level isolation level settings.
+The cluster-level isolation level settings take effect only for subsequently initiated connections. For details, see [Cluster Settings](../../db-operation/cluster-settings-config.md). You can use the `SHOW CLUSTER SETTING sql.txn.cluster_transaction_isolation` statement to view cluster-level isolation level settings.
 
 ```sql
 SET CLUSTER SETTING sql.txn.cluster_transaction_isolation = <level>;
@@ -61,6 +61,7 @@ Values for the `level` parameter:
 The session-level isolation level settings take effect only for the current connection. If no isolation level is specified when initiating a session, the system will use the cluster-level isolation level settings. You can use the following command to change the session-level isolation level settings. After update, you can use the `SHOW default_transaction_isolation` statement to view session-level isolation level settings.
 
 ```sql
+SET default_transaction_isolation = <level>;
 ```
 
 Values for the `level` parameter:
@@ -151,7 +152,7 @@ No privileges are required to initiate a transaction. However, privileges are re
 | --- | --- |
 | `ISOLATION LEVEL` | The isolation level of the transaction. Available options: <br >- Serializable: Serializable isolation is the strongest of the four transaction isolation levels defined by the SQL standard. Serializable isolation guarantees that even though transactions may execute in parallel, the result is the same as if they had executed one at a time, without any concurrency. <br >- Read Committed (RC): RC isolation guarantees a transaction to read data that has been committed by other transactions but does not guarantee the serializability of the transaction's operations. <br >- Repeatable Read (RR): RR isolation guarantees that when the same data is read multiple times within the same transaction, the results are consistent.|
 | `PRIORITY` | The priority of the transaction. By default, it is set to `NORMAL`. You can set it to `LOW` or `HIGH` as required. Transactions with higher priority are less likely to need to be retried.|
-| `READ` | The access mode of the transaction. Avaiable options are `READ ONLY` and `READ WRITE`. By default, it is set to `READ WRITE`. You can set the access mode using the `transaction_read_only` session variable.|
+| `READ` | The access mode of the transaction. Available options are `READ ONLY` and `READ WRITE`. By default, it is set to `READ WRITE`. You can set the access mode using the `transaction_read_only` session variable.|
 | `AS OF SYSTEM TIME` | Execute the transaction using the "as of" timestamp. The `AS OF SYSTEM TIME` clause can be used only when the access mode is set to `READ ONLY`. If the transaction contains any writes, or if the `READ WRITE` access mode is specified, the system returns an error.|
 
 #### Examples
@@ -298,7 +299,7 @@ No privileges are required to set the transaction priority. However, privileges 
 | --- | --- |
 | `ISOLATION LEVEL` | The isolation level of the transaction. Available options: <br >- Serializable: Serializable isolation is the strongest of the four transaction isolation levels defined by the SQL standard. Serializable isolation guarantees that even though transactions may execute in parallel, the result is the same as if they had executed one at a time, without any concurrency. <br >- Read Committed (RC): RC isolation guarantees a transaction to read data that has been committed by other transactions but does not guarantee the serializability of the transaction's operations. <br >- Repeatable Read (RR): RR isolation guarantees that when the same data is read multiple times within the same transaction, the results are consistent.|
 | `PRIORITY` | The priority of the transaction. By default, it is set to `NORMAL`. You can set it to `LOW` or `HIGH` as required. Transactions with higher priority are less likely to need to be retried.|
-| `READ` | The access mode of the transaction. Avaiable options are `READ ONLY` and `READ WRITE`. By default, it is set to `READ WRITE`. You can set the access mode using the `transaction_read_only` session variable.|
+| `READ` | The access mode of the transaction. Available options are `READ ONLY` and `READ WRITE`. By default, it is set to `READ WRITE`. You can set the access mode using the `transaction_read_only` session variable.|
 | `AS OF SYSTEM TIME` | Execute the transaction using the "as of" timestamp. The `AS OF SYSTEM TIME` clause can be used only when the access mode is set to `READ ONLY`. If the transaction contains any writes, or if the `READ WRITE` access mode is specified, the system returns an error.|
 
 #### Examples
@@ -379,7 +380,7 @@ No privileges are required to rollback a transaction. However, privileges are re
 
 | Parameter | Description |
 | --- | --- |
-| `savepoint_name` | The name of the savepoint. KWDB supports creating savepoints for the following transactions: <br >- Nested transactions: the savepoint name can be any name. <br >- Auto-retry transactions: by default, the savepoint name is set to `kwbase_restart`. You can define another name as required. To make the user-defined savepoint name take effect, you need to set the `force_savepoint_restart` session variable to `true`. Once the setting takes effect, the savepoint name for auto-retry tranctions can be any name. |
+| `savepoint_name` | The name of the savepoint. KWDB supports creating savepoints for the following transactions: <br >- Nested transactions: the savepoint name can be any name. <br >- Auto-retry transactions: by default, the savepoint name is set to `kwbase_restart`. You can define another name as required. To make the user-defined savepoint name take effect, you need to set the `force_savepoint_restart` session variable to `true`. Once the setting takes effect, the savepoint name for auto-retry transactions can be any name. |
 
 #### Examples
 
@@ -599,7 +600,7 @@ No privileges are required to create a savepoint. However, privileges are requir
 
 | Parameter | Description |
 | --- | --- |
-| `savepoint_name` | The name of the savepoint. KWDB supports creating savepoints for the following transactions: <br >- Nested transactions: the savepoint name can be any name. <br >- Auto-retry transactions: by default, the savepoint name is set to `kwbase_restart`. You can define another name as required. To make the user-defined savepoint name take effect, you need to set the `force_savepoint_restart` session variable to `true`. Once the setting takes effect, the savepoint name for auto-retry tranctions can be any name. |
+| `savepoint_name` | The name of the savepoint. KWDB supports creating savepoints for the following transactions: <br >- Nested transactions: the savepoint name can be any name. <br >- Auto-retry transactions: by default, the savepoint name is set to `kwbase_restart`. You can define another name as required. To make the user-defined savepoint name take effect, you need to set the `force_savepoint_restart` session variable to `true`. Once the setting takes effect, the savepoint name for auto-retry transactions can be any name. |
 
 #### Examples
 
@@ -709,7 +710,7 @@ No privileges are required to release a savepoint. However, privileges are requi
 
 | Parameter | Description |
 | --- | --- |
-| `savepoint_name` | The name of the savepoint. KWDB supports creating savepoints for the following transactions: <br >- Nested transactions: the savepoint name can be any name. <br >- Auto-retry transactions: by default, the savepoint name is set to `kwbase_restart`. You can define another name as required. To make the user-defined savepoint name take effect, you need to set the `force_savepoint_restart` session variable to `true`. Once the setting takes effect, the savepoint name for auto-retry tranctions can be any name. |
+| `savepoint_name` | The name of the savepoint. KWDB supports creating savepoints for the following transactions: <br >- Nested transactions: the savepoint name can be any name. <br >- Auto-retry transactions: by default, the savepoint name is set to `kwbase_restart`. You can define another name as required. To make the user-defined savepoint name take effect, you need to set the `force_savepoint_restart` session variable to `true`. Once the setting takes effect, the savepoint name for auto-retry transactions can be any name. |
 
 #### Handle Errors
 

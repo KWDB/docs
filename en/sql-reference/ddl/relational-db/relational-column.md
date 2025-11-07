@@ -11,7 +11,7 @@ The `ALTER TABLE ... ADD COLUMN` statement adds columns to existing tables. `ADD
 
 ### Privileges
 
-The user must have been granted the `CREATE` privilege on the specified table(s).
+The user must be a member of the `admin` role or have been granted the `CREATE` privilege on the specified table(s). By default, the `root` user belongs to the `admin` role.
 
 ### Syntax
 
@@ -177,7 +177,7 @@ The `ALTER TABLE ... ALTER COLUMN` statement performs the following operations. 
 
 ### Privileges
 
-The user must have been granted the `CREATE` privilege on the specified table(s).
+The user must be a member of the `admin` role or have been granted the `CREATE` privilege on the specified table(s). By default, the `root` user belongs to the `admin` role.
 
 ### Syntax
 
@@ -186,7 +186,7 @@ The user must have been granted the `CREATE` privilege on the specified table(s)
 ### Supported Operations
 
 - SET
-  - `SET DEFAULT`: Set a `DEFAULT` constraint. KWDB writes the default value when inserting a row of data. Therefore, there is no need to explictly specify a value for the column. If a default value has been defined, you can use this statement to modify the default value of the column.
+  - `SET DEFAULT`: Set a `DEFAULT` constraint. KWDB writes the default value when inserting a row of data. Therefore, there is no need to explicitly specify a value for the column. If a default value has been defined, you can use this statement to modify the default value of the column.
   - `SET NOT NULL`: Set a `NOT NULL` constraint.
 - DROP
   - `DROP DEFAULT`: Remove a `DEFAULT` constraint. No default value is inserted after the `DEFAULT` constraint is removed.
@@ -304,7 +304,7 @@ The `ALTER TABLE ... RENAME COLUMN` statement changes the name of a column in a 
 
 ### Privileges
 
-The user must have been granted the `CREATE` privilege on the specified table(s).
+The user must be a member of the `admin` role or have been granted the `CREATE` privilege on the specified table(s). By default, the `root` user belongs to the `admin` role.
 
 ### Syntax
 
@@ -356,7 +356,7 @@ The `ALTER TABLE ... DROP COLUMN` statement removes columns from a table. `DROP 
 
 ### Privileges
 
-The user must have been granted the `CREATE` privilege on the specified table(s).
+The user must be a member of the `admin` role or have been granted the `CREATE` privilege on the specified table(s). By default, the `root` user belongs to the `admin` role.
 
 ### Syntax
 

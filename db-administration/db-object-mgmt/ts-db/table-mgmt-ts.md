@@ -146,7 +146,6 @@ SHOW TABLES [FROM <db_name>][.<schema_name>] [WITH COMMENT];
 | --- | --- |
 | `db_name` | 待查看表所在的数据库的名称。如未指定，则默认使用当前数据库。|
 | `schema_name` | 可选参数，待查看表所使用的模式名称。时序表只支持使用目标数据库的 public 模式。 |
-| `table_name` | 待查看表的名称。|
 | `WITH COMMENT` | 可选关键字，查看表的注释信息。默认情况下，时序表的注释信息为空。|
 
 ### 语法示例
@@ -239,7 +238,7 @@ SHOW CREATE [TABLE] [<database_name>.] <table_name>;
 
     CREATE TABLE t3(ts timestamp NOT NULL, a int) TAGS(ptag int NOT NULL) PRIMARY TAGS(ptag);
 
-    -- 2. 查看已创建的 t1 时序表。
+    -- 2. 查看已创建的 t3 时序表。
 
     SHOW CREATE TABLE t3;
       table_name |              create_statement
@@ -302,8 +301,10 @@ SHOW CREATE [TABLE] [<database_name>.] <table_name>;
 ### 前提条件
 
 - 重命名表：用户是 `admin` 角色的成员或者拥有目标表的 DROP 权限及所在数据库的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
+- 添加、修改、删除、重命名列或标签：用户是 `admin` 角色的成员或者拥有目标表的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
+- 设置表的数据生命周期：用户是 `admin` 角色的成员或者拥有目标表的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
 - 修改表的区域配置：用户是 `admin` 角色的成员或者拥有目标表的 CREATE 权限或 ZONECONFIG 权限。默认情况下，`root` 用户属于 `admin` 角色。
-- 其它修改表操作：用户是 `admin` 角色的成员或者拥有目标表的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
+- 创建表分区：用户是 `admin` 角色的成员或者拥有目标表的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -344,7 +345,7 @@ ALTER TABLE <table_name>
     - `COLUMN`：可选关键字，如未使用，默认添加列。
     - `IF EXISTS`：可选关键字。当使用 `IF EXISTS` 关键字时，如果列名存在，系统删除列。如果列名不存在，系统删除列失败，但不会报错。当未使用 `IF EXISTS` 关键字时，如果列名存在，系统删除列。如果列名不存在，系统报错，提示列名不存在。
   - `DROP TAG/ATTRITBUTE`：删除标签，需指定标签名称。不支持删除主标签。如果待删除的标签列已创建索引，删除该标签时，需要先删除标签列关联的索引。
-- PARTITION BY: 创建表分区，更多详细信息，参见[分区管理](./partition-mgmt-ts.md)。
+- `partition_by_clause`: 创建表分区，更多详细信息，参见[分区管理](./partition-mgmt-ts.md)。
 - RENAME
   - `RENAME TO`: 修改表的名称。
   - `RENAME COLUMN`：修改列的名称。

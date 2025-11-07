@@ -162,7 +162,7 @@ The user must be a member of the `admin` role. By default, the `root` user belon
 
 ### Examples
 
-This example resets the `audit.enabled` cluster seeting to its default value.
+This example resets the `audit.enabled` cluster setting to its default value.
 
 ```sql
 RESET CLUSTER SETTING audit.enabled;

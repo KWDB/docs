@@ -12,7 +12,7 @@ KWDB supports inserting `NULL` values into columns without defining `NOT NULL`, 
 When creating a table, if a column is not defined as `NOT NULL`, you can insert the `NULL` value into the column.
 
 ::: warning Note
-When inserting data into a table, the system will check the nullability on the specified columns. If the spcified columns are defined as `NOT NULL`, you cannot insert `NULL` values into the column. Otherwise, the system returns an error.
+When inserting data into a table, the system will check the nullability on the specified columns. If the specified columns are defined as `NOT NULL`, you cannot insert `NULL` values into the column. Otherwise, the system returns an error.
 :::
 
 This example creates a table and inserts `NULL` values into the table.

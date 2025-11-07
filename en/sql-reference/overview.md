@@ -5,7 +5,7 @@ id: overview
 
 # SQL Reference Overview
 
-This document describes data types, functions, operators, and SQL statements supported by KWDB, including the following documents:
+This section describes data types, functions, operators, and SQL statements supported by KWDB for time-series and relational data processing, including the following documents:
 
 - Data Types
   - [Time-Series Data Types](./data-type/data-type-ts-db.md)
@@ -25,7 +25,9 @@ This document describes data types, functions, operators, and SQL statements sup
     - [Columns](./ddl/ts-db/ts-column.md)
     - [Tags](./ddl/ts-db/ts-label.md)
     - [Indexes](./ddl/ts-db/ts-index.md)
-    - [Zone Configurations](./ddl/ts-db/ts-zone.md)
+    - [Ranges](./ddl/ts-db/ts-range.md)
+    - [Partitions](./ddl/ts-db/ts-partition.md)
+    - [Zones](./ddl/ts-db/ts-zone.md)
     - [Comments](./ddl/ts-db/ts-comment.md)
   - Relational Data
     - [Databases](./ddl/relational-db/relational-database.md)
@@ -38,7 +40,8 @@ This document describes data types, functions, operators, and SQL statements sup
     - [Constraints](./ddl/relational-db/relational-constraint.md)
     - [Sequences](./ddl/relational-db/relational-sequence.md)
     - [Ranges](./ddl/relational-db/relational-range.md)
-    - [Zone Configurations](./ddl/relational-db/relational-zone.md)
+    - [Partitions](./ddl/relational-db/relational-partition.md)
+    - [Zone](./ddl/relational-db/relational-zone.md)
     - [Comments](./ddl/relational-db/relational-comment.md)
     - [Stored Procedures](./ddl/relational-db/relational-procedure.md)
     - [Triggers](./ddl/relational-db/relational-trigger.md)
@@ -58,28 +61,28 @@ This document describes data types, functions, operators, and SQL statements sup
     - [DELETE](./dml/relational-db/relational-delete.md)
     - [TRUNCATE](./dml/relational-db/relational-truncate.md)
     - [SELECT Optimization](./dml/relational-db/relational-select-optimization.md)
-  - [Cross-model Query](./dml/data-query.md)
+  - [Cross-Model Query](./dml/data-query.md)
 - Database Management Statements
   - [User Management](./db-mgmt/user-mgmt-sql.md)
   - [Role Management](./db-mgmt/role-mgmt-sql.md)
   - [Privilege Management](./db-mgmt/privilege-mgmt-sql.md)
   - [Audit Management](./db-mgmt/audit-mgmt-sql.md)
 - Other Statements
-  - [User-defined Functions](./other-sql-statements/self-defined-functions-sql.md)
-  - [User-defined Variables](./other-sql-statements/user-defined-variables-sql.md)
+  - [User-Defined Functions](./other-sql-statements/self-defined-functions-sql.md)
+  - [User-Defined Variables](./other-sql-statements/user-defined-variables-sql.md)
   - [Queries](./other-sql-statements/query-sql.md)
   - [Transactions](./other-sql-statements/transactions-sql.md)
   - [Statistics](./other-sql-statements/statistics-sql.md)
   - [Jobs](./other-sql-statements/jobs-sql.md)
   - [Schedules](./other-sql-statements/schedules-sql.md)
-  - [Real-time Compression](./other-sql-statements/compression-sql.md)
-  - [Pipes](./other-sql-statements/pipe-sql.md)
   - [Sessions](./other-sql-statements/sessions-sql.md)
   - [Cluster Settings](./other-sql-statements/cluster-settings-sql.md)
   - [Declarations](./other-sql-statements/declare-sql.md)
   - [Cursors](./other-sql-statements/cursor-sql.md)
   - [Delimiter](./other-sql-statements/delimiter-sql.md)
-  - [Streams](./other-sql-statements/stream-sql.md)
-- [System Views](./system-view-sql.md)
+  - [Stream](./other-sql-statements/stream-sql.md)
+- System Views
+  - [kwdb_internal](./system-view/kwdb_internal.md)
+  - [pg_catalog](./system-view/pg_catalog.md)
 - [NULL Value Handling](./null-value-mgmt.md)
 - [View SQL Statements](./sql-help.md)

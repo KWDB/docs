@@ -13,7 +13,7 @@ The `CREATE FUNCTION` statement creates a user-defined function.
 
 ### Privileges
 
-The user must have been granted the `CREATE` privilege on the current database.
+The user must be a member of the `admin` role or have been granted the `CREATE` privilege on the current database.
 
 ### Syntax
 
@@ -27,7 +27,7 @@ The user must have been granted the `CREATE` privilege on the current database.
 | `function_name` | The name of the user-defined function to create. The user-defined function name must be unique within the database. |
 | `arguments` | A comma-separated list of user-defined function parameters, specifying the name and type. Available types: TIMESTAMP, INT2, INT4, INT8, FLOAT4, FLOAT8, CHAR, VARCHAR, NCHAR and NVARCHAR.|
 | `return_type` | The type returned by the user-defined function. Available types: TIMESTAMP, INT2, INT4, INT8, FLOAT4, FLOAT8, CHAR, VARCHAR, NCHAR and NVARCHAR. |
-| `function_content` | The body of the user-defined function, enclosed in single quotes (`''`). If there are any specical characters in the function body, the system will automatically change these special characters to be interpreted differently. For example, the system will change single quotes (`''`) to (`'`). |
+| `function_content` | The body of the user-defined function, enclosed in single quotes (`''`). If there are any special characters in the function body, the system will automatically change these special characters to be interpreted differently. For example, the system will change single quotes (`''`) to (`'`). |
 
 ### Examples
 
@@ -150,7 +150,7 @@ The `DROP FUNCTION` statement removes a user-defined functions from a database.
 
 ### Privileges
 
-The user must have been granted the `CREATE` privilege on the current database.
+The user must be a member of the `admin` role or have been granted the `CREATE` privilege on the current database.
 
 ### Syntax
 
