@@ -294,7 +294,7 @@ The user must be the Admin user or a member of the `admin` role.
 The `DROP DATABASE` statement removes a database and all its objects from a KWDB cluster. To remove the current database, use the `USE <database_name>` statement to set another database as the current database. After deletion, all privileges on the database and its tables are also removed.
 
 ::: warning Note
-When removing a database, KWDB will check whether the current database is referenced by the real-time data feed service. If yes, the system ruturns an error and lists all pipes that reference the specified database. In this case, you can use the `CASCADE` keyword to remove the specified database and its dependent objects.
+When removing a database, KWDB will check whether the current database is referenced by the stream computing service. If yes, the system ruturns an error and lists all streams that reference the specified database. In this case, you can use the `CASCADE` keyword to remove the specified database and its dependent objects.
 :::
 
 ### Privileges

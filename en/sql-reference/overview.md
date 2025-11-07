@@ -79,6 +79,7 @@ This document describes data types, functions, operators, and SQL statements sup
   - [Declarations](./other-sql-statements/declare-sql.md)
   - [Cursors](./other-sql-statements/cursor-sql.md)
   - [Delimiter](./other-sql-statements/delimiter-sql.md)
+  - [Streams](./other-sql-statements/stream-sql.md)
 - [System Views](./system-view-sql.md)
 - [NULL Value Handling](./null-value-mgmt.md)
 - [View SQL Statements](./sql-help.md)
