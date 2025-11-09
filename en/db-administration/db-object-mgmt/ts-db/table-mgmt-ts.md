@@ -31,7 +31,7 @@ PRIMARY [TAGS|ATTRIBUTES] (<primary_tag_list>)
 
 :::warning Note
 
-- Currently, the table name, column name, and tag name do not support Chiese characters.
+- Currently, the table name, column name, and tag name do not support Chinese characters.
 - The optional parameters must be configured in an order of `[RETENTIONS <keep_duration>] [DICT ENCODING] [COMMENT [=] <'comment_text'>] [WITH HASH(<hash_value>)]`. Otherwise, the system returns an error.
 - In version 3.0.0, the `activetime` and `partition interval` configurations are ignored.
 

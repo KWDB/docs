@@ -177,7 +177,7 @@ ALTER [DATABASE <database_name> | TABLE <table_name> | RANGE <range_name> | PART
      CONFIGURE ZONE 1
 
      SHOW ZONE CONFIGURATION FOR TABLE vehicles;
-          target    |             raw_config_sql
+          target    |             config_sql
      ---------------+------------------------------------------
      TABLE vehicles | ALTER TABLE vehicles CONFIGURE ZONE USING
                     |     range_min_bytes = 268435456,

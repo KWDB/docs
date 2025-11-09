@@ -255,7 +255,7 @@ The `DROP DATABASE` statement removes a database and all its objects from a KWDB
 
 ### Privileges
 
-: the user must be a member of the `admin` role or have DROP privileges on the target database and objects. By default, the `root` user belongs to the `admin` role.
+The user must be a member of the `admin` role or have DROP privileges on the target database and objects. By default, the `root` user belongs to the `admin` role.
 
 
 ### Syntax

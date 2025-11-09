@@ -139,8 +139,7 @@ The `EXPLAIN ANALYZE` statement executes a SQL query and generates a statement p
 
 ### Privileges
 
-: the user must be a member of the `admin` role or have been granted appropriate privileges for the statement being explained.
-
+The user must be a member of the `admin` role or have been granted appropriate privileges for the statement being explained.
 
 ### Syntax
 

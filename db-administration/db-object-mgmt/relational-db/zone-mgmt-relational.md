@@ -77,7 +77,7 @@ KWDB 集群中，每个数据分片都隶属于一个特定的副本区域（zon
      执行成功后，控制台输出以下信息：
 
      ```sql
-          target    |             raw_config_sql
+          target    |             config_sql
      ---------------+------------------------------------------
      DATABASE db1   | ALTER DATABASE db1 CONFIGURE ZONE USING
                     |     range_min_bytes = 1048576,
@@ -172,7 +172,7 @@ ALTER [DATABASE <database_name> | TABLE <table_name> | RANGE <range_name> | PART
      CONFIGURE ZONE 1
 
      show zone configuration for table orders;
-          target    |             raw_config_sql
+          target    |             config_sql
      ---------------+------------------------------------------
      TABLE orders | ALTER TABLE orders CONFIGURE ZONE USING
                     |     range_min_bytes = 268435456,

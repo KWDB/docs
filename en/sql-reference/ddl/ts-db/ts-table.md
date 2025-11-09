@@ -23,7 +23,7 @@ The user must be a member of the `admin` role or have been granted the `CREATE` 
 
 :::warning Note
 
-- Currently, the table name, column name, and tag name do not support Chiese characters.
+- Currently, the table name, column name, and tag name do not support Chinese characters.
 - The optional parameters must be configured in an order of `[RETENTIONS <keep_duration>] [DICT ENCODING] [COMMENT [=] <'comment_text'>]`. Otherwise, the system returns an error.
 - In version 3.0.0, the `activetime` and `partition interval` configurations are ignored.
 
@@ -221,7 +221,7 @@ The user must have any privilege on the specified table(s).
 
     CREATE TABLE t3(ts timestamp NOT NULL, a int) TAGS(ptag int NOT NULL) PRIMARY TAGS(ptag) ACTIVETIME 10s;
 
-    -- 2. Checkt the created t1 table.
+    -- 2. Checkt the created t3 table.
 
     SHOW CREATE TABLE t3;
       table_name |              create_statement

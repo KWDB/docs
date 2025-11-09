@@ -29,14 +29,6 @@ KWDB supports importing data in any of the following ways:
 - Import the user data only. When there is data in the target table, KWDB supports incremental import of user data.
 - Import the metadata only.
 
-For relational tables, KWDB performs operations based on whether the target table contains label columns and data columns.
-
-- When the target table contains both label columns and data columns:
-  - When KWDB enables MAC and the target table contains data for label columns, KWDB will check label values of the label columns and the subject. If the data of the label columns is set to NULL or if the label data format or level requirement is not met, KWDB fails to import the data. For details about levels, see [MAC Policies](../../../en/db-security/access-control.md#mac-policies).
-  - When only importing data for data columns, KWDB fills label columns with user labels. If no user labels are available, KWDB fills label columns with empty strings (`''`).
-- When the target table only contains data columns: KWDB imports the data and returns an error if the number of data columns is not matched.
-- When the target table only contains label columns: KWDB fails to import the data and returns an error saying the number of data columns is not matched.
-
 For relational data, if an import fails, KWDB will rollback the import. For time-series data, if an import fails, KWDB will not rollback the import but keep imported files in the destination. The console prints the number of rows that fail to be imported and stores the rejected data and the error messages to the `reject.txt` file. The `reject.txt` file is generated in the same directory as the files to be imported.
 
 ::: warning Note
@@ -84,7 +76,7 @@ The user must be a member of the `admin` role. By default, the `root` user belon
 | `charset` | Optional. Specify the character set encoding for the data to import. By default, it is set to `utf8`. Available options are `gbk`, `gb18030` or `utf8`.<br>**Note**: The specified character set encoding must be identical with the existing character set encoding. Otherwise, it may cause import failures or garbled codes. |
 | `privileges` | Optional. Import the privilege information of non-system users for the specified tables. <br>- With this parameter, KWDB reads and runs the SQL statements that are related to privileges in the metadata file. **Note**: If the metadata file does not contain any SQL statements for privileges, KWDB returns an error, saying `NO PRIVILEGES statement in the SQL file`. In this case, you need to remove this parameter and re-import the data. <br>- Without this parameter, KWDB will not read the SQL statements that are related to privileges from the metadata file.|
 | `table_name`         | The name of the table to import. The number and data type of columns in the specified table should be identical to that in the existing table. |
-| `column_list`        | Optional. Specify the columns to import. <br > - When column names are specified, KWDB can either import data based on the order of columns in the original table or import data without following the order of columns in the original table. For time-series tables, the first column (timestamp-typed column) and primary tag columns must be specified when specifying column names. <br > - When column names are not specified, KWDB imports data based on the order of columns in the original table. For unspecified columns, if these columns support NULL values, KWDB will automatically insert NULL values for them. Otherwise, KWDB returns an error, saying `Null value in column %s violates not-null constraints.`.  <br> **Note** <br> When the target table has label columns, KWDB does not support importing specified columns. |
+| `column_list`        | Optional. Specify the columns to import. <br > - When column names are specified, KWDB can either import data based on the order of columns in the original table or import data without following the order of columns in the original table. For time-series tables, the first column (timestamp-typed column) and primary tag columns must be specified when specifying column names. <br > - When column names are not specified, KWDB imports data based on the order of columns in the original table. For unspecified columns, if these columns support NULL values, KWDB will automatically insert NULL values for them. Otherwise, KWDB returns an error, saying `Null value in column %s violates not-null constraints.`. |
 
 ### Responses
 

@@ -171,7 +171,7 @@ ALTER TABLE <table_name> ALTER [COLUMN] <colunm_name> [SET DATA] TYPE <new_type>
     ALTER TABLE ts_table ALTER COLUMN c4 SET DEFAULT '789';
     ```
 
-- Renove the default value of a column.
+- Remove the default value of a column.
 
     ```sql
     ALTER TABLE ts_table ALTER COLUMN c4 DROP DEFAULT;

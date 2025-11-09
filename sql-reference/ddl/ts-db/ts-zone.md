@@ -84,7 +84,7 @@ id: ts-zone
      执行成功后，控制台输出以下信息：
 
      ```sql
-          target    |             raw_config_sql
+          target    |             config_sql
      ---------------+------------------------------------------
      DATABASE db1 | ALTER DATABASE db1 CONFIGURE ZONE USING
                     |     range_min_bytes = 1048576,
@@ -180,7 +180,7 @@ id: ts-zone
      CONFIGURE ZONE 1
 
      SHOW ZONE CONFIGURATION FOR TABLE vehicles;
-          target    |             raw_config_sql
+          target    |             config_sql
      ---------------+------------------------------------------
      TABLE vehicles | ALTER TABLE vehicles CONFIGURE ZONE USING
                     |     range_min_bytes = 268435456,

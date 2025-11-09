@@ -228,7 +228,7 @@ USE ts_db;
 
 - 修改数据库的生命周期
 
-    ![](../../../static/sql-reference/Ab69bP86UozqWDxtCLMc3vxznwh.png)
+    ![](../../../static/sql-reference/alter-db-ts.png)
 
 - 修改数据库的区域配置
 

@@ -85,7 +85,7 @@ id: relational-zone
      执行成功后，控制台输出以下信息：
 
      ```sql
-          target    |             raw_config_sql
+          target    |             config_sql
      ---------------+------------------------------------------
      DATABASE db1 | ALTER DATABASE db1 CONFIGURE ZONE USING
                     |     range_min_bytes = 1048576,
@@ -178,7 +178,7 @@ id: relational-zone
      CONFIGURE ZONE 1
 
      show zone configuration for table orders;
-          target    |             raw_config_sql
+          target    |             config_sql
      ---------------+------------------------------------------
      TABLE orders | ALTER TABLE orders CONFIGURE ZONE USING
                     |     range_min_bytes = 268435456,

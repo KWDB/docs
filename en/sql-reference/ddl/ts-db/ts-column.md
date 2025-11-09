@@ -164,7 +164,7 @@ The user must be a member of the `admin` role or have been granted the `CREATE` 
     ALTER TABLE ts_table ALTER COLUMN c4 SET DEFAULT '789';
     ```
 
-- Renove the default value of a column.
+- Remove the default value of a column.
 
     ```sql
     ALTER TABLE ts_table ALTER COLUMN c4 DROP DEFAULT;

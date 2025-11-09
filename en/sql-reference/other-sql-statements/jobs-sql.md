@@ -12,7 +12,6 @@ The `SHOW JOBS` statement lists all long-running tasks your cluster has performe
 - Schema changes triggered by `ALTER TABLE`, `DROP DATABASE`, and `DROP TABLE` statements
 - Import and export jobs
 - Historical restart jobs
-- Backup and restore jobs
 - User-created table statistics jobs for use by the cost-based optimizer. Automatic table statistics jobs are not included in `SHOW JOBS` results. To view automatic table statistics jobs, use the `SHOW AUTOMATIC JOBS` statement.
 
 KWDB first checks all running jobs, then checks jobs completed in the last 12 hours. Running jobs are sorted by start time, while completed jobs are sorted by end time.

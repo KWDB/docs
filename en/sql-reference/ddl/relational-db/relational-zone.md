@@ -36,7 +36,7 @@ N/A
 
 ### Syntax
 
-![img](../../../../static/sql-reference/alter-zone-r.png)
+![img](../../../../static/sql-reference/show-zone-r.png)
 
 ### Parameters
 
@@ -131,7 +131,7 @@ The `ALTER ... CONFIGURE ZONE` statement modifies or removes zone configurations
 
 ### Syntax
 
-![img](../../../../static/sql-reference/alter-zone-rdb.png)
+![img](../../../../static/sql-reference/alter-zone-r.png)
 
 ### Parameters
 

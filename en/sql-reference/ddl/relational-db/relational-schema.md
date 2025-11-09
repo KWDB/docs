@@ -1,9 +1,9 @@
 ---
-title: Schema
+title: Schemas
 id: relational-schema
 ---
 
-# Schema
+# Schemas
 
 ## CREATE SCHEMA
 
