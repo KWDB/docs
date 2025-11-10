@@ -136,7 +136,6 @@ The `ALTER TABLE ... ALTER COLUMN` statement performs the following operations. 
 When changing a column, KWDB will check whether the current table is referenced by any stream. If yes, the system ruturns an error and lists all streams that reference the specified table. In this case, you should remove the stream and then change the column. For details about how to remove the stream, see [DROP STREAM](../../../../en/sql-reference/other-sql-statements/stream-sql.md#drop-stream).
 :::
 
-
 ### Privileges
 
 The user must be a member of the `admin` role or have been granted the `CREATE` privilege on the specified table(s). By default, the `root` user belongs to the `admin` role.

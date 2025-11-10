@@ -291,15 +291,10 @@ The `ALTER TABLE` statement performs the following operations:
 ### Privileges
 
 - Rename tables: the user must be a member of the `admin` role or have been granted the `DROP` privilege on the specified table(s) and the `CREATE` privilege on the specified database(s). By default, the `root` user belongs to the `admin` role.
-
 - Add columns/tags to tables, update or rename columns/tags of tables, and remove columns/tags from tables: the user must be a member of the `admin` role or have been granted the `CREATE` privilege on the specified table(s). By default, the `root` user belongs to the `admin` role.
-
 - Set the retention of tables: the user must be a member of the `admin` role or have been granted the `CREATE` privilege on the specified table(s). By default, the `root` user belongs to the `admin` role.
-
 - Change the zone configurations of tables: the user must be a member of the `admin` role or have been granted the `CREATE` or `ZONECONFIG` privilege on the specified table(s). By default, the `root` user belongs to the `admin` role.
-
 - Create partitions: the user must be a member of the `admin` role or have been granted the `CREATE` privilege on the specified table(s). By default, the `root` user belongs to the `admin` role.
-
 
 ### Syntax
 
