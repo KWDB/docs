@@ -140,7 +140,7 @@ Try \h with no argument to see available help.
 
 You can run the `\h <keyword>` command to view a group of SQL statements with the same keyword.
 
-This example lists all supported `SHOW` statments by using the `SHOW` keyword.
+This example lists all supported `SHOW` statements by using the `SHOW` keyword.
 
 ```sql
 \h SHOW;
@@ -160,7 +160,7 @@ SHOW STATISTICS, SHOW SYNTAX, SHOW TABLES, SHOW TRACE SHOW TRANSACTION, SHOW USE
 
 ## View Help Information about Specified SQL Statements
 
-You can run the `\h <sql_statement>` command to view the help information about a specified SQL statement, including the followig parts:
+You can run the `\h <sql_statement>` command to view the help information about a specified SQL statement, including the following parts:
 
 - `Command`: the specified SQL statement
 - `Description`: the descriptions of the SQL statement

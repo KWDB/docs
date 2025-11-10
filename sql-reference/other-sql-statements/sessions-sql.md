@@ -105,7 +105,7 @@ id: sessions-sql
 - 取消多个会话。
 
     ```sql
-    CANCEL SESSIONS (SELECT session_id FROM [SHOW SESSIONS] WHERE user_name = 'kaiwudb');
+    CANCEL SESSIONS (SELECT session_id FROM [SHOW SESSIONS] WHERE user_name = 'KWDB');
     CANCEL SESSIONS 2
     ```
 

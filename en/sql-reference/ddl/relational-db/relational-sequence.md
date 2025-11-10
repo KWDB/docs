@@ -11,7 +11,7 @@ The `CREATE SEQUENCE` statement creates a new sequence within the database. The 
 
 ### Privileges
 
-The user must have been granted the `CREATE` privilege on the parent database.
+The user must be a member of the `admin` role or have been granted the `CREATE` privilege on the parent database.
 
 ### Syntax
 
@@ -170,7 +170,7 @@ The `ALTER SEQUENCE` statement changes the name, increment value, and other sett
 
 ### Privileges
 
-The user must have been granted the `CREATE` privilege on the parent database.
+The user must be a member of the `admin` role or have been granted the `CREATE` privilege on the parent database.
 
 ### Syntax
 
@@ -273,7 +273,7 @@ KWDB does not support renaming a sequence that is being used by a table. To rena
 
 ### Privileges
 
-The user must have been granted the `CREATE` privilege on the parent database of the newly-created sequence.
+The user must be a member of the `admin` role or have been granted the `CREATE` privilege on the parent database of the newly-created sequence.
 
 ### Syntax
 
@@ -330,7 +330,7 @@ The `DROP SEQUENCE` statement removes a sequence from a database. KWDB supports 
 
 ### Privileges
 
-The user must have been granted the `DROP` privilege on the specified sequence(s).
+The user must be a member of the `admin` role or have been granted the `DROP` privilege on the specified sequence(s). By default, the `root` user belongs to the `admin` role.
 
 ### Syntax
 

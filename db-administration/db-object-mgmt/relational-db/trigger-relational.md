@@ -33,7 +33,7 @@ CREATE TRIGGER [IF NOT EXISTS] <trigger_name> <trigger_time> <trigger_event> ON 
 | `FOR EACH ROW` | 用于指定行级触发器，该触发器会在触发事件影响的每行数据上各执行一次。 |
 | `trigger_order` | 用于指定触发器的触发顺序。当目标表上存在多个具有相同触发时机和触发事件的触发器时，用户可以在创建触发器时指定触发顺序。支持以下选项：<br >- `FOLLOWS`：先激活已有的触发器再激活新创建的触发器。 <br >- `PRECEDES`：先激活新创建的触发器再激活已有的触发器。 <br >默认情况下，按照创建触发器的顺序激活触发器。 |
 | `other_trigger_name` | 其他触发器的名称。当目标时序表上存在多个触发器时，可以在创建触发器时指定各个触发器的触发顺序。 |
-| `trigger_body` | 用于指定触发器主体，包括激活触发器的 SQL 语句。触发器主体支持执行多条 SQL 语句，也支持跨表操作。当执行多条 SQL 语句时，需要使用 `BEGIN ... END` 复合语句封装 SQL 语句并需要使用 DELIMITER 语句修改 SQL 语句的终结符。支持在触发器主体中使用 `OLD` 和 `NEW` 别名引用触发器关联表中的列：<br >- `OLD.col_name`：引用更新前或删除前的现有行数据，适用于 `DELETE` 和 `UPDATE` 操作。`DELETE` 触发器只能使用 `OLD` 别名。<br >- `NEW.col_name`：引用待插入的新行数据或更新后的行数据，适用于 `INSERT` 和 `UPDATE` 操作。INSERT 触发器只能使用 `NEW` 别名。<br > **说明** <br >- 触发器主体不支持 DDL 语句、事务语句、`SELECT` 语句、存储过程语句、以及 `PREPARE`、`EXECUTE` 预处理语句。<br >- 修改或者删除触发器中 SQL 语句操作的表时，不会立即影响触发器。触发器会在下一次触发时报错。<br >- 如果使用 KWDB JDBC 创建触发器，需要使用双美元符号（`$$`）将 `BEGIN ...END` 复合语句包裹起来。 |
+| `trigger_body` | 用于指定触发器主体，包括激活触发器的 SQL 语句。触发器主体支持执行多条 SQL 语句，也支持跨表操作。当执行多条 SQL 语句时，需要使用 `BEGIN ... END` 复合语句封装 SQL 语句并需要使用 DELIMITER 语句修改 SQL 语句的终结符。支持在触发器主体中使用 `OLD` 和 `NEW` 别名引用触发器关联表中的列：<br >- `OLD.col_name`：引用更新前或删除前的现有行数据，适用于 `DELETE` 和 `UPDATE` 操作。`DELETE` 触发器只能使用 `OLD` 别名。<br >- `NEW.col_name`：引用待插入的新行数据或更新后的行数据，适用于 `INSERT` 和 `UPDATE` 操作。INSERT 触发器只能使用 `NEW` 别名。<br > **说明** <br >- 触发器主体不支持 DDL 语句、事务语句、`SELECT` 语句、存储过程语句、以及 `PREPARE`、`EXECUTE` 预处理语句。<br >- 修改或者删除触发器中 SQL 语句操作的表时，不会立即影响触发器。触发器会在下一次触发时报错。<br >- 如果使用 KaiwuDB JDBC 创建触发器，需要使用双美元符号（`$$`）将 `BEGIN ...END` 复合语句包裹起来。 |
 
 ### 语法示例
 

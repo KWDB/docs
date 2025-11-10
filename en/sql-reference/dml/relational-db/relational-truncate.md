@@ -9,7 +9,7 @@ The `TRUNCATE` statement removes all rows from a table.
 
 ## Privileges
 
-The user must have been granted the `DROP` privilege on the specified table(s).
+The user must be a member of the `admin` role or have been granted the `DROP` privilege on the specified table(s).
 
 ## Syntax
 

@@ -1,4 +1,4 @@
-KWDB---
+---
 title: Cursors
 id: declare-sql
 ---

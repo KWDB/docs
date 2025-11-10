@@ -23,7 +23,7 @@ You can reference columns using any of the methods listed in the table below:
 | `column_name`                          | Reference the `column_name` column in any table.                                                  |
 | `table_name.column_name`               | Reference the `column_name` column in the `table_name` table within the current database.         |
 | `database_name.table_name.column_name` | Reference the `column_name` column in the `table_name` table within the `database_name` database. |
-| `column_name`                          | Reference any keywords or fileds with special characters.                                          |
+| `column_name`                          | Reference any keywords or fields with special characters.                                          |
 
 When referencing composite identifiers, each individual identifier component must be quoted separately rather than treating the entire composite identifier as a single entity. For example, `"table"."column"` is a valid reference format, whereas `"table.column"` is invalid.
 

@@ -111,7 +111,7 @@ The `ALTER STREAM` statement modifies parameters of a stream.
 The user must be a member of the `admin` role or the creator of the stream. By default, the `root` user belongs to the `admin` role.
 
 ::: warning Note
-If the user who created a stream is removed, only the `admin` or `sysadmin` role can remove the specified stream.
+If the user who created a stream is removed, only the `admin` role can remove the specified stream.
 :::
 
 ### Syntax
@@ -151,7 +151,7 @@ The `DROP STREAM` statement removes a stream. If the target stream is running, t
 The user must be a member of the `admin` role or the creator of the stream. By default, the `root` user belongs to the `admin` role.
 
 ::: warning Note
-If the user who created a stream is removed, only the `admin` or `sysadmin` role can remove the specified stream.
+If the user who created a stream is removed, only the `admin` role can remove the specified stream.
 :::
 
 ### Syntax

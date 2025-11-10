@@ -11,7 +11,7 @@ The `CREATE TABLE` statement creates a new table in a database.
 
 ### Privileges
 
-The user must have been granted the `CREATE` privilege on the specified database(s).
+The user must be a member of the `admin` role or have been granted the `CREATE` privilege on the specified database(s). By default, the `root` user belongs to the `admin` role.
 
 ### Syntax
 
@@ -56,18 +56,19 @@ The user must have been granted the `CREATE` privilege on the specified database
 ### Parameters
 
 :::warning Note
-The optional parameters must be configured in an order of `[<column_def> | <index_def> | <family_def> | <table_constraint>] [<interleave_clause>] [PARTITION INTERVAL <interval>] [COMMENT [=] <'comment_text'>]`. Otherwise, the system returns an error.
+The optional parameters must be configured in an order of `[<column_def> | <index_def> | <family_def> | <table_constraint>] [<interleave_clause>] [<partition_by_clause>] [COMMENT [=] <'comment_text'>]`. Otherwise, the system returns an error.
 :::
 
 | Parameter | Description |
 | --- | --- |
 | `IF NOT EXISTS` | Optional. <br>- When the `IF NOT EXISTS` keyword is used, the system creates a new table only if a table of the same name does not already exist. Otherwise, the system fails to create a new table without returning an error. <br>- When the `IF NOT EXISTS` keyword is not used, the system creates a new table only if a table of the same name does not already exist. Otherwise, the system fails to create a new table and returns an error.<br > **Note** <br > `IF NOT EXISTS` checks the table name only. It does not check if an existing table has the same columns, indexes, constraints, etc., of the new table.|
 | `table_name` | The name of the table to create, which must be unique within its database and follow these [Identifier Rules](../../../sql-reference/sql-identifiers.md). You can use `<database_name>.<table_name>` to specify a table in another database. If not specified, use the table in the current database. |
-| `column_def` | A comma-separated list of column definitions. Each column requires a name and data type. Column names must be unique within the table but can have the same name as indexes or constraints. You can also specify a column qualification (a column-level constraint) in the format of `<column_name> <typename> [COMMENT [=] 'commonent_text'] [col_qual_list]`. Support adding comments to data columns after the data type. The comment can be placed in any order relative to other constraints of the data column. Any PRIMARY KEY, UNIQUE, and CHECK constraints defined at the column level are moved to the table-level as part of the table's creation. Use the `SHOW CREATE TABLE` statement to view them at the table level.  <br> To implement row-level MAC, you need to specify the name of the label column with a data type of `STRING(4000)`. KWDB supports up to one label column and you cannot specify the default values for the label column. |
+| `column_def` | A comma-separated list of column definitions. Each column requires a name and data type. Column names must be unique within the table but can have the same name as indexes or constraints. You can also specify a column qualification (a column-level constraint) in the format of `<column_name> <typename> [COMMENT [=] 'commonent_text'] [col_qual_list]`. Support adding comments to data columns after the data type. The comment can be placed in any order relative to other constraints of the data column. Any PRIMARY KEY, UNIQUE, and CHECK constraints defined at the column level are moved to the table-level as part of the table's creation. Use the `SHOW CREATE TABLE` statement to view them at the table level. |
 | `index_def` | Optional. A comma-separated list of index definitions. For each index, the column(s) to index must be specified. Or, a name can be specified. Index names must be unique within the table and follow these [Identifier Rules](../../sql-identifiers.md). For details about how to create an index, see [CREATE INDEX](./relational-index.md#create-index).|
 | `family_def` | Optional. A comma-separated list of column family definitions in the format of `FAMILY [family_name] (name_list)`. Column family names must be unique within the table but can have the same name as columns, constraints, or indexes. A column family is a group of columns that are stored as a single key-value pair in the underlying key-value store. KWDB automatically groups columns into families to ensure efficient storage and performance. However, you can also manually assign columns to families.|
 | `table_constraint` | Optional. A comma-separated list of table-level constraints in the format of `CONSTRAINT <constraint_name> <constraint_elem>`. Constraint names must be unique within the table but can have the same name as columns, column families, or indexes.|
 | `interleave_clause` | Optional. KWDB supports optimizing query performance using interleaving indexes in the format of `INTERLEAVE IN PARENT <table_name> (<name_list>)`. This may changes how KWDB stores data. |
+| `partition_by_clause` | Optional, allows users to define table partitions at the row level, supporting partitioning by list, range, and hash values. For more information, see [Partitions](./relational-partition.md). |
 | `comment_text` | Optional. Specify the comment to be associated to the table.|
 
 ### Examples
@@ -453,7 +454,7 @@ The optional parameters must be configured in an order of `[<column_def> | <inde
 
 - Create a table with a computed column.
 
-    This example creates a table named users, where the `full_name` column is computed from the `first_name` and `last_name` columns.
+    This example creates a table named `users`, where the `full_name` column is computed from the `first_name` and `last_name` columns.
 
     ```sql
     -- 1. Create a table named users.
@@ -478,15 +479,6 @@ The optional parameters must be configured in an order of `[<column_def> | <inde
     c4803c2e-c2e2-49bf-b912-80072229d785|    |Lola      |McDog    |Lola McDog   |       |           |  
     f363db85-dfd5-40b8-a68e-f12ca8a4b84f|    |Carl      |Kimball  |Carl Kimball |       |           |  
     (3 rows)
-    ```
-
-- Create a table and associate comments to the data columns and the table.
-
-    This example creates a table named `student` and associates comments to the data columns and the table.
-
-    ```sql
-    CREATE TABLE student (student_id UUID PRIMARY KEY DEFAULT, city STRING COMMENT = 'city for students', first_name STRING, last_name STRING, full_name STRING, address STRING, credit_card STRING) COMMENT = 'table for students';
-    CREATE TABLE
     ```
 
 ## SHOW TABLES
@@ -655,6 +647,8 @@ The `ALTER TABLE` statement performs the following operations:
 - Add columns to tables, update or rename columns of tables, and remove columns from tables.
 - Add constraints to tables, validate or rename constraints of tables, and remove constraints from tables.
 - Modify the primary key columns and zone configurations of tables.
+- Modify zone configurations of tables.
+- Create table partitions.
 - Rename tables. The renamed tables can be migrated to a new database or schema. Avoid renaming a relational table in the time-series database.
 - Create or remove a range split at the specified rows in tables to improve performance.
 - Redistribute data of tables.
@@ -662,23 +656,20 @@ The `ALTER TABLE` statement performs the following operations:
 
 ### Privileges
 
-- Add columns to tables, update or rename columns of tables, and remove columns from tables
-  The user must have been granted the `CREATE` privilege on the specified table(s).
-- Add constraints to tables, validate or rename constraints of tables, and remove constraints from tables
-  The user must have been granted the `CREATE` privilege on the specified table(s).
-- Modify primary key columns of tables
-  The user must have been granted the `CREATE` privilege on the specified table(s).
-- Modify zone configurations of tables
-  The user must have been granted the `CREATE` or `ZONECONFIG` privilege on the specified table(s).
+- Add columns to tables, update or rename columns of tables, and remove columns from tables: the user must be a member of the `admin` role or have been granted the `CREATE` privilege on the specified table(s). By default, the `root` user belongs to the `admin` role.
+- Add constraints to tables, validate or rename constraints of tables, and remove constraints from tables: the user must be a member of the `admin` role or have been granted the `CREATE` privilege on the specified table(s). By default, the `root` user belongs to the `admin` role.
+- Modify primary key columns of tables: the user must be a member of the `admin` role or have been granted the `CREATE` privilege on the specified table(s). By default, the `root` user belongs to the `admin` role.
+- Modify zone configurations of tables: the user must be a member of the `admin` role or have been granted the `CREATE` or `ZONECONFIG` privilege on the specified table(s). By default, the `root` user belongs to the `admin` role.
+
+- Create table partitions: the user must be a member of the `admin` role or have been granted the `CREATE` privilege on the specified table(s). By default, the `root` user belongs to the `admin` role.
+
 - Rename tables
-  - Rename tables in the current database
-    The user must have been granted the `CREATE` privilege on the specified database(s) and the `DROP` privilege on the original table. It is not possible to rename a table referenced by a view.
-  - Rename tables and migrate them to other schema
-    The user must have been granted the `CREATE` privilege on the specified database(s) and the `DROP` privilege on the original table.
-  - Rename tables and migrate them to other databases
-    The user must have been granted the `CREATE` privilege on the specified database(s) and the `DROP` privilege on the original table.
-- Create or remove a range split at the specified rows in tables
-  The user must have been granted the `INSERT` privilege on the specified table(s).
+  - Rename tables in the current database: the user must be a member of the `admin` role or have been granted the `CREATE` privilege on the specified database(s) and the `DROP` privilege on the original table. By default, the `root` user belongs to the `admin` role. It is not possible to rename a table referenced by a view.
+  - Rename tables and migrate them to other schema: the user must be a member of the `admin` role or have been granted the `CREATE` privilege on the specified database(s) and the `DROP` privilege on the original table. By default, the `root` user belongs to the `admin` role.
+  - Rename tables and migrate them to other databases: the user must be a member of the `admin` role or have been granted the `CREATE` privilege on the specified database(s) and the `DROP` privilege on the original table. By default, the `root` user belongs to the `admin` role.
+
+- Create or remove a range split at the specified rows in tables: the user must be a member of the `admin` role or have been granted the `INSERT` privilege on the specified table(s). By default, the `root` user belongs to the `admin` role.
+
 
 ### Syntax
 
@@ -692,19 +683,20 @@ The `ALTER TABLE` statement performs the following operations:
 - ALTER
   - `ALTER COLUMN`: Change the default value, data type, and whether or not it's nullable.
   - `ALTER PRIMARY KEY`: Change the primary of the table.
-- `CONFIGURE ZONE`: Change zone configurations of the table. For details, see [Zone Configurations](./relational-zone.md).
+- `CONFIGURE ZONE`: Change zone configurations of the table. For details, see [Zones](./relational-zone.md).
 - DROP
   - `DROP COLUMN`: Rremove columns. You need to specify the column name. The `COLUMN` keyword is optional. If not used, columns will be removed by default. When the `IF EXISTS` keyword is used, the system removes the column only if the target table has already existed. Otherwise, the system fails to remove the column without returning an error. When the `IF EXISTS` keyword is not used, the system removes the column only if the target table has already existed. Otherwise, the system fails to remove the column and returns an error.
   - `DROP CONSTRAINT`: Remove constraints. For details, see [DROP CONSTRAINT](./relational-constraint.md#drop-constraint).
+- `PARTITION BY`: Create partitions for the table. For details, see [Partitions](./relational-partition.md).
 - RENAME
   - `RENAME TO`: Change the names of tables.
   - `RENAME COLUMN`: Change the names of columns. For details, see [ALTER COLUMN](./relational-column.md#alter-column).
-  - `RENAME TAG/ATTRIBUTE`: Change the names of constraints. For details, see [RENAME CONSTRAINT](./relational-constraint.md#rename-constraint).
+  - `RENAME CONSTRAINT`:  Change the names of constraints. For details, see [RENAME CONSTRAINT](./relational-constraint.md#rename-constraint).
 - `VALIDATE CONSTRAINT`: Validate whether the column value is matched with the constraints on the column.
 - `SPLIT AT`: Create a split at the specified row or range in the table to optimize the table performance when the data is distributed unevenly or there are hotspots, etc. You can use the `WITH EXPIRATION` clause to set the expiration time of the split. Therefore, the system can automatically remove the splits after the specified time.
 - `UNSPLIT AT`: Remove a split at the specified row or range from the table. You can use the `SELECT` clause to specify the position of the split to be removed.
 - `UNSPLIT ALL`: Remove all range splits from the table to optimize the table performance when the data is distributed unevenly or there are hotspots, etc.
-- `SCATTER`: Reditribute data of the tables to achieve better load balancing. You can use the `FROM` cluse to specify the data ranges to be reditributed.
+- `SCATTER`: Redistribute data of the tables to achieve better load balancing. You can use the `FROM` clause to specify the data ranges to be redistributed.
 - `INJECT STATISTICS`: An experimental feature used to inject statistics into a table. It can be used for test and debugging, and should be used with caution in a production environment.
 
 ### Parameters
@@ -716,7 +708,7 @@ The `ALTER TABLE` statement performs the following operations:
 | `typename` | The data type of the column.|
 | `col_qual_list` | A list of column qualifications. KWDB supports the following qualifications: <br >- `<col_qualification_elem>`: `NULL`, `NOT NULL`, `UNIQUE`, `PRIMARY KEY`, `CHECK`, `DEFAULT`, `REFERENCES`, `AS`.<br >- `CONSTRAINT <constraint_name> <col_qualification_elem>` <br >- `COLLATE <collation_name>` <br >- `FAMILY <family_name>`: If no column family is specified, the column is added to the first column family. <br >- `CREATE FAMILY [<family_name>]` <br > **Note** <br > KWDB does not support adding columns with a FOREIGN KEY constraint. For details about how to add a FOREIGN KEY constraint to a column, see [ADD CONSTRAINT](./relational-constraint.md#add-constraint). |
 | `constraint_name` | The name of the constraint. The constraint name must be unique within the table and must follow these [Identifier Rules](../../../sql-reference/sql-identifiers.md). |
-| `constraint_elem` | The constraints to add. KWDB supports the following constrains: <br >- `CHECK`: specify the column values that match the specified conditons ir expressions. <br >- `UNIQUE`: specify that each non-NULL value in the constrained column must be unique. <br >- `FOREIGN KEY`: before adding a FOREIGN KEY constraint to a column, the column value must refer to anthor column. If not, you can use the `CREATE INDEX` statement to create an index and then add a FOREIGN KEY constraint. For details, see [ADD CONSTRAINT](./relational-constraint.md#add-constraint).|
+| `constraint_elem` | The constraints to add. KWDB supports the following constrains: <br >- `CHECK`: specify the column values that match the specified conditions ir expressions. <br >- `UNIQUE`: specify that each non-NULL value in the constrained column must be unique. <br >- `FOREIGN KEY`: before adding a FOREIGN KEY constraint to a column, the column value must refer to another column. If not, you can use the `CREATE INDEX` statement to create an index and then add a FOREIGN KEY constraint. For details, see [ADD CONSTRAINT](./relational-constraint.md#add-constraint).|
 | `a_expr` | The default value to use. |
 | `collation_name` | The name of the collation. |
 | `index_params` | The indexes. For details, see [Indexes](./relational-index.md).|
@@ -763,7 +755,7 @@ The `ALTER TABLE` statement performs the following operations:
     vehicleid | licenseplate | owner | model | year
   ------------+--------------+-------+-------+-------
             1 | JA11111     | Mark  | BMW   | 2020
-            2 | JA22222     | Jhon  | Buick | 2022
+            2 | JA22222     | John  | Buick | 2022
   (2 rows)
   
   -- 2. Set a split.
@@ -780,7 +772,7 @@ The `ALTER TABLE` statement performs the following operations:
   ALTER TABLE vehicles UNSPLIT ALL;
   ```
 
-- Reditribute data of a table.
+- Redistribute data of a table.
 
   ```sql
   ALTER TABLE vehicles SCATTER;
@@ -802,7 +794,7 @@ The `DROP TABLE` statement removes a table and all its indexes and associated tr
 
 ### Privileges
 
-- The user must have been granted the `DROP` privilege on the specified table(s).
+- The user must be a member of the `admin` role or have been granted the `DROP` privilege on the specified table(s). By default, the `root` user belongs to the `admin` role.
 - When the target table has FOREIGN KEY constraints or is interleaved with other tables, the user must have been granted the `REFERENCES` privilege on the interleaved tables.
 - When the target table is dependent on a view, the user must have been granted the `DROP` privilege on the specified table(s) and all dependent views.
 

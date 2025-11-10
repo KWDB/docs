@@ -20,7 +20,7 @@ Currently, function-based indexes do not support window functions, aggregate fun
 
 ### Privileges
 
-The user must have been granted the `CREATE` privilege on the specified table(s) or materialized view(s).
+The user must be a member of the `admin` role or have been granted the `CREATE` privilege on the specified table(s) or materialized view(s). By default, the `root` user belongs to the `admin` role.
 
 ### Syntax
 
@@ -263,8 +263,8 @@ The `ALTER INDEX` statement changes the name of an index or applies a range spli
 
 ### Privileges
 
-- Change the name of an index: the user must have been granted the `CREATE` privilege on the specified table(s) or materialized view(s).
-- Apply a range split for a specified row in the index: the user must have been granted the `INSERT` privilege on the specified index(es).
+- Change the name of an index: the user must be a member of the `admin` role or have been granted the `CREATE` privilege on the specified table(s) or materialized view(s). By default, the `root` user belongs to the `admin` role.
+- Apply a range split for a specified row in the index: the user must be a member of the `admin` role or have been granted the `INSERT` privilege on the specified index(es). By default, the `root` user belongs to the `admin` role.
 
 ### Syntax
 
@@ -281,13 +281,13 @@ The `ALTER INDEX` statement changes the name of an index or applies a range spli
 | Parameter | Description |
 | --- | --- |
 | `IF EXISTS` | Optional. <br>- When the `IF EXISTS` keyword is used, the system updates the index only if the target index has already existed. Otherwise, the system fails to update the index without returning an error. <br>- When the `IF EXISTS` keyword is not used, the system updates the index only if the target index has already existed. Otherwise, the system fails to update the index and returns an error. |
-| `table_name` | The name of the table with the index to change. You can use the `SHOW TABLES` statement to get exsiting table names. |
-| `mv_name` | The name of the materialized view with the index to change. You can use the `SHOW TABLES` statement to get exsiting materialized view names. |
+| `table_name` | The name of the table with the index to change. You can use the `SHOW TABLES` statement to get existing table names. |
+| `mv_name` | The name of the materialized view with the index to change. You can use the `SHOW TABLES` statement to get existing materialized view names. |
 | `index_name` | The current name of the index to change.|
 | `new_name` | The new name of the index. The index name must be unique within the database and must follow these [Identifier Rules](../../sql-identifiers.md).|
 | `SPLIT AT` | Force a range split at the specified row in the index.|
 | `select_stmt` | A `SELECT` query statement that produces one or more rows at which to split the index.|
-| `a_expr` | The expiration of the split enforcement on the index. Available options are `DECIMAL`, `INTERVAL`, `TIMESTAMP`, or `TIMESTAMPZ`.|
+| `a_expr` | The expiration of the split enforcement on the index. Available options are `DECIMAL`, `INTERVAL`, `TIMESTAMP`, or `TIMESTAMPTZ`.|
 
 ### Examples
 
@@ -378,7 +378,7 @@ The `DROP INDEX` statement removes indexes from tables or materialized views.
 
 ### Privileges
 
-The user must have been granted the `CREATE` privilege on the specified table(s) or materialized view(s).
+The user must be a member of the `admin` role or have been granted the `CREATE` privilege on the specified table(s) or materialized view(s). By default, the `root` user belongs to the `admin` role.
 
 ### Syntax
 
@@ -390,9 +390,9 @@ The user must have been granted the `CREATE` privilege on the specified table(s)
 | --- | --- |
 | `CONCURRENTLY` | Optional. It is compatible with the PostgreSQL syntax. All indexes are removed concurrently in KWDB. |
 | `IF EXISTS` | Optional. <br>- When the `IF EXISTS` keyword is used, the system removes the index only if the target index has already existed. Otherwise, the system fails to remove the index without returning an error. <br>- When the `IF EXISTS` keyword is not used, the system removes the index only if the target index has already existed. Otherwise, the system fails to remove the index and returns an error. |
-| `table_name` | The name of the table with the index to remove. You can use the `SHOW TABLES` statement to get exsiting table names. |
-| `mv_name` | The name of the materialized view with the index you to remove. You can use the `SHOW TABLES` statement to get exsiting materialized view names. |
-| `index_name` | The name of the index to remove. You can use the `SHOW TABLES` statement to get exsiting index names. You cannot remove a table's primary index.|
+| `table_name` | The name of the table with the index to remove. You can use the `SHOW TABLES` statement to get existing table names. |
+| `mv_name` | The name of the materialized view with the index you to remove. You can use the `SHOW TABLES` statement to get existing materialized view names. |
+| `index_name` | The name of the index to remove. You can use the `SHOW TABLES` statement to get existing index names. You cannot remove a table's primary index.|
 | `CASCADE` | Optional. Remove the target index and its dependent objects. The `CASCADE` keyword does not list objects it removes, so it should be used cautiously. |
 | `RESTRICT` | (Default) Optional. Do not remove the index if any objects depend on it. |
 

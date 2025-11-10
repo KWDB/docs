@@ -22,7 +22,7 @@ The `ALTER TABLE ... ADD CONSTRAINT` statement adds the following constraints to
 
 ### Privileges
 
-The user must have been granted the `CREATE` privilege on the specified table(s).
+The user must be a member of the `admin` role or have been granted the `CREATE` privilege on the specified table(s). By default, the `root` user belongs to the `admin` role.
 
 ### Syntax
 
@@ -172,7 +172,7 @@ The `ALTER TABLE ... RENAME CONSTRAINT` statement changes the name of a constrai
 
 ### Privileges
 
-The user must have been granted the `CREATE` privilege on the specified table(s).
+The user must be a member of the `admin` role or have been granted the `CREATE` privilege on the specified table(s). By default, the `root` user belongs to the `admin` role.
 
 ### Syntax
 
@@ -217,7 +217,7 @@ The `ALTER TABLE ... DROP CONSTRAINT` statement removes CHECK and FOREIGN KEY co
 
 ### Privileges
 
-The user must have been granted the `CREATE` privilege on the specified table(s).
+The user must be a member of the `admin` role or have been granted the `CREATE` privilege on the specified table(s). By default, the `root` user belongs to the `admin` role.
 
 ### Syntax
 

@@ -19,11 +19,11 @@ KWDB supports configuring the following cluster parameters related to querying t
   - For single-device queries, the system returns query results in reverse order of the timestamp of the inserted data.
   - For multi-device queries, the system first breaks down the query into single-device queries and then merges all results.
 
-For more information, see [Real-time Parameters](../../../db-operation/cluster-settings-config.md#real-time-parameters).
+For more information, see [Real-time Parameters](../../../db-operation/cluster-settings-config.md#cluster-parameters).
 
-KWDB supports using the highest precision to perform addition and substraction operations of time in queries for timestamp-typed columns or timestamp constants, and for functions and expressions whose result is timestamp. KWDB supports comparing the operation results using the greater than sign (`>`), the less than sign (`<`), the equals sign (`=`), the greater than or equal to sign (`>=`), and the less than or equal to sign (`<=`). The addition and substraction operations can include the `interval` constant, other timestamp-typed columns, and the functions and expressions whose result is interval, timestamp, or timestampz. If both sides of the operator are timestamp-typed or timestamptz-typed columns, only subtraction is supported.
+KWDB supports using the highest precision to perform addition and subtraction operations of time in queries for timestamp-typed columns or timestamp constants, and for functions and expressions whose result is timestamp. KWDB supports comparing the operation results using the greater than sign (`>`), the less than sign (`<`), the equals sign (`=`), the greater than or equal to sign (`>=`), and the less than or equal to sign (`<=`). The addition and subtraction operations can include the `interval` constant, other timestamp-typed columns, and the functions and expressions whose result is interval, timestamp, or timestamptz. If both sides of the operator are timestamp-typed or timestamptz-typed columns, only subtraction is supported.
 
-In addition and substraction operations, the supported units for the `interval` constant include nanosecond (ns), microsecond (us), millisecond (ms), second (s), minute (m), hour (h), day (d), week (w), month (mon), and year (y). Currently, KWDB does ​not​ support composite time formats, such as `1d1h`.
+In addition and subtraction operations, the supported units for the `interval` constant include nanosecond (ns), microsecond (us), millisecond (ms), second (s), minute (m), hour (h), day (d), week (w), month (mon), and year (y). Currently, KWDB does ​not​ support composite time formats, such as `1d1h`.
 
 The valid ranges for millisecond, second, minute, and hour are constrained by the maximum value of nanosecond (INT64). The table below specifies the supported value ranges:
 
@@ -36,24 +36,24 @@ The valid ranges for millisecond, second, minute, and hour are constrained by th
 | Minute (m)       | [-153,722,867, 153,722,867]               |
 | Hour (h)         | [-2,562,047, 2,562,047]                   |
 
-The valid ranges for day, week, month, and year are constrained by the results of addition and substraction operations, whose corresponding number of microseconds must not exceed the range of INT64.
+The valid ranges for day, week, month, and year are constrained by the results of addition and subtraction operations, whose corresponding number of microseconds must not exceed the range of INT64.
 
 ::: warning Note
 
-KWDB supports using the addition and substraction operations of time in the following cases:
+KWDB supports using the addition and subtraction operations of time in the following cases:
 
 - `SELECT` list: such as `SELECT ts+1h FROM table1;`, which means to return the results based on the specified time (the column's timestamp + one hour).
 - `WHERE` clause: such as `SELECT * FROM table1 WHERE ts+1h > now();`, which means to return the results whose specified time (the column's timestamp + one hours) is greater than the current time.
 - `ORDER BY` clause: such as `SELECT * FROM table1 ORDER BY ts+1h;`, which means to sort columns based on the specified time (the column's timestamp + one hour).
 - `HAVING` clause: such as `SELECT MAX(ts) FROM table1 GROUP BY ts HAVING ts+1h > now();`, which means to filter the qualified grouped results.
 - Recall functions whose parameter type is set to timestamp: such as `SELECT CAST(ts+1h AS timestamp) FROM table1;`, which means to convert the results based on the specified time (the column's timestamp + one hour) into timestamp-typed values.
-- Use comparision operations to indicate the join condition: such as `SELECT * FROM table1,table2 WHERE table1.ts+1h > table2.ts;`, which means to use the addition and subscription operations when joinning two tables.
+- Use comparison operations to indicate the join condition: such as `SELECT * FROM table1,table2 WHERE table1.ts+1h > table2.ts;`, which means to use the addition and subscription operations when joining two tables.
 
 :::
 
 ### Privileges
 
-The user must have been granted the `SELECT` privilege on the specified table(s).
+The user must be a member of the `admin` role or have been granted the `SELECT` privilege on the specified table(s).
 
 ### Syntax
 
@@ -85,13 +85,13 @@ The user must have been granted the `SELECT` privilege on the specified table(s)
 | --- | --- |
 | `order_by_clause` | The `ORDER BY` clause takes a comma-separated list of ordering specifications. Each ordering specification is composed of a column selection followed optionally by the keyword `ASC` or `DESC`.|
 | `limit_clause` | The `LIMIT` clause specifies the maximum number of returned rows. For example, `LIMIT 10` means to return up to 10 rows. You can set it to `LIMIT ALL`, which means to return all rows. KWDB also supports configuring the maximum number of returned rows of the SQL query results using the `sql.auto_limit.quantity` cluster parameter. But the priority of the `LIMIT` clause is higher than that of the `sql.auto_limit.quantity` cluster parameter. |
-| `offset_clause` | The `OFFSET` clause instructs the operation to skip a specified number of rows. It is often used with `LIMIT` to paginate through retrieved rows. In general, the `OFFSET` cluase is used to paginate large tables to avoid restriving the full table.|
+| `offset_clause` | The `OFFSET` clause instructs the operation to skip a specified number of rows. It is often used with `LIMIT` to paginate through retrieved rows. In general, the `OFFSET` clause is used to paginate large tables to avoid retrieving the full table.|
 | `DISTINCT` | When `DISTINCT` is specified, duplicate rows in query results are eliminated. |
 | `target_elem` | It can be a scalar expression or `*`. <br>- A scalar expression: compute a column in each result row. <br>- `*`: automatically retrieve all columns from the `FROM` clause. <br> If `target_elem` contains an aggregate function, a `GROUP BY` clause can be used to further control the aggregation. |
 | `alias_clause` | An alias for the table name or the subquery, which makes queries more readable and understandable.|
 | `as_of_clause` | Retrieve data as it existed as of timestamp. <br> **Note** <br> Because `AS OF SYSTEM TIME` returns historical data, your reads might be stale.|
 | `WHERE` | The filtering statement for the `SELECT` statement, which is used to select rows that return `TRUE`. The format is `WHERE <column> <operator> <value>` where the `<operator>` supports `=`, `<>`, `<`, `<=`, `>`, `>=`, `LIKE` operators. The columns can be data columns or tag columns. |
-| `GROUP BY` | The system uses the `GROUP BY` clause to divide a data set into multiple small areas based on expressions or group window functions and then deals with data in these small areas. When using an aggregate function and `GROUP BY` clause in a query, aviod an oversized result set listed after the `GROUP BY`. For details about Group Window functions, see [Group Window Query](#group-window-queries).|
+| `GROUP BY` | The system uses the `GROUP BY` clause to divide a data set into multiple small areas based on expressions or group window functions and then deals with data in these small areas. When using an aggregate function and `GROUP BY` clause in a query, avoid an oversized result set listed after the `GROUP BY`. For details about Group Window functions, see [Group Window Query](#group-window-queries).|
 | `HAVING` | When not working with the `WHERE` clause, the `HAVING` clause is used to filer grouped data. Normally, the `HAVING` clause works with the `GROUP BY` clause to only retrieve aggregate function groups that return `TRUE` for `a_expr`. `a_expr` must be an expression that returns Boolean values using columns (e.g., `<column> = <value>`). The `HAVING` clause works like the `WHERE` clause, but for aggregate functions.|
 
 ### Examples
@@ -241,7 +241,7 @@ KWDB supports the following group window functions:
 
 ### Privileges
 
-The user must have been granted the `SELECT` privilege on the specified table(s).
+The user must be a member of the `admin` role or have been granted the `SELECT` privilege on the specified table(s).
 
 ### Syntax
 
@@ -404,12 +404,12 @@ KWDB supports the following nested query forms:
 - `FROM` Subquery: embed a complete SQL query within the `FROM` clause of another query, acting as a temporary table.
 
 ::: warning Note
-When there are multiple subqueries and logical operators (AND, OR) in the `WHERE` clause and there some semantic errors in some subqueries, the system retruns an error when executing a query, saying `internal error: invalid index`.
+When there are multiple subqueries and logical operators (AND, OR) in the `WHERE` clause and there some semantic errors in some subqueries, the system returns an error when executing a query, saying `internal error: invalid index`.
 :::
 
 ### Privileges
 
-The user must have been granted the `SELECT` privilege on the specified table(s).
+The user must be a member of the `admin` role or have been granted the `SELECT` privilege on the specified table(s).
 
 ### Syntax
 
@@ -493,7 +493,7 @@ When using `FULL JOIN`, ​avoid using subqueries in join conditions.
 
 ### Privileges
 
-The user must have been granted the `SELECT` privilege on the specified table(s).
+The user must be a member of the `admin` role or have been granted the `SELECT` privilege on the specified table(s).
 
 ### Syntax
 
@@ -529,7 +529,7 @@ A UNION query combines multiple results with the same column structure into a re
 
 ### Privileges
 
-The user must have been granted the `SELECT` privilege on the specified table(s).
+The user must be a member of the `admin` role or have been granted the `SELECT` privilege on the specified table(s).
 
 ### Syntax
 

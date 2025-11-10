@@ -18,7 +18,7 @@ The `ALTER TABLE ... ADD COLUMN` statement adds columns to existing tables. `ADD
 
 ### Privileges
 
-The user must have been granted the `CREATE` privilege on the specified table(s).
+The user must be a member of the `admin` role or have been granted the `CREATE` privilege on the specified table(s). By default, the `root` user belongs to the `admin` role.
 
 ### Syntax
 
@@ -134,7 +134,7 @@ When changing a column, KWDB will check whether the current table is referenced 
 
 ### Privileges
 
-The user must have been granted the `CREATE` privilege on the specified table(s).
+The user must be a member of the `admin` role or have been granted the `CREATE` privilege on the specified table(s). By default, the `root` user belongs to the `admin` role.
 
 ### Syntax
 
@@ -147,7 +147,7 @@ The user must have been granted the `CREATE` privilege on the specified table(s)
 | `table_name` | The name of the table. You can use `<database_name>.<table_name>` to specify a table in another database. If not specified, use the table in the current database. |
 | `column_name` | The name of the column to modify. |
 | `new_type` | The data type and data width of the column to modify. <br > **Note** <br >- The converted data width must be greater than the original data width. For example, INT4 can be converted to INT8 but not to INT2. CHAR(200) can be converted to VARCHAR (254) but not to VARCHAR (100). <br >- CHAR-typed, VARCHAR-typed, NCHAR-typed, and NVARCHAR-typed values can be converted to values of the same data types. But the width cannot be shorter. For example, CHAR(100) can be converted to VARCHAR (200) but not to VARCHAR (50). For details about the data type, default width, maximum width, and convertible data types, see [Time-Series Data Types](../../data-type/data-type-ts-db.md). |
-| `SET DEFAULT <default_expr>` | Required. KWDB writes the default value when inserting a row of data. Therefore, there is no need to explictly specify a value for the column. For non-TIMESTAMP data columns, the default value must be a constant. For TIMESTAMP-typed columns, the default value can either be a constant or the `now()` function. If the data type of the default value is not matched with that of the column, the system returns an error. KWDB supports setting NULL as the default value.|
+| `SET DEFAULT <default_expr>` | Required. KWDB writes the default value when inserting a row of data. Therefore, there is no need to explicitly specify a value for the column. For non-TIMESTAMP data columns, the default value must be a constant. For TIMESTAMP-typed columns, the default value can either be a constant or the `now()` function. If the data type of the default value is not matched with that of the column, the system returns an error. KWDB supports setting NULL as the default value.|
 | `DROP DEFAULT` | Required. Remove the defined default value. No default value is inserted after the defined default value is removed.|
 
 ### Examples
@@ -164,7 +164,7 @@ The user must have been granted the `CREATE` privilege on the specified table(s)
     ALTER TABLE ts_table ALTER COLUMN c4 SET DEFAULT '789';
     ```
 
-- Renove the default value of a column.
+- Remove the default value of a column.
 
     ```sql
     ALTER TABLE ts_table ALTER COLUMN c4 DROP DEFAULT;
@@ -180,7 +180,7 @@ When renaming a column, KWDB will check whether the current table is referenced 
 
 ### Privileges
 
-The user must have been granted the `CREATE` privilege on the specified table(s).
+The user must be a member of the `admin` role or have been granted the `CREATE` privilege on the specified table(s). By default, the `root` user belongs to the `admin` role.
 
 ### Syntax
 
@@ -216,7 +216,7 @@ The `ALTER TABLE ... DROP COLUMN` statement removes columns from a table. `DROP 
 
 ### Privileges
 
-The user must have been granted the `CREATE` privilege on the specified table(s).
+The user must be a member of the `admin` role or have been granted the `CREATE` privilege on the specified table(s). By default, the `root` user belongs to the `admin` role.
 
 ### Syntax
 

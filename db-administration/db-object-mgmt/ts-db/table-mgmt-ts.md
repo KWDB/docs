@@ -40,7 +40,7 @@ PRIMARY [TAGS|ATTRIBUTES] (<primary_tag_list>)
 | `column_list`| 待创建的数据列列表，支持添加两个以上的列定义，最多可指定 4096 列。列定义包括列名、数据类型、注释信息和默认值。<br>- 列名的最大长度为 128 字节，支持指定 NOT NULL，默认为空值。支持自定义第一列的列名，但数据类型必须是 TIMESTAMPTZ 或 TIMESTAMP 且非空。默认时区为 UTC。<br >- 对于非时间类型的数据列，默认值只能是常量。对于时间类型的列（TIMESTAMPTZ 或 TIMESTAMP），默认值可以是常量，也可以是 `now()` 函数。如果默认值类型与列类型不匹配，设置默认值时，系统报错。支持默认值设置为 NULL。<br >- KWDB 支持毫秒、微秒和纳秒的时间精度。默认情况下，KWDB 采用毫秒时间精度。<br >- 支持在数据类型之后添加数据列的注释信息。|
 | `tag_list`| 标签列表，支持添加一个或多个标签定义，最多可指定 `128` 个标签。标签定义包含标签名、数据类型和注释信息。<br>- 标签名的最大长度为 128 字节，支持指定 NOT NULL，默认为空值。不支持 TIMESTAMP、TIMESTAMPTZ、NVARCHAR 和 GEOMETRY 数据类型。<br >- 支持在 nullable 条件之后添加标签列的注释信息。 |
 | `primary_tag_list`| 主标签列表，支持添加一个或多个主标签名称，最多可指定 `4` 个。主标签必须包含在标签列表内且指定为 NOT NULL，不支持浮点类型和除 VARCHAR 之外的变长数据类型。VARCHAR 类型长度默认 `64` 字节，最大长度为 `128` 字节。|
-| `keep_duration` | 可选参数，设置表的数据生命周期。数据超过此时长后将被系统自动清除。<br>默认值： `0s`（永久保留）<br>时间单位：<br>- 秒：`s` 或 `second`<br>- 分钟：`m` 或 `minute`<br>- 小时：`h` 或 `hour`<br>- 天：`d` 或 `day`<br>- 周：`w` 或 `week`<br>- 月：`mon` 或 `month`<br>- 年：`y` 或 `year`<br>取值范围:正整数，上限为 1000 年<br>**说明：**<br>- 表级设置优先于库级设置。<br>- 保留时长越长，存储空间占用越大，请根据业务需求合理配置。<br>- 如果待写入的数据已超过生命周期限制，系统会直接丢弃该数据，不予写入。|
+| `keep_duration` | 可选参数，设置表的数据生命周期。数据超过此时长后将被系统自动清除。<br>默认值： `0s`（永久保留）<br>时间单位：<br>- 秒：`s` 或 `second`<br>- 分钟：`m` 或 `minute`<br>- 小时：`h` 或 `hour`<br>- 天：`d` 或 `day`<br>- 周：`w` 或 `week`<br>- 月：`mon` 或 `month`<br>- 年：`y` 或 `year`<br>取值范围：正整数，上限为 1000 年<br>**说明：**<br>- 表级设置优先于库级设置。<br>- 保留时长越长，存储空间占用越大，请根据业务需求合理配置。<br>- 如果待写入的数据已超过生命周期限制，系统会直接丢弃该数据，不予写入。|
 | `DICT ENCODING`| 可选参数，启用字符串的字典编码功能，提升字符串数据的压缩能力。表中存储的字符串数据重复率越高，压缩优化效果越明显。该功能只适用于 CHAR 和 VARCHAR 长度小于等于 `1023` 的字符串，且只能在建表时开启。开启后不支持禁用。 |
 | `[COMMENT [=] <'comment_text'>` | 可选项，定义表的注释信息。 |
 | `hash_value`| 可选参数，用于定义分布式集群中 HASH 环的大小，决定最大 Range 分片数量。例如 HASH(100) 表示最多可产生 100 个不同的 Range 分片。<br><br>默认值为 2000，表示最多可产生 2000 个 Range 分片。支持设置范围为 [1,50000]。<br><br>性能影响：HASH 值过小时将导致多个设备的数据集中在少数 Range 中，形成写入热点，HASH 值过大时则会导致 Range 数量过多，增加管理开销。<br><br>推荐配置：建议根据预期设备数量选择合适的 HASH 值：<br>- 设备数 ≤ 1,000：HASH 值 < 20<br>- 设备数 ≤ 50,000：HASH 值 < 2,000<br>- 设备数 ≤ 1,000,000：HASH 值 < 10,000|
@@ -115,7 +115,7 @@ PRIMARY [TAGS|ATTRIBUTES] (<primary_tag_list>)
     以下示例创建一个名为 `device_info` 的时序表并为表及其数据列和标签列添加注释信息。
 
     ```sql
-    CREATE TABLE device_info (create_time TIMESTAMPZ NOT NULL, device_id INT COMMENT 'device ID' NOT NULL, install_date TIMESTAMPZ, warranty_period INT2) TAGS (plant_code INT2 NOT NULL COMMENT = 'plant code', workshop VARCHAR(128) NOT NULL, device_type CHAR(1023) NOT NULL, manufacturer NCHAR(254) NOT NULL) PRIMARY TAGS(plant_code, workshop, device_type, manufacturer) COMMENT = 'table for device information';
+    CREATE TABLE device_info (create_time TIMESTAMPTZ NOT NULL, device_id INT COMMENT 'device ID' NOT NULL, install_date TIMESTAMPTZ, warranty_period INT2) TAGS (plant_code INT2 NOT NULL COMMENT = 'plant code', workshop VARCHAR(128) NOT NULL, device_type CHAR(1023) NOT NULL, manufacturer NCHAR(254) NOT NULL) PRIMARY TAGS(plant_code, workshop, device_type, manufacturer) COMMENT = 'table for device information';
     ```
 
 - 创建时序表并设置 HASH 环大小。
@@ -146,7 +146,6 @@ SHOW TABLES [FROM <db_name>][.<schema_name>] [WITH COMMENT];
 | --- | --- |
 | `db_name` | 待查看表所在的数据库的名称。如未指定，则默认使用当前数据库。|
 | `schema_name` | 可选参数，待查看表所使用的模式名称。时序表只支持使用目标数据库的 public 模式。 |
-| `table_name` | 待查看表的名称。|
 | `WITH COMMENT` | 可选关键字，查看表的注释信息。默认情况下，时序表的注释信息为空。|
 
 ### 语法示例
@@ -239,7 +238,7 @@ SHOW CREATE [TABLE] [<database_name>.] <table_name>;
 
     CREATE TABLE t3(ts timestamp NOT NULL, a int) TAGS(ptag int NOT NULL) PRIMARY TAGS(ptag);
 
-    -- 2. 查看已创建的 t1 时序表。
+    -- 2. 查看已创建的 t3 时序表。
 
     SHOW CREATE TABLE t3;
       table_name |              create_statement
@@ -251,7 +250,7 @@ SHOW CREATE [TABLE] [<database_name>.] <table_name>;
                 |     ptag INT4 NOT NULL ) PRIMARY TAGS(ptag)
                 |     retentions 0s
                 |     activetime 1d
-                |     partition interval 30d
+                |     partition interval 10d
     (1 row)
     ```
 
@@ -275,7 +274,7 @@ SHOW CREATE [TABLE] [<database_name>.] <table_name>;
                     |     site INT4 NOT NULL ) PRIMARY TAGS(site)
                     |     retentions 0s
                     |     activetime 1d
-                    |     partition interval 30d
+                    |     partition interval 10d
         (1 row)
     ```
 
@@ -302,8 +301,10 @@ SHOW CREATE [TABLE] [<database_name>.] <table_name>;
 ### 前提条件
 
 - 重命名表：用户是 `admin` 角色的成员或者拥有目标表的 DROP 权限及所在数据库的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
+- 添加、修改、删除、重命名列或标签：用户是 `admin` 角色的成员或者拥有目标表的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
+- 设置表的数据生命周期：用户是 `admin` 角色的成员或者拥有目标表的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
 - 修改表的区域配置：用户是 `admin` 角色的成员或者拥有目标表的 CREATE 权限或 ZONECONFIG 权限。默认情况下，`root` 用户属于 `admin` 角色。
-- 其它修改表操作：用户是 `admin` 角色的成员或者拥有目标表的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
+- 创建表分区：用户是 `admin` 角色的成员或者拥有目标表的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -344,7 +345,7 @@ ALTER TABLE <table_name>
     - `COLUMN`：可选关键字，如未使用，默认添加列。
     - `IF EXISTS`：可选关键字。当使用 `IF EXISTS` 关键字时，如果列名存在，系统删除列。如果列名不存在，系统删除列失败，但不会报错。当未使用 `IF EXISTS` 关键字时，如果列名存在，系统删除列。如果列名不存在，系统报错，提示列名不存在。
   - `DROP TAG/ATTRITBUTE`：删除标签，需指定标签名称。不支持删除主标签。如果待删除的标签列已创建索引，删除该标签时，需要先删除标签列关联的索引。
-- PARTITION BY: 创建表分区，更多详细信息，参见[分区管理](./partition-mgmt-ts.md)。
+- `partition_by_clause`: 创建表分区，更多详细信息，参见[分区管理](./partition-mgmt-ts.md)。
 - RENAME
   - `RENAME TO`: 修改表的名称。
   - `RENAME COLUMN`：修改列的名称。
@@ -364,7 +365,7 @@ ALTER TABLE <table_name>
 | `new_table_name` | 拟修改的表名。 |
 | `old_name` | 当前列名或标签名，不支持修改主标签名称。|
 | `new_name` | 拟修改的列名或标签名。列名或标签名的最大长度为 128 字节。 |
-| `keep_duration` | 可选参数，设置表的数据生命周期。数据超过此时长后将被系统自动清除。<br>默认值： `0s`（永久保留）<br>时间单位：<br>- 秒：`s` 或 `second`<br>- 分钟：`m` 或 `minute`<br>- 小时：`h` 或 `hour`<br>- 天：`d` 或 `day`<br>- 周：`w` 或 `week`<br>- 月：`mon` 或 `month`<br>- 年：`y` 或 `year`<br>取值范围:正整数，上限为 1000 年<br>**说明：**<br>- 表级设置优先于库级设置。<br>- 保留时长越长，存储空间占用越大，请根据业务需求合理配置。<br>- 如果待写入的数据已超过生命周期限制，系统会直接丢弃该数据，不予写入。|
+| `keep_duration` | 可选参数，设置表的数据生命周期。数据超过此时长后将被系统自动清除。<br>默认值： `0s`（永久保留）<br>时间单位：<br>- 秒：`s` 或 `second`<br>- 分钟：`m` 或 `minute`<br>- 小时：`h` 或 `hour`<br>- 天：`d` 或 `day`<br>- 周：`w` 或 `week`<br>- 月：`mon` 或 `month`<br>- 年：`y` 或 `year`<br>取值范围：正整数，上限为 1000 年<br>**说明：**<br>- 表级设置优先于库级设置。<br>- 保留时长越长，存储空间占用越大，请根据业务需求合理配置。<br>- 如果待写入的数据已超过生命周期限制，系统会直接丢弃该数据，不予写入。|
 
 ### 语法示例
 

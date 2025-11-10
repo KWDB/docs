@@ -7,9 +7,9 @@ id: relational-select
 
 The simple `SELECT` clause is the main SQL syntax to read and process existing data. When used as a standalone statement, the simple `SELECT` clause is also called the `SELECT` statement. However, it is also a selection clause that can be combined with other constructs to form more complex queries. KWDB supports configuring the maximum number of returned rows of the SQL query results using the `SET CLUSTER SETTING sql.auto_limit.quantity = <value>` command.
 
-KWDB supports addition and substraction operations of time in queries for timestamp-typed columns or timestamp constants, and for functions and expressions whose result is timestamp. KWDB supports comparing the operation results using the greater than sign (`>`), the less than sign (`<`), the equals sign (`=`), the greater than or equal to sign (`>=`), and the less than or equal to sign (`<=`). The addition and substraction operations can include the `interval` constant, other timestamp-typed columns, and the functions and expressions whose result is interval, timestamp, or timestampz. If both sides of the operator are timestamp-typed or timestamptz-typed columns, only subtraction is supported.
+KWDB supports addition and subtraction operations of time in queries for timestamp-typed columns or timestamp constants, and for functions and expressions whose result is timestamp. KWDB supports comparing the operation results using the greater than sign (`>`), the less than sign (`<`), the equals sign (`=`), the greater than or equal to sign (`>=`), and the less than or equal to sign (`<=`). The addition and subtraction operations can include the `interval` constant, other timestamp-typed columns, and the functions and expressions whose result is interval, timestamp, or timestamptz. If both sides of the operator are timestamp-typed or timestamptz-typed columns, only subtraction is supported. 
 
-In addition and substraction operations, the supported units for the `interval` constant include microsecond (us), millisecond (ms), second (s), minute (m), hour (h), day (d), week (w), month (mon), and year (y). Currently, KWDB does ​not​ support composite time formats, such as `1d1h`.
+In addition and subtraction operations, the supported units for the `interval` constant include microsecond (us), millisecond (ms), second (s), minute (m), hour (h), day (d), week (w), month (mon), and year (y). Currently, KWDB does ​not​ support composite time formats, such as `1d1h`.
 
 The valid ranges for millisecond, second, minute, and hour are constrained by the maximum value of nanosecond (INT64). The table below specifies the supported value ranges:
 
@@ -21,24 +21,24 @@ The valid ranges for millisecond, second, minute, and hour are constrained by th
 | Minute (m)       | [-153,722,867, 153,722,867]               |
 | Hour (h)         | [-2,562,047, 2,562,047]                   |
 
-The valid ranges for day, week, month, and year are constrained by the results of addition and substraction operations, whose corresponding number of microseconds must not exceed the range of INT64.
+The valid ranges for day, week, month, and year are constrained by the results of addition and subtraction operations, whose corresponding number of microseconds must not exceed the range of INT64.
 
 ::: warning Note
 
-KWDB supports using the addition and substraction operations of time in the following cases:
+KWDB supports using the addition and subtraction operations of time in the following cases:
 
 - `SELECT` list: such as `SELECT ts+1h FROM table1;`, which means to return the results based on the specified time (the column's timestamp + one hour).
 - `WHERE` clause: such as `SELECT * FROM table1 WHERE ts+1h > now();`, which means to return the results whose specified time (the column's timestamp + one hour) is greater than the current time.
 - `ORDER BY` clause: such as `SELECT * FROM table1 ORDER BY ts+1h;`, which means to sort columns based on the specified time (the column's timestamp + one hour).
 - `HAVING` clause: such as `SELECT MAX(ts) FROM table1 GROUP BY ts HAVING ts+1h > now();`, which means to filter the qualified grouped results.
 - Recall functions whose parameter type is set to timestamp: such as `SELECT CAST(ts+1h AS timestamp) FROM table1;`, which means to convert the results based on the specified time (the column's timestamp + one hour) into timestamp-typed values.
-- Use comparision operations to indicate the join condition: such as `SELECT * FROM table1,table2 WHERE table1.ts+1h > table2.ts;`, which means to use the addition and subscription operations when joinning two tables.
+- Use comparison operations to indicate the join condition: such as `SELECT * FROM table1,table2 WHERE table1.ts+1h > table2.ts;`, which means to use the addition and subscription operations when joining two tables.
 
 :::
 
 ## Privileges
 
-The user must have been granted the `SELECT` privilege on the specified table(s).
+The user must be a member of the `admin` role or have been granted the `SELECT` privilege on the specified table(s).
 
 ## Syntax
 
@@ -97,8 +97,8 @@ The user must have been granted the `SELECT` privilege on the specified table(s)
     | `target_elem` | It can be a scalar expression or `*`. <br>- A scalar expression: compute a column in each result row. <br>- `*`: automatically retrieve all columns from the `FROM` clause. <br> If `target_elem` contains an aggregate function, a `GROUP BY` clause can be used to further control the aggregation.|
     | `table_ref` | The table expression to retrieve data from. Using two or more table expressions in the `FROM` clause, separated with a comma, is equivalent to a CROSS JOIN expression. For details about CROSS JOIN, see [Cross-model Query](../data-query.md).|
     | `AS OF SYSTEM TIME` | Retrieve data as it existed as of timestamp. <br> **Note** <br> Because `AS OF SYSTEM TIME` returns historical data, your reads might be stale.|
-    | `WHERE a_expr` | The filtering statement for the `SELECT` statement, which is used to select rows that return `TRUE`. `a_expr` must be an expression that returns Boolean values using columns (e.g., `<column> = <value>`). `ROWNUM` is a sequence starting from `1`. The system filters each rows based on conditions. If no condition is met, the `ROWNUM` is not automatically incremented. If met, the `ROWNUM` is automatically incremented by `1`. <br>**Tip** <br> When there are multiple subqueries and logical operators (AND, OR) in the `WHERE` clause and there some semantic errors in some subqueries, the system retruns an error when executing a query, saying `internal error: invalid index`. |
-    | `GROUP BY + a_expr` | The system uses the `GROUP BY` clause to divide a data set into multiple small areas based on some rules (defined using `a_expr`) and then deals with data in these small areas. When an aggregate function follows `SELECT` as a `target_elem`, or `HAVING` as an `a_expr`, you can create aggregate groups on column groupings listed after `GROUP BY`. When using an aggregate function and `GROUP BY` clause in a query, aviod an oversized result set listed after the `GROUP BY`. |
+    | `WHERE a_expr` | The filtering statement for the `SELECT` statement, which is used to select rows that return `TRUE`. `a_expr` must be an expression that returns Boolean values using columns (e.g., `<column> = <value>`). `ROWNUM` is a sequence starting from `1`. The system filters each rows based on conditions. If no condition is met, the `ROWNUM` is not automatically incremented. If met, the `ROWNUM` is automatically incremented by `1`. <br>**Tip** <br> When there are multiple subqueries and logical operators (AND, OR) in the `WHERE` clause and there some semantic errors in some subqueries, the system returns an error when executing a query, saying `internal error: invalid index`. |
+    | `GROUP BY + a_expr` | The system uses the `GROUP BY` clause to divide a data set into multiple small areas based on some rules (defined using `a_expr`) and then deals with data in these small areas. When an aggregate function follows `SELECT` as a `target_elem`, or `HAVING` as an `a_expr`, you can create aggregate groups on column groupings listed after `GROUP BY`. When using an aggregate function and `GROUP BY` clause in a query, avoid an oversized result set listed after the `GROUP BY`. |
     | `HAVING + a_expr` | When not working with the `WHERE` clause, the `HAVING` clause is used to filer grouped data. Normally, the `HAVING` clause works with the `GROUP BY` clause to only retrieve aggregate function groups that return `TRUE` for `a_expr`. `a_expr` must be an expression that returns Boolean values using columns (e.g., `<column> = <value>`). The `HAVING` clause works like the `WHERE` clause, but for aggregate functions.|
     | `WINDOW window_definition_list` | A list of window definitions. Available options are: <br >- `window_name`: the name of the new window frame.<br >- `opt_existing_window_name`: an optional name of an existing window frame, defined in a different window definition. <br >- `opt_sort_clause`: an optional `ORDER BY` clause. <br >- `opt_frame_clause`: an optional frame clause, which contains a frame boundary and/or an `EXCLUDE` clause.|
 
@@ -106,11 +106,11 @@ The user must have been granted the `SELECT` privilege on the specified table(s)
 
     | Parameter | Description |
     | --- | --- |
-    | `SELECT` clause | The `SELECT` clause supports any of the fllowing forms: <br >- `simple_SELECT_clause`: simple `SELECT` clause <br >- `values_clause`: `VALUES` clause <br >- `table_clause`: table clause <br >- `set_operation`: set operations|
+    | `SELECT` clause | The `SELECT` clause supports any of the following forms: <br >- `simple_SELECT_clause`: simple `SELECT` clause <br >- `values_clause`: `VALUES` clause <br >- `table_clause`: table clause <br >- `set_operation`: set operations|
     | `ORDER BY` | The `ORDER BY` clause takes a comma-separated list of ordering specifications. Each ordering specification is composed of a column selection followed optionally by the keyword `ASC` or `DESC`. The `ORDER` specifications can take any of the following forms: <br >- `a_expr`: an arbitrary scalar expression. This uses the result of evaluating that expression as the sorting key. <br >- `PRIMARY KEY` + `table_name`: use the primary key column(s) of the given table as the sorting key. This table must be part of the data source.<br >- `INDEX` + `table_name` + `@` + `index_name`: uses the columns indexed by the given index as the sorting key. This table must be part of the data source. <br>- Optional `ASC` and `DESC` keywords: they are used to specify the order. By default, it is set to `ASC`. The `ASC` keyword indicates to use the sorting key as-is. The `DESC` keyword indicates to invert the direction of the column(s). |
     | `FOR LOCKING` clause | Order transactions by controlling concurrent access to one or more rows. |
     | `LIMIT` clause | You can use the `LIMIT + count` format to retrieve the specified number of rows. KWDB also supports configuring the maximum number of returned rows of the SQL query results using the `sql.auto_limit.quantity` cluster parameter. But the priority of the `LIMIT` clause is higher than that of the `sql.auto_limit.quantity` cluster parameter. |
-    | `OFFSET` clause | The `OFFSET` clause instructs the operation to skip a specified number of rows. It is often used with `LIMIT` to paginate through retrieved rows. To limit the size of the result set and skip some rows of the initial result set, you can use the `OFFSET` clause to get the next part of the result set. In general, the `OFFSET` cluase is used to paginate large tables to avoid restriving the full table.|
+    | `OFFSET` clause | The `OFFSET` clause instructs the operation to skip a specified number of rows. It is often used with `LIMIT` to paginate through retrieved rows. To limit the size of the result set and skip some rows of the initial result set, you can use the `OFFSET` clause to get the next part of the result set. In general, the `OFFSET` clause is used to paginate large tables to avoid retrieving the full table.|
 
 ## Examples
 

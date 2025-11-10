@@ -29,13 +29,14 @@ This table lists all the statement-level audit operations supported by KWDB.
 | SCHEMA     | - CREATE SCHEMA <br >- DROP SCHEMA                                                                    | -                                                                                        |
 | TABLE      | - CREATE TABLE <br >- ALTER TABLE <br >- DROP TABLE <br >- TRUNCATE TABLE <br >- IMPORT <br >- EXPORT | - CREATE TABLE <br >- ALTER TABLE <br >- DROP TABLE <br >- IMPORT <br >- EXPORT          |
 | VIEW       | - CREATE VIEW <br >- ALTER VIEW <br >- DROP VIEW                                                      | -                                                                                        |
-| INDEX      | - CREATE INDEX <br >- ALTER INDEX <br >- DROP INDEX                                                   | -                                                                                        |
+| INDEX      | - CREATE INDEX <br >- ALTER INDEX <br >- DROP INDEX                                 | - CREATE INDEX <br >- ALTER INDEX <br >- DROP INDEX                 |
 | SEQUENCE   | - CREATE SEQUENCE <br >- ALTER SEQUENCE <br >- DROP SEQUENCE                                          | -                                                                                        |
 | PRIVILEGE  | - GRANT PRIVILEGE <br >- REVOKE PRIVILEGE                                                             | - GRANT PRIVILEGE <br >- REVOKE PRIVILEGE                                                |
 | AUDIT      | - CREATE AUDIT <br >- ALTER AUDIT <br >- DROP AUDIT                                                   | - CREATE AUDIT <br >- ALTER AUDIT <br >- DROP AUDIT                                      |
+| RANGE      | ALTER RANGE                                                                                           | ALTER RANGE                                                                              |
 | QUERY      | - CANCEL QUERY <br >- EXPLAIN QUERY                                                                   | - CANCEL QUERY <br >- EXPLAIN QUERY                                                      |
 | JOB        | - CANCEL JOB <br >- PAUSE JOB <br >- RESUME JOB                                                       | - CANCEL JOB <br >- PAUSE JOB <br >- RESUME JOB                                          |
-| SCHEDULE   | - ALTER SCHEDULE <br >- PAUSE SCHEDULE <br >- RESUME SCHEDULE                                         | - ALTER SCHEDULE <br >- PAUSE SCHEDULE <br >- RESUME SCHEDULE                            |
+| SCHEDULE   | - CREATE SCHEDULE <br >- ALTER SCHEDULE <br >- PAUSE SCHEDULE <br >- RESUME SCHEDULE  <br >- DROP SCHEDULE                     | - CREATE SCHEDULE <br >- ALTER SCHEDULE <br >- PAUSE SCHEDULE <br >- RESUME SCHEDULE  <br >- DROP SCHEDULE                  |
 | SESSION    | - SET SESSION <br >- RESET SESSION <br >- CANCEL SESSION                                              | - SET SESSION <br >- RESET SESSION <br >- CANCEL SESSION                                 |
 | STATISTICS | CREATE STATISTICS                                                                                     | CREATE STATISTICS                                                                        |
 

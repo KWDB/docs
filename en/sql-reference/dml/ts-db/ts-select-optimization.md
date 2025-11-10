@@ -16,7 +16,7 @@ The `EXPLAIN` statement returns KWDB's statement plan for a preparable statement
 
 ### Privileges
 
-The user must have been granted appropriate privileges for the statement being explained.
+The user must be a member of the `admin` role or have been granted appropriate privileges for the statement being explained.
 
 ### Syntax
 
@@ -34,7 +34,7 @@ The user must have been granted appropriate privileges for the statement being e
 A successful `EXPLAIN` statement returns a table with the following fields:
 
 - `tree`: a tree representation of the hierarchy of the statement plan.
-- `field`: the property names of the statement plan. Distributed and vectorized properties apply to the entire statement plan while other properties apply to satement plan nodes in the tree atchitecture.
+- `field`: the property names of the statement plan. Distributed and vectorized properties apply to the entire statement plan while other properties apply to statement plan nodes in the tree architecture.
 - `description`: additional information about parameters in fields.
 - `columns`: the columns provided to processes at lower levels of the hierarchy. This field is included in output of the `EXPLAIN` statement with the `TYPES` or `VERBOSE` option.
 - `ordering`: the order where the results are presented to processes at each level of the hierarchy and other attributes of the result set at each level. This field is included in output of the `EXPLAIN` statement with the `TYPES` or `VERBOSE` option.
@@ -139,7 +139,7 @@ The `EXPLAIN ANALYZE` statement executes a SQL query and generates a statement p
 
 ### Privileges
 
-The user must have been granted appropriate privileges for the statement being explained.
+The user must be a member of the `admin` role or have been granted appropriate privileges for the statement being explained.
 
 ### Syntax
 

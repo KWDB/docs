@@ -11,7 +11,7 @@ The `CREATE VIEW` statement creates a new view, which is a stored query represen
 
 ### Privileges
 
-The user must have been granted the `CREATE` privilege on the parent database and the `SELECT` previledge on any table(s) referenced by the view.
+The user must be a member of the `admin` role or have been granted the `CREATE` privilege on the parent database and the `SELECT` privilege on any table(s) referenced by the view. By default, the `root` user belongs to the `admin` role.
 
 ### Syntax
 
@@ -63,7 +63,8 @@ The `ALTER VIEW` statement changes the name of a view.
 
 ### Privileges
 
-The user must have been granted the `DROP` privilege on the current view and the `CREATE` privilege on the parent database of the renamed view.
+The user must be a member of the `admin` role or have been granted the `DROP` privilege on the current view and the `CREATE` privilege on the parent database of the renamed view. By default, the `root` user belongs to the `admin` role.
+
 
 ### Syntax
 
@@ -112,8 +113,8 @@ The `DROP VIEW` statement removes a view from a database.
 
 ### Privileges
 
-- Remove a view with no dependency: the user must have been granted the `DROP` privilege on the specified view(s).
-- Remove a view with dependencies: the user must have been granted the `DROP` privilege on the specified view(s) and its dependent objects.
+- Remove a view with no dependency: the user must be a member of the `admin` role or have been granted the `DROP` privilege on the specified view(s).
+- Remove a view with dependencies: the user must be a member of the `admin` role or have been granted the `DROP` privilege on the specified view(s) and its dependent objects.
 
 ### Syntax
 

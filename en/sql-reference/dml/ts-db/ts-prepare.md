@@ -36,12 +36,12 @@ If the table's metadata (e.g., metadata changes caused by ​adding columns, ​
 | Parameter | Description |
 | --- | --- |
 | `statement_name` | The SQL statement to preprocess. |
-| `statement_sql` | The `INSERT`, `QUERY`, or `DROP` statement, in which `$<number>` is used as the placeholer, such as `$1`, `$2`. |
+| `statement_sql` | The `INSERT`, `QUERY`, or `DROP` statement, in which `$<number>` is used as the placeholder, such as `$1`, `$2`. |
 | `parameter_value` | The values of parameters to insert, query or delete. These values should correspond to placeholders in the `INSERT`, `QUERY`, or `DROP` statement. |
 
 ## Examples
 
-- Insert a single row without specifiying column names.
+- Insert a single row without specifying column names.
 
     ```sql
     CREATE TABLE vehicle_gps_track (TIME timestamp not NULL, LATITUDE float, LONGITUDE float, ALTITUDE float, SPEED float, DIRECTION varchar) TAGS (IMEI int not null) PRIMARY TAGS (IMEI);        
@@ -59,7 +59,7 @@ If the table's metadata (e.g., metadata changes caused by ​adding columns, ​
       2024-02-06 12:00:00+00:00 |  34.0522 | -118.2437 |      100 |    60 | North     | 12345678
     ```
 
-- Insert multiple rows without specifiying column names.
+- Insert multiple rows without specifying column names.
 
     ```sql
     PREPARE p2 AS INSERT INTO vehicle_gps_track VALUES ($1,$2,$3,$4,$5,$6,$7),($8,$9,$10,$11,$12,$13,$14);

@@ -11,7 +11,7 @@ The `COMMENT ON` statement associates comments to databases, tables, or columns.
 
 ### Privileges
 
-The user must have the `CREATE` privilege on the object they are commenting on.
+The user must be a member of the `admin` role or have the `CREATE` privilege on the object they are commenting on.
 
 ### Syntax
 

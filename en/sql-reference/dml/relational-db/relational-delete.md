@@ -13,7 +13,7 @@ By default, when the `sql_safe_updates` session variable is set to `true`, you c
 
 ## Privileges
 
-The user must have been granted the `SELECT` and `DELETE` privileges on the specified table(s).
+The user must be a member of the `admin` role or have been granted the `SELECT` and `DELETE` privileges on the specified table(s).
 
 ## Syntax
 
@@ -39,7 +39,7 @@ The user must have been granted the `SELECT` and `DELETE` privileges on the spec
 
 | Parameter | Description |
 | --- | --- |
-| `common_table_expr` | You can use it in combination with the `WITH` keyword as the `WITH AS` caluse. It provides an alias for a frequently-performed SQL subquery before it is used in a larger query context. Therefore, the system can directly recall the SQL subquery using the alias. This improves the query performance. |
+| `common_table_expr` | You can use it in combination with the `WITH` keyword as the `WITH AS` clause. It provides an alias for a frequently-performed SQL subquery before it is used in a larger query context. Therefore, the system can directly recall the SQL subquery using the alias. This improves the query performance. |
 | `table_name` | The name of the table that contains the rows to delete. |
 | `AS table_alias_name` | An alias for the table name. When an alias is provided, it completely hides the actual table name. |
 | `WHERE a_expr` | The filtering statement for the `DELETE` statement, which is used to delete rows that return `TRUE`. `a_expr` must be an expression that returns Boolean values using columns (e.g., `<column> = <value>`). Without a `WHERE` clause, the `DELETE` statement deletes all rows from the table. To delete all rows in a table, it is recommended to use the `TRUNCATE` statement. |

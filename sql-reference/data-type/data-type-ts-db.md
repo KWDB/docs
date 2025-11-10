@@ -76,9 +76,9 @@ TIMESTAMP 类型的数据可以转换为以下任何一种数据类型。
 | INT | 超出转换类型的范围时，系统报错。 |
 | FLOAT | 结果转换为毫秒数。 |
 | STRING | - |
-| TIMESTAMPZ | - |
+| TIMESTAMPTZ | - |
 
-TIMESTAMPZ 类型的数据可以转换为以下任何一种数据类型。
+TIMESTAMPTZ 类型的数据可以转换为以下任何一种数据类型。
 
 | 类型 | 描述 |
 | --- | --- |
@@ -162,7 +162,7 @@ KWDB 支持有符号的整数数据类型。
 | FLOAT | - |
 | STRING | 根据转换后的 STRING 类型的长度进行截断。 |
 | TIMESTAMP | 按照毫秒数进行转换。|
-| TIMESTAMPZ | 按照毫秒数进行转换。 |
+| TIMESTAMPTZ | 按照毫秒数进行转换。 |
 
 #### 示例
 

@@ -72,10 +72,10 @@ The user must be a member of the `admin` role. By default, the `root` user belon
       <ul>
       <li>Asterisk (<code>*</code>): match all values for the specified filed. For example, <code>0 0 0 1 1 * *</code> indicates running a schedule once a year at midnight on the first day of January.</li>
       <li>Comma (<code>,</code>): specify multiple values to indicates the time to run a schedule. For example, <code>10, 15, 30</code> in the <code>minutes</code> filed indicates running a schedule at the 10th, 15th, and 30th minute respectively. </li>
-      <li>Hyphen (<code>-</code>): define the value range. For example, <code>2000-2010</code> in the <code>year</code> filed indicates running a schedule between 2000 year and 2010 year, inlcuding 2000 and 2010 years. </li>
+      <li>Hyphen (<code>-</code>): define the value range. For example, <code>2000-2010</code> in the <code>year</code> filed indicates running a schedule between 2000 year and 2010 year, including 2000 and 2010 years. </li>
       <li>Slash (<code>/</code>): define the incremental values. For example, <code>*/15</code> in the <code>minutes</code> filed indicates running a schedule every 15 minutes.</li>
       <li>Character <code>L</code>: indicate <code>last</code>. In the <code>day of month</code> field, it indicates running a schedule on the last day of the month. In the <code>day of week</code> field, it indicates running a schedule on the last weekday of the month. For example, <code>5L</code> indicates running a schedule on the last Friday of the month. </li>
-      <li>Character <code>W</code>: specify the nearest weekday (Monday through Friday) to a specified day. For example, <code>15W</code> indicates running a schedule on the nearest weekday to the 15th day of the specified month. If the 15th day is Saturday, the schedule is going to run on the 14th day (Friday). If the 15th day is Sunday, the schedule is going to run on the 16th day (Monday). If the 15th day is Tuesday, the schedule is going to run on the 15th day (Tuesday). The <code>W</code> character can work with the <code>L</code> character. <code>LW</code> indicates running a schedule on the last weekday of a month. Please note that the system will not skip the bundary of days in a month. For example, when it is set to <code>1W</code> and the first day of the month is Saturday, the schedule is going to run on the third day of the month (Monday). You cannot spcifiy the character <code>W</code> until the <code>day of month</code> filed is set to a single date rather than a date range or a list of dates. </li>
+      <li>Character <code>W</code>: specify the nearest weekday (Monday through Friday) to a specified day. For example, <code>15W</code> indicates running a schedule on the nearest weekday to the 15th day of the specified month. If the 15th day is Saturday, the schedule is going to run on the 14th day (Friday). If the 15th day is Sunday, the schedule is going to run on the 16th day (Monday). If the 15th day is Tuesday, the schedule is going to run on the 15th day (Tuesday). The <code>W</code> character can work with the <code>L</code> character. <code>LW</code> indicates running a schedule on the last weekday of a month. Please note that the system will not skip the boundary of days in a month. For example, when it is set to <code>1W</code> and the first day of the month is Saturday, the schedule is going to run on the third day of the month (Monday). You cannot specify the character <code>W</code> until the <code>day of month</code> filed is set to a single date rather than a date range or a list of dates. </li>
       <li>Number sign (<code>#</code>): specify the “N-th” occurrence of a weekday of the month. In the <code>day of week</code> field, the number sign must be followed by a digit between 1 and 5 to indicate the “N-th” occurrence of a weekday. For example, <code>5#2</code> indicates running a schedule on the second Friday of the specified month. </li>
       </ul>
       </td>
@@ -169,10 +169,7 @@ CREATE SCHEDULE s1 FOR SQL 'INSERT INTO tsdb.t2 SELECT * FROM tsdb.t1' RECURRING
 
 ## SHOW SCHEDULES
 
-The `SHOW SCHEDULE` statement lists created schedules. By default, the system automatically creates the following two schedules:
-
-- `scheduled_table_retention`: table retention management schedules
-- `scheduled_table_compress`: table compression schedules
+The `SHOW SCHEDULE` statement lists created schedules. By default, the system automatically creates the `scheduled_table_retention` schedules.
 
 ### Privileges
 
@@ -309,7 +306,7 @@ RESUME SCHEDULE scheduled_table_statistics;
 
 ## DROP SCHEDULE
 
-The `DROP SCHEDULE` statement removes a schedule. Currently, you can not remove `scheduled_table_compress` and `scheduled_table_retention` schedules that are automatically-created by the system.
+The `DROP SCHEDULE` statement removes a schedule. Currently, you can not remove `scheduled_table_retention` schedules that are automatically-created by the system.
 
 ### Privileges
 
