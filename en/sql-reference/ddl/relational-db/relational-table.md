@@ -27,7 +27,7 @@ The user must be a member of the `admin` role or have been granted the `CREATE` 
 
 - `col_quailfication_elem`
 
-    ![](../../../../static//sql-reference/JgXXboDxzoUFPVxND7UcGSFNngg.png)
+    ![](../../../../static/sql-reference/JgXXboDxzoUFPVxND7UcGSFNngg.png)
 
 - `index_def`
 
