@@ -71,8 +71,8 @@ KaiwuDB Kafka Connector is currently supported only on Linux operating systems.
     Here are some useful Kafka topic management commands:
 
     - List all topics: `./kafka-topics.sh --bootstrap-server localhost:9092 --list`
-    - View data in a specific topic: `./kafka-console-consumer.sh --bootstrap-server localhost:9092 --from-beginning --topic kw-tsdb-ts_json_kaiwudb_tb`
-    - Delete a topic: `./kafka-topics.sh --bootstrap-server localhost:9092 --delete --topic kw-tsdb-ts_json_kaiwudb_tb`
+    - View data in a specific topic: `./kafka-console-consumer.sh --bootstrap-server localhost:9092 --from-beginning --topic kw-tsdb-json_kaiwudb_with_tag_tb`
+    - Delete a topic: `./kafka-topics.sh --bootstrap-server localhost:9092 --delete --topic kw-tsdb-json_kaiwudb_with_tag_tb`
 
     :::
 
@@ -103,7 +103,7 @@ KWDB supports automatic creation of time-series or relational tables based on th
 
 1. (Optional) Create a custom Kafka topic for multi-tasking scenarios. Skip this step if you don't need multi-task support.
 
-    The following example creates a topic named `kw-tsdb-ts_json_kaiwudb_tb` with 5 partitions.
+    The following example creates a topic named `kw-tsdb-json_kaiwudb_with_tag_tb` with 5 partitions.
 
     ::: warning Note
 
@@ -112,7 +112,7 @@ KWDB supports automatic creation of time-series or relational tables based on th
     :::
 
     ```shell
-    ./kafka-topics.sh --create --topic kw-tsdb-ts_json_kaiwudb_tb --partitions 5 --bootstrap-server localhost:9092
+    ./kafka-topics.sh --create --topic kw-tsdb-json_kaiwudb_with_tag_tb --partitions 5 --bootstrap-server localhost:9092
     ```
 
 2. Create a KaiwuDB Sink Connector configuration file (e.g., `kw-json-kaiwudb-sink.json`), defining Kafka topics, KWDB connection details, and data format.
@@ -123,7 +123,7 @@ KWDB supports automatic creation of time-series or relational tables based on th
       "config": {
         "connector.class": "com.kaiwudb.kafka.connect.sink.KwdbSinkConnector",
         "tasks.max": "5",
-        "topics": "kw-tsdb-ts_json_kaiwudb_tb",
+        "topics": "kw-tsdb-json_kaiwudb_with_tag_tb",
         "connection.url": "jdbc:kaiwudb://localhost:26257",
         "connection.user": "test",
         "connection.password": "<password>",
@@ -166,7 +166,7 @@ KWDB supports automatic creation of time-series or relational tables based on th
 2. Send the test data to your Kafka topic:
 
     ```shell
-    cat kw-json-kaiwudb-data.txt | ./../bin/kafka-console-producer.sh --broker-list localhost:9092 --topic kw-tsdb-ts_json_kaiwudb_tb
+    cat kw-json-kaiwudb-data.txt | ./../bin/kafka-console-producer.sh --broker-list localhost:9092 --topic kw-tsdb-json_kaiwudb_with_tag_tb
     ```
 
 3. Verify that the data has been written to KWDB:
