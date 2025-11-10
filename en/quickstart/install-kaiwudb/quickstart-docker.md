@@ -157,7 +157,7 @@ Deployment logs are saved in the `log` directory within `kwdb_install`. The syst
     management_user=kaiwudb
     rest_port=8080
     kaiwudb_port=26257
-    # brpc_port=27257
+    brpc_port=27257
     data_root=/var/lib/kaiwudb
     cpu=1
 
@@ -178,7 +178,7 @@ Deployment logs are saved in the `log` directory within `kwdb_install`. The syst
     | | `management_user` | The user account for managing KWDB, set to `kaiwudb` by default. After installation, KWDB creates this user and a user group with the same name. |
     | | `rest_port` | Port for web services (default: `8080`). |
     | | `kaiwudb_port` | Port for client and application connections (default: `26257`). |
-    | | `brpc_port` | The brpc communication port between KWDB time-series engines, used for inter-node communication. <br>This parameter can be omitted for single-node deployments; if specified, the system will automatically ignore it. |
+    | | `brpc_port` | The brpc communication port between KWDB time-series engines, used for inter-node communication. <br>This parameter is ignored in single-node deployment. |
     | | `data_root` | Data directory (default: `/var/lib/kaiwudb`). |
     | | `cpu` | (Optional) Specifies CPU usage for KWDB on the node. The default is unlimited. The value range is [0,1], with a precision of up to two decimal places. |
     | **local** | `node_addr` | The IP address for client and application connections. The default listening address is `0.0.0.0`, meaning the node will listen on `kaiwudb_port` across all IP addresses on the host. |

@@ -366,14 +366,14 @@ Parameter Descriptions:
 Example:
 
 ```shell
-ts_line_opentsdb_tb.c1 1648432611249 10.3 tag1=1
-ts_line_opentsdb_tb.c2 1648432611249 219 tag1=1
-ts_line_opentsdb_tb.c1 1648432611250 12.6 tag1=1
-ts_line_opentsdb_tb.c2 1648432611250 218 tag1=1
-ts_line_opentsdb_tb.c1 1648432611249 10.8 tag1=1
-ts_line_opentsdb_tb.c2 1648432611249 221 tag1=1
-ts_line_opentsdb_tb.c1 1648432611250 11.3 tag1=1
-ts_line_opentsdb_tb.c2 1648432611250 217 tag1=1
+line_opentsdb_tb.c1 1648432611249 10.3 tag1=1
+line_opentsdb_tb.c2 1648432611249 219 tag1=1
+line_opentsdb_tb.c1 1648432611250 12.6 tag1=1
+line_opentsdb_tb.c2 1648432611250 218 tag1=1
+line_opentsdb_tb.c1 1648432611249 10.8 tag1=1
+line_opentsdb_tb.c2 1648432611249 221 tag1=1
+line_opentsdb_tb.c1 1648432611250 11.3 tag1=1
+line_opentsdb_tb.c2 1648432611250 217 tag1=1
 ```
 
 #### InfluxDB Line Format
