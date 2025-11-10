@@ -43,3 +43,4 @@ This section describes how to manage databases and their objects, query data, ma
 - Data Import and Export
   - [Export Data](./import-export-data/export-data.md)
   - [Import Data](./import-export-data/import-data.md)
+- [Stream Computing](./data-stream.md)
