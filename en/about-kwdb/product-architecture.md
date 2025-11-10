@@ -11,16 +11,23 @@ The architecture of KWDB is illustrated below:
 
 <img src="../static/about-kaiwudb/kwdb-architecture.png" alt="KWDB Architecture" style="max-width:80%; height:auto;" />
 
-- **Data Storage**: KWDB uses a hybrid storage system that combines the best of row and column storage, working with both SSDs and HDDs to give you flexibility in how your data is stored.
+**Interface Layer**: Supports multiple standardized interface protocols, including JDBC, ODBC, and RESTful API, ensuring seamless compatibility with various applications and development tools.
 
-- **Data Replication**: KWDB is built on a Shared-Nothing architecture, meaning each node operates independently. Using the Raft consensus protocol, we ensure your data is replicated across multiple nodes, keeping it safe and accessible even in the event of a failure.
+**Computing Layer**:
 
-- **Computation and Execution**: KWDB intelligently handles your data by automatically selecting the best way to store and process different data models while providing you with a simple, unified interface. Here’s what’s under the hood:
-  
-  - **Adaptive Time-Series Engine**: This purpose-built engine is optimized for time-series data, supporting complex queries and multi-dimensional aggregation. KWDB provides 5-30x compression capability, and compressed data can be used directly without decompression.
-  
-  - **Transaction Processing Engine**: Our robust engine manages distributed transactions with Multi-Version Concurrency Control (MVCC), while providing all the essential database features including comments, views, constraints, indexes, and sequences.
+- **SQL Execution Engine**: Delivers a complete SQL processing workflow, including protocol parsing, multi-model SQL parser, multi-model SQL optimizer, and multi-model SQL executor. Enables unified querying and processing across time-series and relational data.
 
-- **System Management**: KWDB provides comprehensive management capabilities, incorporating essential features such as connection management, authentication, access control, and resource management - all designed for both power and usability.
+- **Monitoring and Management Module**: Provides comprehensive system monitoring and management capabilities, including session management, memory management, thread management, message management, heartbeat management, performance monitoring, and log tracing.
 
-- **Ecosystem Tools and Compatibility**: KWDB comes with visual tools to help you manage and monitor your databases. Additionally, it works seamlessly with industry-standard tools such as [EMQX](https://www.emqx.io/), [Kafka](https://kafka.apache.org/), and [Telegraf](https://github.com/influxdata/telegraf).
+- **Core Service Components**: Includes essential database services such as metadata management, transaction management, job management, and security management.
+
+- **Value-Added Services**: Offers advanced features including real-time compression, lifecycle management, specialized built-in functions, system tasks, and Write-Ahead Logging (WAL).
+
+- **Multi-Engine Integration**: Integrates multiple data computing engines that automatically select the optimal storage and computation mode based on data characteristics while providing a unified interface. This delivers diverse analytical capabilities and enhanced query efficiency.
+  - **Adaptive Time-Series Engine**: Specifically optimized for time-series data, supporting complex time-series queries and multi-dimensional aggregation. Capable of inserting millions of records in real-time within seconds and delivering query responses in seconds for hundreds of millions of records. Provides 5-30x real-time compression, with compressed data directly usable without decompression.
+  - **Transaction Processing Engine**: Supports distributed transactions and Multi-Version Concurrency Control (MVCC), with complete relational database capabilities including comments, views, constraints, indexes, sequences, stored procedures, and triggers.
+
+**Storage Layer**:
+
+- **Time-Series Storage Engine**: Optimized for time-series data, enabling efficient data storage and retrieval.
+- **Relational Storage Engine**: Traditional relational database engine that provides full ACID transaction guarantees.

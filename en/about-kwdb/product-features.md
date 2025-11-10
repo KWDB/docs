@@ -7,11 +7,13 @@ id: product-features
 
 ## Multi-Model Fusion: One Database for Multiple Use Cases
 
-KWDB integrates both time-series and relational data models into a unified system, enabling seamless data fusion. With unified data access and management across different models, KWDB abstracts data models from applications. This approach meets the needs of both simple data management for single data models in various use cases, and complex system requirements for handling multi-model data in large-scale environments.
+KWDB combines time-series and relational data models into a single unified system. Applications access data through a consistent interface regardless of the underlying data model. This design supports simple deployments using a single data model as well as complex enterprise environments requiring multiple data models at scale.
 
 ## Decentralized Distributed Architecture
 
-**Decentralized and Transparent Distributed Architecture**: KWDB utilizes a fully decentralized, peer-to-peer architecture where all nodes in the cluster are equal, removing any single point of failure.
+**Decentralized and Transparent Distributed Architecture**: KWDB utilizes a fully decentralized, peer-to-peer architecture where all nodes in the cluster are equal, eliminating any single point of failure. In the event of node failure, services are seamlessly transferred to other nodes.
+
+**Distributed Linear Scalability**: KWDB supports rapid business scaling with seamless scale-out and scale-in capabilities. Data remains accessible during redistribution with no impact on operations, offering transparent service continuity and petabyte-scale storage capacity.
 
 **High-Performance and Consistent Distributed Transactions**: KWDB supports multi-replica clusters that use the RAFT protocol to maintain data consistency. The system also includes self-healing and adaptive failover capabilities to ensure high availability.
 
@@ -21,23 +23,36 @@ KWDB integrates both time-series and relational data models into a unified syste
 
 KWDB provides several high-performance data writing methods for both ordered and unordered data:
 
-- Supports standard SQL inserts and imports.
-- Capable of writing millions of rows per second.
-- Provides nanosecond-level precision for data writing.
+- Supports standard SQL inserts and imports
+- Capable of writing millions of rows in seconds
+- Provides nanosecond-level precision for data writing
 
 ### Fast Data Query and Analysis
 
-The time-series table of KWDB is optimized for handling massive amounts of time-series data, improving read/write performance. Users can define primary tags for time-series data and create indexes for fast data retrieval. During data insertion, KWDB automatically partitions data based on tags and uses indexes for rapid query execution. This optimizes both query speed and aggregation performance.
+In IoT and similar scenarios, each device type generates data with similar characteristics. KWDB addresses this through time-series tables, an optimized design specifically tailored for high-speed read/write operations on massive time-series datasets.
+
+Time-series tables use primary tags to identify different devices. During data insertion, KWDB automatically partitions data by these tags and creates indexes, enabling rapid location of device-specific data. This design delivers high-performance queries for individual devices and efficient aggregation across large-scale datasets.
 
 Leveraging in-place computation techniques, KWDB efficiently locates and retrieves target data within large datasets. This delivers significant performance improvements for complex query scenarios including total counts, maximum values by year, `GROUP BY`, and `JOIN` operations. Aggregation queries across millions of records complete in seconds.
 
-KWDB also offers specialized time-series queries to simplify data analysis. It supports user-defined functions and provides a rich set of time/date functions, mathematical functions, aggregation functions and window functions, including `LAST`, value filters, condition-based queries, interpolation functions, as well as `MIN`, `MAX`, `AVG`, and other basic aggregations.
+KWDB provides specialized capabilities for time-series data analysis. It supports user-defined functions and includes a comprehensive set of built-in functions: time/date operations, mathematical calculations, aggregations (`MIN`, `MAX`, `AVG`, etc.), and window functions.
+
+For time-series-specific scenarios, KWDB offers dedicated query features such as LAST value retrieval, value filters, condition-based queries, and interpolation functions.
+
+### Stream Computing
+
+KWDB features built-in stream computing functionality. Users can define tasks using standard SQL, and when data is written to source tables, it is automatically processed and written to target tables based on the defined transformation rules and filter criteria.
+
+Stream computing supports two key use cases:
+
+- Intelligent downsampling: Compresses high-frequency data in real-time to lower frequencies, then synchronizes to the cloud via publish-subscribe mechanisms, reducing storage and transmission costs.
+- Pre-computation acceleration: Performs real-time calculations on complex queries and stores results persistently, significantly improving query response times.
 
 ## Cost-Effective Storage
 
 ### Online Data Compression
 
-KWDB supports online data compression for both instant and periodic compression. Users can choose from various compression algorithms, including gzip, lz4, lzo, Xz, and zstd, achieving compression ratios of 5-30x to reduce storage costs. The system also allows querying compressed data directly, without the need for decompression.
+KWDB supports real-time online data compression. The system automatically selects the optimal compression algorithm based on data types, achieving compression ratios of 5-30x to reduce storage costs.
 
 ### Lifecycle Management
 
@@ -53,20 +68,26 @@ KWDB offers multiple authentication methods that can be used simultaneously. Use
 
 #### Visual Management Tools
 
-KWDB offers a comprehensive graphical database management tool covering database connections, database management, schema management, table management, and other key functions. This encompasses nearly all database operations, significantly improving user experience.
+KWDB offers a graphical database management tool that covers database connections, database management, schema management, table management, and other key functions, encompassing nearly all database operations to improve the user experience.
 
 #### Heterogeneous Database Migration Tools
 
-KWDB provides a comprehensive migration tool for seamless data transfer from heterogeneous databases including MySQL, Oracle, MongoDB, InfluxDB, OpenTSDB, and TDengine. Supporting both full and incremental migration modes, it ensures accurate, consistent, and timely data transfer with minimal operational disruption.
+KWDB provides a complete migration tool for seamless data transfer from heterogeneous databases including MySQL, Oracle, MongoDB, InfluxDB, OpenTSDB, and TDengine. Supporting both full and incremental migration modes, it ensures accurate, consistent, and timely data transfer with minimal operational disruption.
+
+#### Performance Testing Tools
+
+kwdb-tsbs is KWDB's professional time-series database performance benchmarking tool, developed based on Timescale TSBS. It covers the complete testing workflow: data generation, batch import, query execution, and result statistics.
+
+The tool supports CPU monitoring and IoT scenarios with 26 query types to meet diverse business requirements. Key features include high-concurrency processing, flexible parameter configuration, and one-click automated testing. This enables enterprises to conduct reliable performance evaluations for capacity planning, performance tuning, and technology selection.
 
 ### Ecosystem Compatibility
 
-#### Compatibility with Popular Programming Languages and Operating Systems
+#### Programming Languages and Operating Systems
 
-KWDB supports connections from a variety of popular programming languages, including C/C++, Java, C#, Python, and more. This flexibility enables developers to choose the most suitable programming language for their projects, educing development costs and improving efficiency. For more details, see [Application Development](../development/overview.md).
+KWDB supports multiple popular programming languages including C/C++, Java, C#, and Python, enabling developers to use their preferred language and reduce development costs. For more details, see [Development](../development/overview.md).
 
-KWDB is also compatible with several major operating systems, including Ubuntu, CentOS, Kylin, and UOS, ensuring stable operation across various environments. For a complete list of supported operating systems and CPU architectures, see [Supported Operating Systems and CPU Architectures](./product-metrics.md#operating-systems-and-cpu-architectures).
+KWDB runs on major operating systems including Ubuntu, CentOS, Kylin, and UOS. For a complete list of supported operating systems and CPU architectures, see [Supported Operating Systems and CPU Architectures](./product-metrics.md#operating-systems-and-cpu-architectures).
 
-#### Compatibility with Third-Party Ecosystem Tools
+#### Third-Party Ecosystem Tools
 
-KWDB integrates seamlessly with third-party tools like [EMQX](https://www.emqx.io/), [Kafka](https://kafka.apache.org/), and [Telegraf](https://github.com/influxdata/telegraf). Users can easily read and write data to and from these tools with simple configuration—no additional coding required. This simplifies system setup and maintenance while enhancing flexibility and scalability.
+KWDB integrates seamlessly with third-party tools like [EMQX](https://www.emqx.io/), [Kafka](https://kafka.apache.org/), [Flink](https://flink.apache.org/), and [Telegraf](https://github.com/influxdata/telegraf). Users can easily read and write data to and from these tools with simple configuration—no additional coding required.

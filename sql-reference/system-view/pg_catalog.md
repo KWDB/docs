@@ -5,7 +5,7 @@ id: pg_catalog
 
 # pg_catalog
 
-KaiwuDB 中的 `pg_catalog` 模式旨在与 PostgreSQL 兼容。
+KWDB 中的 `pg_catalog` 模式旨在与 PostgreSQL 兼容。
 
 用户可通过 `SHOW TABLES FROM [<database_name>.]pg_catalog;` SQL 语句列出指定数据库 `pg_catalog` 模式下的所有系统视图。未指定数据库时，默认使用当前数据库进行查询；也可以使用 `SELECT` 语句查看 `pg_catalog` 模式下的指定系统视图信息。
 

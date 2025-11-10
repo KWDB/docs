@@ -5,32 +5,32 @@ id: product-intro
 
 # Product Overview
 
-KWDB is a distributed, multi-model database designed for AIoT (Artificial Intelligence of Things) environments. It enables the concurrent operation of time-series and relational databases within a single instance, allowing for the seamless integration of diverse data processing models. The system excels at rapid time-series data processing while ensuring high availability, robust security, and operational stability—all while prioritizing ease of use. KWDB serves as a comprehensive data platform for industries such as industrial IoT, digital energy, the internet of vehicles, and smart industries.
+KWDB is a distributed, multi-model database engineered for AIoT (Artificial Intelligence of Things) environments. It supports concurrent time-series and relational database operations within a single instance, enabling seamless integration of diverse data processing models. The system delivers high-speed time-series data processing with high availability, enterprise-grade security, and operational stability—all through an intuitive, user-friendly interface. KWDB provides a unified data platform for industries including industrial IoT, digital energy, connected vehicles, and smart manufacturing.
 
 ## Product Values
 
 KWDB combines comprehensive features with excellent performance to meet the demands of various use cases, empowering enterprises in their digital transformation.
 
 - **Higher Processing Capabilities**
-  - Optimized time-series data handling for high-throughput read/write operations.
-  - Specialized query capabilities including interpolation and mathematical function support.
-  - Streamlined analysis workflows for enhanced application performance and better user experience.
+  - Massive data processing capability: Optimized design for high-speed read/write of massive time-series data, with the capacity to connect tens of millions of devices.
+  - High-speed query response: Supports second-level query response for hundreds of millions of data records.
+  - Rich time-series query functions: Provides specialized query capabilities including interpolation queries, mathematical functions, and window functions.
 
 - **Lower Operational and Management Costs**
-  - Unified multi-model data management, allowing diverse data models to be integrated into a single database, enabling support for a variety of business applications.
-  - Reduced procurement and operational expenses by enabling cross-department, cross-business data management in a single database system.
+  - Unified multi-model data management: A single database system enables cross-department, cross-business unified data management, significantly reducing procurement and operational costs for enterprise IT infrastructure.
+  - Business data integration: Supports diverse applications and enables multi-business data integration.
 
 - **Lower Storage Costs**
-  - Compression ratios of 5-30x and comprehensive data lifecycle management.
-  - Flexible data retention policies based on data importance, minimizing resource usage while meeting business needs.
+  - Intelligent compression technology: Supports real-time compression, automatically adapting optimal compression algorithms based on different data types, with compression ratios of 5-30x.
+  - Lifecycle management: Provides data lifecycle management with flexible retention policies based on data importance, meeting business needs with fewer nodes and resources.
 
 - **Enhanced Security**
   - Database auditing and encryption to ensure system security and operational stability across various business scenarios.
 
 - **Simplified Usage**
-  - Developer-friendly interfaces enabling seamless integration with third-party tools, reducing complexity and boosting efficiency.
-  - Admin-friendly capabilities enabling rapid installation, deployment, upgrades, migration, and monitoring, reducing management costs and boosting efficiency..
-  - KWDB MCP Server delivers streamlined business intelligence by facilitating natural language interactions between users, KWDB, large language models, and complementary services.
+  - Developer-friendly: Provides universal connection interfaces with features including high-speed writes, ultra-fast queries, SQL support, data lifecycle management, and cluster deployment. Seamlessly integrates with third-party tools, lowering the learning curve and improving development efficiency.
+  - Admin-friendly: Provides rapid deployment, upgrade, migration, and monitoring capabilities, reducing database operational and management costs.
+  - Provides MCP Server to enable efficient interaction and business intelligence through natural language with KWDB, large language models, and services.
 
 ## Use Cases
 

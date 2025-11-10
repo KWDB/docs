@@ -70,7 +70,7 @@ KaiwuDB Kafka Connector is currently supported only on Linux operating systems.
 
     Here are some useful Kafka topic management commands:
 
-    - List all topics:`./kafka-topics.sh --bootstrap-server localhost:9092 --list`
+    - List all topics: `./kafka-topics.sh --bootstrap-server localhost:9092 --list`
     - View data in a specific topic: `./kafka-console-consumer.sh --bootstrap-server localhost:9092 --from-beginning --topic kw-tsdb-ts_json_kaiwudb_tb`
     - Delete a topic: `./kafka-topics.sh --bootstrap-server localhost:9092 --delete --topic kw-tsdb-ts_json_kaiwudb_tb`
 
@@ -80,6 +80,15 @@ KaiwuDB Kafka Connector is currently supported only on Linux operating systems.
 
 The KaiwuDB Sink Connector transfers data from specified Kafka topics to the KWDB database.
 
+When writing data to time-series databases, the following formats are supported:
+
+- [KaiwuDB JSON Format](#kaiwudb-json-format)
+- [OpenTSDB JSON Format](#opentsdb-json-format)
+- [OpenTSDB Telnet Format](#opentsdb-telnet-format)
+- [InfluxDB Line Format](#influxdb-line-format)
+
+When writing data to relational databases, the [KaiwuDB JSON Format](#kaiwudb-json-format) is supported.
+
 ### Prerequisites
 
 - Complete the [KaiwuDB Kafka Connector configuration](#configure-kaiwudb-kafka-connector).
@@ -87,12 +96,12 @@ The KaiwuDB Sink Connector transfers data from specified Kafka topics to the KWD
 - Set up authentication credentials (user and password) for KWDB database access.
 
 ::: warning Note
-When writing Kafka data to KWDB, the system can automatically create time-series tables based on the Kafka data format if they do not already exist, except when using the InfluxDB Line format.
+KWDB supports automatic creation of time-series or relational tables based on the data format. When the target table does not exist, the system will automatically create the corresponding table structure, except when using the InfluxDB Line format.
 :::
 
 ### Steps
 
-1. (Optional) Create a custom Kafka topic for multi-tasking scenarios:
+1. (Optional) Create a custom Kafka topic for multi-tasking scenarios. Skip this step if you don't need multi-task support.
 
     The following example creates a topic named `kw-tsdb-ts_json_kaiwudb_tb` with 5 partitions.
 
@@ -183,7 +192,7 @@ curl -X DELETE http://localhost:8083/connectors/KwdbSinkConnector
 
 ## Configure KaiwuDB Source Connector
 
-The KaiwuDB Source Connector exports data from KWDB databases to Apache Kafka topics through periodic queries. It automatically retrieves the latest data at configurable intervals and publishes time-series data to designated Kafka topics.
+The KaiwuDB Source Connector exports data from KWDB databases to Apache Kafka topics through periodic queries. It automatically retrieves the latest data at configurable intervals and publishes time-series data to designated Kafka topics. By default, data from each time-series table is published to its corresponding independent topic.
 
 ### Prerequisites
 
@@ -279,7 +288,7 @@ This format uses a JSON string to represent one or more rows of data, including 
 
 ::: warning Note
 
-- JSON data includes information about column names, types, and lengths. If the target time-series table does not exist, KWDB will automatically create it.
+- JSON data includes information about column names, types, and lengths. If the target time-series or relational table does not exist, KWDB will automatically create it.
 - Kafka processes data line by line. Each complete JSON object must be compressed into a single-line string.
 
 :::
@@ -295,10 +304,10 @@ Parameter Descriptions:
 
 | Parameter      | Description                                                                                                                                            |
 | --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `table`   | Required. The name of the time-series table. If the table already exists in KWDB, it must match this name.                                                         |
+| `table`   | Required. The name of the time-series or relational table. If the table already exists in KWDB, it must match this name.                                                         |
 | `columns` | Required. Specifies column names, types, lengths, and nullability. If the table already exists, these must match the structure of the existing table. |
-| `tags`    | Required. Specifies tag names, types, lengths, primary status, and nullability. Each table must have at least one non-nullable primary tag.                                 |
-| `data`    | The dataset to write. Corresponds to column and tag fields. Timestamp supports millisecond, microsecond, and nanosecond precision. Default is millisecond.                                                             |
+| `tags`    | Optional. Specifies tag names, types, lengths, primary status, and nullability. For time-series databases, each table must have at least one non-nullable primary tag. For relational databases, this parameter can be set to null or omitted.                                 |
+| `data`    | The dataset to write. Corresponds to column and tag fields. For time-series databases, timestamp supports millisecond, microsecond, and nanosecond precision. For relational databases, timestamp currently only supports millisecond precision. In relational databases, timestamp values must be in string format; numeric timestamp format is not supported.                                                             |
 
 #### OpenTSDB JSON Format
 
@@ -306,7 +315,7 @@ This format uses a JSON string to represent one or more rows of data following t
 
 ::: warning Note
 
-- Time-series table names follow the `table_name.column_name` structure. If the target table doesn’t exist, it will be automatically created.
+- Time-series table names follow the `table_name.column_name` structure. If the target table doesn't exist, it will be automatically created.
 - Each time-series table will have `timestamp` and `value` columns. These columns and all tag fields are stored as `VARCHAR`.
 - Kafka processes data line by line. Each complete JSON object must be compressed into a single-line string.
 
@@ -334,7 +343,7 @@ This format uses a single-line string to represent one row of data, following th
 ::: warning Note
 
 - Time-series table names follow the `table_name.column_name` structure.
-- If the target table doesn’t exist, it will be automatically created with `timestamp` and `value` columns.
+- If the target table doesn't exist, it will be automatically created with `timestamp` and `value` columns.
 - All columns, including tags, are stored as `VARCHAR`.
 
 :::
@@ -400,7 +409,7 @@ Data type specifications:
 | FLOAT4        | `f32` suffix | `1.8f32` |
 | FLOAT8        | `f64` or none | `0.16f64` |
 | BOOL          | `true`, `false` (case-insensitive) | `true` |
-| VARBYTES、CHAR、NCHAR、VARCHAR、NVARCHAR  | - Data must be enclosed in single (`'`) or double (`"`) quotes. <br>- Special characters (space, `=`, `,`, `"`, `\`) must be escaped with a backslash. <br>- For `NCHAR`/`NVARCHAR`, use double (`"`) quotes with the `L` prefix.| `'a'`, `\"rfv\"`, `L\"ikl\"` |
+| VARBYTES, CHAR, NCHAR, VARCHAR, NVARCHAR  | - Data must be enclosed in single (`'`) or double (`"`) quotes. <br>- Special characters (space, `=`, `,`, `"`, `\`) must be escaped with a backslash. <br>- For `NCHAR`/`NVARCHAR`, use double (`"`) quotes with the `L` prefix.| `'a'`, `\"rfv\"`, `L\"ikl\"` |
 | TIMESTAMP     | A Unix timestamp or a string formatted as `"YYYY-MM-DD HH:MI:SS.MS"`. | `1648432611249`, `"2023-08-11 12:12:10.249"` |
 
 Example:
@@ -429,8 +438,8 @@ ts_line_influxdb_tb,tag_name=tag_value c1=14i16,c2=24i32,c3=34i64,c4=14.8f32,c5=
 | `max.retries`                      | int    | Maximum number of retries before a task fails.                                                                                                                                                                                              | 3                                    |
 | `retry.backoff.ms`                 | int    | Wait time before retrying after an error (in milliseconds).                                                                                                                                                                   | 3                                    |
 | `batch.size`                       | int    | Maximum number of records to insert in one batch operation.                                                                                                                                                                                                                                  | 1000                                 |
-| `protocol.type`                    | string | Data format to write into KWDB. Supported values: `json_kaiwudb`, `json_opentsdb`, `line_opentsdb`, `line_influxdb`.                                                                                                          | -                                    |
-| `timestamp.precision`              | string | Precision of timestamps written to KWDB: <br>- `json_kaiwudb`: supports `ms`, `us`, `ns` <br>- `line_opentsdb`: supports `s`, `ms`<br>- `json_opentsdb`: supports `s`, `ms`<br>- `line_influxdb`: supports `ms`, `us`, `ns` | -                                    |
+| `protocol.type`                    | string | Data format to write into KWDB. For time-series databases: `json_kaiwudb`, `json_opentsdb`, `line_opentsdb`, `line_influxdb`. For relational databases: `json_kaiwudb`. For more information, see [Supported Data Formats](#supported-data-formats).                                                                                                          | -                                    |
+| `timestamp.precision`              | string | Precision of timestamps written to KWDB: <br>- `json_kaiwudb`: time-series databases support `ms`, `us`, `ns`; relational databases support `ms` only <br>- `line_influxdb`: supports `ms`, `us`, `ns`<br>- `json_opentsdb` and `line_opentsdb`: support `s`, `ms` | -                                    |
 | `key.converter`                    | string | Converter class for transforming between Kafka Connect format and the serialization format read from Kafka.                                                                                                                                                   | -                                    |
 | `value.converter`                  | string | Converter class for transforming between Kafka Connect format and the serialization format read from Kafka.                                                                                                                                                 | -                                    |
 
@@ -444,12 +453,12 @@ ts_line_influxdb_tb,tag_name=tag_value c1=14i16,c2=24i32,c3=34i64,c4=14.8f32,c5=
 | `connection.url`                   | string | JDBC connection URL used to connect to KWDB.                                                                                  | -                                    |
 | `connection.user`                  | string |  Username used for the KaiwuDB JDBC connection.                                                                         | -                                    |
 | `connection.password`              | string | Password used for the KaiwuDB JDBC connection.                                                                             | -                                    |
-| `connection.database`              | string | KWDB database to read data from.                                        | -                                    |
+| `connection.database`              | string | KWDB time-series database to read data from.                                        | -                                    |
 | `connection.attempts`              | int    | Maximum number of attempts for JDBC connection. Must be a positive integer.                             | 3                                    |
 | `connection.backoff.ms`            | int    | Backoff time between connection attempts (in milliseconds).                           | 5000                                 |
 | `topic.prefix`                     | string | Prefix for Kafka topic names. By default, topic names are generated using the pattern: `[prefix]+[database]+[table]+[format]`.                   | -                                    |
 | `topic.delimiter`                  | string | Delimiter for topic names. Default is hyphen.                                           | `-`                                    |
-| `timestamp.initial`                | string | Initial timestamp for queries. Format: `yyyy-MM-dd HH:MM:SS`. If unspecified, all data in the table will be retrieved.                                    |
+| `timestamp.initial`                | string | Initial timestamp for queries. Format: `yyyy-MM-dd HH:MM:SS`. If unspecified, all data in the table will be retrieved.                                    | -                                    |
 | `poll.interval.ms`                 | int    | Frequency to poll for new or dropped tables (in milliseconds).                                                        | 5000                                 |
 | `fetch.max.rows`                   | int    | Maximum number of rows to fetch per polling for new data. Limits the internal cache size of the connector.                | 100                                  |
 | `query.interval.ms`                | int    | Time interval between consecutive queries (in milliseconds).                                         | 1000                                 |
