@@ -5,7 +5,7 @@ id: overview
 
 # Database Management Overview
 
-This section describes how to manage databases and their objects, query data, manage user privileges, view the database version, and enable/disable the real-time data feed service, including the following documents:
+This section describes how to manage databases and their objects, query data, manage user privileges，view the database version，including the following documents:
 
 - Database Management
   - [Time-Series Databases](./db-mgmt/db-mgmt-ts.md)
@@ -43,4 +43,3 @@ This section describes how to manage databases and their objects, query data, ma
 - Data Import and Export
   - [Export Data](./import-export-data/export-data.md)
   - [Import Data](./import-export-data/import-data.md)
-- [Real-time Data Feed](./data-subscription.md)

@@ -16,7 +16,6 @@ KWDB supports creating, modifying, checking, removing, and calling stored proced
 - `CONTINUE HANDLER`, `EXIT HANDLER`
 - `IFELSE`
 - `LOOP`
-- `LABEL`
 - `LEAVE`
 - Transaction statements
 - Special functions, such as (`ROW_COUNT()`)

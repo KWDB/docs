@@ -16,7 +16,6 @@ KWDB 关系引擎支持创建、修改、查看、删除、执行存储过程。
 - `CONTINUE HANDLER`、`EXIT HANDLER`
 - `IFELSE`
 - `LOOP`
-- `LABEL`
 - `LEAVE`
 - 事务语句
 - 特殊函数（`ROW_COUNT()`）
