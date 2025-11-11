@@ -3,7 +3,7 @@ title: Overview
 id: operation-overview
 ---
 
-# Database Operations Overview
+# Overview
 
 This section covers essential topics for KWDB database administrators and application developers. It includes the following topics:
 
