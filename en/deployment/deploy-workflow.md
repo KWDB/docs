@@ -1,9 +1,9 @@
 ---
-title: Deployment Workflow
+title: Workflow
 id: deploy-workflow
 ---
 
-# Deployment Workflow
+# Workflow
 
 ## Preparation
 
