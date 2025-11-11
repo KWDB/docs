@@ -5,7 +5,7 @@ id: flink
 
 # Flink
 
-Apache Flink is a distributed stream and batch processing framework open-sourced by The Apache Software Foundation. It is widely used in big data scenarios including stream processing, batch processing, complex event processing, real-time data warehouse construction, and machine learning.
+Apache Flink is a distributed stream and batch processing framework open-sourced by the Apache Software Foundation. It is widely used in big data scenarios including stream processing, batch processing, complex event processing, real-time data warehouse construction, and machine learning.
 
 KWDB provides the **KaiwuDB Flink Connector** to enable seamless integration between Flink and KWDB. This connector allows you to:
 
@@ -24,7 +24,7 @@ KaiwuDB Flink Connector supports the following features:
 - **Bidirectional Data Flow**: Read from and write to KWDB seamlessly
 - **Automatic Type Mapping**: Built-in conversion between KWDB and Flink data types
 - **Flexible Configuration**: Customize URL addresses, batch sizes, database and table names, parallelism levels, and more
-- **Parallel Processing**: Support for concurrent data reading through timestamp-based and tag-based partitioning
+- **Parallel Processing**: Support for concurrent data reading through timestamp-based and tag-based splitting
 
 ## Configure KaiwuDB Flink Connector
 
@@ -172,7 +172,7 @@ public void testSource() throws Exception {
     System.out.println("Test flink source finished!");
 }
 
-// Time-Based Partitioning
+// Time-Based Splitting
 public void testSourceByTimeSplit() throws Exception {
     System.out.println("Test flink source by time split start!");
     
@@ -188,12 +188,12 @@ public void testSourceByTimeSplit() throws Exception {
             new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS"),  // Date format
             ZoneId.of("Asia/Shanghai")));    // Time zone
     
-    // Execute with parallelism of 3 (matches number of time partitions)
+    // Execute with parallelism of 3 (matches number of time splits)
     sourceQuery(sqlObject, 3);
     System.out.println("Test flink source by time split finished!");
 }
 
-// Tag-Based Partitioning
+// Tag-Based Splitting
 public void testSourceByTagSplit() throws Exception {
     System.out.println("Test flink source by tag split start!");
     
@@ -203,7 +203,7 @@ public void testSourceByTagSplit() throws Exception {
         .setSplitType(SplitType.TAG)  // Set split type to tag split
         .setTagList(Arrays.asList("t1 = 1", "t1 = 2", "t1 = 3"));  // Tag filter conditions
     
-    // Execute with parallelism of 3 (matches number of tag partitions)
+    // Execute with parallelism of 3 (matches number of tag splits)
     sourceQuery(sqlObject, 3);
     System.out.println("Test flink source by tag split finished!");
 }
@@ -400,7 +400,7 @@ public void testSourceToSink() throws Exception {
     environment.setParallelism(1); 
     environment.enableCheckpointing(3000, AT_LEAST_ONCE);  
 
-    //  Configure source with time-based partitioning
+    //  Configure source with time-based splitting
     SplitObject sqlObject = new SplitObject();
     sqlObject.setSql("select ts, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, t1, t2 from test_tb")
         .setSplitType(SplitType.TIMESTAMP)  // Set split type to timestamp split
