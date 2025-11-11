@@ -32,7 +32,7 @@ KWDB 3.0.0 delivers comprehensive optimizations and enhancements across database
 
 #### Query Enhancements
 
-- **Contextual Min/Max Queries**: When querying time-series data using `min()` or `max()` function, the system can retrieve additional fields from the rows containing the minimum or maximum values
+- **Contextual Min/Max Query**: When querying time-series data using `min()` or `max()` function, the system can retrieve additional fields from the rows containing the minimum or maximum values
 
 ### Session Management
 
