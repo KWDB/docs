@@ -45,6 +45,7 @@ Learn how to connect to KWDB using various supported connectors. Each option inc
 Discover how to integrate KWDB with popular messaging and data processing tools to enable smooth data flows:
 
 - [Kafka](./read-write-data/kafka.md)
+- [Flink](./read-write-data/flink.md)
 - [DataX](./read-write-data/datax.md)
 - [EMQX](./read-write-data/emqx.md)
 - [Telegraf](./read-write-data/telegraf.md)

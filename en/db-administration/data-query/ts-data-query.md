@@ -298,9 +298,9 @@ INSERT INTO t2 (time, device_id, temperature, humidity) VALUES ('2024-09-01 12:0
     (8 rows)
     ```
 
-## Maximum/Minimum Value Context Query
+## Contextual Min/Max Query
 
-The maximum/minimum value context query feature in KWDB allows you to retrieve the complete row context when using `min` or `max` functions. This feature extends beyond standard SQL syntax limitations, enabling you to obtain complete contextual information about extreme values in a single query.
+The contextual min/max query feature in KWDB allows you to retrieve the complete row context when using `min` or `max` functions. This feature extends beyond standard SQL syntax limitations, enabling you to obtain complete contextual information about extreme values in a single query.
 
 **Notes:**
 
