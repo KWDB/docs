@@ -117,5 +117,4 @@ Error codes are grouped into categories based on their type. The prefix indicate
 | KW913      | Cannot open cfg file/directory!            | Contact support.                                  |
 | KW914      | Cannot find/parse config.                  | Contact support.                                  |
 | KW915      | Failed to bind message callback function    | Contact support.                                  |
-| KW916      | Failed to init pubsub                       | Contact support.                                  |
 | KW917      | Failed to init T                            | Contact support.                                  |
