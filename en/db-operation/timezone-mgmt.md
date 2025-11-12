@@ -11,7 +11,7 @@ You can use the `SET TIME ZONE` SQL statement to modify the time zone of the cur
 
 No privileges required.
 
-## Synopsis
+## Syntax
 
 ```sql
 SET TIME ZONE [ <int> | '<location>'];
