@@ -20,12 +20,12 @@ KWDB provides the `add_user.sh` script in the installation package. After instal
 
 :::
 
-## Prerequisites
+### Prerequisites
 
 - KWDB is installed and running.
 - You have access to the `kwdb_install` directory.
 
-## Steps
+### Steps
 
 1. Navigate to the installation directory.
 
