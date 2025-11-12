@@ -13,7 +13,7 @@ KWDB 3.0.0 delivers comprehensive optimizations and enhancements across database
 
 | Version | Release Date |
 |:--------|:-------------|
-| 3.0.0   | 2025.xx.xx   |
+| 3.0.0   | 2025.11.12   |
 
 ## New Features
 
