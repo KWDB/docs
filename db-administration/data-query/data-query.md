@@ -46,11 +46,84 @@ KWDB 跨模查询支持以下联合查询：
 
 ## 语法示例
 
-以下示例假设已创建 `tsdb` 时序数据库、`rdb` 关系数据库、关系表 `DeviceModel` 和 `Device`、时序表 `MonitoringCenter` 并写入相关数据。
+以下示例假设已创建关系数据库 `rdb`、关系表 `DeviceModel` 和 `Device`、 时序数据库 `tsdb` 、时序表 `MonitoringCenter` 并写入相关数据。
+
+```sql
+-- 创建关系数据库
+CREATE DATABASE rdb;
+
+-- 切换到关系数据库
+USE rdb;
+
+-- 创建设备型号表
+CREATE TABLE DeviceModel (
+    modelID INT PRIMARY KEY,
+    TypeName VARCHAR(50),
+    ModelName VARCHAR(50)
+);
+
+-- 创建设备表
+CREATE TABLE Device (
+    deviceID INT PRIMARY KEY,
+    modelID INT,
+    deviceName VARCHAR(100),
+    FOREIGN KEY (modelID) REFERENCES DeviceModel(modelID)
+);
+
+-- 插入设备型号数据
+INSERT INTO DeviceModel (modelID, TypeName, ModelName) VALUES
+(101, '智能电表', 'SM-E100单相电表'),
+(102, '智能电表', 'SM-E300三相电表'),
+(201, '配电变压器', 'TR-D500油浸式变压器'),
+(202, '配电变压器', 'TR-D800干式变压器'),
+(301, '断路器', 'CB-V200真空断路器');
+
+-- 插入设备数据
+INSERT INTO Device (deviceID, modelID, deviceName) VALUES
+(1001, 101, '1号楼单相电表'),
+(1002, 101, '2号楼单相电表'),
+(1003, 102, '3号楼三相电表'),
+(2001, 201, 'A区主变压器'),
+(2002, 201, 'B区主变压器'),
+(2003, 202, 'C区干式变压器'),
+(3001, 301, '总进线断路器'),
+(3002, 301, '1号线路断路器'),
+(3003, 301, '2号线路断路器'),
+(3004, 301, '3号线路断路器');
+
+-- 创建时序数据库
+CREATE TS DATABASE tsdb;
+
+-- 切换到时序数据库
+USE tsdb;
+
+-- 创建监控中心时序表
+CREATE TABLE MonitoringCenter (
+    ts TIMESTAMP NOT NULL,
+    status INT
+) TAGS (
+    deviceID INT NOT NULL,
+    location VARCHAR(100)
+) PRIMARY TAGS (deviceID);
+
+-- 插入监控中心数据
+-- 设备状态说明: 0-正常运行, 1-轻微告警, -1-严重故障
+INSERT INTO MonitoringCenter (ts, status, deviceID, location) VALUES
+('2024-11-13 10:00:00', 0, 1001, '北京海淀'),
+('2024-11-13 10:00:00', 0, 1002, '北京朝阳'),
+('2024-11-13 10:00:00', -1, 1003, '北京丰台'),    -- 严重故障: 三相电表
+('2024-11-13 10:00:00', 0, 2001, '上海浦东'),
+('2024-11-13 10:00:00', 1, 2002, '上海静安'),
+('2024-11-13 10:00:00', 0, 2003, '上海徐汇'),
+('2024-11-13 10:00:00', 0, 3001, '广州天河'),
+('2024-11-13 10:00:00', 1, 3002, '广州越秀'),
+('2024-11-13 10:00:00', -1, 3003, '深圳南山'),    -- 严重故障: 2号线路断路器
+('2024-11-13 10:00:00', 0, 3004, '深圳福田');
+```
 
 - 关联查询
 
-    以下示例通过内连接将 `Device`、`DeviceModel`、`MonitoringCenter` 表关联在一起，获取特定条件下的设备信息和相关型号与监控中心信息。
+    以下示例通过内连接将 `Device`、`DeviceModel`、`MonitoringCenter` 表关联，查询故障设备的详细信息。
 
     ```sql
     SELECT d.deviceID, dm.TypeName, dm.ModelName
@@ -59,81 +132,71 @@ KWDB 跨模查询支持以下联合查询：
     INNER JOIN tsdb.MonitoringCenter AS mc ON d.deviceID = mc.deviceID
     WHERE mc.status = -1
     ORDER BY d.deviceID;
-      deviceid | typename |  modelname
-    -----------+----------+--------------
-            7 | 电表     | 电表模型2
-            16 | 变压器   | 变压器模型6
+    ```
+
+    查询结果：
+
+    ```sql
+      deviceid | typename |     modelname
+    -----------+----------+--------------------
+          1003 | 智能电表 | SM-E300三相电表
+          3003 | 断路器   | CB-V200真空断路器
     (2 rows)
     ```
 
 - 嵌套查询
 
-    以下示例使用相关投影子查询，对设备 ID 与 `tsdb.MonitoringCenter` 的表进行关联，返回相应设备 ID 下的最新状态。
+    以下示例使用相关投影子查询，对设备 ID 与 `tsdb.MonitoringCenter` 的表进行关联，获取每个设备的最新状态。
 
     ```sql
     SELECT d.deviceID,
           (SELECT MAX(status) FROM tsdb.MonitoringCenter WHERE deviceID = d.deviceID) AS LatestStatus
     FROM rdb.Device AS d ORDER by d.deviceID;
+    ```
+
+    查询结果：
+
+    ```sql
       deviceid | lateststatus
     -----------+---------------
-            1 | NULL
-            2 |            0
-            3 | NULL
-            4 | NULL
-            5 | NULL
-            6 | NULL
-            7 |           -1
-            8 | NULL
-            9 | NULL
-            10 | NULL
-            11 | NULL
-            12 | NULL
-            13 | NULL
-            14 |            0
-            15 | NULL
-            16 |           -1
-            17 | NULL
-            18 |            0
-            19 | NULL
-            20 | NULL
-            21 | NULL
-    (21 rows)
+          1001 |            0
+          1002 |            0
+          1003 |           -1
+          2001 |            0
+          2002 |            1
+          2003 |            0
+          3001 |            0
+          3002 |            1
+          3003 |           -1
+          3004 |            0
+    (10 rows)
     ```
 
 - 联合查询
 
-    以下示例使用 `UNION` 操作符合并 `rdb.Device` 和 `tsdb.MonitoringCenter` 表的查询结果，并将最终结果以 `deviceID` 和 `status` 进行升序排序。
+    以下示例使用 `UNION` 操作符合并 `rdb.Device` 和 `tsdb.MonitoringCenter` 表的查询结果，生成需要重点关注的设备列表（电表类设备和故障设备）。
 
     ```sql
-    SELECT deviceID, NULL AS status
+    SELECT deviceID, deviceName, '电表类设备' AS category
     FROM rdb.Device
-    UNION
-    SELECT NULL AS deviceID, status
-    FROM tsdb.MonitoringCenter order by deviceID,status;
-      deviceid | status
-    -----------+---------
-      NULL     |     -1
-      NULL     |      0
-            1 | NULL
-            2 | NULL
-            3 | NULL
-            4 | NULL
-            5 | NULL
-            6 | NULL
-            7 | NULL
-            8 | NULL
-            9 | NULL
-            10 | NULL
-            11 | NULL
-            12 | NULL
-            13 | NULL
-            14 | NULL
-            15 | NULL
-            16 | NULL
-            17 | NULL
-            18 | NULL
-            19 | NULL
-            20 | NULL
-            21 | NULL
-    (23 rows)
+    WHERE modelID IN (101, 102)
+    UNION ALL
+    SELECT d.deviceID, d.deviceName, '故障设备' AS category
+    FROM rdb.Device AS d
+    INNER JOIN tsdb.MonitoringCenter AS mc ON d.deviceID = mc.deviceID
+    WHERE mc.status = -1
+    ORDER BY deviceID;
+    ```
+
+    查询结果：
+
+    ```sql
+      deviceid |  devicename   |  category
+    -----------+---------------+-------------
+          1001 | 1号楼单相电表 | 电表类设备
+          1002 | 2号楼单相电表 | 电表类设备
+          1003 | 3号楼三相电表 | 电表类设备
+          1003 | 3号楼三相电表 | 故障设备
+          3003 | 2号线路断路器 | 故障设备
+    (5 rows)
     ```
