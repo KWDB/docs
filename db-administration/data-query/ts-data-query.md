@@ -367,7 +367,7 @@ SELECT 子句中各列顺序可以自由排列，但必须包含：
 以下示例假设用户已创建时序库 `sensor_db`, 时序表 `sensors`, 并向表内写入对应的数值。
 
 ```sql
-- 创建时序数据库
+-- 创建时序数据库
 CREATE TS DATABASE sensor_db;
 
 -- 切换到时序数据库
@@ -451,7 +451,8 @@ INSERT INTO sensors (k_timestamp, voltage, temperature, device_id, location) VAL
   ```sql
   SELECT device_id, k_timestamp, temperature, min(voltage) 
   FROM sensors 
-  GROUP BY device_id;
+  GROUP BY device_id
+  ORDER BY device_id;
     device_id |        k_timestamp        | temperature |  min
   ------------+---------------------------+-------------+--------
             1 | 2024-01-01 00:30:00+00:00 |        26.1 | 218.5
@@ -474,8 +475,10 @@ INSERT INTO sensors (k_timestamp, voltage, temperature, device_id, location) VAL
   FROM sensors 
   GROUP BY time_window(k_timestamp, '10min')
   ORDER BY window_start DESC;
-            window_start        |        window_end         |        k_timestamp        | voltage | device_id |  min
+          window_start        |        window_end         |        k_timestamp        | voltage | device_id |  min
   ----------------------------+---------------------------+---------------------------+---------+-----------+--------
+    2024-01-02 00:10:00+00:00 | 2024-01-02 00:20:00+00:00 | 2024-01-02 00:10:00+00:00 |   218.5 |         2 | 218.5
+    2024-01-02 00:00:00+00:00 | 2024-01-02 00:10:00+00:00 | 2024-01-02 00:00:00+00:00 |     218 |         2 |   218
     2024-01-01 01:00:00+00:00 | 2024-01-01 01:10:00+00:00 | 2024-01-01 01:00:00+00:00 |   219.8 |         2 | 219.8
     2024-01-01 00:50:00+00:00 | 2024-01-01 01:00:00+00:00 | 2024-01-01 00:50:00+00:00 |   220.3 |         2 | 220.3
     2024-01-01 00:40:00+00:00 | 2024-01-01 00:50:00+00:00 | 2024-01-01 00:40:00+00:00 |     220 |         1 |   220
@@ -483,5 +486,5 @@ INSERT INTO sensors (k_timestamp, voltage, temperature, device_id, location) VAL
     2024-01-01 00:20:00+00:00 | 2024-01-01 00:30:00+00:00 | 2024-01-01 00:20:00+00:00 |     219 |         3 |   219
     2024-01-01 00:10:00+00:00 | 2024-01-01 00:20:00+00:00 | 2024-01-01 00:10:00+00:00 |   217.5 |         2 | 217.5
     2024-01-01 00:00:00+00:00 | 2024-01-01 00:10:00+00:00 | 2024-01-01 00:00:00+00:00 |   219.2 |         2 | 219.2
-  (7 rows)
+  (9 rows)
   ```

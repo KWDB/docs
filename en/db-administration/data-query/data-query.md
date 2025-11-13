@@ -109,7 +109,7 @@ INSERT INTO MonitoringCenter (ts, status, deviceID, location) VALUES
 ('2024-11-13 10:00:00', 0, 1002, 'Beijing Chaoyang'),
 ('2024-11-13 10:00:00', -1, 1003, 'Beijing Fengtai'),    -- Critical Fault: Three-Phase Meter
 ('2024-11-13 10:00:00', 0, 2001, 'Shanghai Pudong'),
-('2024-11-13 10:00:00', 1, 2002, 'Shanghai Jing\'an'),
+('2024-11-13 10:00:00', 1, 2002, 'Shanghai Jingan'),
 ('2024-11-13 10:00:00', 0, 2003, 'Shanghai Xuhui'),
 ('2024-11-13 10:00:00', 0, 3001, 'Guangzhou Tianhe'),
 ('2024-11-13 10:00:00', 1, 3002, 'Guangzhou Yuexiu'),
