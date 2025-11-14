@@ -349,12 +349,75 @@ Columns in the `SELECT` clause can be arranged in any order, but must include:
 
 ### Examples
 
+The following examples assume that you have created a time-series database (`sensor_db`), a time-series table (`sensors`), and inserted the corresponding data into the table.
+
+```sql
+-- Create time-series database
+CREATE TS DATABASE sensor_db;
+
+-- Switch to time-series database
+USE sensor_db;
+
+-- Create sensor data table
+CREATE TABLE sensors (
+    k_timestamp TIMESTAMP NOT NULL,
+    voltage FLOAT,
+    temperature FLOAT
+) TAGS (
+    device_id INT NOT NULL,
+    location VARCHAR(100)
+) PRIMARY TAGS (device_id);
+
+-- Insert data to device 1 (2024-01-01)
+INSERT INTO sensors (k_timestamp, voltage, temperature, device_id, location) VALUES
+('2024-01-01 00:00:00', 220.5, 25.3, 1, 'Beijing Server Room A'),
+('2024-01-01 00:10:00', 219.8, 25.5, 1, 'Beijing Server Room A'),
+('2024-01-01 00:20:00', 221.2, 25.8, 1, 'Beijing Server Room A'),
+('2024-01-01 00:30:00', 218.5, 26.1, 1, 'Beijing Server Room A'),  -- Minimum voltage
+('2024-01-01 00:40:00', 220.0, 26.3, 1, 'Beijing Server Room A'),
+('2024-01-01 00:50:00', 222.3, 26.5, 1, 'Beijing Server Room A'),  -- Maximum voltage
+('2024-01-01 01:00:00', 220.8, 26.2, 1, 'Beijing Server Room A'),
+
+-- Insert data to device 2 (2024-01-01)
+('2024-01-01 00:00:00', 219.2, 24.8, 2, 'Shanghai Server Room B'),
+('2024-01-01 00:10:00', 217.5, 24.9, 2, 'Shanghai Server Room B'),  -- Minimum voltage
+('2024-01-01 00:20:00', 220.8, 25.2, 2, 'Shanghai Server Room B'),
+('2024-01-01 00:30:00', 221.5, 25.5, 2, 'Shanghai Server Room B'),
+('2024-01-01 00:40:00', 223.0, 25.8, 2, 'Shanghai Server Room B'),  -- Maximum voltage
+('2024-01-01 00:50:00', 220.3, 25.6, 2, 'Shanghai Server Room B'),
+('2024-01-01 01:00:00', 219.8, 25.3, 2, 'Shanghai Server Room B'),
+
+-- Insert data to device 3 (2024-01-01)
+('2024-01-01 00:00:00', 221.0, 26.0, 3, 'Guangzhou Server Room C'),
+('2024-01-01 00:10:00', 220.5, 26.2, 3, 'Guangzhou Server Room C'),
+('2024-01-01 00:20:00', 219.0, 26.5, 3, 'Guangzhou Server Room C'),  -- Minimum voltage
+('2024-01-01 00:30:00', 221.8, 26.8, 3, 'Guangzhou Server Room C'),
+('2024-01-01 00:40:00', 224.2, 27.0, 3, 'Guangzhou Server Room C'),  -- Maximum voltage
+('2024-01-01 00:50:00', 222.5, 26.7, 3, 'Guangzhou Server Room C'),
+('2024-01-01 01:00:00', 221.3, 26.4, 3, 'Guangzhou Server Room C'),
+
+-- Cross-day data (2024-01-02, for conditional query testing)
+('2024-01-02 00:00:00', 220.0, 25.0, 1, 'Beijing Server Room A'),
+('2024-01-02 00:10:00', 219.5, 25.2, 1, 'Beijing Server Room A'),
+('2024-01-02 00:00:00', 218.0, 24.5, 2, 'Shanghai Server Room B'),
+('2024-01-02 00:10:00', 218.5, 24.7, 2, 'Shanghai Server Room B');
+```
+
 - **Full table query**
 
   The following example queries the minimum voltage value in the entire table along with its corresponding timestamp, temperature, and device ID.
 
   ```sql
   SELECT k_timestamp, temperature, device_id, min(voltage) FROM sensors;
+  ```
+
+  Expected result:
+
+  ```sql
+          k_timestamp        | temperature | device_id |  min
+  ----------------------------+-------------+-----------+--------
+    2024-01-01 00:10:00+00:00 |        24.9 |         2 | 217.5
+  (1 row) 
   ```
 
 - **Conditional query**
@@ -367,6 +430,15 @@ Columns in the `SELECT` clause can be arranged in any order, but must include:
   WHERE k_timestamp >= '2024-01-01' AND k_timestamp < '2024-01-02';
   ```
 
+  Expected result:
+
+  ```sql
+          k_timestamp        | temperature | device_id |  min
+  ----------------------------+-------------+-----------+--------
+    2024-01-01 00:10:00+00:00 |        24.9 |         2 | 217.5
+  (1 row)
+  ```
+
 - **Grouped query**
 
   The following example groups data by device and queries the minimum voltage and corresponding information for each device.
@@ -374,7 +446,19 @@ Columns in the `SELECT` clause can be arranged in any order, but must include:
   ```sql
   SELECT device_id, k_timestamp, temperature, min(voltage) 
   FROM sensors 
-  GROUP BY device_id;
+  GROUP BY device_id
+  ORDER BY device_id;
+  ```
+
+  Expected result:
+
+  ```sql
+    device_id |        k_timestamp        | temperature |  min
+  ------------+---------------------------+-------------+--------
+            1 | 2024-01-01 00:30:00+00:00 |        26.1 | 218.5
+            2 | 2024-01-01 00:10:00+00:00 |        24.9 | 217.5
+            3 | 2024-01-01 00:20:00+00:00 |        26.5 |   219
+  (3 rows)  
   ```
 
 - **Time window grouped query**
@@ -391,4 +475,21 @@ Columns in the `SELECT` clause can be arranged in any order, but must include:
   FROM sensors 
   GROUP BY time_window(k_timestamp, '10min')
   ORDER BY window_start DESC;
+  ```
+
+  Expected result:
+
+  ```sql
+          window_start        |        window_end         |        k_timestamp        | voltage | device_id |  min
+  ----------------------------+---------------------------+---------------------------+---------+-----------+--------
+    2024-01-02 00:10:00+00:00 | 2024-01-02 00:20:00+00:00 | 2024-01-02 00:10:00+00:00 |   218.5 |         2 | 218.5
+    2024-01-02 00:00:00+00:00 | 2024-01-02 00:10:00+00:00 | 2024-01-02 00:00:00+00:00 |     218 |         2 |   218
+    2024-01-01 01:00:00+00:00 | 2024-01-01 01:10:00+00:00 | 2024-01-01 01:00:00+00:00 |   219.8 |         2 | 219.8
+    2024-01-01 00:50:00+00:00 | 2024-01-01 01:00:00+00:00 | 2024-01-01 00:50:00+00:00 |   220.3 |         2 | 220.3
+    2024-01-01 00:40:00+00:00 | 2024-01-01 00:50:00+00:00 | 2024-01-01 00:40:00+00:00 |     220 |         1 |   220
+    2024-01-01 00:30:00+00:00 | 2024-01-01 00:40:00+00:00 | 2024-01-01 00:30:00+00:00 |   218.5 |         1 | 218.5
+    2024-01-01 00:20:00+00:00 | 2024-01-01 00:30:00+00:00 | 2024-01-01 00:20:00+00:00 |     219 |         3 |   219
+    2024-01-01 00:10:00+00:00 | 2024-01-01 00:20:00+00:00 | 2024-01-01 00:10:00+00:00 |   217.5 |         2 | 217.5
+    2024-01-01 00:00:00+00:00 | 2024-01-01 00:10:00+00:00 | 2024-01-01 00:00:00+00:00 |   219.2 |         2 | 219.2
+  (9 rows)
   ```
