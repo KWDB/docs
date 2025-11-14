@@ -135,8 +135,8 @@ This document uses [Cline](https://cline.bot) for an example. But these steps ar
 - Install the Visual Studio Code.
 - Install the Cline extension in the Visual Studio Code.
 - [Download](https://gitee.com/kwdb/kwdb-mcp-server/releases) and decompress the KWDB MCP Server installation package.
-- Install and start KWDB, configure the authentication method, and create a database. For details, see the [KWDB Documentation Website]().<!--Update links later-->
-- Create a user with appropriate privileges on tables and databases. For details, see [Create Users]().<!--Update links later-->
+- Install and start KWDB, configure the authentication method, and create a database. For details, see the [KWDB Documentation Website](https://www.kaiwudb.com/kaiwudb_docs/#/oss_dev/).
+- Create a user with appropriate privileges on tables and databases. For details, see [Create Users](../../../sql-reference/db-mgmt/user-mgmt-sql.md#create-user).
 
 ### Configure KWDB MCP Server in Cline
 
@@ -172,7 +172,7 @@ This document uses [Cline](https://cline.bot) for an example. But these steps ar
     - `hostname`: the IP address of the KWDB database
     - `port`: the port of the KWDB database
     - `database_name`: the name of the KWDB database
-    - `sslmode`: the SSL mode, available options are `disable`, `allow`, `prefer`, `require`, `verify-ca` and `verify-full`. For details about the SSL mode, see [SSL Mode Parameters](). <!--Update links later-->
+    - `sslmode`: the SSL mode, available options are `disable`, `allow`, `prefer`, `require`, `verify-ca` and `verify-full`. For details about the SSL mode, see [SSL Mode Parameters](../java/connect-jdbc.md#ssl-mode-parameters).
 
 5. Select the **Installed** tab and click the **Restart** button next to the KWDB MCP server you would like to restart, or click **Restart Server** at the bottom of that pane.
 
@@ -195,7 +195,7 @@ This document uses [Cline](https://cline.bot) for an example. But these steps ar
     - `hostname`: the IP address of the KWDB database
     - `port`: the port of the KWDB database
     - `database_name`: the name of the KWDB database
-    - `sslmode`: the SSL mode, available options are `disable`, `allow`, `prefer`, `require`, `verify-ca` and `verify-full`. For details about the SSL mode, see [SSL Mode Parameters]().<!--Update links later-->
+    - `sslmode`: the SSL mode, available options are `disable`, `allow`, `prefer`, `require`, `verify-ca` and `verify-full`. For details about the SSL mode, see [SSL Mode Parameters](../java/connect-jdbc.md#ssl-mode-parameters).
 
 2. Configure the KWDB MCP Server in Cline.
 

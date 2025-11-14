@@ -47,7 +47,7 @@ The user granting the privileges must also have the `GRANT` privilege on the spe
 
 ### Examples
 
-This example grants the privilege to create the `db1` and `defaultdb` databases to `operatora` user.
+This example grants the `CREATE` privilege to create the `db1` and `defaultdb` databases to `operatora` user.
 
 ```sql
 GRANT CREATE ON DATABASE db1, defaultdb TO operatora;
@@ -76,7 +76,7 @@ The user revoking the privileges must also have the `GRANT` privilege on the spe
 
 ### Examples
 
-This example revokes the privilege to create the `db1` and `defaultdb` databases from `user11` user.
+This example revokes the `CREATE` privilege to create the `db1` and `defaultdb` databases from `user11` user.
 
 ```sql
 REVOKE CREATE ON DATABASE db1, defaultdb FROM user11;
