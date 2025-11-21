@@ -70,11 +70,7 @@ This feature is ideal for:
 - Deployments using mechanical hard disk storage
 - Applications requiring high write throughput
 
-When enabled, the system automatically creates a `raftlog` subdirectory within the time-series engine directory. Log files are managed through an intelligent rotation mechanism:
-
-- Active log files rotate to historical files when they reach 512MB
-- Historical files automatically merge when more than 6 accumulate
-- The system checks for merge eligibility every 5 minutes
+When enabled, the system automatically creates a `raftlog` subdirectory within the time-series engine directory. Active log files automatically rotate to historical files when they reach 512MB. The system checks for merge eligibility every 30 minutes.
 
 ### Configuration
 
