@@ -59,3 +59,28 @@ Reorganization operations and merge operations are mutually exclusive; the same 
 ### Reorganization Configuration
 
 In KWDB, the data reorganization feature is enabled by default. You can enable or disable this feature through the `ts.auto_vacuum.enabled` cluster parameter. For more information, see [Cluster Parameters](./cluster-settings-config.md#cluster-parameters).
+
+## RaftLog Store for Time-Series Data
+
+RaftLog Store is a storage optimization for distributed clusters handling time-series data. It significantly improves write performance on mechanical hard drives by reducing disk I/O pressure and streamlining the write path.
+
+This feature is ideal for:
+
+- Distributed clusters with high-volume time-series data writes
+- Deployments using mechanical hard disk storage
+- Applications requiring high write throughput
+
+When enabled, the system automatically creates a `raftlog` subdirectory within the time-series engine directory. Active log files automatically rotate to historical files when they reach 512MB. The system checks for merge eligibility every 30 minutes.
+
+### Configuration
+
+To enable RaftLog Store, add the `--use-raft-store` flag to your node startup command.
+
+::: warning
+
+- This parameter must be set during **initial database installation and startup**. It is disabled by default.
+- Once the database is initialized, you **cannot** change the storage engine by modifying startup flags.
+
+:::
+
+For detailed startup command information and examples, see [kwbase start](../tool-command-reference/client-tool/kwbase-sql-reference.md#kwbase-start).
