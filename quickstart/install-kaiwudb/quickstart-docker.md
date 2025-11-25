@@ -414,11 +414,11 @@ KWDB 支持通过以下方式获取容器镜像：
     - 非安全模式（不带密码）：
 
         ```bash
-        docker exec kwdb-container bash -c "./kwbase sql --insecure --host=<host_ip> -e \"create user <username>;grant admin to <username> with admin option;\""
+        docker exec kwdb bash -c "./kwbase sql --insecure --host=<host_ip> -e \"create user <username>;grant admin to <username> with admin option;\""
         ```
 
     - 安全模式（带密码）：
 
         ```bash
-        docker exec kwdb-container bash -c "./kwbase sql --host=<host_ip> --certs-dir=<cert_dir> -e \"create user <username> with password \\\"<user_password>\\\";grant admin to <username> with admin option;\""
+        docker exec kwdb bash -c "./kwbase sql --host=<host_ip> --certs-dir=<cert_dir> -e \"create user <username> with password \\\"<user_password>\\\";grant admin to <username> with admin option;\""
         ```
