@@ -94,13 +94,13 @@ Before proceeding, ensure all important data has been backed up. These operation
    :::
 
    ```bash
-   docker stop kwdb-container
+   docker stop <kwdb-container>
    ```
 
 2. Remove the container:
 
    ```bash
-   docker rm kwdb-container
+   docker rm <kwdb-container>
    ```
 
 3. Delete the Docker image:
