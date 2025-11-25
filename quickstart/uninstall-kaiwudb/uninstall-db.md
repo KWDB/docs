@@ -81,13 +81,13 @@ id: uninstall-db
    :::
 
    ```bash
-   docker stop kwdb-container
+   docker stop <kwdb-container>
    ```
 
 2. 移除容器。
 
    ```bash
-   docker rm kwdb-container
+   docker rm <kwdb-container>
    ```
 
 3. 删除 Docker 镜像。

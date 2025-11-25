@@ -91,13 +91,13 @@ This section covers two upgrade methods:
 1. Stop the KWDB container. The container name is the one specified by the `--name` parameter when running the container.
 
    ```bash
-      docker stop kwdb-container
+      docker stop <kwdb-container>
    ```
 
 2. Remove the container:
 
    ```bash
-      docker rm kwdb-container
+      docker rm <kwdb-container>
    ```
 
 3. Obtain the new version image:

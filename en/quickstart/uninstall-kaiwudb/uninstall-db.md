@@ -67,7 +67,7 @@ Before proceeding, ensure all important data has been backed up. These operation
 1. Stop the KWDB container:
 
    ```bash
-   docker stop kwdb-container
+   docker stop <kwdb-container>
    ```
 
    ::: tip  
@@ -79,7 +79,7 @@ Before proceeding, ensure all important data has been backed up. These operation
 2. Remove the container:
 
    ```bash
-   docker rm kwdb-container
+   docker rm <kwdb-container>
    ```
 
 3. Delete the Docker image:

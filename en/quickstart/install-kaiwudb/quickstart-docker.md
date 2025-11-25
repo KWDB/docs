@@ -404,11 +404,11 @@ Deployment logs are saved in the `log` directory within `kwdb_install`. The syst
       - Insecure mode (without password):
 
           ```bash
-          docker exec kwdb-container bash -c "./kwbase sql --insecure --host=<host_ip> -e \"create user <username>;grant admin to <username> with admin option;\""
+          docker exec kwdb bash -c "./kwbase sql --insecure --host=<host_ip> -e \"create user <username>;grant admin to <username> with admin option;\""
           ```
 
       - Secure mode (with password):
 
           ```bash
-          docker exec kwdb-container bash -c "./kwbase sql --host=<host_ip> --certs-dir=<cert_dir> -e \"create user <username> with password \\\"<user_password>\\\";grant admin to <username> with admin option;\""
+          docker exec kwdb bash -c "./kwbase sql --host=<host_ip> --certs-dir=<cert_dir> -e \"create user <username> with password \\\"<user_password>\\\";grant admin to <username> with admin option;\""
           ```

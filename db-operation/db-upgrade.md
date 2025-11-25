@@ -84,13 +84,13 @@ id: db-upgrade
 1. 停止 KWDB 容器。容器名称为运行容器时通过 `--name` 参数指定的容器名称。
 
    ```bash
-   docker stop kwdb-container
+   docker stop <kwdb-container>
    ```
 
 2. 删除容器。
 
    ```bash
-   docker rm kwdb-container
+   docker rm <kwdb-container>
    ```
 
 3. 获取新版本镜像。
