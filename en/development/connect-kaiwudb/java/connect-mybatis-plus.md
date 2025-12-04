@@ -8,7 +8,7 @@ id: connect-mybatis-plus
 
 [MyBatis-Plus](https://baomidou.com/en/getting-started/) is an enhancement of MyBatis that provides numerous convenient features, including conditional constructors, pagination plugins, and code generators, which significantly improve development efficiency.
 
-This section demonstrates how to integrate KWDB with a Maven-managed Spring Boot project using MyBatis-Plus for data access and management. For frequently asked questions about using MyBatis-Plus, see [Mybatis and Mybatis-Plus](../../../faqs/faqs.md#mybatis-and-mybatis-plus).
+This section demonstrates how to integrate KWDB with a Maven-managed Spring Boot project using MyBatis-Plus for data access and management. For frequently asked questions about using MyBatis-Plus, see [MyBatis and MyBatis-Plus](../../../faqs/faqs.md#mybatis-and-mybatis-plus).
 
 This example uses the following tools and frameworks:
 
