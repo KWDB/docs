@@ -11,10 +11,10 @@ KWDB 支持配置集群级和会话级多模查询优化。其中会话级多模
 
 - 配置集群级多模查询优化。
 
-    集群级多模查询优化设置仅对后续启动的连接生效。默认情况下，开启集群级多模查询优化功能。如需关闭多模查询优化，将 `sql.defaults.multimode.enabled` 参数设置为 `false`。
+    集群级多模查询优化设置仅对后续启动的连接生效。默认情况下，开启集群级多模查询优化功能。如需关闭多模查询优化，将 `sql.defaults.multimodel.enabled` 参数设置为 `false`。
 
     ```sql
-    SET CLUSTER SETTING sql.defaults.multimode.enabled = false;
+    SET CLUSTER SETTING sql.defaults.multimodel.enabled = false;
     ```
 
 - 配置会话级多模查询优化。
