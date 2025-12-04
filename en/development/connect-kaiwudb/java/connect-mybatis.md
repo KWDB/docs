@@ -9,7 +9,7 @@ id: connect-mybatis
 
 This section demonstrates how to connect to KWDB using MyBatis in a Spring Boot + Maven project. Once configured, you can follow standard MyBatis development practices to build applications that interact with KWDB databases.
 
-For frequently asked questions about using MyBatis, see [Mybatis and Mybatis-Plus](../../../faqs/faqs.md#mybatis-and-mybatis-plus).
+For frequently asked questions about using MyBatis, see [MyBatis and MyBatis-Plus](../../../faqs/faqs.md#mybatis-and-mybatis-plus).
 
 ## Prerequisites
 
