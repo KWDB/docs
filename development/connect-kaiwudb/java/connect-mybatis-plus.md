@@ -7,7 +7,7 @@ id: connect-mybatis-plus
 
 [MyBatis-Plus](https://baomidou.com/getting-started/) 基于 MyBatis 进行扩展，提供了许多便捷功能，例如，条件构造器、分页插件、代码生成器等，有助于提高开发效率。
 
-本文演示了如何在 Maven 管理的 Spring Boot 项目中，整合 KWDB 数据库，通过 MyBatis-Plus 实现数据访问和管理。MyBatis-Plus 使用时的常见问题可参见 [Mybatis 和 Mybatis-Plus](../../../faqs/faqs.md#mybatis-和-mybatis-plus)。
+本文演示了如何在 Maven 管理的 Spring Boot 项目中，整合 KWDB 数据库，通过 MyBatis-Plus 实现数据访问和管理。MyBatis-Plus 使用时的常见问题可参见 [MyBatis 和 MyBatis-Plus](../../../faqs/faqs.md#mybatis-和-mybatis-plus)。
 
 本示例使用了以下软件：
 
