@@ -79,7 +79,7 @@ DRBD 镜像数据具有以下特点：
 
 1. 登录主节点，生成公私密钥对：
    
-   ```Shell
+   ```shell
    ssh-keygen -f ~/.ssh/id_rsa -N ""
    ```
 
@@ -91,13 +91,13 @@ DRBD 镜像数据具有以下特点：
 
 2. 将公钥分发到备节点：
 
-   ```Shell
+   ```shell
    ssh-copy-id -f -i ~/.ssh/id_rsa.pub -o StrictHostKeyChecking=no <secondary_node> 
    ```
 
 3. 检查主节点能否非交互式地登录备节点：
 
-   ```Shell
+   ```shell
    ssh <secondary_node>
    ```
 
@@ -109,19 +109,19 @@ DRBD 镜像数据具有以下特点：
 
 1. 查看系统的`/bin/sh`文件的详细信息：
 
-   ```Shell
+   ```shell
    ls -al /bin/sh
    ```
 
 2. 在主备节点上重新配置 `dash` shell，选择 `no`：
 
-   ```Shell
+   ```shell
    sudo dpkg-reconfigure dash
    ```
 
 3. 在主备节点停止并禁用 `multipathd.socket`、`multipath-tools` 和 `multipath` 服务：
 
-   ```Shell
+   ```shell
    systemctl stop multipathd.socket
    systemctl disable multipathd.socket
    systemctl stop multipath-tools.service
@@ -148,7 +148,7 @@ DRBD 镜像数据具有以下特点：
 
 1. 在主备节点安装 Pacemaker、corosync 和 pcs 软件包，安装完成之后系统会默认创建 `hacluster` 用户。
 
-   ```Shell
+   ```shell
    apt install pacemaker corosync pcs
    ```
 
@@ -156,31 +156,31 @@ DRBD 镜像数据具有以下特点：
 
    1. 在主备节点为 hacluster 用户设置密码：
 
-         ```Shell
+         ```shell
          passwd hacluster 
          ```
 
    2. 在任一节点销毁软件安装后自动建立的默认集群：
 
-         ```Shell
+         ```shell
          pcs cluster destroy 
          ```
 
    3. 在任一节点授权用户管理节点，根据系统提示输入密码。
 
-         ```Shell
+         ```shell
          pcs host auth <primary_node> <secondary_node> -u hacluster 
          ```
 
          示例：
 
-         ```Shell
+         ```shell
          pcs host auth ha-node01 ha-node02 -u hacluster 
          ```
 
 3. 在任一节点创建并启动高可用集群
 
-   ```Shell
+   ```shell
    pcs cluster setup <cluster_name> <primary_node> <secondary_node> --start --enable --force
    ```
 
@@ -200,7 +200,7 @@ DRBD 镜像数据具有以下特点：
 
     示例：
 
-   ```Shell
+   ```shell
    root@ha-node01:~# pcs cluster setup ha-cluster ha-node01 ha-node02 --start --enable --force
    No addresses specified for host 'ha-node01', using 'ha-node01'
    No addresses specified for host 'ha-node02', using 'ha-node02'
@@ -227,20 +227,20 @@ DRBD 镜像数据具有以下特点：
 
 4. 在任一节点配置强行关机协议：
 
-   ```Shell
+   ```shell
    pcs property set stonith-enabled=false
    pcs property set no-quorum-policy=ignore
    ```
 
 5. 在任一节点检查集群状态：
 
-   ```Shell
+   ```shell
    pcs status
    ```
 
    示例：
 
-   ```Shell
+   ```shell
    root@ha-node01:~# pcs status
    Cluster name: ha-cluster
    Cluster Summary:
@@ -265,7 +265,7 @@ DRBD 镜像数据具有以下特点：
 
 6. 在任一节点创建虚拟 IP 资源（ClusterIP），配置属性和监控操作：
 
-   ```Shell
+   ```shell
    pcs resource create ClusterIP ocf:heartbeat:IPaddr2 ip=<virtual_ip_address> cidr_netmask=24 op monitor interval=30s
    ```
 
@@ -273,21 +273,15 @@ DRBD 镜像数据具有以下特点：
 
    - `virtual_ip_address`：虚拟 IP 地址。
 
-   示例：
-
-   ```Shell
-   root@ha-node01:/etc# pcs resource create ClusterIP ocf:heartbeat:IPaddr2 ip=<virtual_ip_address> cidr_netmask=24 op monitor interval=30s
-   ```
-
 7. （可选）检查资源是否创建成功：
 
-      ```Shell
+      ```shell
       pcs resource
       ```
 
       示例：
 
-      ```Shell
+      ```shell
       root@ha-node01:/etc# pcs resource
       ClusterIP      (ocf::heartbeat:IPaddr2):       Started ha-node01
       ```
@@ -298,25 +292,25 @@ DRBD 镜像数据具有以下特点：
 
       1. 将主节点设置为待机状态：
 
-         ```Shell
+         ```shell
          pcs node standby <primary_node>
          ```
 
       2. 等待一段时间后，解除主节点的待机状态：
 
-         ```Shell
+         ```shell
          pcs node unstandby <primary_node>
          ```
 
 10. （可选）检查资源漂移结果：
 
-      ```Shell
+      ```shell
       pcs resource
       ```
 
      示例：
 
-      ```Shell
+      ```shell
       root@ha-node02:~# pcs resource
       ClusterIP      (ocf::heartbeat:IPaddr2):       Started ha-node02
       ```
@@ -329,7 +323,7 @@ DRBD 镜像数据具有以下特点：
 
 - 如果使用磁盘或磁盘分区，例如`/dev/sdd`，由于磁盘或磁盘分区名称会因为系统重启而变化，已通过 `udevadm info`命令获取到磁盘位于`/dev/disk/by-id/`的稳定标识符作为该磁盘的唯一标识符。
 
-   ```Shell
+   ```shell
    udevadm info /dev/sdd
    ...
    E: DEVLINKS= .../dev/disk/by-id/scsi-36f80f41ffaf5a00028e0acde21f326ff
@@ -344,7 +338,7 @@ DRBD 镜像数据具有以下特点：
    配置类型建议选择“No configuration”。
    :::
 
-   ```Shell
+   ```shell
    apt install drbd-utils 
    ```
 
@@ -352,7 +346,7 @@ DRBD 镜像数据具有以下特点：
 
    1. 切换至`/etc/drbd.d` 目录：
 
-      ```SQL
+      ```sql
       cd /etc/drbd.d
       ```
 
@@ -360,7 +354,7 @@ DRBD 镜像数据具有以下特点：
 
       示例：
 
-      ```Shell
+      ```shell
       # DRBD is the result of over a decade of development by LINBIT.
       # In case you need professional services for DRBD or have
       # feature requests visit http://www.linbit.com
@@ -443,7 +437,7 @@ DRBD 镜像数据具有以下特点：
 
       示例：
 
-      ```Shell
+      ```shell
       resource drbd3 {     ##与文件名相同
               on ha-node01 {     ##主节点主机名
               device /dev/drbd3;    ##自定义设备名称
@@ -463,7 +457,7 @@ DRBD 镜像数据具有以下特点：
 
    示例：
 
-   ```Shell
+   ```shell
    drbdadm create-md drbd3
    drbdadm adjust all
    ```
@@ -474,7 +468,7 @@ DRBD 镜像数据具有以下特点：
    此命令会覆盖备节点磁盘中所有的数据，只需第一次初始化复制时执行。
    :::
 
-   ```Shell
+   ```shell
    drbdadm -- --overwrite-data-of-peer primary drbd3
    ```
 
@@ -484,7 +478,7 @@ DRBD 镜像数据具有以下特点：
 
    - 复制进行中
 
-        ```Shell
+        ```shell
         root@ha-node01:/etc/drbd.d# drbdadm status drbd3
         drbd3 role:Secondary
           disk:Inconsistent
@@ -500,7 +494,7 @@ DRBD 镜像数据具有以下特点：
 
    - 复制完成
 
-        ```Shell
+        ```shell
         root@ha-node01:/etc/drbd.d# drbdadm status drbd3
         drbd3 role:Secondary
           disk:UpToDate
@@ -518,7 +512,7 @@ DRBD 镜像数据具有以下特点：
 
    示例：
 
-   ```Shell
+   ```shell
    mkfs.ext4 /dev/drbd3
    ```
 
@@ -528,23 +522,23 @@ DRBD 镜像数据具有以下特点：
 
    示例：
 
-   ```Shell
-   mkdir –p /var/lib/kwdb
+   ```shell
+   mkdir –p /var/lib/kaiwudb
    ```
 
 2. 在资源活动节点挂载文件系统。
 
    示例：
 
-   ```Shell
-   mount /dev/drbd3 /var/lib/kwdb
+   ```shell
+   mount /dev/drbd3 /var/lib/kaiwudb
    ```
 
 3. 登录任一节点，在 Pacemaker 高可用集群中创建 DRBD 资源，由 Pacemaker 统一管理 DRBD 复制。
 
    示例：
 
-   ```Shell
+   ```shell
    pcs resource create KaiwuData ocf:linbit:drbd drbd_resource="drbd3" op monitor interval=10s #创建名为KaiwuData的资源，指定DRBD资源名为drbd3，每 10 秒监控一次资源状态
    pcs resource promotable KaiwuData promoted-max=1 promoted-node-max=1 clone-max=2 clone-node-max=1 notify=true #支持资源节点内移动、指定可提升节点数和可克隆节点数
    pcs resource refresh KaiwuData #刷新资源状态
@@ -569,8 +563,8 @@ DRBD 镜像数据具有以下特点：
 
    示例：
 
-   ```Shell
-   pcs resource create KaiwuFS ocf:heartbeat:Filesystem device="/dev/drbd3" directory="/var/lib/kwdb" fstype="ext4" #创建名为 KaiwuFS的文件系统资源，指定DRBD设备文件、挂载点和文件系统类型
+   ```shell
+   pcs resource create KaiwuFS ocf:heartbeat:Filesystem device="/dev/drbd3" directory="/var/lib/kaiwudb" fstype="ext4" #创建名为 KaiwuFS的文件系统资源，指定DRBD设备文件、挂载点和文件系统类型
    pcs constraint colocation add KaiwuFS  with KaiwuData-clone  INFINITY with-rsc-role=Master #添加亲和性约束
    pcs constraint order promote KaiwuData-clone  then start KaiwuFS #添加启动顺序约束
    ```
@@ -581,13 +575,13 @@ DRBD 镜像数据具有以下特点：
 
       1. 将主节点设置为待机状态：
 
-         ```Shell
+         ```shell
          pcs node standby <primary_node>
          ```
 
       2. 等待一段时间后，解除主节点的待机状态：
 
-         ```Shell
+         ```shell
          pcs node unstandby <primary_node>
          ```
 
@@ -613,19 +607,13 @@ DRBD 镜像数据具有以下特点：
 
       2. 执行证书生成命令，允许备节点和虚拟IP地址访问主节点证书。
 
-         ```Shell
+         ```shell
          kwbase cert create-node <primary_node_ip> <secondary_node_ip> <virtual_ip> 127.0.0.1 0.0.0.0 localhost --certs-dir=/etc/kaiwudb/certs --ca-key=ca.key
-         ```
-
-         示例：
-
-         ```Shell
-         kwbase cert create-node <primary_node_ip> <secondary_node_ip> <virtual_ip> 127.0.0.1 0.0.0.0 localhost  --certs-dir=/etc/kaiwudb/certs --ca-key=ca.key
          ```
 
       3. 将主节点`/etc/kaiwudb/certs/*`中的证书文件复制到备节点相同目录。
 
-         ```Shell
+         ```shell
          scp /etc/kaiwudb/certs/* ha-node02:/etc/kaiwudb/certs/
          ```
 
@@ -656,7 +644,7 @@ DRBD 镜像数据具有以下特点：
 
          示例：
 
-         ```Shell
+         ```shell
          root@ha-node01: ~# pcs status
          Cluster name: ha-cluster
          Cluster Summary:
@@ -691,17 +679,13 @@ DRBD 镜像数据具有以下特点：
 
 步骤：
 
-1. 使用KaiwuDB 开发者中心或 JDBC 连接 KWDB 数据库，更多操作信息见[使用 KaiwuDB 开发者中心连接 KWDB ](../quickstart/access-kaiwudb/access-kaiwudb-kdc.md)和[使用 JDBC 连接 KWDB](../quickstart/access-kaiwudb/access-kaiwudb-jdbc.md)。
-
-   ::: warning 注意
-   KaiwuDB 开发者中心只支持安全模式部署的数据库。
-   :::
+1. 连接 KWDB 数据库，更多操作信息见[连接 KWDB](../quickstart/overview.md)。
 
 2. 执行数据库增删改查操作。
 
 3. 将主节点设置为待机状态。
 
-   ```Shell
+   ```shell
    pcs node standby <primary_node>
    ```
 
@@ -709,7 +693,7 @@ DRBD 镜像数据具有以下特点：
 
    示例：
 
-   ```Shell
+   ```shell
    root@ha-node01: ~# pcs status
    Cluster name: ha-cluster
    Cluster Summary:
@@ -742,7 +726,7 @@ DRBD 镜像数据具有以下特点：
 
    示例：
 
-   ```Shell
+   ```shell
    pcs node unstandby ha-node01
    ```
 
@@ -750,7 +734,7 @@ DRBD 镜像数据具有以下特点：
 
    示例：
 
-   ```Shell
+   ```shell
    root@ha-node01: ~# pcs status
    Cluster name: ha-cluster
    Cluster Summary:
@@ -791,13 +775,13 @@ DRBD 镜像数据具有以下特点：
 
   - 创建集群：
 
-      ```Shell
+      ```shell
       pcs cluster setup <cluster_id> ...
       ```
 
   - 销毁集群：
 
-      ```Shell
+      ```shell
       pcs cluster destroy <cluster_id>
       ```
 
@@ -805,13 +789,13 @@ DRBD 镜像数据具有以下特点：
 
   - 将节点置为待机状态：
 
-      ```Shell
+      ```shell
       pcs node standby <node_id>
       ```
 
   - 解除节点的待机状态：
 
-      ```Shell
+      ```shell
       pcs node unstandby <node_id>
       ```
 
@@ -819,13 +803,13 @@ DRBD 镜像数据具有以下特点：
 
   - 创建资源：
 
-      ```Shell
+      ```shell
       pcs resource create <resource_id> ...
       ```
 
   - 移除资源：
 
-      ```Shell
+      ```shell
       pcs resource remove <resource_id>
       ```
 
@@ -833,7 +817,7 @@ DRBD 镜像数据具有以下特点：
 
   - 配置资源相关性：
 
-      ```Shell
+      ```shell
       pcs constraint colocation ...
       ```
 
@@ -843,18 +827,18 @@ DRBD 镜像数据具有以下特点：
 
   - 创建元数据和启动复制关系：
 
-      ```Shell
+      ```shell
       drbdadm --overwrite-data-of-peer primary <resource_id>
       ```
 
   - 查看 DRBD 状态和信息：
 
-      ```Shell
+      ```shell
       drbdadm status <resource_id>
       ```
 
 - 使用 drbdmon 来监控 DRBD：
 
-   ```Shell
+   ```shell
    drbdmon
    ```

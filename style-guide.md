@@ -108,7 +108,7 @@ KWDB 文档的代码块使用 [Markdown](https://en.wikipedia.org/wiki/Markdown)
 - 使用代码符号（\`）包括裹语句或者命令中某个参数名或关键字。代码符号中的内容会渲染为灰色底色。例如，`version`。
 - 使用代码块符号（\```）包裹多行代码。VuePress 使用 [Prism](https://prismjs.com/) 为 Markdown 中的代码块实现语法高亮。如需高亮代码块，你只需在第一个代码块符号（\```）之后加上相应语法名称。
 
-    ```SQL
+    ```sql
     CREATE DATABASE <db_name>;
     ```
 

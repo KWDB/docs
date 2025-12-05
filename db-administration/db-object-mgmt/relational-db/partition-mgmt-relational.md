@@ -50,7 +50,7 @@ id: partition-management-relational
 
 - **建表时创建分区**
 
-    ```SQL
+    ```sql
     CREATE TABLE <table_name> (<column_def>) 
     PARTITION BY [ 
         LIST (name_list) ( 
@@ -73,7 +73,7 @@ id: partition-management-relational
 
 - **通过修改表创建分区**
 
-    ```SQL
+    ```sql
     ALTER TABLE <table_name> 
     PARTITION BY [ 
         LIST (name_list) ( 
@@ -98,7 +98,7 @@ id: partition-management-relational
 
   - 建表时定义哈希分片
 
-    ```SQL
+    ```sql
     CREATE TABLE <table_name> (
         <column_def>, 
         PRIMARY KEY (<column_name>) USING HASH WITH BUCKET_COUNT = <bucket_count>
@@ -107,7 +107,7 @@ id: partition-management-relational
 
   - 通过修改表创建分区
 
-    ```SQL
+    ```sql
     ALTER TABLE <table_name> 
     PARTITION BY HASH (kwdb_internal_<primary-key>_shard_<bucket-count>) ( 
         PARTITION <partition_name> VALUES IN ( <expr_list>), 
@@ -133,7 +133,7 @@ id: partition-management-relational
 
 - 建表时创建分区
 
-    ```SQL
+    ```sql
     -- 创建电商订单管理数据库
     CREATE DATABASE ecommerce_orders;
 
@@ -156,7 +156,7 @@ id: partition-management-relational
 
 - 修改表时创建分区
 
-    ```SQL
+    ```sql
     -- 为现有表添加按时间范围的分区
     ALTER TABLE existing_orders 
     PARTITION BY RANGE (created_at) (
@@ -169,7 +169,7 @@ id: partition-management-relational
 
 - 通过哈希分片索引创建分区
 
-    ```SQL
+    ```sql
     -- 启用哈希分片索引
     SET experimental_enable_hash_sharded_indexes = ON;
     
@@ -218,7 +218,7 @@ id: partition-management-relational
 
 ### 语法格式
 
-```SQL
+```sql
 ALTER PARTITION <partition_name> OF TABLE <table_name> 
 CONFIGURE ZONE [USING <variable> = <value>, <variable> = <value>, ... | DISCARD];
 ```
@@ -235,7 +235,7 @@ CONFIGURE ZONE [USING <variable> = <value>, <variable> = <value>, ... | DISCARD]
 
 ### 语法示例
 
-```SQL
+```sql
 -- 华北分区：数据存储在所有节点，lease 偏向节点 1
 ALTER PARTITION north_china OF TABLE ecommerce_orders.regional_orders 
 CONFIGURE ZONE USING 

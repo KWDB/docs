@@ -50,7 +50,7 @@ ALTER RANGE <range_name> CONFIGURE ZONE [USING <variable> = [COPY FROM PARENT | 
 
 This example changes the number of replicas to `7` for the `meta` range.
 
-```SQL
+```sql
 ALTER RANGE meta CONFIGURE ZONE USING num_replicas=7;
 ALTER RANGE 
 

@@ -85,13 +85,13 @@ id: faqs
 
     3. 保存 `kaiwudb.service` 文件后，重新加载配置。
 
-          ```Shell
+          ```shell
           systemctl daemon-reload
           ```
 
     4. 检查修改是否生效：
 
-          ```Shell
+          ```shell
           systemctl show kaiwudb | grep LimitNOFILE
           ```
 
@@ -172,7 +172,7 @@ id: faqs
 
   1. 停止 KWDB 服务。
 
-     ```SQL
+     ```sql
      systemctl stop kaiwudb
      ```
 
@@ -190,7 +190,7 @@ id: faqs
 
   4. 重新启动 KWDB 服务。
 
-     ```SQL
+     ```sql
      systemctl restart kaiwudb
      ```
 
@@ -235,37 +235,37 @@ id: faqs
 
       示例：
 
-        ```SQL
+        ```sql
         SET CLUSTER SETTING sql.distsql.temp_storage.workmem = '32768Mib';
         ```
 
   2. 启用 SQL 下推功能，减少数据处理的开销。
 
-       ```SQL
+       ```sql
         SET CLUSTER SETTING sql.all_push_down.enabled = TRUE;
        ```
 
   3. 打开短路优化，减少不必要的操作步骤。
 
-      ```SQL
+      ```sql
         SET CLUSTER SETTING sql.pg_encode_short_circuit.enabled = TRUE;
       ```
 
   4. 关闭自动统计时序数据信息收集功能。注意：关闭此功能后将无法查看监控数据，适用于对性能要求较高且对监控数据依赖较低的场景。
 
-        ```SQL
+        ```sql
         SET CLUSTER SETTING sql.stats.ts_automatic_collection.enabled = FALSE;
         ```
 
   5. （KWDB 2.x 版本）关闭数据压缩功能，减少写入时的计算开销，适用于对空间占用不敏感的场景。
 
-        ```SQL
+        ```sql
         ALTER SCHEDULE scheduled_table_compress F Recurring '0 0 1 1 ？2099';
         ```
 
   6. 关闭生命周期管理功能，避免定期的表清理操作，适用于数据持久性要求较高且对写入性能要求较高的场景。
 
-        ```SQL
+        ```sql
         ALTER SCHEDULE scheduled_table_retention Recurring '0 0 1 1 ? 2099';
         ```
 
@@ -273,7 +273,7 @@ id: faqs
 
      1. 关闭 WAL 日志功能。
 
-           ```SQL
+           ```sql
            SET CLUSTER SETTING ts.wal.flush_interval = -1s;
            ```
 
@@ -297,7 +297,7 @@ id: faqs
 
   1. 停止 KWDB 服务。
 
-     ```Shell
+     ```shell
      systemctl stop kaiwudb
      ```
 
@@ -310,13 +310,13 @@ id: faqs
 
   3. 保存文件并重新加载。
 
-     ```Shell
+     ```shell
      systemctl daemon-reload
      ```
 
   4. 重启 KWDB 服务。
 
-     ```Shell
+     ```shell
      systemctl restart kaiwudb
      ```
 
@@ -324,7 +324,7 @@ id: faqs
 
   1. 在 `/etc/kaiwudb/script` 目录停止并删除 KWDB 容器。
 
-     ```Shell
+     ```shell
      docker-compose down
      ```
 
@@ -340,7 +340,7 @@ id: faqs
 
   3. 保存配置，重新创建和启动 KWDB 容器。
 
-     ```Shell
+     ```shell
      systemctl start kaiwudb
      ```
 
@@ -354,7 +354,7 @@ id: faqs
 
   可以通过以下 SQL 语句向数据库查询优化器提供特定指令，优化查询性能：
 
-  ```SQL
+  ```sql
   SELECT /*+ STMT_HINT(ACCESS_HINT(TAG_ONLY,<table_name>)) */ <tag_name> FROM <table_name> GROUP BY <tag_name>;
   ```
 
@@ -368,7 +368,7 @@ id: faqs
 
   示例：
 
-  ```SQL
+  ```sql
   > SELECT /*+ STMT_HINT(ACCESS_HINT(TAG_ONLY,t1)) */ tag1 FROM t1 GROUP BY tag1;
     tag1
   ------

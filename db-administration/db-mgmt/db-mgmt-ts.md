@@ -278,7 +278,7 @@ KWDB 支持修改数据库的名称、生命周期和区域配置。
   
     以下示例将 `tsdb` 数据库的副本数改为 5 个，将数据在垃圾回收前保留的时间改为 100000 秒。
 
-    ```SQL
+    ```sql
     -- 1. 修改区域配置
     ALTER DATABASE tsdb CONFIGURE ZONE USING num_replicas = 5, gc.ttlseconds = 100000;
     CONFIGURE ZONE 1

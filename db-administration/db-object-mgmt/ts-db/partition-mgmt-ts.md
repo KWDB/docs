@@ -46,7 +46,7 @@ id: partition-mgmt-ts
 
 - 按指定哈希值分区：
 
-    ```SQL
+    ```sql
     ALTER TABLE <table_name> 
     PARTITION BY HASHPOINT (
         PARTITION <partition_name> VALUES IN [<hashpoint_list>], 
@@ -57,7 +57,7 @@ id: partition-mgmt-ts
 
 - 按指定哈希值范围分区：
 
-    ```SQL
+    ```sql
     ALTER TABLE <table_name>  
     PARTITION BY HASHPOINT (
         PARTITION <partition_name> VALUES FROM (<hashpoint_1>) TO (<hashpoint_2>),
@@ -80,7 +80,7 @@ id: partition-mgmt-ts
 
 - 按指定哈希值分区
 
-    ```SQL
+    ```sql
     -- 为订单表创建按指定哈希值的分区 
     ALTER TABLE orders  
     PARTITION BY HASHPOINT (
@@ -92,7 +92,7 @@ id: partition-mgmt-ts
 
 - 按指定哈希值范围分区
 
-    ```SQL
+    ```sql
     -- 为用户表创建按哈希值范围的分区 
     ALTER TABLE users
     PARTITION BY HASHPOINT (
@@ -121,7 +121,7 @@ id: partition-mgmt-ts
 
 ### 语法格式
 
-```SQL
+```sql
 ALTER PARTITION <partition_name> OF TABLE <table_name> 
 CONFIGURE ZONE [USING <variable> = <value>, <variable> = <value>, ... | DISCARD];
 ```
@@ -138,7 +138,7 @@ CONFIGURE ZONE [USING <variable> = <value>, <variable> = <value>, ... | DISCARD]
 
 ### 语法示例
 
-```SQL
+```sql
 -- 低哈希值分区：数据存储在所有节点，lease 偏向节点 1
 ALTER PARTITION p_low OF TABLE users 
 CONFIGURE ZONE USING 

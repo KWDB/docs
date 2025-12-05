@@ -68,7 +68,7 @@ The following steps uses EMQX version 5.0.19. UI elements and configuration step
         - Add header `Authorization` with value of your token.
     4. In the **Body** section, enter the SQL template for inserting data:
 
-        ```SQL
+        ```sql
         INSERT INTO my_database.my_table VALUES (now(), ${payload.temperature}, ${payload.humidity}, ${payload.volume}, 'a'"
         ```
 

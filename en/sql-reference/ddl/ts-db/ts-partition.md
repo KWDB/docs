@@ -66,7 +66,7 @@ The following syntax shows only the parameters required for creating partitions.
 
 - Partitioning by specified hash values
 
-    ```SQL
+    ```sql
     -- Create partitions by specified hash values
     ALTER TABLE orders  
     PARTITION BY HASHPOINT (
@@ -78,7 +78,7 @@ The following syntax shows only the parameters required for creating partitions.
 
 - Partitioning by specified hash value ranges
 
-    ```SQL
+    ```sql
     -- Create partitions by hash value ranges
     ALTER TABLE users
     PARTITION BY HASHPOINT (
@@ -121,7 +121,7 @@ The user must be a member of the `admin` role or have CREATE privileges on the t
 
 ### Examples
 
-```SQL
+```sql
 -- Low hash value partition: Data stored on all nodes, leaseholder prefers node 1
 ALTER PARTITION p_low OF TABLE users 
 CONFIGURE ZONE USING 

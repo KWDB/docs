@@ -123,7 +123,7 @@ ALTER RANGE <range_name> CONFIGURE ZONE [USING <variable> = [COPY FROM PARENT | 
   
   以下示例将 `meta` 系统数据分片的副本数改为 7 个。
 
-  ```SQL
+  ```sql
   ALTER RANGE meta CONFIGURE ZONE USING num_replicas=7;
   ALTER RANGE 
 

@@ -25,7 +25,7 @@ The following example assumes you have already created a relational database, a 
 
 1. Create the time-series database and table.
 
-    ```SQL
+    ```sql
     CREATE TS DATABASE test_ts_mybatis;
 
     CREATE TABLE test_ts_mybatis.ts_table
@@ -50,7 +50,7 @@ The following example assumes you have already created a relational database, a 
 
 2. Create the relational database and table.
 
-    ```SQL
+    ```sql
     CREATE DATABASE test_mybatis;
     
     CREATE TABLE test_mybatis.rel_table
@@ -117,7 +117,7 @@ The following example assumes you have already created a relational database, a 
 
 3. If the KaiwuDB JDBC driver cannot be loaded, install it into your local Maven repository using the following command:
 
-      ```Shell
+      ```shell
       mvn install:install-file "-Dfile=../kaiwudb-jdbc.2.1.0.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=2.2.0" "-Dpackaging=jar"
       ```
 

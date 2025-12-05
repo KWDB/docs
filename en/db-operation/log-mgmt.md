@@ -122,7 +122,7 @@ The audit function is disabled by default. When the audit function is enabled, t
 
 - To enable audit while disabling audit loging:
 
-    ```SQL
+    ```sql
     -- Enable audit
     SET CLUSTER SETTING audit.enabled = true;
 

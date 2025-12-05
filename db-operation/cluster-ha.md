@@ -89,7 +89,7 @@ KWDB 集群启动后，分片副本均匀分布在所有节点上，确保数据
 
 用户也可以通过以下 SQL 命令设置节点判定时间：
 
-```SQL
+```sql
 SET CLUSTER SETTING server.time_until_store_dead = <value>;
 ```
 
@@ -99,7 +99,7 @@ SET CLUSTER SETTING server.time_until_store_dead = <value>;
 
 系统将离线节点标记为不可用节点后，如果剩余节点数量仍大于副本数，系统将自动补足缺失的副本，确保数据的高可用性。用户也可以通过以下 SQL 命令关闭自动补足副本功能：
 
-```SQL
+```sql
 SET CLUSTER SETTING kv.allocator.ts_store_dead_rebalance.enabled = false;
 ```
 
@@ -119,7 +119,7 @@ SET CLUSTER SETTING kv.allocator.ts_store_dead_rebalance.enabled = false;
 
 使用 SQL 命令查询是否存在副本不足或不可用分片:
 
-  ```SQL
+  ```sql
   SELECT sum((metrics->>'ranges.unavailable')::DECIMAL)::INT AS ranges_unavailable,
       sum((metrics->>'ranges.underreplicated')::DECIMAL)::INT As ranges_underreplicated
   FROM kwdb_internal.kv_store_status;

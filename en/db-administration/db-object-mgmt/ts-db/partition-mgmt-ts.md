@@ -46,7 +46,7 @@ The following syntax shows only the parameters required for creating partitions.
 
 - Partitioning by specified values:
 
-    ```SQL
+    ```sql
     ALTER TABLE <table_name> 
     PARTITION BY HASHPOINT (
         PARTITION <partition_name> VALUES IN [<hashpoint_list>], 
@@ -57,7 +57,7 @@ The following syntax shows only the parameters required for creating partitions.
 
 - Partitioning by continuous ranges:
 
-    ```SQL
+    ```sql
     ALTER TABLE <table_name>  
     PARTITION BY HASHPOINT (
         PARTITION <partition_name> VALUES FROM (<hashpoint_1>) TO (<hashpoint_2>),
@@ -80,7 +80,7 @@ The following syntax shows only the parameters required for creating partitions.
 
 - Partitioning by specified hash values
 
-    ```SQL
+    ```sql
     -- Create partitions by specified hash values
     ALTER TABLE orders  
     PARTITION BY HASHPOINT (
@@ -92,7 +92,7 @@ The following syntax shows only the parameters required for creating partitions.
 
 - Partitioning by specified hash value ranges
 
-    ```SQL
+    ```sql
     -- Create partitions by hash value ranges
     ALTER TABLE users
     PARTITION BY HASHPOINT (
@@ -121,7 +121,7 @@ The user must be a member of the `admin` role or have CREATE privileges on the t
 
 ### Syntax
 
-```SQL
+```sql
 ALTER PARTITION <partition_name> OF TABLE <table_name> 
 CONFIGURE ZONE [USING <variable> = <value>, <variable> = <value>, ... | DISCARD];
 ```
@@ -138,7 +138,7 @@ CONFIGURE ZONE [USING <variable> = <value>, <variable> = <value>, ... | DISCARD]
 
 ### Examples
 
-```SQL
+```sql
 -- Low hash value partition: Data stored on all nodes, leaseholder prefers node 1
 ALTER PARTITION p_low OF TABLE users 
 CONFIGURE ZONE USING 

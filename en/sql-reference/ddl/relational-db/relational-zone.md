@@ -152,7 +152,7 @@ The `ALTER ... CONFIGURE ZONE` statement modifies or removes zone configurations
 
     The following example changes the number of replicas for the `db3` database to 5 and the data retention time before garbage collection to 100000 seconds.
 
-    ```SQL
+    ```sql
     ALTER DATABASE db3 CONFIGURE ZONE USING num_replicas = 5, gc.ttlseconds = 100000;
     CONFIGURE ZONE 1
 
@@ -173,7 +173,7 @@ The `ALTER ... CONFIGURE ZONE` statement modifies or removes zone configurations
 
     The following example changes the number of replicas for the `orders` table to 3 and the data retention time before garbage collection to 100000 seconds.
 
-    ```SQL
+    ```sql
     ALTER TABLE orders CONFIGURE ZONE USING num_replicas = 3, gc.ttlseconds = 100000;
     CONFIGURE ZONE 1
 
@@ -194,7 +194,7 @@ The `ALTER ... CONFIGURE ZONE` statement modifies or removes zone configurations
 
     The following example restores the default zone configuration for the `orders` table.
 
-    ```SQL
+    ```sql
     alter table orders configure zone discard;
     CONFIGURE ZONE 1
 

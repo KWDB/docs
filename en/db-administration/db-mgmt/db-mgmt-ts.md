@@ -279,7 +279,7 @@ The `ALTER DATABASE` statement applies a name, retention, or zone configurations
   
     This example sets the number of the replicas of the `tsdb` database to `5` and the time to retain data before garbage collection to `100000` seconds.
 
-    ```SQL
+    ```sql
     -- 1. Change the zone configurations of the tsdb database.
 
     ALTER DATABASE tsdb CONFIGURE ZONE USING num_replicas = 5, gc.ttlseconds = 100000;

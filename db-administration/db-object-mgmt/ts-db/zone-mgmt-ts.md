@@ -151,7 +151,7 @@ ALTER [DATABASE <database_name> | TABLE <table_name> | RANGE <range_name> | PART
   
      以下示例将 `vtx` 数据库的副本数改为 5 个，将数据在垃圾回收前保留的时间改为 100000 秒。
 
-     ```SQL
+     ```sql
      ALTER DATABASE vtx CONFIGURE ZONE USING num_replicas = 5, gc.ttlseconds = 100000;
      CONFIGURE ZONE 1
 
@@ -172,7 +172,7 @@ ALTER [DATABASE <database_name> | TABLE <table_name> | RANGE <range_name> | PART
   
      以下示例将 `vehicles` 表的副本数改为 3 个，将数据在垃圾回收前保留的时间改为 100000 秒。
 
-     ```SQL
+     ```sql
      ALTER TABLE vehicles CONFIGURE ZONE USING num_replicas = 3, gc.ttlseconds = 100000;
      CONFIGURE ZONE 1
 
@@ -193,7 +193,7 @@ ALTER [DATABASE <database_name> | TABLE <table_name> | RANGE <range_name> | PART
   
   以下示例恢复了 `vehicles` 表的默认区域配置。
 
-     ```SQL
+     ```sql
      ALTER TABLE vehicles CONFIGURE ZONE DISCARD;
      CONFIGURE ZONE 1
 

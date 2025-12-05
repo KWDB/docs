@@ -123,7 +123,7 @@ KWDB 支持开发人员通过在 SpringBoot 项目中集成 JPA、KaiwuDB JDBC �
 
    示例：
 
-   ```Shell
+   ```shell
    mvn install:install-file "-Dfile=../hibernate-core-5.6.16.RELEASE.jar" "-DpomFile=../hibernate-core-5.6.16.RELEASE.pom" "-DgroupId=org.hibernate -DartifactId=hibernate-core" "-Dversion=5.6.16.RELEASE" "-Dpackaging=jar"
    ```
 
@@ -370,7 +370,7 @@ KWDB 时序库和关系库在配置和使用上有所不同，以下章节分别
   
     示例中，@Table 标签中的 `name` 指定了对应的关系表名称 `rdb_table`，表内字段对应了目前 KWDB 支持的大部分数据类型。其中 `id` 字段使用 SEQUENCE 自动生成，因此需要添加以下两个注解来指定使用的 SEQUENCE：
 
-    ```Shell
+    ```shell
     @SequenceGenerator(name = "sequence", sequenceName = "rdb_table_id", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence")
     ```
@@ -402,7 +402,7 @@ KWDB 时序库和关系库在配置和使用上有所不同，以下章节分别
 
     其中创建示例中的关系表和 SEQUENCE 的语法如下：
 
-    ```SQL
+    ```sql
     CREATE SEQUENCE rdb_table_id START 1 INCREMENT 1;
 
     CREATE TABLE test_rdb.rdb_table

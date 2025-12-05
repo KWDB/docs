@@ -127,7 +127,7 @@ KWDB 支持通过以下任一方式设置日志相关参数，控制日志存储
 
 - 启动审计功能，关闭审计日志：
 
-    ```SQL
+    ```sql
     -- 启动审计功能
     SET CLUSTER SETTING audit.enabled = true;
 

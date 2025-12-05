@@ -46,13 +46,13 @@ Frequent execution of `ALTER` statements during scale-out may delay the automati
 
    - Secure mode
 
-      ```Shell
+      ```shell
       <kwbase_path>/kwbase start --certs-dir=<cert_path> --store=<data_dir> --brpc-addr=:27257 --listen-addr=<new_node>:<kaiwudb_port> --http-addr=<new_node>:<rest_port> --join=<node_address_list> --background
       ```
 
    - Insecure mode
 
-      ```Shell
+      ```shell
       <kwbase_path>/kwbase start --insecure --store=<data_dir> --brpc-addr=:27257 --listen-addr=<new_node>:26257 --http-addr=<new_node>:<rest_port> --join=<node_address_list> --background
       ```
 
@@ -76,7 +76,7 @@ Frequent execution of `ALTER` statements during scale-out may delay the automati
 
    - Secure mode
 
-      ```Shell
+      ```shell
       <kwbase_path>/kwbase node status --certs-dir=<cert_path> [--host=<address_of_any_alive_node>]
       ```
 
@@ -116,13 +116,13 @@ Scaling out a KWDB single-replica cluster is straightforward—simply add the no
 
    - Secure mode
 
-      ```Shell
+      ```shell
       <kwbase_path>/kwbase start-single-replica --certs-dir=<cert_path> --store=<data_dir> --brpc-addr=:27257 --listen-addr=<new_node>:<kaiwudb_port> --http-addr=<new_node>:<rest_port> --join=<node_address_list> --background
       ```
 
    - Insecure mode
 
-      ```Shell
+      ```shell
       <kwbase_path>/kwbase start-single-replica --insecure --store=<data_dir> --brpc-addr=:27257 --listen-addr=<new_node>:26257 --http-addr=<new_node>:<rest_port> --join=<node_address_list> --background
       ```
 
@@ -130,7 +130,7 @@ Scaling out a KWDB single-replica cluster is straightforward—simply add the no
 
    - Secure mode
 
-      ```Shell
+      ```shell
       <kwbase_path>/kwbase node status --certs-dir=<cert_path> [--host=<address_of_any_alive_node>]
       ```
 
@@ -166,13 +166,13 @@ When a decommissioned node rejoins the cluster, the data directory needs to be c
 
    - Execute the cluster node status view command in the installation directory:
 
-      ```Shell
+      ```shell
       ./deploy.sh cluster --status
       ```
 
    - View node status through the `kwbase node status` command:
 
-      ```Shell
+      ```shell
       <kwbase_path>/kwbase node status [--host=<ip:port>] [--insecure | --certs-dir=<path>]
       ```
 
@@ -180,7 +180,7 @@ When a decommissioned node rejoins the cluster, the data directory needs to be c
 
 - There are no unavailable ranges under-replicated ranges.
 
-    ```SQL
+    ```sql
     SELECT sum((metrics->>'ranges.unavailable')::DECIMAL)::INT AS ranges_unavailable,
         sum((metrics->>'ranges.underreplicated')::DECIMAL)::INT As ranges_underreplicated
     FROM kwdb_internal.kv_store_status;
@@ -192,7 +192,7 @@ When a decommissioned node rejoins the cluster, the data directory needs to be c
 
    - Secure mode
 
-      ```Shell
+      ```shell
       <kwbase_path>/kwbase node decommission <node_id> --certs-dir=<cert_path> [--host=<address_of_any_alive_node>]
       ```
 
@@ -206,7 +206,7 @@ When a decommissioned node rejoins the cluster, the data directory needs to be c
 
    - Secure mode
 
-     ```Shell
+     ```shell
      <kwbase_path>/kwbase node status --certs-dir=<cert_path> [--host=<address_of_any_alive_node>] --decommission
      ```
 
@@ -234,7 +234,7 @@ When a decommissioned node rejoins the cluster, the data directory needs to be c
 
    - Secure mode
 
-     ```Shell
+     ```shell
      <kwbase_path>/kwbase node status --certs-dir=<cert_path> [--host=<address_of_any_alive_node>]
      ```
 
