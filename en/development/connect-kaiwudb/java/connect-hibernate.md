@@ -128,7 +128,7 @@ With KWDB's Hibernate integration, developers can:
 
    Example:
 
-   ```Shell
+   ```shell
    mvn install:install-file "-Dfile=../hibernate-core-5.6.16.RELEASE.jar" "-DpomFile=../hibernate-core-5.6.16.RELEASE.pom" "-DgroupId=org.hibernate -DartifactId=hibernate-core" "-Dversion=5.6.16.RELEASE" "-Dpackaging=jar"
    ```
 
@@ -385,7 +385,7 @@ For time-series data, KWDB supports explicit transactions for queries and writes
 
    In this example, the `name` value in the `@Table` annotation (`rdb_table`) corresponds to the relational table in KWDB. Each field maps to a supported data type. The `id` field uses a SEQUENCE for automatic generation, so the following annotations are required:
 
-   ```Shell
+   ```shell
    @SequenceGenerator(name = "sequence", sequenceName = "rdb_table_id", allocationSize = 1)
    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence")
    ```
@@ -417,7 +417,7 @@ For time-series data, KWDB supports explicit transactions for queries and writes
 
    The SQL needed to create the relational table and sequence is as follows:
 
-   ```SQL
+   ```sql
    CREATE SEQUENCE rdb_table_id START 1 INCREMENT 1;
    
    CREATE TABLE test_rdb.rdb_table

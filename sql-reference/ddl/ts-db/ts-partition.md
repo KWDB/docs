@@ -66,7 +66,7 @@ id: ts-partition
 
 - 按指定哈希值分区
 
-    ```SQL
+    ```sql
     -- 为订单表创建按指定哈希值的分区 
     ALTER TABLE orders  
     PARTITION BY HASHPOINT (
@@ -78,7 +78,7 @@ id: ts-partition
 
 - 按指定哈希值范围分区
 
-    ```SQL
+    ```sql
     -- 为用户表创建按哈希值范围的分区 
     ALTER TABLE users
     PARTITION BY HASHPOINT (
@@ -121,7 +121,7 @@ id: ts-partition
 
 ### 语法示例
 
-```SQL
+```sql
 -- 低哈希值分区：数据存储在所有节点，lease 偏向节点 1
 ALTER PARTITION p_low OF TABLE users 
 CONFIGURE ZONE USING 

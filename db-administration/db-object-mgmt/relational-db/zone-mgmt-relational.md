@@ -146,7 +146,7 @@ ALTER [DATABASE <database_name> | TABLE <table_name> | RANGE <range_name> | PART
   
      以下示例将 `db3` 数据库的副本数改为 5 个，将数据在垃圾回收前保留的时间改为 100000 秒。
 
-     ```SQL
+     ```sql
      ALTER DATABASE db3 CONFIGURE ZONE USING num_replicas = 5, gc.ttlseconds = 100000;
      CONFIGURE ZONE 1
 
@@ -167,7 +167,7 @@ ALTER [DATABASE <database_name> | TABLE <table_name> | RANGE <range_name> | PART
   
      以下示例将 `orders` 表的副本数改为 3 个，将数据在垃圾回收前保留的时间改为 100000 秒。
 
-     ```SQL
+     ```sql
      ALTER TABLE orders CONFIGURE ZONE USING num_replicas = 3, gc.ttlseconds = 100000;
      CONFIGURE ZONE 1
 
@@ -188,7 +188,7 @@ ALTER [DATABASE <database_name> | TABLE <table_name> | RANGE <range_name> | PART
   
      以下示例移除了 `orders` 表的自定义设置，改为使用默认数据分片设置。
 
-     ```SQL
+     ```sql
      alter table orders configure zone discard;
      CONFIGURE ZONE 1
 

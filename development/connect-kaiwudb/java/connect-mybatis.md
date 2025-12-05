@@ -23,7 +23,7 @@ MyBatis 使用时的常见问题可参见 [MyBatis 和 MyBatis-Plus](../../../fa
 
 1. 创建时序库和时序表。
 
-    ```SQL
+    ```sql
     CREATE TS DATABASE test_ts_mybatis;
 
     CREATE TABLE test_ts_mybatis.ts_table
@@ -48,7 +48,7 @@ MyBatis 使用时的常见问题可参见 [MyBatis 和 MyBatis-Plus](../../../fa
 
 2. 创建关系库和关系表。
 
-    ```SQL
+    ```sql
     CREATE DATABASE test_mybatis;
 
     CREATE TABLE test_mybatis.rel_table
@@ -115,7 +115,7 @@ MyBatis 使用时的常见问题可参见 [MyBatis 和 MyBatis-Plus](../../../fa
 
 3. 如果 KaiwuDB JDBC 无法正常加载使用，运行以下命令，将 KaiwuDB JDBC 驱动安装到本地 Maven 仓库中。
 
-      ```Shell
+      ```shell
       mvn install:install-file "-Dfile=../kaiwudb-jdbc.2.0.4.1.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=2.0.4.1" "-Dpackaging=jar"
       ```
 

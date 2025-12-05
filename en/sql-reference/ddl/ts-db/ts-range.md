@@ -48,7 +48,7 @@ The user must be a member of the `admin` role. By default, the `root` user belon
 
 This example changes the number of replicas to `7` for the `meta` range.
 
-```SQL
+```sql
 ALTER RANGE meta CONFIGURE ZONE USING num_replicas=7;
 ALTER RANGE 
 

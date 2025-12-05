@@ -31,7 +31,7 @@ The following example assumes you have already created a relational database and
 
 1. Create the database.
 
-   ```SQL
+   ```sql
    CREATE DATABASE kaiwudb_app;
    ```
 

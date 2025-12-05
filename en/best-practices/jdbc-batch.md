@@ -1,44 +1,49 @@
 ---
-title: 使用 KaiwuDB JDBC 扩展接口优化批量数据写入
+title: Using KaiwuDB JDBC Extended Interface to Optimize Batch Data Writing
 id: jdbc-batch
 ---
 
-# 使用 KaiwuDB JDBC 扩展接口优化批量数据写入
+# Using KaiwuDB JDBC Extended Interface to Optimize Batch Data Writing
 
-KaiwuDB JDBC 是 KWDB 的官方 Java 语言连接器，基于 PgJDBC 扩展实现，符合 JDBC 4.0、JDBC 4.1 和 JDBC 4.2 规范。Java 开发人员可以使用 KaiwuDB JDBC 驱动程序连接 KWDB 的服务进程，进行数据增删改查操作。
+KaiwuDB JDBC is the official Java connector for KWDB. Built as an extension of PgJDBC, it complies with JDBC 4.0, 4.1, and 4.2 specifications. Java developers can use the KaiwuDB JDBC driver to connect to KWDB service processes and perform create, read, update, and delete operations on data.
 
-KaiwuDB JDBC 提供了传统的批量执行 SQL 接口，用户可以通过手动拼接 SQL 实现批量数据写入，同时提供了
- `addBatchInsert`、`executeBatchInsert` 和 `clearBatchInsert` 接口，能够将同一张时序表的多次数据写入合并到一条 SQL 语句，降低 CPU 占用，提升写入性能。
+In addition to traditional batch SQL execution interfaces that support manual SQL concatenation, KaiwuDB JDBC provides specialized batch interfaces: `addBatchInsert`, `executeBatchInsert`, and `clearBatchInsert`. These interfaces can merge multiple writes to the same time-series table into a single SQL statement, reducing CPU usage and improving write performance.
 
- 使用批量接口写入数据时，如果待写入的值与列的数据类型不符或者待写入的字段不存在，KaiwuDB JDBC 会返回成功写入条数、写入失败条数，并将具体错误信息记录到日志中。本文提供了使用 KaiwuDB JDBC 批量接口写入数据的最佳实践。
+When writing data with batch interfaces, KaiwuDB JDBC handles errors gracefully. If written values don't match column data types or if specified fields don't exist, the driver returns counts for both successfully written and failed records, and logs detailed error information. This document provides best practices for writing data using KaiwuDB JDBC batch interfaces.
 
-::: warning 说明
+::: warning Note
 
-目前，批量写入功能只适用于 KWDB 单机版本。
+Currently, the batch write functionality is only available for the standalone version of KWDB.
 
 :::
 
-有关 KaiwuDB JDBC 的数据库连接方式、基础使用、数据类型和异常处理，参见[使用 JDBC 连接 KWDB 数据库](../development/connect-kaiwudb/java/connect-jdbc.md)；更多错误码信息，参见 [KaiwuDB JDBC Driver 错误码](../db-operation/error-code/error-code-jdbc-driver.md)；更多故障排查信息，参见 [KaiwuDB JDBC 故障排查](../troubleshooting-guide/troubleshooting.md#kaiwudb-jdbc)。
+For more information, see:
 
-## 前提条件
+- Database connection methods, basic usage, data types, and exception handling: [Connect to KWDB using JDBC](../development/connect-kaiwudb/java/connect-jdbc.md)
+- Error codes: [KaiwuDB JDBC Driver Error Codes](../db-operation/error-code/error-code-jdbc-driver.md)
+- Troubleshooting: [KaiwuDB JDBC Driver Troubleshooting](../troubleshooting-guide/troubleshooting.md#kaiwudb-jdbc)
 
-- [安装 openJDK](https://openjdk.org/install/)（1.8 及以上版本）。
-- [安装 Maven](https://maven.apache.org/install.html)（3.6 及以上版本）。
-- 安装 KWDB 2.1.0 或以上版本数据库、配置数据库认证方式、创建数据库。
-- 创建具有表级别及以上操作权限的用户。
-- 获取 KaiwuDB JDBC 驱动包。
+## Prerequisites
 
-## 配置数据库
+- [OpenJDK 1.8 or higher]((https://openjdk.org/install/)) installed
+- [Maven 3.6 or higher](https://maven.apache.org/install.html) installed
+- KaiwuDB JDBC driver package obtained
+- KWDB 2.1.0 or above installed and running with:
+  - Properly configured database authentication
+  - A database created for your connection
+  - A user with appropriate privileges on tables or higher
 
-默认情况下，数据库开启时序写入短接功能。开启后，系统直接将数据写入存储，减少中间处理环节。此外，用户可以设置允许写入时跳过错误数据，正常写入其他数据，从而提高写入性能。
+## Configure Database
+
+Users can configure the system to skip error data during writes and continue writing other data normally, thereby improving write performance.
 
 ```sql
 SET SESSION ts_ignore_batcherror=true;
 ```
 
-## 配置连接
+## Configure Connection
 
-1. 在 `pom.xml` 中添加依赖，将 KaiwuDB JDBC 引入 Java 项目：
+1. Add the KaiwuDB JDBC dependency to your `pom.xml` file:
 
    ```xml
    <dependency>
@@ -48,19 +53,19 @@ SET SESSION ts_ignore_batcherror=true;
    </dependency>
    ```
 
-2. 如果 KaiwuDB JDBC 无法正常加载使用，执行以下命令，将驱动安装到本地 Maven 仓库中：
+2. If KaiwuDB JDBC cannot be loaded, install the driver to your local Maven repository using the following command:
 
    ```shell
    mvn install:install-file "-Dfile=../kaiwudb-jdbc-2.2.0.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=2.2.0" "-Dpackaging=jar"
    ```
 
-## 配置示例
+## Configuration Example
 
-以下示例演示了如何使用 KaiwuDB JDBC 将不同设备的数据批量写入到时序表。
+The following example demonstrates how to use KaiwuDB JDBC to batch write data from multiple devices to time-series tables.
 
-1. 创建时序表。
+1. Create time-series tables.
 
-   以下示例创建 `tbl_raw_1` 到 `tbl_raw_10` 多个时序表用于批量插入不同设备的数据。每个表的数据结构相同。
+   This example creates ten time-series tables (`tbl_raw_1` through `tbl_raw_10`) for batch insertion of data from different devices. All tables share the same data structure:
 
    ```sql
    CREATE TABLE tsdb.tbl_raw_1 (ts TIMESTAMPTZ NOT NULL, data FLOAT8 NULL, type CHAR(10) NULL, parse VARCHAR NULL) TAGS (device CHAR(10) NOT NULL, iot_hub_name VARCHAR(64) NOT NULL) PRIMARY TAGS (device, iot_hub_name);
@@ -84,7 +89,9 @@ SET SESSION ts_ignore_batcherror=true;
    CREATE TABLE tsdb.tbl_raw_10 (ts TIMESTAMPTZ NOT NULL, data FLOAT8 NULL, type CHAR(10) NULL, parse VARCHAR NULL) TAGS (device CHAR(10) NOT NULL, iot_hub_name VARCHAR(64) NOT NULL) PRIMARY TAGS (device, iot_hub_name);
    ```
 
-2. 向时序表中批量写入数据。
+2. Batch write data to time-series tables.
+
+   This example loops 1,000 times, writing 1,000 rows per iteration for a total of 1 million rows. Each iteration inserts data for 20 devices with 50 rows per device:
 
    ```java
    public class BatchInsertTest {
@@ -96,9 +103,10 @@ SET SESSION ts_ignore_batcherror=true;
 
       try (Connection connection = DriverManager.getConnection(url, user, password)) {
          KwStatement statement = (KwStatement) connection.createStatement();
-         long timestamp = 1731373200000L; // 2024-11-12 09:00:00.000 初始时间戳
+         long timestamp = 1731373200000L; // Initial timestamp: 2024-11-12 09:00:00.000
          for (int i = 0; i < 1000; i++) {
-         // 循环1000次，每次写入1000行数据，共计100万行数据；每次循环插入20个设备，每个设备50行的数据
+         // Loop 1000 times, writing 1000 rows per iteration for a total of 1 million rows
+         // Each iteration inserts data for 20 devices, with 50 rows per device
          for (int row = 1; row <= 50; row++) {
          int index = (row - 1) % 10 + 1;
             long finalTime = timestamp + (row * 1000L) + (i * 50 * 1000L);
@@ -119,13 +127,13 @@ SET SESSION ts_ignore_batcherror=true;
             }
          }
 
-         // execute batch insert sql data
+         // Execute the batch insert
          statement.executeBatchInsert();
 
-         // clear batch insert temp data
+         // Clear temporary batch insert data
          statement.clearBatchInsert();
          }
-         // close statement
+         // Close the statement
          statement.colse();
       } catch (SQLException ex) {
          ex.printStackTrace();

@@ -46,13 +46,13 @@ KWDB 多副本集群扩容操作简单，只需将新节点加入现有集群即
 
    - 安全模式
 
-      ```Shell
+      ```shell
       <kwbase_path>/kwbase start --certs-dir=<cert_path> --store=<data_dir> --brpc-addr=:27257 --listen-addr=<new_node>:<kaiwudb_port> --http-addr=<new_node>:<rest_port> --join=<node_address_list> --background
       ```
 
    - 非安全模式
 
-      ```Shell
+      ```shell
       <kwbase_path>/kwbase start --insecure --store=<data_dir> --brpc-addr=:27257 --listen-addr=<new_node>:26257 --http-addr=<new_node>:<rest_port> --join=<node_address_list> --background
       ```
 
@@ -76,7 +76,7 @@ KWDB 多副本集群扩容操作简单，只需将新节点加入现有集群即
 
    - 安全模式
 
-      ```Shell
+      ```shell
       <kwbase_path>/kwbase node status --certs-dir=<cert_path> [--host=<address_of_any_alive_node>]
       ```
 
@@ -116,13 +116,13 @@ KWDB 单副本集群的扩容非常简单，只需要将待扩容节点加入到
 
    - 安全模式
 
-      ```Shell
+      ```shell
       <kwbase_path>/kwbase start-single-replica --certs-dir=<cert_path> --store=<data_dir> --brpc-addr=:27257 --listen-addr=<new_node>:<kaiwudb_port> --http-addr=<new_node>:<rest_port> --join=<node_address_list> --background
       ```
 
    - 非安全模式
 
-      ```Shell
+      ```shell
       <kwbase_path>/kwbase start-single-replica --insecure --store=<data_dir> --brpc-addr=:27257 --listen-addr=<new_node>:26257 --http-addr=<new_node>:<rest_port> --join=<node_address_list> --background
       ```
 
@@ -130,7 +130,7 @@ KWDB 单副本集群的扩容非常简单，只需要将待扩容节点加入到
 
    - 安全模式
 
-      ```Shell
+      ```shell
       <kwbase_path>/kwbase node status --certs-dir=<cert_path> [--host=<address_of_any_alive_node>]
       ```
 
@@ -166,13 +166,13 @@ KWDB 单副本集群的扩容非常简单，只需要将待扩容节点加入到
 
   - 在安装包目录执行集群节点状态查看命令：
 
-    ```Shell
+    ```shell
     ./deploy.sh cluster --status
     ```
 
   - 通过 `kwbase node status` 命令查看节点状态：
 
-    ```Shell
+    ```shell
     <kwbase_path>/kwbase node status [--host=<ip:port>] [--insecure | --certs-dir=<path>]
     ```
 
@@ -180,7 +180,7 @@ KWDB 单副本集群的扩容非常简单，只需要将待扩容节点加入到
 
 - 没有不可用分片和副本不足分片：
 
-    ```SQL
+    ```sql
     SELECT sum((metrics->>'ranges.unavailable')::DECIMAL)::INT AS ranges_unavailable,
         sum((metrics->>'ranges.underreplicated')::DECIMAL)::INT As ranges_underreplicated
     FROM kwdb_internal.kv_store_status;
@@ -192,7 +192,7 @@ KWDB 单副本集群的扩容非常简单，只需要将待扩容节点加入到
 
    - 安全模式
 
-      ```Shell
+      ```shell
       <kwbase_path>/kwbase node decommission <node_id> --certs-dir=<cert_path> [--host=<address_of_any_alive_node>]
       ```
 
@@ -206,7 +206,7 @@ KWDB 单副本集群的扩容非常简单，只需要将待扩容节点加入到
 
    - 安全模式
 
-     ```Shell
+     ```shell
      <kwbase_path>/kwbase node status --certs-dir=<cert_path> [--host=<address_of_any_alive_node>] --decommission
      ```
 
@@ -234,12 +234,12 @@ KWDB 单副本集群的扩容非常简单，只需要将待扩容节点加入到
 
    - 安全模式
 
-     ```Shell
+     ```shell
      <kwbase_path>/kwbase node status --certs-dir=<cert_path> [--host=<address_of_any_alive_node>]
      ```
 
    - 非安全模式
 
-      ```Shell
+      ```shell
       <kwbase_path>/kwbase node status --insecure [--host=<address_of_any_alive_node>]
       ```

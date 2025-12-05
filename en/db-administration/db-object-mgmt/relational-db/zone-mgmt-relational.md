@@ -139,7 +139,7 @@ ALTER [DATABASE <database_name> | TABLE <table_name> | RANGE <range_name> | PART
 
 - Modify zones for a database.
 
-    ```SQL
+    ```sql
     ALTER DATABASE db3 CONFIGURE ZONE USING num_replicas = 5, gc.ttlseconds = 100000;
     CONFIGURE ZONE 1
 
@@ -158,7 +158,7 @@ ALTER [DATABASE <database_name> | TABLE <table_name> | RANGE <range_name> | PART
 
 - Modify zones for a table.
 
-    ```SQL
+    ```sql
     ALTER TABLE orders CONFIGURE ZONE USING num_replicas = 3, gc.ttlseconds = 100000;
     CONFIGURE ZONE 1
 
@@ -177,7 +177,7 @@ ALTER [DATABASE <database_name> | TABLE <table_name> | RANGE <range_name> | PART
 
 - Remove zones from a table.
 
-    ```SQL
+    ```sql
     alter table orders configure zone discard;
     CONFIGURE ZONE 1
 

@@ -51,7 +51,7 @@ KWDB 支持用户使用 `SELECT * from kwdb_internal.ranges` 语句查看时序�
 
   以下示例将 `meta` 数据分片的副本数改为 7 个。
 
-  ```SQL
+  ```sql
   ALTER RANGE meta CONFIGURE ZONE USING num_replicas=7;
   ALTER RANGE 
 
