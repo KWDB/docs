@@ -9,7 +9,7 @@ High Availability (HA) refers to a system's ability to switch over to a standby 
 
 **Multi-Replica Cluster**: KWDB's multi-replica cluster includes built-in high availability support with automatic failover and strong data consistency. Cluster nodes maintain connections and monitor system health through regular heartbeat mechanisms, enabling prompt failure detection and automated recovery actions. For more information, see [Multi-Replica Cluster High Availability](#multi-replica-cluster-high-availability).
 
-**Single-Node Version**: KWDB single-node deployments support DRBD-based replication, an open-source solution based on DRBD (Distributed Replicated Block Device) to replicate data between master and standby nodes. For more details, see [DRBD-Based Single-Node High Availability Solution](../../best-practices/single-ha-drbd.md).
+**Single-Node Version**: KWDB single-node deployments support DRBD-based replication, an open-source solution based on DRBD (Distributed Replicated Block Device) to replicate data between master and standby nodes. For more details, see [DRBD-Based Single-Node High Availability Solution](../../best-practices/single-ha.md).
 
 **Single-Replica Cluster**: KWDB single-replica clusters do not support high availability solutions due to the lack of data redundancy.
 

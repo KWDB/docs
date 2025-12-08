@@ -18,7 +18,7 @@ A more realistic approach is to align your high availability solution with actua
 
 High availability solutions typically comprise several key technical components: system monitoring and health checks, cluster high availability strategy management, cluster resource orchestration, automation script execution, and data replication. Among these, data replication is the most fundamental component. For KWDB, minimizing data loss through robust replication technology is the primary objective.
 
-KWDB cluster deployments provide built-in high availability with automatic failover and strong data consistency. For more information, see [Multi-Replica Cluster High Availability](../db-operation/ha/cluster-ha.md).
+KWDB cluster deployments provide built-in high availability with automatic failover and strong data consistency. For more information, see [Multi-Replica Cluster High Availability](../db-operation/cluster-ha.md#multi-replica-cluster-high-availability).
 
 For single-node deployments, KWDB leverages DRBD (Distributed Replicated Block Device), an open-source solution that handles data replication between primary and secondary nodes. System monitoring and health checks are managed by Pacemaker, one of the most successful open-source high availability projects in the Linux-HA ecosystem. Pacemaker uses heartbeat services and cluster communication to build high availability clusters that continuously monitor resource status and orchestrate instance migration and failover operations.
 

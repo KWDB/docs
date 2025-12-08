@@ -965,7 +965,7 @@ You can create the required databases and tables using the following SQL command
 | `name`     | The identifier for the KaiwuDBWriter plugin. Must be set to `kaiwudbwriter`. |
 | `username` | Username for connecting to the KWDB database. |
 | `password` | Password for connecting to the KWDB database. |
-| `jdbcUrl`   | The JDBC connection URL for the KWDB database. For more information, see [JDBC Connection Parameters](../connect-kaiwudb/java/connect-jdbc.md#connection-parameters). |
+| `jdbcUrl`   | The JDBC connection URL for the KWDB database. For more information, see [JDBC Connection Parameters](../development/connect-kaiwudb/java/connect-jdbc.md#connection-parameters). |
 | `table`     | The target table name where data will be written. This table must exist and contain all the specified columns. |
 | `column`    | The list of columns in the target table. The order and number of columns must match those defined in the reader's `column` or `querySql` configuration. |
 | `writeMode` | (Optional) Specifies the data write mode. Supports `INSERT` and `UPDATE`. The default is `INSERT`, which uses the `INSERT` statement to insert data. If set to `UPDATE`, the `UPSERT` statement is used instead. **Note:** This parameter is only applicable when migrating data to relational tables. |
@@ -980,7 +980,7 @@ You can create the required databases and tables using the following SQL command
 | `name`     | The identifier for the KaiwuDBReader plugin. Must be set to `kaiwudbreader`. |
 | `username` | Username for connecting to the KWDB database. |
 | `password` | Password for connecting to the KWDB database. |
-| `jdbcUrl`        | The JDBC connection URL for the KWDB database. For more information, see [JDBC Connection Parameters](../connect-kaiwudb/java/connect-jdbc.md#connection-parameters). |
+| `jdbcUrl`        | The JDBC connection URL for the KWDB database. For more information, see [JDBC Connection Parameters](../development/connect-kaiwudb/java/connect-jdbc.md#connection-parameters). |
 | `table`          | The source table to read data from. Only single-table reads are supported. Not required if `querySql` is specified. |
 | `column`         | The list of columns to read from the source table. Not required if `querySql` is specified.|
 | `where`          | (Optional) SQL WHERE clause to filter data when used with `table` and `column` parameters. For configuration examples, see [Data Migration from a Relational Table to a Time-Series Table](#from-a-relational-table-to-a-time-series-table). Not required if `querySql` is specified. |
