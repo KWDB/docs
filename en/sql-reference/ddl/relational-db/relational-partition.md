@@ -46,7 +46,7 @@ Partition definitions assign identifiers to rows that meet specified conditions.
 
 ::: warning Note
 
-The following syntax shows only the parameters required for creating partitions. For all parameters supported for creating and altering tables, see [Create Table](../../../sql-reference/ddl/relational-db/relational-table.md#creating-tables) and [Alter Table](../../../sql-reference/ddl/relational-db/relational-table.md#alter-table).
+The following syntax shows only the parameters required for creating partitions. For all parameters supported for creating and altering tables, see [Create Table](../../../sql-reference/ddl/relational-db/relational-table.md#create-table) and [Alter Table](../../../sql-reference/ddl/relational-db/relational-table.md#alter-table).
 
 :::
 

@@ -797,7 +797,7 @@ DataX 作业配置示例如下：
 | `name` | KaiwuDBWriter 插件的名称，即 `kaiwudbwriter`。 |
 | `username` | 连接 KWDB 数据库的用户名。|
 | `password` | 连接 KWDB 数据库的密码。|
-| `jdbcUrl` | KWDB 数据库的 JDBC 连接信息，更多详细信息，参见 [JDBC 连接参数](../development//connect-kaiwudb/java/connect-jdbc.md###连接参数)。|
+| `jdbcUrl` | KWDB 数据库的 JDBC 连接信息，更多详细信息，参见 [JDBC 连接参数](../development/connect-kaiwudb/java/connect-jdbc.md#连接参数)。|
 | `table` | 目标表名，目标表中必须包含所有待写入的列。 |
 | `column` | 目标表的列。列的顺序和数量需要与 Reader 中 `column` 或 `querySql` 中定义的列顺序和数量一致。|
 | `writeMode` | 可选参数，指定数据写入模式，支持 `INSERT` 和 `UPDATE`。默认值为 `INSERT`，表示使用 `INSERT` 语句插入数据。如果设置为 `UPDATE` ，则使用 `UPSERT` 语句写入数据。**注意：** 该参数仅在同步关系数据时生效。 |
@@ -812,7 +812,7 @@ DataX 作业配置示例如下：
 | `name`       |KaiwuDBReader 插件名称，即`kaiwudbreader`。 |
 | `username`   | 连接 KWDB 数据库的用户名。                                                                                                                                                                                                                                                                           |
 | `password`   | 连接 KWDB 数据库的密码。                                                                                                                                                                                                                                                                |
-| `jdbcUrl` | KWDB 数据库的 JDBC 连接信息。 更多详细信息，参见 [JDBC 连接参数](../development//connect-kaiwudb/java/connect-jdbc.md###连接参数)。|
+| `jdbcUrl` | KWDB 数据库的 JDBC 连接信息。 更多详细信息，参见 [JDBC 连接参数](../development/connect-kaiwudb/java/connect-jdbc.md#连接参数)。|
 | `table` | 读取数据的目标表，目前只支持单表。如果已配置 `querySql` 参数，则无需设置此参数。 |
 | `column`     | 读取目标表的列。 如果已配置 `querySql` 参数，则无需设置此参数。 |
 | `where` | 可选参数，与 `table` 、`column`等参数共同使用，用于限定同步数据的范围。具体配置示例，可参见[关系表同步到时序表配置示例](#关系表同步到时序表)。如果已配置 `querySql` 参数，则无需设置此参数。 |
