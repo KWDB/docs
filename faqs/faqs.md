@@ -75,7 +75,7 @@ id: faqs
 
     2. 在 `[Service]` 部分添加 `LimitNOFILE=1048576`，增加单个进程能够打开的最大文件描述符数量。
 
-        ```YAML
+        ```yaml
         ...
         [Service]
         ...
@@ -178,13 +178,13 @@ id: faqs
 
   2. 进入 `/etc/kaiwudb/script` 目录，打开 `kaiwudb_env` 文件，添加启动参数 `buffer-pool-size`。
 
-     ```YAML
+     ```yaml
      KAIWUDB_START_ARG="--buffer-pool-size=32657"
      ```
 
   3. 保存 `kaiwudb_env` 文件并重新加载文件。
 
-     ```Bash
+     ```bash
      systemctl daemon-reload
      ```
 
@@ -198,13 +198,13 @@ id: faqs
 
   1. 进入 `/etc/kaiwudb/script` 目录，停止并删除 KWDB 容器。
 
-     ```Bash
+     ```bash
      docker-compose down
      ```
 
   2. 打开 `docker-compose.yml` 文件，添加启动参数 `buffer-pool-size`。
 
-     ```YAML
+     ```yaml
      ...
          command: 
            - /bin/bash- -c- |
@@ -213,7 +213,7 @@ id: faqs
 
   3. 保存配置，重新创建并启动 KWDB 容器。
 
-     ```Bash
+     ```bash
      systemctl start kaiwudb
      ```
 
@@ -279,7 +279,7 @@ id: faqs
 
      2. 重启 KWDB 服务。
 
-           ```Bash
+           ```bash
            systemctl restart kaiwudb
            ```
 
@@ -303,7 +303,7 @@ id: faqs
 
   2. 进入 `/etc/kaiwudb/script` 目录，编辑 `kaiwudb_env` 配置文件，添加 `KWBASE_RAFT_ELECTION_TIMEOUT_TICKS` 环境变量。
 
-     ```Plain
+     ```plain
      KAIWUDB_START_ARG=""
      KWBASE_RAFT_ELECTION_TIMEOUT_TICKS=100
      ```
@@ -330,7 +330,7 @@ id: faqs
 
   2. 打开 `docker-compose.yml` 文件，添加 `KWBASE_RAFT_ELECTION_TIMEOUT_TICKS` 环境变量。
 
-     ```Plain
+     ```plain
      ...
          environment:
            - LD_LIBRARY_PATH=/kaiwudb/lib
@@ -421,7 +421,7 @@ id: faqs
 
   2. 添加分页配置。
 
-        ```Bash
+        ```bash
         @Configuration
         public class MybatisPlusConfig {
           @Bean

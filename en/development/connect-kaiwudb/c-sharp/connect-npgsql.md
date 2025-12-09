@@ -140,7 +140,7 @@ This example assumes that a relational database `bank` has been created in KWDB.
 
 4. Ensure your project file `kaiwudb-test-app.csproj` includes the Npgsql dependency:
 
-   ```XML
+   ```xml
    <Project Sdk="Microsoft.NET.Sdk">
        <PropertyGroup>
            <OutputType>Exe</OutputType>

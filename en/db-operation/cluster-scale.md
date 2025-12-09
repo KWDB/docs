@@ -82,7 +82,7 @@ Frequent execution of `ALTER` statements during scale-out may delay the automati
 
    - Insecure mode
 
-      ```Bash
+      ```bash
       <kwbase_path>/kwbase node status --insecure [--host=<address_of_any_alive_node>]
       ```
 
@@ -136,7 +136,7 @@ Scaling out a KWDB single-replica cluster is straightforward—simply add the no
 
    - Insecure mode
 
-      ```Bash
+      ```bash
       <kwbase_path>/kwbase node status --insecure [--host=<address_of_any_alive_node>]
       ```
 
@@ -198,7 +198,7 @@ When a decommissioned node rejoins the cluster, the data directory needs to be c
 
    - Insecure mode
 
-      ```Bash
+      ```bash
       <kwbase_path>/kwbase node decommission <node_id> --insecure [--host=<address_of_any_alive_node>]
       ```
 
@@ -212,7 +212,7 @@ When a decommissioned node rejoins the cluster, the data directory needs to be c
 
    - Insecure mode
 
-     ```Bash
+     ```bash
      <kwbase_path>/kwbase node status --insecure [--host=<address_of_any_alive_node>] --decommission
      ```
 
@@ -220,13 +220,13 @@ When a decommissioned node rejoins the cluster, the data directory needs to be c
 
    - Secure mode
 
-     ```Bash
+     ```bash
      <kwbase_path>/kwbase quit --certs-dir=<cert_path> --host=<decommissioned_node>
      ```
 
    - Insecure mode
 
-     ```Bash
+     ```bash
      <kwbase_path>/kwbase quit --insecure --host=<decommissioned_node>
      ```
 

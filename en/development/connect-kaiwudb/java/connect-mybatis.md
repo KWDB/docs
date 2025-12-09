@@ -95,7 +95,7 @@ The following example assumes you have already created a relational database, a 
 
 1. Add the MyBatis dependency to your `pom.xml` file:
 
-    ```XML
+    ```xml
     <!-- mybatis-spring-boot-starter -->
     <dependency>
       <groupId>org.mybatis.spring.boot</groupId>
@@ -106,7 +106,7 @@ The following example assumes you have already created a relational database, a 
 
 2. Add the KaiwuDB JDBC dependency to your `pom.xml` file:
 
-    ```XML
+    ```xml
     <!-- KaiwuDB JDBC 2.2.0 -->
     <dependency>
       <groupId>com.kaiwudb</groupId>
@@ -125,7 +125,7 @@ The following example assumes you have already created a relational database, a 
 
 1. Configure the data sources and server port in the `application.yml` file:
 
-    ```YAML
+    ```yaml
     spring:
       # Time-series data source configuration
       tsdb-datasource:
@@ -148,7 +148,7 @@ The following example assumes you have already created a relational database, a 
 
      - Time-series data configuration class:
 
-        ```Java
+        ```java
         @Configuration
         @MapperScan(basePackages = "com.kaiwudb.mybatis.mapper.tsdb", sqlSessionTemplateRef = "tsSqlSessionTemplate")
         public class TsDatabaseConfig {
@@ -184,7 +184,7 @@ The following example assumes you have already created a relational database, a 
 
      - Relational data configuration class:
 
-        ```Java
+        ```java
         @Configuration
         @MapperScan(basePackages = "com.kaiwudb.mybatis.mapper.rdb", sqlSessionTemplateRef = "sqlSessionTemplate")
         public class DatabaseConfig {
@@ -239,7 +239,7 @@ Create a time-series table entity class named `TimeSeriesEntity` in the `src/mai
 
 For KWDB time-series databases, the entity class must include both column and tag information, as demonstrated in the following example:
 
-```Java
+```java
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -271,7 +271,7 @@ Result:
 
 Create the `TimeSeriesMapper` interface in the `src/main/java/com/kaiwudb/mybatis/mapper/tsdb` directory. This interface defines operations for the time-series database. Use the `@Mapper` and `@Repository` annotations to implement common CRUD operations:
 
-```Java
+```java
 @Mapper
 @Repository
 public interface TimeSeriesMapper {
@@ -309,7 +309,7 @@ Create a service interface `TimeSeriesService` and its implementation `TimeSerie
 
 - `TimeSeriesService` service interface
 
-  ```Java
+  ```java
   public interface TimeSeriesService {
     int insert(TimeSeriesEntity entity);
 
@@ -327,7 +327,7 @@ Create a service interface `TimeSeriesService` and its implementation `TimeSerie
 
 - `TimeSeriesServiceImpl` implementation
 
-  ```Java
+  ```java
   @Service
   public class TimeSeriesServiceImpl implements TimeSeriesService {
     @Autowired
@@ -366,7 +366,7 @@ Create a service interface `TimeSeriesService` and its implementation `TimeSerie
 
 Create the `TimeSeriesController` class in the `src/main/java/com/kaiwudb/mybatis/controller` directory. This controller handles HTTP requests and delegates processing to the service layer, implementing operations for creating, deleting, and querying time-series data.
 
-```Java
+```java
 @RestController
 @RequestMapping("/time-series")
 public class TimeSeriesController {
@@ -409,7 +409,7 @@ Create a relational table entity class named `RelationalEntity` in the `src/main
 
 For KWDB relational databases, the entity class only needs to include column information:
 
-```Java
+```java
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -437,7 +437,7 @@ Result:
 
 Create the `RelationalMapper` interface in the `src/main/java/com/kaiwudb/mybatis/mapper/rdb` directory. This interface defines operations for the relational database. Use the `@Mapper` and `@Repository` annotations to quickly implement common CRUD operations:
 
-```Java
+```java
 @Mapper
 @Repository
 public interface RelationalMapper {
@@ -482,7 +482,7 @@ Create a service interface `RelationalService` and its implementation `Relationa
 
 - `RelationalService` service interface class
 
-  ```Java
+  ```java
   public interface RelationalService {
     int insert(RelationalEntity entity);
 
@@ -504,7 +504,7 @@ Create a service interface `RelationalService` and its implementation `Relationa
 
 - `RelationalServiceImpl` implementation class
 
-  ```Java
+  ```java
   @Service
   public class RelationalServiceImpl implements RelationalService {
     @Autowired
@@ -552,7 +552,7 @@ Create a service interface `RelationalService` and its implementation `Relationa
 
 Create the `RelationalController` class in the `src/main/java/com/kaiwudb/mybatis/controller` directory. This controller handles HTTP requests and delegates processing to the service layer, implementing operations for creating, deleting, and querying relational data.
 
-```Java
+```java
 @RestController
 @RequestMapping("/relational")
 public class RelationalController {
@@ -601,7 +601,7 @@ Result:
 
 Create a `MyBatisApplication` class in the root package to serve as the application entry point. Include the standard `main` method to bootstrap the application, and apply the necessary Spring annotations to enable component scanning and auto-configuration.
 
-```Java
+```java
 @SpringBootApplication(scanBasePackages = "com.kaiwudb.mybatis")
 @Configuration
 public class MyBatisApplication extends SpringBootServletInitializer {

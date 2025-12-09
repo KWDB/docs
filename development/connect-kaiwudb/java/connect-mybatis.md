@@ -93,7 +93,7 @@ MyBatis 使用时的常见问题可参见 [MyBatis 和 MyBatis-Plus](../../../fa
 
 1. 在项目的 `pom.xml` 文件，引入 MyBatis 依赖。
 
-    ```XML
+    ```xml
     <!-- mybatis-spring-boot-starter -->
     <dependency>
       <groupId>org.mybatis.spring.boot</groupId>
@@ -104,7 +104,7 @@ MyBatis 使用时的常见问题可参见 [MyBatis 和 MyBatis-Plus](../../../fa
 
 2. 在项目的 `pom.xml` 文件，引入 KaiwuDB JDBC 依赖。
 
-    ```XML
+    ```xml
     <!-- KaiwuDB JDBC 2.2.0 -->
     <dependency>
       <groupId>com.kaiwudb</groupId>
@@ -123,7 +123,7 @@ MyBatis 使用时的常见问题可参见 [MyBatis 和 MyBatis-Plus](../../../fa
 
 1. 在 `application.yml` 文件中设置数据库的数据源及服务启动时的端口信息。
 
-    ```YAML
+    ```yaml
     spring:
       # 时序库数据源配置
       tsdb-datasource:
@@ -146,7 +146,7 @@ MyBatis 使用时的常见问题可参见 [MyBatis 和 MyBatis-Plus](../../../fa
 
      - 时序数据源配置类
 
-        ```Java
+        ```java
         @Configuration
         @MapperScan(basePackages = "com.kaiwudb.mybatis.mapper.tsdb", sqlSessionTemplateRef = "tsSqlSessionTemplate")
         public class TsDatabaseConfig {
@@ -182,7 +182,7 @@ MyBatis 使用时的常见问题可参见 [MyBatis 和 MyBatis-Plus](../../../fa
 
      - 关系库数据源配置类
 
-        ```Java
+        ```java
         @Configuration
         @MapperScan(basePackages = "com.kaiwudb.mybatis.mapper.rdb", sqlSessionTemplateRef = "sqlSessionTemplate")
         public class DatabaseConfig {
@@ -237,7 +237,7 @@ SpringBoot 集成 KaiwuDB JDBC 和 MyBatis 后，用户可以使用 MyBatis 编�
 
 KWDB 时序数据库对应的实体类定义包含列信息和标签信息，用户可以参考以下内容定义 KWDB 时序表相关的实体类。
 
-```Java
+```java
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -269,7 +269,7 @@ public class TimeSeriesEntity {
 
 在 `src/main/java/com/kaiwudb/mybatis/mapper/tsdb` 目录下创建 `TimeSeriesMapper` 接口类，定义时序数据库的操作接口，使用 `@Mapper` 和 `@Repository` 注解，以快速实现常见的数据插入、更新、删除和查询等操作。
 
-```Java
+```java
 @Mapper
 @Repository
 public interface TimeSeriesMapper {
@@ -307,7 +307,7 @@ public interface TimeSeriesMapper {
 
 - `TimeSeriesService` 接口服务类
 
-  ```Java
+  ```java
   public interface TimeSeriesService {
     int insert(TimeSeriesEntity entity);
 
@@ -325,7 +325,7 @@ public interface TimeSeriesMapper {
 
 - `TimeSeriesServiceImpl` 接口服务实现类
 
-  ```Java
+  ```java
   @Service
   public class TimeSeriesServiceImpl implements TimeSeriesService {
     @Autowired
@@ -364,7 +364,7 @@ public interface TimeSeriesMapper {
 
 在 `src/main/java/com/kaiwudb/mybatis/controller` 目录下创建 `TimeSeriesController` 控制器来处理用户的 HTTP 请求，并处理相应的业务逻辑，将用户的请求转发给 Service 层处理，实现对时序数据的增、改、删、查等操作，并将处理结果返回给用户。
 
-```Java
+```java
 @RestController
 @RequestMapping("/time-series")
 public class TimeSeriesController {
@@ -407,7 +407,7 @@ public class TimeSeriesController {
 
 KWDB 关系数据库对应的实体类定义仅包含列信息，用户可以参考以下内容定义 KWDB 关系表相关的实体类。
 
-```Java
+```java
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -435,7 +435,7 @@ public class RelationalEntity {
 
 在 `src/main/java/com/kaiwudb/mybatis/mapper/rdb`目录下创建 `RelationalMapper` 接口类，用于定义关系数据库的操作接口，使用 `@Mapper` 和 `@Repository` 注解，以快速实现常见的数据插入、更新、删除和查询等操作。
 
-```Java
+```java
 @Mapper
 @Repository
 public interface RelationalMapper {
@@ -480,7 +480,7 @@ public interface RelationalMapper {
 
 - `RelationalService` 接口服务类
 
-  ```Java
+  ```java
   public interface RelationalService {
     int insert(RelationalEntity entity);
 
@@ -502,7 +502,7 @@ public interface RelationalMapper {
 
 - `RelationalServiceImpl` 接口服务实现类
 
-  ```Java
+  ```java
   @Service
   public class RelationalServiceImpl implements RelationalService {
     @Autowired
@@ -550,7 +550,7 @@ public interface RelationalMapper {
 
 在 `src/main/java/com/kaiwudb/mybatis/controller` 目录下创建 `RelationalController` 控制器来处理用户的 HTTP 请求，并处理相应的业务逻辑，将用户的请求转发给 Service 层处理，实现对关系数据的增、改、删、查等操作，并将处理结果返回给用户。
 
-```Java
+```java
 @RestController
 @RequestMapping("/relational")
 public class RelationalController {
@@ -599,7 +599,7 @@ public class RelationalController {
 
 在根目录下创建名为 `MyBatisApplication` 的主程序类文件，设置通过 `public static void main(String[] args)` 方法启动应用程序，添加运行时需加载的配置类注解等。
 
-```Java
+```java
 @SpringBootApplication(scanBasePackages = "com.kaiwudb.mybatis")
 @Configuration
 public class MyBatisApplication extends SpringBootServletInitializer {

@@ -82,7 +82,7 @@ KWDB 多副本集群扩容操作简单，只需将新节点加入现有集群即
 
    - 非安全模式
 
-      ```Bash
+      ```bash
       <kwbase_path>/kwbase node status --insecure [--host=<address_of_any_alive_node>]
       ```
 
@@ -136,7 +136,7 @@ KWDB 单副本集群的扩容非常简单，只需要将待扩容节点加入到
 
    - 非安全模式
 
-      ```Bash
+      ```bash
       <kwbase_path>/kwbase node status --insecure [--host=<address_of_any_alive_node>]
       ```
 
@@ -198,7 +198,7 @@ KWDB 单副本集群的扩容非常简单，只需要将待扩容节点加入到
 
    - 非安全模式
 
-      ```Bash
+      ```bash
       <kwbase_path>/kwbase node decommission <node_id> --insecure [--host=<address_of_any_alive_node>]
       ```
 
@@ -212,7 +212,7 @@ KWDB 单副本集群的扩容非常简单，只需要将待扩容节点加入到
 
    - 非安全模式
 
-     ```Bash
+     ```bash
      <kwbase_path>/kwbase node status --insecure [--host=<address_of_any_alive_node>] --decommission
      ```
 
@@ -220,13 +220,13 @@ KWDB 单副本集群的扩容非常简单，只需要将待扩容节点加入到
 
    - 安全模式
 
-     ```Bash
+     ```bash
      <kwbase_path>/kwbase quit --certs-dir=<cert_path> --host=<decommissioned_node>
      ```
 
    - 非安全模式
 
-     ```Bash
+     ```bash
      <kwbase_path>/kwbase quit --insecure --host=<decommissioned_node>
      ```
 
