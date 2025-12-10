@@ -177,7 +177,7 @@ id: connect-mybatis-plus
 
 1. 在 `mapper` 目录下创建 `SensorDataMapper`，继承 `BaseMapper` 接口，使用 `@Mapper` 和 `@Repository` 注解，以快速实现常见的数据插入、更新、删除和查询等操作。
 
-    ```Java
+    ```java
     package com.kaiwudb.app.mapper;
 
     import com.baomidou.mybatisplus.core.mapper.BaseMapper;

@@ -33,7 +33,7 @@ With KWDB's Hibernate integration, developers can:
 
 1. In your project directory, create a `pom.xml` file and include the dependencies for JPA, Hibernate, and KaiwuDB JDBC driver:
 
-   ```XML
+   ```xml
    <?xml version="1.0" encoding="UTF-8"?>
    <project xmlns="http://maven.apache.org/POM/4.0.0"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -158,7 +158,7 @@ For time-series data, KWDB supports explicit transactions for queries and writes
 
    Example:
 
-   ```YAML
+   ```yaml
    spring:
      datasource:
        driver-class-name: com.kaiwudb.Driver
@@ -184,7 +184,7 @@ For time-series data, KWDB supports explicit transactions for queries and writes
 
    In this example, the name value in the `@Table` annotation (`tsdb_table`) corresponds to the time-series table in KWDB. Each field maps to a currently supported data type. The `t1` column serves as the primary tag column in the time-series table.
 
-   ```Java
+   ```java
    @Data
    @Entity
    @Table(name = "tsdb_table")
@@ -213,7 +213,7 @@ For time-series data, KWDB supports explicit transactions for queries and writes
 
    Example:
 
-    ```Java
+    ```java
     @Repository
     public interface TsdbEntityRepository extends JpaRepository<TsdbEntity, Timestamp> {
    
@@ -230,7 +230,7 @@ For time-series data, KWDB supports explicit transactions for queries and writes
 
       Example:
 
-      ```Java
+      ```java
       public interface TsdbService {
       
         int insert(TsdbEntity entity);
@@ -254,7 +254,7 @@ For time-series data, KWDB supports explicit transactions for queries and writes
 
       Example:
 
-      ```Java
+      ```java
       @Service
       class TsdbServiceImpl implements TsdbService {
       
@@ -293,7 +293,7 @@ For time-series data, KWDB supports explicit transactions for queries and writes
 
    Example:
 
-   ```Java
+   ```java
    @RestController
    @RequestMapping("tsdb")
    public class TsdbController {
@@ -362,7 +362,7 @@ For time-series data, KWDB supports explicit transactions for queries and writes
 
    Example:
 
-   ```YAML
+   ```yaml
    spring:
      datasource:
        driver-class-name: com.kaiwudb.Driver
@@ -390,7 +390,7 @@ For time-series data, KWDB supports explicit transactions for queries and writes
    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence")
    ```
 
-   ```Java
+   ```java
    @Data
    @Entity
    @Table(name = "rdb_table")
@@ -442,7 +442,7 @@ For time-series data, KWDB supports explicit transactions for queries and writes
 
    Example:
 
-   ```Java
+   ```java
    @Repository
    public interface RdbEntityRepository extends JpaRepository<RdbEntity, Integer> {
    
@@ -465,7 +465,7 @@ For time-series data, KWDB supports explicit transactions for queries and writes
 
       Example:
 
-        ```Java
+        ```java
         public interface RdbService {
       
           RdbEntity save(RdbEntity entity);
@@ -483,7 +483,7 @@ For time-series data, KWDB supports explicit transactions for queries and writes
 
       Example:
 
-      ```Java
+      ```java
       @Service
       class RdbServiceImpl implements RdbService {
       
@@ -517,7 +517,7 @@ For time-series data, KWDB supports explicit transactions for queries and writes
 
    Example:
 
-   ```Java
+   ```java
    @RestController
    @RequestMapping("rdb")
    public class RdbController {

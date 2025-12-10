@@ -9,7 +9,7 @@ KWDB 支持用户通过发送 HTTP 请求与数据库进行交互。用户可以
 
 KWDB 支持同时使用多个 HTTP 请求连接数据库，最多支持 150 个 HTTP 连接。所有请求通过 HTTPS 发送，并在 HTTP 请求头部包含认证信息。HTTP 请求的 URL 格式为：
 
-```HTTP
+```http
 https://<hostname>:<port>/<endpoint>?[tz=<timezone>][db=<db_name>]
 ```
 

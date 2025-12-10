@@ -552,7 +552,7 @@ DRBD 镜像数据具有以下特点：
 
    示例：
 
-   ```Plain
+   ```plain
    pcs resource
    * Clone Set: KaiwuData-clone [KaiwuData] (promotable):
    * Promoted: [ ha-node02 ]
@@ -621,7 +621,7 @@ DRBD 镜像数据具有以下特点：
 
       示例：
 
-      ```Plain
+      ```plain
       pcs resource create KaiwuDB systemd:kaiwudb.service op monitor on-fail=restart #创建新资源
       pcs resource defaults migration-threshold=2 #设置资源默认值
       pcs resource meta KaiwuDB failure-timeout=10s #设置资源元数据
@@ -634,7 +634,7 @@ DRBD 镜像数据具有以下特点：
 
       示例：
 
-      ```Plain
+      ```plain
       pcs constraint colocation add ClusterIP with KaiwuDB  INFINITY 
       ```
 

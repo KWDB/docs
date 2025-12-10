@@ -137,7 +137,7 @@ KWDB 支持用户通过 Npgsql 驱动连接数据库，并执行创建、插入�
 
 4. 检查项目文件 `kaiwudb-test-app.csproj`，确保项目文件包含 Npgsql 依赖项。
 
-    ```XML
+    ```xml
     <Project Sdk="Microsoft.NET.Sdk">
         <PropertyGroup>
             <OutputType>Exe</OutputType>

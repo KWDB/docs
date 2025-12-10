@@ -28,7 +28,7 @@ KWDB 支持开发人员通过在 SpringBoot 项目中集成 JPA、KaiwuDB JDBC �
 
    示例：
 
-   ```XML
+   ```xml
    <?xml version="1.0" encoding="UTF-8"?>
    <project xmlns="http://maven.apache.org/POM/4.0.0"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -147,7 +147,7 @@ KWDB 时序库和关系库在配置和使用上有所不同，以下章节分别
     :::
    示例：
 
-   ```YAML
+   ```yaml
    spring:
      datasource:
        driver-class-name: com.kaiwudb.Driver
@@ -173,7 +173,7 @@ KWDB 时序库和关系库在配置和使用上有所不同，以下章节分别
 
    示例中，@Table 标签中的 name 名称 `tsdb_table` 为对应的时序表名称，每列字段对应目前 KWDB 支持的各种数据类型；`t1` 列作为 KWDB 时序表的主标签列使用。
 
-   ```Java
+   ```java
    @Data
    @Entity
    @Table(name = "tsdb_table")
@@ -202,7 +202,7 @@ KWDB 时序库和关系库在配置和使用上有所不同，以下章节分别
 
     示例：
 
-    ```Java
+    ```java
     @Repository
     public interface TsdbEntityRepository extends JpaRepository<TsdbEntity, Timestamp> {
 
@@ -219,7 +219,7 @@ KWDB 时序库和关系库在配置和使用上有所不同，以下章节分别
 
       示例：
 
-      ```Java
+      ```java
       public interface TsdbService {
       
         int insert(TsdbEntity entity);
@@ -240,7 +240,7 @@ KWDB 时序库和关系库在配置和使用上有所不同，以下章节分别
       :::
       示例：
 
-      ```Java
+      ```java
       @Service
       class TsdbServiceImpl implements TsdbService {
 
@@ -279,7 +279,7 @@ KWDB 时序库和关系库在配置和使用上有所不同，以下章节分别
 
     示例：
 
-    ```Java
+    ```java
     @RestController
     @RequestMapping("tsdb")
     public class TsdbController {
@@ -347,7 +347,7 @@ KWDB 时序库和关系库在配置和使用上有所不同，以下章节分别
 
    示例：
 
-   ```YAML
+   ```yaml
    spring:
      datasource:
        driver-class-name: com.kaiwudb.Driver
@@ -375,7 +375,7 @@ KWDB 时序库和关系库在配置和使用上有所不同，以下章节分别
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence")
     ```
 
-    ```Java
+    ```java
     @Data
     @Entity
     @Table(name = "rdb_table")
@@ -427,7 +427,7 @@ KWDB 时序库和关系库在配置和使用上有所不同，以下章节分别
 
     示例：
 
-    ```Java
+    ```java
     @Repository
     public interface RdbEntityRepository extends JpaRepository<RdbEntity, Integer> {
 
@@ -450,7 +450,7 @@ KWDB 时序库和关系库在配置和使用上有所不同，以下章节分别
 
       示例：
 
-      ```Java
+      ```java
       public interface RdbService {
 
         RdbEntity save(RdbEntity entity);
@@ -468,7 +468,7 @@ KWDB 时序库和关系库在配置和使用上有所不同，以下章节分别
 
       示例：
 
-      ```Java
+      ```java
       @Service
       class RdbServiceImpl implements RdbService {
       
@@ -502,7 +502,7 @@ KWDB 时序库和关系库在配置和使用上有所不同，以下章节分别
 
     示例：
 
-    ```Java
+    ```java
     @RestController
     @RequestMapping("rdb")
     public class RdbController {
