@@ -37,7 +37,7 @@ You can adjust WAL behavior through the following parameters:
 
 | Parameter | Description | Default Value |
 |----------------|-------------|---------------|
-| `ts.wal.wal_level` | WAL write level, controlling data persistence strategy:<br>- `0` (`off`): Disables WAL; restores data state through time-series storage engine interface upon restart<br>- `1` (`sync`): Writes logs to disk in real-time with forced persistence, providing the highest safety with relatively lower performance<br>- `2` (`flush`): Writes logs to file system buffer, balancing performance and safety<br>- `3` (`byrl`): Ensures data consistency based on raft Log, with WAL responsible only for metadata consistency | `1` |
+| `ts.wal.wal_level` | WAL write level, controlling data persistence strategy:<br>- `0` (`off`): Disables WAL; restores data state through time-series storage engine interface upon restart<br>- `1` (`sync`): Writes logs to disk in real-time with forced persistence, providing the highest safety with relatively lower performance<br>- `2` (`flush`): Writes logs to file system buffer, balancing performance and safety<br>- `3` (`byrl`): Ensures data consistency based on raft Log, with WAL responsible only for metadata consistency | `2` |
 | `ts.wal.checkpoint_interval` | Checkpoint execution interval, controlling the frequency of persisting time-series data from memory to disk | `1m` |
 
 ::: warning Note
