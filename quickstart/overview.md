@@ -5,23 +5,32 @@ id: overview
 
 # 快速上手概述
 
-本节介绍如何通过单节点部署方式快速上手体验 KWDB 数据库。集群部署相关信息，参见[集群部署](../deployment/overview.md)。
+本节帮助您快速部署、连接和使用 KWDB 数据库。
 
-- 部署 KWDB
+## 第一步: 部署 KWDB
 
-    对于非生产环境，用户可以选择以下任意一种方式部署 KWDB 数据库：
+选择适合您的部署方式:
 
-  - [单节点裸机部署](./install-kaiwudb/quickstart-bare-metal.md)
-  - [单节点容器部署](./install-kaiwudb/quickstart-docker.md)
+- **[快速部署](./install-kaiwudb/quick-deploy.md)** - 自动化脚本一键部署，首次体验推荐
+- **[裸机部署](./install-kaiwudb/quickstart-bare-metal.md)** - 原生部署，性能最优
+- **[容器部署](./install-kaiwudb/quickstart-docker.md)** - 基于 Docker，环境隔离
 
-- 管理 KWDB
+## 第二步: 连接 KWDB
 
-    用户可以采取以下任一方式连接 KWDB 服务端并进行 SQL 操作：
+根据使用习惯选择连接方式:
 
-  - 通过 kwbase CLI 工具[连接](./access-kaiwudb/access-kaiwudb-cli.md)和[管理](./use-kaiwudb/use-kaiwudb-cli.md) KWDB
-  - 通过 KaiwuDB Developer Center（KaiwuDB 开发者中心）[连接](./access-kaiwudb/access-kaiwudb-kdc.md)和[使用](./use-kaiwudb/use-kaiwudb-kdc.md) KWDB
-  - 通过 KaiwuDB JDBC [连接](./access-kaiwudb/access-kaiwudb-jdbc.md)和[使用](./use-kaiwudb/use-kaiwudb-jdbc.md) KWDB
+**命令行工具**
 
-- 卸载 KWDB
+- kwbase CLI: [连接](./access-kaiwudb/access-kaiwudb-cli.md) | [使用](./use-kaiwudb/use-kaiwudb-cli.md)
 
-  如需了解如何卸载 KWDB，请参见[卸载 KWDB 数据库](./uninstall-kaiwudb/uninstall-db.md)
+**图形化工具**
+
+- KaiwuDB Developer Center (KDC): [连接](./access-kaiwudb/access-kaiwudb-kdc.md) | [使用](./use-kaiwudb/use-kaiwudb-kdc.md)
+
+**应用程序接口**
+
+- KWDB JDBC: [连接](./access-kaiwudb/access-kaiwudb-jdbc.md) | [使用](./use-kaiwudb/use-kaiwudb-jdbc.md)
+
+## 卸载 KWDB
+
+需要卸载时，请参见[卸载 KWDB 数据库](./uninstall-kaiwudb/uninstall-db.md)。
