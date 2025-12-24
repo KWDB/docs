@@ -75,11 +75,7 @@ KWDB 为首次体验的用户提供了自动化部署工具——快速部署脚
 
 5. 启动 KWDB：
 
-    ```bash
-    # 重新加载服务
-    systemctl daemon-reload
-
-    # 启动 KWDB
+    ```shell
     systemctl start kaiwudb
     ```
 
@@ -87,13 +83,13 @@ KWDB 为首次体验的用户提供了自动化部署工具——快速部署脚
 
     - 裸机部署
 
-      ```bash
+      ```shell
       /usr/local/kaiwudb/bin/kwbase sql --insecure --host=127.0.0.1
       ```
 
     - 容器部署
 
-      ```bash
+      ```shell
       docker exec -it kaiwudb-container ./kwbase sql --insecure --host=127.0.0.1
       ```
 
@@ -152,7 +148,7 @@ KWDB 为首次体验的用户提供了自动化部署工具——快速部署脚
 
 ### 如何修改已部署的配置？
 
-快速部署后如需修改配置，建议：
+快速部署后如需修改配置，需要执行以下步骤：
 
 1. 卸载当前部署（参见[卸载 KWDB](../uninstall-kaiwudb/uninstall-db.md)）
-2. 使用[裸机部署](./quickstart-bare-metal.md)或[容器部署](./quickstart-docker.md)重新部署，可进行详细配置
+2. 使用[裸机部署](./quickstart-bare-metal.md)或[容器部署](./quickstart-docker.md)重新部署，进行详细配置
