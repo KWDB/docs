@@ -38,6 +38,7 @@ KWDB can be deployed on the following operating systems:
 | :----------- | :--------------------------- | :--------- | :--------- |
 | Anolis       | 8                          | ✓          | ✓          |
 | KylinOS      | V10 SP2                      | ✓          | ✓          |
+|              | V10 SP3 2303                 | ✓          | ✓          |
 |              | V10 SP3 2403                 | ✓          | ✓          |
 | Ubuntu       | V20.04                       | ✓          | ✓          |
 |              | V22.04                       | ✓          | ✓          |
