@@ -58,7 +58,7 @@ The following table lists the required dependencies:
 | Dependency    | Version   | Remarks |
 | ------------- | --------- | ----------- |
 | OpenSSL       | v1.1.1+   | N/A         |
-| libprotobuf      | v3.6.1+   |  The default version of libprotobuf included in Ubuntu 18.04 is lower than the required version. Users need to install a compatible version beforehand (3.6.1 and 3.12.4 recommended).       |
+| libprotobuf      | v3.6.1 ~ v21.x   |  The default version of libprotobuf included in Ubuntu 18.04 is lower than the required version. Users need to install a compatible version beforehand (3.6.1 and 3.12.4 recommended).       |
 | GEOS          | v3.3.8+   | Optional    |
 | xz-libs       | v5.2.0+   | N/A         |
 | libgcc        | v7.3.0+   | N/A         |
