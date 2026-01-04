@@ -109,7 +109,7 @@ MyBatis 使用时的常见问题可参见 [MyBatis 和 MyBatis-Plus](../../../fa
     <dependency>
       <groupId>com.kaiwudb</groupId>
       <artifactId>kaiwudb-jdbc</artifactId>
-      <version>2.2.0</version>
+      <version>3.1.0</version>
     </dependency>
     ```
 

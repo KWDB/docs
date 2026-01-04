@@ -105,7 +105,7 @@ With KWDB's Hibernate integration, developers can:
        <dependency>
          <groupId>com.kaiwudb</groupId>
          <artifactId>kaiwudb-jdbc</artifactId>
-         <version>2.2.0</version>
+         <version>3.1.0</version>
        </dependency>
        <!-- mockito-core -->
        <dependency>
@@ -121,7 +121,7 @@ With KWDB's Hibernate integration, developers can:
 2. If the KaiwuDB JDBC driver cannot be loaded, run the following command to install the driver into your local Maven repository:
 
    ```shell
-   mvn install:install-file "-Dfile=../kaiwudb-jdbc-2.2.0.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=2.2.0" "-Dpackaging=jar"
+   mvn install:install-file "-Dfile=../kaiwudb-jdbc-3.1.0.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=3.1.0" "-Dpackaging=jar"
    ```
 
 3. Install the KaiwuDB-adapted Hibernate Core package into your local Maven repository:

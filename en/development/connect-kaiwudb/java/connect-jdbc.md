@@ -34,14 +34,14 @@ KaiwuDB JDBC driver is the official Java connector for KWDB. Built on the PgJDBC
    <dependency>
      <groupId>com.kaiwudb</groupId>
      <artifactId>kaiwudb-jdbc</artifactId>
-     <version>2.2.0</version>
+     <version>3.1.0</version>
    </dependency>
    ```
 
 2. If the KaiwuDB JDBC dependency cannot be loaded, install the driver into your local Maven repository with the following command:
 
    ```shell
-   mvn install:install-file "-Dfile=../kaiwudb-jdbc-2.2.0.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=2.2.0" "-Dpackaging=jar"
+   mvn install:install-file "-Dfile=../kaiwudb-jdbc-3.1.0.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=3.1.0" "-Dpackaging=jar"
    ```
 
 ## Connecting to the Database

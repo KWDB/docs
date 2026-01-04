@@ -96,14 +96,14 @@ id: connect-mybatis-plus
     <dependency>
       <groupId>com.kaiwudb</groupId>
       <artifactId>kaiwudb-jdbc</artifactId>
-      <version>2.2.0</version>
+      <version>3.1.0</version>
     </dependency>
     ```
 
 3. 如果 KaiwuDB JDBC 无法正常加载使用，运行以下命令，将 KaiwuDB JDBC 驱动安装到本地 Maven 仓库中。
 
    ```shell
-   mvn install:install-file "-Dfile=../kaiwudb-jdbc-2.2.0.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=2.2.0" "-Dpackaging=jar"
+   mvn install:install-file "-Dfile=../kaiwudb-jdbc-3.1.0.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=3.1.0" "-Dpackaging=jar"
    ```
 
 ## 配置连接

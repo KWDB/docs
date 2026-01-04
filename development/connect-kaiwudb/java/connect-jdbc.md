@@ -5,9 +5,11 @@ id: connect-jdbc
 
 # 使用 JDBC 连接 KWDB 数据库
 
-Java 数据库连接（Java Database Connectivity，JDBC）是 Java 应用程序访问数据库的标准 API。它提供一套完整的接口，允许 Java 应用程序与不同类型的数据库进行交互。KWDB 提供 KaiwuDB JDBC 驱动程序，支持 Java 应用程序与 KWDB 数据库交互，执行查询、插入、更新和删除等操作。JDBC 驱动程序在将 Java 数据类型发送到数据库之前，会将其转换为相应的 JDBC 类型。有关 Java 数据类型和 JDBC 数据类型对比转换的详细信息，参见[支持的数据类型](#支持的数据类型)。
+Java 数据库连接（Java Database Connectivity，JDBC）是 Java 应用程序访问数据库的标准 API，通过提供统一的接口，允许 Java 应用程序与不同类型的数据库进行交互。
 
-KaiwuDB JDBC 是 KWDB 的官方 Java 语言连接器。它基于 PgJDBC 扩展实现，符合 JDBC 4.0、JDBC 4.1 和 JDBC 4.2 规范。Java 开发人员可以使用 KaiwuDB JDBC 驱动程序向 KWDB 的服务进程发送消息，访问任何形式的表格数据，操作流程如下：
+KaiwuDB JDBC 驱动程序是 KWDB 官方提供的 Java 连接器，支持执行查询、插入、更新和删除等数据库操作。驱动程序在将 Java 数据类型发送到数据库之前，会将其转换为相应的 JDBC 类型。有关数据类型对比转换的详细信息，参见[支持的数据类型](#支持的数据类型)。
+
+KaiwuDB JDBC 基于 PgJDBC 扩展实现，符合 JDBC 4.0、JDBC 4.1 和 JDBC 4.2 规范。Java 开发人员可以使用 KaiwuDB JDBC 驱动程序向 KaiwuDB 的服务进程发送消息，访问任何形式的表格数据，操作流程如下：
 
 1. 连接数据源并创建到数据库的连接。
 2. 创建查询或更新指令。
@@ -30,14 +32,14 @@ KaiwuDB JDBC 是 KWDB 的官方 Java 语言连接器。它基于 PgJDBC 扩展�
    <dependency>
      <groupId>com.kaiwudb</groupId>
      <artifactId>kaiwudb-jdbc</artifactId>
-     <version>2.2.0</version>
+     <version>3.1.0</version>
    </dependency>
    ```
 
 2. 如上述依赖无法正常加载使用，运行以下命令，将 KaiwuDB JDBC 驱动安装到本地 Maven 仓库中。
 
    ```shell
-   mvn install:install-file "-Dfile=../kaiwudb-jdbc-2.2.0.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=2.2.0" "-Dpackaging=jar"
+   mvn install:install-file "-Dfile=../kaiwudb-jdbc-3.1.0.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=3.1.0" "-Dpackaging=jar"
    ```
 
 ## 连接数据库
@@ -268,30 +270,31 @@ while(resultSet.next()){
 
 下表列出 Java 数据类型和 JDBC 数据类型的对比转换关系。
 
-| SQL       | JDBC | 关系引擎支持 | 时序引擎支持 |
-|-----------|-------------------------------------|-------------|-------------|
-| BIT       | java.lang.Boolean                   | 是           | 否           |
-| BOOL      | java.lang.Boolean                   | 是           | 是           |
-| TIMESTAMP | java.sql.Timestamp                  | 是           | 是           |
-| DATE      | java.sql.Date                       | 是           | 否           |
-| TIME      | java.sql.Time                       | 是           | 否           |
-| NUMERIC   | Java.math.BigDecimal                | 是           | 否           |
-| INTEGER   | java.lang.Integer                   | 是           | 是           |
-| BIGINT    | java.lang.Long                      | 是           | 是           |
-| FLOAT     | java.lang.Float                     | 是           | 是           |
-| DOUBLE    | java.lang.Double                    | 是           | 是           |
-| SMALLINT  | java.lang.Short                     | 是           | 是           |
-| TINYINT   | java.lang.Byte                      | 是           | 否           |
-| REAL      | java.lang.Float                     | 是           | 是           |
-| BYTES     | [B                                  | 是           | 是           |
-| VARBYTES  | [B                                  | 是           | 是           |
-| CHAR      | java.lang.String                    | 是           | 是           |
-| NCHAR     | java.lang.String                    | 是           | 是           |
-| VARCHAR   | java.lang.String                    | 是           | 是           |
-| NVARCHAR  | java.lang.String                    | 是           | 是           |
-| ARRAY     | java.sql.Array                      | 是           | 否           |
-| BLOB      | java.sql.Blob                       | 是           | 否           |
-| CLOB      | java.sql.Clob                       | 否           | 否           |
+| SQL       | JDBC                 | 关系引擎支持 | 时序引擎支持 |
+|-----------|----------------------|-------------|-------------|
+| BIT       | java.lang.Boolean    | 是           | 否           |
+| BOOL      | java.lang.Boolean    | 是           | 是           |
+| SMALLINT  | java.lang.Integer    | 是           | 是           |
+| INTEGER   | java.lang.Integer    | 是           | 是           |
+| BIGINT    | java.lang.Long       | 是           | 是           |
+| REAL      | java.lang.Float      | 是           | 是           |
+| DOUBLE    | java.lang.Double     | 是           | 是           |
+| DECIMAL   | java.math.BigDecimal | 是           | 否           |
+| DATE      | java.sql.Date        | 是           | 否           |
+| TIME      | java.sql.Time        | 是           | 否           |
+| TIMESTAMP | java.sql.Timestamp   | 是           | 是           |
+| CHAR      | java.lang.String     | 是           | 是           |
+| VARCHAR   | java.lang.String     | 是           | 是           |
+| NCHAR     | java.lang.String     | 是           | 是           |
+| NVARCHAR  | java.lang.String     | 是           | 是           |
+| BYTES     | byte[] ([B)          | 是           | 是           |
+| VARBYTES  | byte[] ([B)          | 是           | 是           |
+| BLOB      | byte[] ([B)          | 是           | 否           |
+| CLOB      | java.lang.String     | 是           | 否           |
+| JSON      | com.kaiwudb.util.KWobject | 是           | 否           |
+| GEOMETRY  | java.lang.String     | 否           | 是           |
+| POINT     | com.kaiwudb.geometric.KWpoint  | 否           | 是           |
+| ARRAY     | java.sql.Array       | 是           | 否           |
 
 ### 异常处理
 
