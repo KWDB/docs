@@ -25,7 +25,7 @@ id: uninstall-db
     ./deploy.sh uninstall 
     ```
 
-4. 确认是否删除数据目录。输入 `y` 将删除数据目录。输入 `n` 将保留数据目录。
+4. 确认是否删除数据、安装证书、日志等信息。输入 `y` 删除。输入 `n` 保留。
 
     ```shell
     When uninstalling KaiwuDB, you can either delete or keep all user data. Please confirm your choice: Do you want to delete the data? (y/n): 

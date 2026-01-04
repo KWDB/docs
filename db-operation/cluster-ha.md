@@ -26,7 +26,7 @@ KWDB 多副本集群默认采用 3 副本机制，通过 RAFT 协议保证数据
 | 数据分片（Range）     | KWDB 将所有用户数据（表、索引等）和几乎所有系统数据存储在键值对的排序映射中。这个键空间被划分为多个数据分片，每个键始终可以在单个数据分片内找到。数据分片是集群高可用性和数据迁移的最小单元。 |
 | 副本（Replica）       | 每个用户数据分片默认有 3 个副本，以保证高可用性。数据迁移时，以分片副本为单位进行迁移。 |
 | 主副本（Leaseholder） | 每个分片的主副本，负责处理该分片的读写请求。主副本通过 RAFT 协议选举产生，确保数据一致性。 |
-| 节点状态              | KWDB 中的集群节点存在以下状态：<br>- 存活节点：默认节点状态，表示节点正常运行<br>- 异常节点：1 分钟内无网络连接的节点会被标记为异常节点<br>- 不可用节点：默认 30 分钟内无网络连接的节点将被标记为不可用节点，触发数据副本补足机制 <br><br>**提示:** 用户可通过 KWDB 监控平台和 `kwbase node status` 命令查看集群内的节点状态 |
+| 节点状态              | KWDB 中的集群节点存在以下状态：<br>- 存活节点：默认节点状态，表示节点正常运行<br>- 异常节点：1 分钟内无网络连接的节点会被标记为异常节点<br>- 不可用节点：默认 30 分钟内无网络连接的节点将被标记为不可用节点，触发数据副本补足机制 <br><br>**提示:** 用户可通过 `kw-status` 或 `kwbase node status` 命令查看集群内的节点状态 |
 
 ### 机制说明
 
@@ -107,13 +107,23 @@ SET CLUSTER SETTING kv.allocator.ts_store_dead_rebalance.enabled = false;
 
 #### 查看节点状态
 
-使用 `kwbase` 命令查询节点状态:
+- **通过 `kw-status.sh` 脚本**
+  
+  ::: warning 说明
+  该命令只适用于脚本部署。
+  :::
 
   ```shell
-  <kwbase_path>/kwbase node status [--host=<ip:port>] [--insecure | --certs-dir=<path>]
+  kw-status
   ```
 
-`is_available` 和 `is_live` 均为 `true` 表示节点正常运行，均为 `false` 表示节点异常。
+- **通过 `kwbase` 命令**
+
+    ```shell
+    <kwbase_path>/kwbase node status [--host=<ip:port>] [--insecure | --certs-dir=<path>]
+    ```
+
+  `is_available` 和 `is_live` 均为 `true` 表示节点正常运行，均为 `false` 表示节点异常。
 
 #### 查看副本补足状态
 

@@ -74,23 +74,31 @@ KWDB 多副本集群扩容操作简单，只需将新节点加入现有集群即
 
 4. 检查集群节点状态。
 
-   - 安全模式
+   - 脚本部署
 
       ```shell
-      <kwbase_path>/kwbase node status --certs-dir=<cert_path> [--host=<address_of_any_alive_node>]
+      kw-status
       ```
 
-   - 非安全模式
+   - kwbase 命令
 
-      ```bash
-      <kwbase_path>/kwbase node status --insecure [--host=<address_of_any_alive_node>]
-      ```
+      - 安全模式
 
-    参数说明：
+         ```shell
+         <kwbase_path>/kwbase node status --certs-dir=<cert_path> [--host=<address_of_any_alive_node>]
+         ```
 
-   - `<kwbase_path>`：kwbase 二进制文件所在目录，裸机部署默认目录为 `/usr/local/kaiwudb/bin`， 容器部署默认目录为 `/kaiwudb/bin`。
-   - `cert_path`：证书目录，默认存储位置为 `/etc/kaiwudb/certs`。
-   - `--host=<address_of_any_alive_node>`：可选参数，用于指定执行命令的节点，该节点必须为健康节点，地址格式为 `<ip>:<port>`, 不指定时默认使用 `127.0.0.1:26257`。
+      - 非安全模式
+
+         ```bash
+         <kwbase_path>/kwbase node status --insecure [--host=<address_of_any_alive_node>]
+         ```
+
+      参数说明：
+
+      - `<kwbase_path>`：kwbase 二进制文件所在目录，裸机部署默认目录为 `/usr/local/kaiwudb/bin`， 容器部署默认目录为 `/kaiwudb/bin`。
+      - `cert_path`：证书目录，默认存储位置为 `/etc/kaiwudb/certs`。
+      - `--host=<address_of_any_alive_node>`：可选参数，用于指定执行命令的节点，该节点必须为健康节点，地址格式为 `<ip>:<port>`, 不指定时默认使用 `127.0.0.1:26257`。
   
 ### 单副本集群扩容
 
@@ -128,17 +136,25 @@ KWDB 单副本集群的扩容非常简单，只需要将待扩容节点加入到
 
 4. 检查集群节点状态。
 
-   - 安全模式
+   - 脚本部署
 
       ```shell
-      <kwbase_path>/kwbase node status --certs-dir=<cert_path> [--host=<address_of_any_alive_node>]
+      kw-status
       ```
 
-   - 非安全模式
+   - kwbase 命令
 
-      ```bash
-      <kwbase_path>/kwbase node status --insecure [--host=<address_of_any_alive_node>]
-      ```
+      - 安全模式
+
+         ```shell
+         <kwbase_path>/kwbase node status --certs-dir=<cert_path> [--host=<address_of_any_alive_node>]
+         ```
+
+      - 非安全模式
+
+         ```bash
+         <kwbase_path>/kwbase node status --insecure [--host=<address_of_any_alive_node>]
+         ```
 
 ## 集群缩容
 
@@ -232,14 +248,22 @@ KWDB 单副本集群的扩容非常简单，只需要将待扩容节点加入到
 
 4. （可选）检查集群节点是否移除成功。
 
-   - 安全模式
-
-     ```shell
-     <kwbase_path>/kwbase node status --certs-dir=<cert_path> [--host=<address_of_any_alive_node>]
-     ```
-
-   - 非安全模式
+   - 脚本部署
 
       ```shell
-      <kwbase_path>/kwbase node status --insecure [--host=<address_of_any_alive_node>]
+      kw-status
       ```
+
+   - kwbase 命令
+
+      - 安全模式
+
+         ```shell
+         <kwbase_path>/kwbase node status --certs-dir=<cert_path> [--host=<address_of_any_alive_node>]
+         ```
+
+      - 非安全模式
+
+         ```shell
+         <kwbase_path>/kwbase node status --insecure [--host=<address_of_any_alive_node>]
+         ```

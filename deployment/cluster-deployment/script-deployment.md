@@ -31,21 +31,34 @@ id: script-deployment
 
     ```yaml
     [global]
+    # Whether to turn on secure mode
     secure_mode=tls
+    # Management KaiwuDB user
     management_user=kaiwudb
+    # KaiwuDB cluster http port
     rest_port=8080
-    brpc_port=27257
+    # KaiwuDB service port
     kaiwudb_port=26257
+    # KaiwuDB brpc port
+    brpc_port=27257
+    # KaiwuDB data directory
     data_root=/var/lib/kaiwudb
+    # CPU usage[0-1]
     cpu=1
 
     [local]
-    node_addr= local_node_ip
+    # local node configuration
+    node_addr=192.168.122.221
 
     [cluster]
-    node_addr= cluster_node_ips
+    # remote node addr,split by ','
+    node_addr=192.168.122.222,192.168.122.223
+    # ssh info
     ssh_port=22
     ssh_user=admin
+
+    # [additional]
+    # IPs=127.0.0.3,127.0.0.4
     ```
 
     配置参数说明：
@@ -66,14 +79,9 @@ id: script-deployment
         - `cluster_node_ips`：远程节点对外提供服务的 IP 地址。各节点的 IP 地址使用逗号（`,`）分割，远程节点数应不少于 2 个。
         - `ssh_port`：远程节点的 SSH 服务端口。各节点的 SSH 服务端口必须相同。
         - `ssh_user`：远程节点的 SSH 登录用户。各节点的 SSH 登录用户必须相同。
+    - `additional`：主备集群 IP 地址配置。KWDB 暂不支持该功能。
 
-2. 为 `deploy.sh` 脚本增加运行权限。
-
-    ```shell
-    chmod +x ./deploy.sh
-    ```
-
-3. 执行安装命令。
+2. 执行安装命令。
 
    - 多副本集群
 
@@ -87,13 +95,35 @@ id: script-deployment
         ./deploy.sh install --single-replica
         ```
 
-4. 根据系统提示重新加载 `systemd` 守护进程的配置文件。
+3. 检查配置无误后输入 `Y` 或 `y`，如需返回修改 `deploy.cfg` 配置文件，输入 `N` 或 `n`。
 
     ```shell
-    systemctl daemon-reload
+    ================= KaiwuDB Basic Info =================
+    Deploy Mode: bare-metal
+    Management User: kaiwudb
+    Start Mode: multi-replication
+    RESTful Port: 8080
+    KaiwuDB Port: 26257
+    BRPC Port: 27257
+    Data Root: /var/lib/kaiwudb
+    Secure Mode: tls
+    CPU Usage Limit: 1
+    Local Node Address: 192.168.122.221
+    ================= KaiwuDB Cluster Info =================
+    Cluster Node Address: 192.168.122.222 192.168.122.223
+    SSH User: admin
+    SSH Port: 22
+    =========================================================
+    Please confirm the installation information above(Y/n):
     ```
 
-5. 初始化并启动集群。
+    执行成功后，控制台输出以下信息：
+
+      ```shell
+      [INSTALL COMPLETED]:KaiwuDB has been installed successfully! ...
+      ```
+
+4. 初始化并启动集群。
 
     ::: warning 提示
     集群初始化和启动大约需要 10 秒左右时间。在此期间，如果有节点死亡，可能会导致集群无法触发高可用机制。
@@ -109,17 +139,21 @@ id: script-deployment
     ./deploy.sh cluster --init
     ```
 
-6. 查看集群节点状态。
+5. 使用以下任一方式查看集群节点状态：
 
-    ```shell
-    ./deploy.sh cluster -s
-    ```
+    - 在当前目录使用部署脚本
 
-    或者
+      ```shell
+      ./deploy.sh cluster -s
+      # 或者
+      ./deploy.sh cluster --status
+      ```
 
-    ```shell
-    ./deploy.sh cluster --status
-    ```
+    - 在任一目录下使用便捷脚本（推荐）
+
+      ```shell
+      kw-status
+      ```
 
     返回字段说明：
 
@@ -128,14 +162,14 @@ id: script-deployment
     | `id`           | 节点 ID。                                                                                                                                                                   |
     | `address`      | 节点地址。                                                                                                                                                                  |
     | `sql_address`  | SQL 地址。                                                                                                                                                                  |
-    | `build`        | 节点的 KWDB 版本                                                                                                                                                       |
+    | `build`        | 节点运行的 KWDB 版本                                                                                                                                                       |
     | `started_at`   | 节点启动的日期和时间。                                                                                                                                                     |
-    | `updated_at`   | 节点更新命令结果的日期和时间。节点正常时，每 10 秒左右记录一次新状态。节点不正常时，此命令的统计信息可能会较旧。                                                             |
+    | `updated_at`   | 节点状态更新的日期和时间。节点正常时，每 10 秒左右记录一次新的状态；节点异常时，更新信息可能会有所滞后。                                                           |
     | `locality`     | 节点 ID。                                                                                                            |
-    | `start_mode`   | 节点启动模式。                                                                                                                                  |
-    | `is_available`<br>`is_live` | 如果均为 `true`，表示节点为存活状态。<br>如果均为 `false`，表示节点为异常状态。                                                                                     |
+    | `start_mode`   | 节点的启动模式。                                                                                                                                  |
+    | `is_available`<br>`is_live` | 如果均为 `true`，表示节点处于正常状态。<br>如果均为 `false`，表示节点处于异常状态。                                                                                     |
 
-7. （可选）配置 KWDB 开机自启动。
+6. （可选）配置 KWDB 开机自启动。
 
     配置 KWDB 开机自启动后，如果系统重启，则自动启动 KWDB。
 
