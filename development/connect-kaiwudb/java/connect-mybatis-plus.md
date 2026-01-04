@@ -92,7 +92,7 @@ id: connect-mybatis-plus
 2. 在项目的 `pom.xml` 文件，引入 KaiwuDB JDBC 依赖。
 
     ```xml
-    <!-- KaiwuDB JDBC 2.2.0 -->
+    <!-- KaiwuDB JDBC 3.1.0 -->
     <dependency>
       <groupId>com.kaiwudb</groupId>
       <artifactId>kaiwudb-jdbc</artifactId>

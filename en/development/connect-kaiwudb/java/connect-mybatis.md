@@ -107,7 +107,7 @@ The following example assumes you have already created a relational database, a 
 2. Add the KaiwuDB JDBC dependency to your `pom.xml` file:
 
     ```xml
-    <!-- KaiwuDB JDBC 2.2.0 -->
+    <!-- KaiwuDB JDBC 3.1.0 -->
     <dependency>
       <groupId>com.kaiwudb</groupId>
       <artifactId>kaiwudb-jdbc</artifactId>
