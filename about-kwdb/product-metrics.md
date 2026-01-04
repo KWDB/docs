@@ -64,12 +64,19 @@ KWDB 支持在以下服务器操作系统进行安装部署。
             <td></td>
         </tr>
         <tr>
-            <td rowspan="2" class="os-name">KylinOS</td>
+            <td rowspan="3" class="os-name">KylinOS</td>
             <td>V10 SP2</td>
             <td class="check">✓</td>
             <td class="check">✓</td>
             <td class="check">✓</td>
             <td class="check">✓</td>
+        </tr>
+         <tr>
+            <td>V10 SP3 2303</td>
+            <td class="check">✓</td>
+            <td class="check">✓</td>
+            <td class="check"></td>
+            <td class="check"></td>
         </tr>
         <tr>
             <td>V10 SP3 2403</td>
