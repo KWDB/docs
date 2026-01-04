@@ -29,6 +29,7 @@ KWDB can be deployed on the following operating systems:
 | :----------- | :--------------------------- | :--------- | :--------- |
 | Anolis       | 8                          | ✓          | ✓          |
 | KylinOS      | V10 SP2                      | ✓          | ✓          |
+|              | V10 SP3 2303                 | ✓          | ✓          |
 |              | V10 SP3 2403                 | ✓          | ✓          |
 | Ubuntu       | V20.04                       | ✓          | ✓          |
 |              | V22.04                       | ✓          | ✓          |
@@ -50,7 +51,7 @@ The following table lists the required dependencies:
 | Dependency    | Version   | Remarks |
 | ------------- | --------- | ----------- |
 | OpenSSL       | v1.1.1+   | N/A         |
-| libprotobuf      | v3.6.1+   | The default version of libprotobuf included in Ubuntu 18.04 is lower than the required version. Before deployment, install the required version in advance (versions 3.6.1 and 3.12.4 are recommended).       |
+| libprotobuf      | v3.6.1 ~ v21.x   | The default version of libprotobuf included in Ubuntu 18.04 is lower than the required version. Before deployment, install the required version in advance (versions 3.6.1 and 3.12.4 are recommended).       |
 | GEOS          | v3.3.8+   | Optional    |
 | xz-libs       | v5.2.0+   | N/A         |
 | libgcc        | v7.3.0+   | N/A         |
