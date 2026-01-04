@@ -292,6 +292,10 @@ id: functions-relational-db
 | timezone(timezone: string, timestamptz: timestamptz) → timestamp | 将 timestamptz 转换到指定时区，返回不带时区的 timestamp 类型。 |
 | timezone(timezone: string, timestamptz_string: string) → timestamp | 将 timestamptz 转换到指定时区，返回不带时区的 timestamp 类型。 |
 | timezone(timezone: string, timetz: timetz) → timetz          | 将 timetz 转换到指定时区，返回新时区的 timetz 类型。         |
+| to_timestamp(int) → timestamp | 将时间戳类型的数据转换为时间格式的数据，其中 int 数据类型的入参在 `[-9223372036854775808, -9223372036854775807]` 范围内。|
+| to_timestamp(string) → timestamp | 将时间戳类型的数据转换为时间格式的数据，其中 string 数据类型的入参符合以下条件：<br> - 有效的十进制整数字符串 <br> - 在 `[-9223372036854775808, -9223372036854775807]` 范围内<br> - 不包含任何非数字字符（除可选的负号以外） |
+| to_timestamp(time string, format string) → timestamp | 根据指定的 format 格式，将 time 转换为指定时间精度的数据。目前，KWDB 支持毫秒、微秒、纳秒三种时间精度。<br>- YYYY-MM-DD HH24:MI:SS.MS：毫秒精度 <br>- YYYY-MM-DD HH24:MI:SS.US：微秒精度 <br>- YYYY-MM-DD HH24:MI:SS.NS：纳秒精度|
+| to_timestamp(time timestamp, format string) → timestamp | 根据指定的 format 格式，将 time 转换为指定时间精度的数据。目前，KWDB 支持毫秒、微秒、纳秒三种时间精度。<br>- YYYY-MM-DD HH24:MI:SS.MS：毫秒精度 <br>- YYYY-MM-DD HH24:MI:SS.US：微秒精度 <br>- YYYY-MM-DD HH24:MI:SS.NS：纳秒精度 |
 | transaction_timestamp() → date                               | 返回当前事务的时间。该值基于事务开始时选择的时间戳，并且在整个事务中保持不变。此时间戳与并发事务的提交顺序无关。 |
 | transaction_timestamp() → timestamp                          | 返回当前事务的时间。该值基于事务开始时选择的时间戳，并且在整个事务中保持不变。此时间戳与并发事务的提交顺序无关。 |
 | transaction_timestamp() → timestamptz                        | 返回当前事务的时间。该值基于事务开始时选择的时间戳，并且在整个事务中保持不变。此时间戳与并发事务的提交顺序无关。 |
