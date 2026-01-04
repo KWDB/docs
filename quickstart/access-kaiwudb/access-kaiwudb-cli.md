@@ -17,7 +17,7 @@ kwbase 是 KWDB 提供的在命令行下运行的数据库连接工具。用户�
 
 ### 前提条件
 
-已使用 `deploy.sh` 脚本部署和启动 KaiwuDB。
+已使用 `deploy.sh` 脚本部署和启动 KWDB。
 
 ### 步骤
 
