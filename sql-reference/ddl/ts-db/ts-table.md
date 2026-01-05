@@ -23,7 +23,7 @@ id: ts-table
 
 - 目前，时序表名、列名和标签名称不支持中文字符。
 - 配置可选参数时，必须严格按照 `[RETENTIONS <keep_duration>] [DICT ENCODING] [COMMENT [=] <'comment_text'>] [WITH HASH(<hash_value>)]` 的顺序，否则系统将会报错。
-- 对于 KWDB 3.1.0，表的分区间隔配置使用所属数据库的时间分区间隔配置。
+- 3.0.0 版本中，表活跃时间和分区间隔的配置不会生效。
 
 :::
 
