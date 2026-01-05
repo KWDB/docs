@@ -20,7 +20,6 @@ CREATE TS DATABASE <db_name> [RETENTIONS <keep_duration>] [COMMENT [=] <'comment
 ### 参数说明
 
 :::warning 说明
-
 - 配置可选参数时，必须严格按照 `[RETENTIONS <keep_duration>] [COMMENT [=] <'comment_text'>]` 的顺序，否则系统将会报错。
 - 3.0.0 版本数据库分区间隔仅支持 10 天，其他配置值无效。
 
