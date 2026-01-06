@@ -293,7 +293,6 @@ while(resultSet.next()){
 | CLOB      | java.lang.String     | 是           | 否           |
 | JSON      | com.kaiwudb.util.KWobject | 是           | 否           |
 | GEOMETRY  | java.lang.String     | 否           | 是           |
-| POINT     | com.kaiwudb.geometric.KWpoint  | 否           | 是           |
 | ARRAY     | java.sql.Array       | 是           | 否           |
 
 ### 异常处理
