@@ -287,7 +287,7 @@ while(resultSet.next()){
 | VARCHAR   | java.lang.String     | 是           | 是           |
 | NCHAR     | java.lang.String     | 是           | 是           |
 | NVARCHAR  | java.lang.String     | 是           | 是           |
-| BYTES     | byte[] ([B)          | 是           | 是           |
+| BYTES     | byte[] ([B)          | 是           | 否          |
 | VARBYTES  | byte[] ([B)          | 是           | 是           |
 | BLOB      | byte[] ([B)          | 是           | 否           |
 | CLOB      | java.lang.String     | 是           | 否           |
