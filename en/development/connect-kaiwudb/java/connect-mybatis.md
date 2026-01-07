@@ -107,18 +107,18 @@ The following example assumes you have already created a relational database, a 
 2. Add the KaiwuDB JDBC dependency to your `pom.xml` file:
 
     ```xml
-    <!-- KaiwuDB JDBC 2.2.0 -->
+    <!-- KaiwuDB JDBC 3.1.0 -->
     <dependency>
       <groupId>com.kaiwudb</groupId>
       <artifactId>kaiwudb-jdbc</artifactId>
-      <version>2.2.0</version>
+      <version>3.1.0</version>
     </dependency>
     ```
 
 3. If the KaiwuDB JDBC driver cannot be loaded, install it into your local Maven repository using the following command:
 
       ```shell
-      mvn install:install-file "-Dfile=../kaiwudb-jdbc.2.1.0.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=2.2.0" "-Dpackaging=jar"
+      mvn install:install-file "-Dfile=../kaiwudb-jdbc.2.1.0.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=3.1.0" "-Dpackaging=jar"
       ```
 
 ## Configuring the Connection

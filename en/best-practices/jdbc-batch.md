@@ -49,14 +49,14 @@ SET SESSION ts_ignore_batcherror=true;
    <dependency>
      <groupId>com.kaiwudb</groupId>
      <artifactId>kaiwudb-jdbc</artifactId>
-     <version>2.2.0</version>
+     <version>3.1.0</version>
    </dependency>
    ```
 
 2. If KaiwuDB JDBC cannot be loaded, install the driver to your local Maven repository using the following command:
 
    ```shell
-   mvn install:install-file "-Dfile=../kaiwudb-jdbc-2.2.0.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=2.2.0" "-Dpackaging=jar"
+   mvn install:install-file "-Dfile=../kaiwudb-jdbc-3.1.0.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=3.1.0" "-Dpackaging=jar"
    ```
 
 ## Configuration Example

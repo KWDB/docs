@@ -28,14 +28,14 @@ Before installing the KaiwuDB JDBC Driver, ensure you have the following:
    <dependency>
      <groupId>com.kaiwudb</groupId>
      <artifactId>kaiwudb-jdbc</artifactId>
-     <version>2.2.0</version>
+     <version>3.1.0</version>
    </dependency>
    ```
 
 2. If the dependency fails to load automatically, manually install the KaiwuDB JDBC Driver into your local Maven repository:
 
    ```shell
-   mvn install:install-file "-Dfile=../kaiwudb-jdbc-2.2.0.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=2.2.0" "-Dpackaging=jar"
+   mvn install:install-file "-Dfile=../kaiwudb-jdbc-3.1.0.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=3.1.0" "-Dpackaging=jar"
    ```
 
 ## Connect to KWDB
