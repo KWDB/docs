@@ -81,6 +81,7 @@ This section describes data types, functions, operators, and SQL statements supp
   - [Cursors](./other-sql-statements/cursor-sql.md)
   - [Delimiter](./other-sql-statements/delimiter-sql.md)
   - [Stream](./other-sql-statements/stream-sql.md)
+  - [Storage and Compression](./other-sql-statements/show-distribution-sql.md)
   - [Vacuum](./other-sql-statements/vacuum.md)
 - System Views
   - [kwdb_internal](./system-view/kwdb_internal.md)
