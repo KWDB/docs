@@ -1,11 +1,12 @@
 # Cluster Configuration
 
-After deploying KWDB, you can customize its behavior through two main configuration mechanisms: startup flags and cluster parameters.
+After deploying KWDB, you can customize its behavior by modifying **startup flags**, **environment variables**, or **real-time cluster parameters**:
 
 | **Parameter Type**       | **Scope**                          | **When Changes Take Effect**                           | **How to Configure**                                          |
 | :---------------------- | :----------------------------------------- | :------------------------------------------ | :---------------------------------------------------------------- |
-| **Startup flags**  | Individual node | Only at node startup (requires service restart)|• Bare-metal deployment: Edit `/etc/kaiwudb/script/kaiwudb_env`<br>• Container deployment: Edit `/etc/kaiwudb/script/docker-compose.yml`<br>• Command line: Use `kwbase start` with flags |
-| **Cluster parameters** | Entire cluster (all nodes)| Immediately (no restart needed)| Execute SQL statements (changes are stored in system tables) |
+| **Startup flags**  | Individual node | At node startup only (requires service restart)|• Bare-metal script deployment: Edit `/etc/kaiwudb/script/kaiwudb_env`<br>• Container script deployment: Edit `/etc/kaiwudb/script/docker-compose.yml`<br>• Command line: Pass flags with `kwbase start` command |
+| **Environment variables** | User level or system level | At database process startup (requires service restart) | Configure in system-level or user-level shell configuration files (e.g., `.bashrc`, `.bash_profile`) or system service files (e.g., systemd unit files) |
+| **Cluster parameters** | Entire cluster (all nodes)| Immediately (no restart required)| Execute SQL statements (stored in system tables) |
 
 ## Startup Flags
 
@@ -89,24 +90,23 @@ The cluster startup flags can be modified using any of the following methods:
 This section explains how to modify the `kaiwudb_env` and `docker-compose.yml` files to change the startup flag configurations. For information on the `kwbase start` command, see [kwbase start](../tool-command-reference/client-tool/kwbase-sql-reference.md).
 
 ::: warning Note
-Startup flags are node-level configurations. To modify the configuration for the entire cluster, you need to log into each node in the cluster and make the corresponding changes.
+Startup flags are node-level configurations. To apply changes cluster-wide, you must configure each node separately.
 :::
 
 To modify cluster startup flags, follow these steps:
 
-1. Log into the cluster node to be modified and navigate to the KWDB installation directory.
-2. Stop the KWDB service.
+1. Log in to the target node and stop the KWDB service:
 
     ```shell
     systemctl stop kaiwudb
     ```
 
-3. Navigate to the `/etc/kaiwudb/script` directory and open the configuration file.
+2. Navigate to the `/etc/kaiwudb/script` directory and open the configuration file.
 
     - For bare-metal deployment: open the `kaiwudb_env` file.
     - For container deployment: open the `docker-compose.yml` file.
 
-4. Add or modify the startup flags in the configuration file as needed.
+3. Add or modify the startup flags in the configuration file as needed.
 
     - For bare-metal deployment:
 
@@ -142,10 +142,56 @@ To modify cluster startup flags, follow these steps:
               /kaiwudb/bin/kwbase start-single-node --certs-dir=<certs_dir> --listen-addr=0.0.0.0:26257 --advertise-addr=your-host-ip:port --store=/kaiwudb/deploy/kwdb-container --cache=25%
         ```
 
-5. After saving the configuration, restart the KWDB service.
+4. Restart the KWDB service.
 
     ```shell
     systemctl restart kaiwudb
+    ```
+
+## Environment Variables
+
+### Parameter Description
+
+Environment variables are operating system-level parameters that affect the behavior of all database instances at the user or system level.
+
+To view current KWDB configuration and other environment variables, run the `env` command. Environment variables used at node startup are logged in the node logs.
+
+The priority order for KWDB configuration (from highest to lowest) is:
+
+- Startup flags
+- Environment variables
+- Default values
+
+The following table lists currently supported environment variables:
+
+| Parameter Name | Description | Default Value |
+|---------|------|--------|
+| `KWBASE_ENABLE_FOLLOWER_READ` | Controls whether data can be read from follower replicas of multi-replica cluster data ranges.<br><br>When a cluster experiences a severe failure where the number of alive nodes is less than half of the total replicas and failed nodes cannot be recovered, you can enable this parameter to connect to alive nodes and read time-series and relational data from follower replicas.<br><br>**Note**:<br>- Enabling it will affect write functionality; **do not enable this parameter in healthy clusters**<br>- Due to potential replication lag, data read from follower replicas may be outdated compared to the leaseholder replica and is unsuitable for strong consistency requirements<br>- Only data on alive nodes can be queried; data not stored on alive nodes is inaccessible<br>- For clusters with more than 5 nodes, since the default metadata replica count is 5, alive nodes may not be able to query normally after restart | `false` |
+
+### Environment Variable Configuration
+
+::: warning Note
+Environment variables are node-level configurations. To apply changes cluster-wide, you must configure each node separately.
+:::
+
+Steps:
+
+1. Log in to the target node and stop the KWDB service:
+
+    ```shell
+    systemctl stop kaiwudb
+    ```
+
+2. Set the environment variable:
+
+    ```shell
+    export KWBASE_ENABLE_FOLLOWER_READ=true
+    ```
+
+3. Restart the KWDB service.
+  
+    ```shell
+    systemctl start kaiwudb
     ```
 
 ## Cluster Parameters
@@ -189,6 +235,7 @@ The table below lists all cluster parameters supported by KWDB along with their 
 | `kv.allocator.ts_store_dead_rebalance.enabled`                | Controls automatic replica migration after node death. When enabled, the replica queue automatically performs replica migration, replacement, and replenishment based on node status; when disabled, replicas are not replenished even if a node dies. Note: In a 5-node three-replica cluster, disabling this feature will make it unable to tolerate consecutive node failures. | `true`      | bool    |
 | `kv.bulk_io_write.max_rate`                             | Rate limit for bulk I/O write operations to disk. | `1.0 TiB`    | byte size |
 | `kv.closed_timestamp.follower_reads_enabled`            | All replicas provide consistent historical reads based on closed timestamp information. | `TRUE`      | bool     |
+| `kv.kvserver.qps_ts_follower_read_threshold` | Sets the QPS (queries per second) threshold for enabling follower reads on time-series data. When a time-series data range's QPS exceeds this threshold, the system allows reads from follower replicas to distribute query load away from the leaseholder, reducing resource consumption on high-load nodes and improving overall query performance.<br><br>This parameter is useful for clusters with hot data ranges or high query load. The default value of `0` disables this feature.<br><br>**Note**: Due to potential replication lag, data read from follower replicas may be outdated compared to the leaseholder replica and is unsuitable for strong consistency requirements. Set this threshold based on your cluster's actual QPS load to balance query performance with data consistency needs.<br><br>**Tip**: Monitor each time-series range's QPS using the following SQL command to determine an appropriate threshold:<br>`SELECT range_id, lease_holder, lease_holder_qps FROM kwdb_internal.ranges;` | `0` | float |
 | `kv.kvserver.ts_split_by_timestamp.enabled`            | Controls whether time-series data ranges are split by timestamp. When set to `false`, only hash points are used for splitting. When set to `true` and `kv.kvserver.ts_split_interval` is set to `1`, time-series data ranges are split based on both hash points and timestamps. | `FALSE`      | bool     |
 | `kv.kvserver.ts_split_interval`            | Time-series data shard split interval. Default value is `10`. | `10`      | int     |
 | `kv.protectedts.reconciliation.interval`                | Frequency for reconciling jobs through protected timestamp records. | `5m0s`      | duration |
