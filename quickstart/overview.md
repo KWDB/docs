@@ -21,7 +21,7 @@ id: overview
 
 **命令行工具**
 
-- kwbase CLI: [连接](./access-kaiwudb/access-kaiwudb-cli.md) | [使用](./use-kaiwudb/use-kaiwudb-cli.md)
+- kwbase CLI 或 kw-sql 脚本: [连接](./access-kaiwudb/access-kaiwudb-cli.md) | [使用](./use-kaiwudb/use-kaiwudb-cli.md)
 
 **图形化工具**
 

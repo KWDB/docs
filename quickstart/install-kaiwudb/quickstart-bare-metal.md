@@ -138,27 +138,41 @@ tar -zxvf <package_name>
 1. 登录待部署节点，编辑安装包目录下的 `deploy.cfg` 配置文件，设置安全模式、管理用户、服务端口等信息。
 
     ::: warning 说明
-    默认情况下，`deploy.cfg` 配置文件中包含集群配置参数。请删除或注释 `[cluster]` 集群配置项。
+    默认情况下，`deploy.cfg` 配置文件中包含集群和主备集群地址配置参数。请删除或注释 `[cluster]` 和 `[additional]` 配置项。
     :::
 
     配置文件示例：
 
     ```yaml
     [global]
+    # Whether to turn on secure mode
     secure_mode=tls
+    # Management KaiwuDB user
     management_user=kaiwudb
+    # KaiwuDB cluster http port
     rest_port=8080
+    # KaiwuDB service port
     kaiwudb_port=26257
+    # KaiwuDB brpc port
     brpc_port=27257
+    # KaiwuDB data directory
     data_root=/var/lib/kaiwudb
-    cpu=1
+    # CPU usage[0-1]
+    # cpu=1
+
     [local]
-    node_addr=your-host-ip
+    # local node configuration
+    node_addr=127.0.0.1
 
     # [cluster]
-    # node_addr=your-host-ip, your-host-ip
+    # remote node addr,split by ','
+    # node_addr=127.0.0.2
+    # ssh info
     # ssh_port=22
     # ssh_user=admin
+
+    # [additional]
+    # IPs=127.0.0.3,127.0.0.4
     ```
 
     参数说明：
@@ -176,31 +190,36 @@ tar -zxvf <package_name>
     - `local`：本地节点配置
       - `node_addr`：本地节点对外提供服务的 IP 地址，监听地址为 `0.0.0.0`，端口为 KWDB 服务端口。
 
-2. 为 `deploy.sh` 脚本添加运行权限。
-
-    ```shell
-    chmod +x ./deploy.sh
-    ```
-
-3. 执行单机部署安装命令。
+2. 执行单机部署安装命令。
 
     ```shell
     ./deploy.sh install --single
     ```
 
+3. 检查配置无误后输入 `Y` 或 `y`，如需返回修改 `deploy.cfg` 配置文件，输入 `N` 或 `n`。
+
+    ```shell
+    ================= KaiwuDB Basic Info =================
+    Deploy Mode: bare-metal
+    Start Mode: single
+    RESTful Port: 8080
+    KaiwuDB Port: 26257
+    BRPC Port: 27257
+    Data Root: /var/lib/kaiwudb
+    Secure Mode: tls
+    CPU Usage Limit: unlimited
+    Local Node Address: 127.0.0.1
+    ======================================================
+    Please confirm the installation information above(Y/n):
+    ```
+
     执行成功后，控制台输出以下信息：
 
     ```shell
-    INSTALL COMPLETED: KaiwuDB has been installed successfuly! ...
+    [INSTALL COMPLETED]:KaiwuDB has been installed successfully! ...
     ```
 
-4. 根据系统提示重新加载 `systemd` 守护进程的配置文件。
-
-    ```shell
-    systemctl daemon-reload
-    ```
-
-5. 启动 KWDB 节点。
+4. 启动 KWDB 节点。
 
     ```shell
     ./deploy.sh start
@@ -209,22 +228,30 @@ tar -zxvf <package_name>
     执行成功后，控制台输出以下信息：
 
     ```shell
-    START COMPLETED: KaiwuDB has started successfuly.
+    [START COMPLETED]:KaiwuDB start successfully.
     ```
 
-6. 查看 KWDB 节点状态。
+5. 使用以下任一方式查看节点状态：
 
-    ```shell
-    ./deploy.sh status
-    ```
+    - 在当前目录使用部署脚本
 
-    或者
+        ```shell
+        ./deploy.sh status
+        ```
 
-    ```shell
-    systemctl status kaiwudb
-    ```
+    - 在任一目录下使用 `systemctl` 命令
 
-7. （可选）配置 KWDB 开机自启动。
+        ```shell
+        systemctl status kaiwudb
+        ```
+
+    - 在任一目录下使用便捷脚本（推荐）
+
+        ```shell
+        kw-status
+        ```
+
+6. （可选）配置 KWDB 开机自启动。
 
     配置 KWDB 开机自启动后，如果系统重启，则自动启动 KWDB。
 
@@ -232,7 +259,7 @@ tar -zxvf <package_name>
     systemctl enable kaiwudb
     ```
 
-8. （可选）执行 `add_user.sh` 脚本创建数据库用户。如果跳过该步骤，系统将默认使用部署数据库时使用的用户，且无需密码访问数据库。
+7. （可选）执行 `add_user.sh` 脚本创建数据库用户。如果跳过该步骤，系统将默认使用部署数据库时使用的用户，且无需密码访问数据库。
 
     ```shell
     ./add_user.sh
@@ -245,6 +272,8 @@ tar -zxvf <package_name>
     ```shell
     [ADD USER COMPLETED]:User creation completed.
     ```
+
+8. 执行 `kw-sql` 使用 `root` 用户登录数据库或使用 [kwbase CLI 工具登录数据库](../access-kaiwudb/access-kaiwudb-cli.md)。
 
 ### 使用 kwbase CLI 启动 KWDB
 
