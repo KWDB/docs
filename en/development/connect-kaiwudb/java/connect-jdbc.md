@@ -273,7 +273,7 @@ The following table lists the mapping between SQL and JDBC data types:
 
 | SQL       | JDBC | Relational Engine | Time Series Engine |
 |-----------|-------------------------------------|---------------------------|---------------------------|
-| BIT       | java.lang.Boolean    | Yes           | No           |
+| BIT       | java.lang.String    | Yes           | No           |
 | BOOL      | java.lang.Boolean    | Yes           | Yes           |
 | SMALLINT  | java.lang.Integer    | Yes           | Yes           |
 | INTEGER   | java.lang.Integer    | Yes           | Yes           |
