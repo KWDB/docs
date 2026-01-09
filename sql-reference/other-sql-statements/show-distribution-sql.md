@@ -45,7 +45,7 @@ id: show-distribution-sql
 | 字段 | 说明 |
 | --- | --- |
 | `node_id` | 节点标识。|
-| `level` | 压缩层级，包括 `last segment`(最新段)、`entity segment`(实体段)和 `total`(总计)。|
+| `level` | 压缩层级，包括 `last segment` (最新段)、`entity segment` (实体段)和 `total` (总计)。|
 | `blocks_num` | 数据块个数。|
 | `blocks_size` | 磁盘占用空间大小。|
 | `avg_size` | 平均数据块占用空间大小。|
