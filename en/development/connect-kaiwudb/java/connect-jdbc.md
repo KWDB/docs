@@ -7,9 +7,9 @@ id: connect-jdbc
 
 Java Database Connectivity (JDBC) is the standard API for accessing databases in Java applications. It provides a comprehensive set of interfaces that enable Java applications to interact with various database types.
 
-KWDB offers a JDBC driver that allows Java applications to connect to KWDB instances and perform operations such as querying, inserting, updating, and deleting data. The driver handles the conversion of Java data types to their corresponding JDBC types before sending them to the database. For more information on data type conversions, see [Supported Data Types](#supported-data-types).
+KaiwuDB JDBC driver is the official Java connector for KWDB. It allows Java applications to connect to KWDB instances and perform operations such as querying, inserting, updating, and deleting data. The driver handles the conversion of Java data types to their corresponding JDBC types before sending them to the database. For more information on data type conversions, see [Supported Data Types](#supported-data-types).
 
-KaiwuDB JDBC driver is the official Java connector for KWDB. Built on the PgJDBC extension, it complies with JDBC 4.0, 4.1, and 4.2 specifications. Java developers can use this driver to communicate with KWDB and access tabular data. The operation process is as follows:
+Built on the PgJDBC extension, KaiwuDB JDBC driver complies with JDBC 4.0, 4.1, and 4.2 specifications. Java developers can use this driver to communicate with KWDB and access tabular data. The operation process is as follows:
 
 1. Connect to the data source and establish a database connection
 2. Create query or update commands
@@ -273,28 +273,29 @@ The following table lists the mapping between SQL and JDBC data types:
 
 | SQL       | JDBC | Relational Engine | Time Series Engine |
 |-----------|-------------------------------------|---------------------------|---------------------------|
-| BIT       | java.lang.Boolean                   | Yes                       | No                        |
-| BOOL      | java.lang.Boolean                   | Yes                       | Yes                       |
-| TIMESTAMP | java.sql.Timestamp                  | Yes                       | Yes                       |
-| DATE      | java.sql.Date                       | Yes                       | No                        |
-| TIME      | java.sql.Time                       | Yes                       | No                        |
-| NUMERIC   | Java.math.BigDecimal                | Yes                       | No                        |
-| INTEGER   | java.lang.Integer                   | Yes                       | Yes                       |
-| BIGINT    | java.lang.Long                      | Yes                       | Yes                       |
-| FLOAT     | java.lang.Float                     | Yes                       | Yes                       |
-| DOUBLE    | java.lang.Double                    | Yes                       | Yes                       |
-| SMALLINT  | java.lang.Short                     | Yes                       | Yes                       |
-| TINYINT   | java.lang.Byte                      | Yes                       | No                        |
-| REAL      | java.lang.Float                     | Yes                       | Yes                       |
-| BYTES     | [B                                  | Yes                       | Yes                       |
-| VARBYTES  | [B                                  | Yes                       | Yes                       |
-| CHAR      | java.lang.String                    | Yes                       | Yes                       |
-| NCHAR     | java.lang.String                    | Yes                       | Yes                       |
-| VARCHAR   | java.lang.String                    | Yes                       | Yes                       |
-| NVARCHAR  | java.lang.String                    | Yes                       | Yes                       |
-| ARRAY     | java.sql.Array                      | Yes                       | No                        |
-| BLOB      | java.sql.Blob                       | Yes                       | No                        |
-| CLOB      | java.sql.Clob                       | No                        | No                        |
+| BIT       | java.lang.String    | Yes           | No           |
+| BOOL      | java.lang.Boolean    | Yes           | Yes           |
+| SMALLINT  | java.lang.Integer    | Yes           | Yes           |
+| INTEGER   | java.lang.Integer    | Yes           | Yes           |
+| BIGINT    | java.lang.Long       | Yes           | Yes           |
+| REAL      | java.lang.Float      | Yes           | Yes           |
+| DOUBLE    | java.lang.Double     | Yes           | Yes           |
+| DECIMAL   | java.math.BigDecimal | Yes           | No           |
+| DATE      | java.sql.Date        | Yes           | No           |
+| TIME      | java.sql.Time        | Yes           | No           |
+| TIMESTAMP | java.sql.Timestamp   | Yes           | Yes           |
+| CHAR      | java.lang.String     | Yes           | Yes           |
+| VARCHAR   | java.lang.String     | Yes           | Yes           |
+| NCHAR     | java.lang.String     | Yes           | Yes           |
+| NVARCHAR  | java.lang.String     | Yes           | Yes           |
+| BYTES     | byte[] ([B)          | Yes           | No           |
+| VARBYTES  | byte[] ([B)          | Yes           | Yes           |
+| BLOB      | byte[] ([B)          | Yes           | No           |
+| CLOB      | java.lang.String     | Yes           | No           |
+| JSON      | com.kaiwudb.util.KWobject | Yes      | No           |
+| GEOMETRY  | java.lang.String     | No           | Yes           |
+| ARRAY     | java.sql.Array       | Yes           | No           |
+
 
 ### Exception Handling
 
