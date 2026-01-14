@@ -4,44 +4,39 @@ id: cluster-scale
 ---
 # Cluster Scaling
 
-## Scaling Out a Cluster
-
-::: warning Note
-
-During cluster scale-out, there may be brief periods of incomplete data queries. After the operation completes, the system will automatically synchronize to ensure data query integrity and accuracy.
-:::
+## Scale-Out Operations
 
 Both KWDB multi-replica clusters and single-replica clusters support scale-out operations.
 
-- After scaling out a multi-replica cluster, the system automatically triggers data redistribution by default. For more information, see [Multi-Replica Cluster Scale-Out](#multi-replica-cluster-scale-out).
-- After scaling out a single-replica cluster, the system will not redistribute existing data and will only balance data when new tables are created. For more information, see [Single-Replica Cluster Scale-Out](#single-replica-cluster-scale-out).
+- After scaling out a multi-replica cluster, the system automatically triggers data redistribution. For more information, see [Scaling Out Multi-Replica Clusters](#scaling-out-multi-replica-clusters).
+- After scaling out a single-replica cluster, the system does not redistribute existing data and only balances data when new tables are created. For more information, see [Scaling Out Single-Replica Clusters](#scaling-out-single-replica-clusters).
 
-### Multi-Replica Cluster Scale-Out
+::: warning Note
+During cluster scale-out, there may be brief periods where data queries are incomplete. After the operation completes, the system will automatically synchronize to ensure data integrity and query completeness.
+:::
 
-Scaling out a KWDB multi-replica cluster is straightforward—simply add new nodes to the existing cluster. The cluster will automatically complete data redistribution by default. You can also disable the automatic redistribution feature using the `kv.allocator.ts_consider_rebalance.enabled` parameter, then re-enable this parameter for data redistribution when system load is lower.
+### Scaling Out Multi-Replica Clusters
 
-During scale-out, the total disk capacity required by the cluster may temporarily increase due to data migration. Once scale-out is complete, the total disk capacity will return to pre-scale-out levels, with only minor differences.
+To scale out a KWDB multi-replica cluster, you only need to add new nodes to the cluster. By default, the cluster automatically completes data redistribution. If needed, you can disable this automatic redistribution using the `kv.allocator.ts_consider_rebalance.enabled` parameter.
 
-DDL operations related to tag indexes may fail during scale-out but will execute successfully after scale-out completes.
-
-Frequent execution of `ALTER` statements during scale-out may delay the automatic data rebalancing process.
+During the scale-out process, note the following: The total disk capacity required by the cluster may temporarily increase due to data migration but returns to normal levels once complete. DDL operations related to time-series indexes may fail during scale-out but execute successfully afterward. Additionally, frequent execution of `ALTER` statements may delay the automatic data rebalancing process.
 
 **Prerequisites**
 
-- KWDB has been installed on the nodes to be added using the multi-replica cluster deployment method. For instructions, see [Cluster Deployment](../deployment/cluster-deployment/script-deployment.md).
+- KWDB is installed on the new nodes using the multi-replica deployment method. For instructions, see [Cluster Deployment](../deployment/cluster-deployment/script-deployment.md).
 - The target cluster is running.
-- If the cluster uses secure mode, the `kaiwudb_certs.tar.gz` file is available.
+- If the cluster is deployed in secure mode, the `kaiwudb_certs.tar.gz` file is available.
 
 **Steps**
 
 1. Log in to the node that needs to join the cluster.
 
-2. If the cluster uses secure mode, copy the `kaiwudb_certs.tar.gz` file generated in the installation directory after deployment to the current node.
+2. If the cluster is deployed in secure mode, copy the `kaiwudb_certs.tar.gz` file generated in the installation directory after deployment to the current node.
 
-3. Execute the command to join the cluster.
+3. Run the following command to join the node to the cluster.
 
    ::: warning Note
-   The following commands list only commonly used startup flags. For all startup flags supported by KWDB, see [Startup Flags](../db-operation/cluster-settings-config.md).
+   The following commands show only commonly used startup flags. For all startup flags supported by KWDB, see [Startup Flags](../db-operation/cluster-settings-config.md).
    :::
 
    - Secure mode
@@ -56,7 +51,7 @@ Frequent execution of `ALTER` statements during scale-out may delay the automati
       <kwbase_path>/kwbase start --insecure --store=<data_dir> --brpc-addr=:27257 --listen-addr=<new_node>:26257 --http-addr=<new_node>:<rest_port> --join=<node_address_list> --background
       ```
 
-   **Parameters:**
+   Parameters:
 
    - `<kwbase_path>`: The directory where the kwbase binary file is located. The default directory is `/usr/local/kaiwudb/bin` for bare-metal deployment and `/kaiwudb/bin` for container deployment.
 
@@ -72,46 +67,50 @@ Frequent execution of `ALTER` statements during scale-out may delay the automati
 
    - `--background`: (Optional) runs the process in the background.
 
-4. Check the cluster node status:
+4. Check the cluster node status using the following command:
 
-   - Secure mode
+   - Deployment script
 
       ```shell
-      <kwbase_path>/kwbase node status --certs-dir=<cert_path> [--host=<address_of_any_alive_node>]
+      kw-status
       ```
 
-   - Insecure mode
+   - kwbase command
 
-      ```bash
+      ```shell
+      # Secure mode
+      <kwbase_path>/kwbase node status --certs-dir=<cert_path> [--host=<address_of_any_alive_node>]
+   
+      # Insecure mode
       <kwbase_path>/kwbase node status --insecure [--host=<address_of_any_alive_node>]
       ```
 
-    **Parameters:**
+   Parameters:
 
    - `<kwbase_path>`: The directory where the kwbase binary file is located. The default directory is `/usr/local/kaiwudb/bin` for bare-metal deployment and `/kaiwudb/bin` for container deployment.
    - `cert_path`: Certificate directory. The default storage location is `/etc/kaiwudb/certs`.
    - `--host=<address_of_any_alive_node>`: (Optional) specifies the node on which to execute the command. This node must be healthy. The address format is `<ip>:<port>`. If not specified, the default is `127.0.0.1:26257`.
 
-### Single-Replica Cluster Scale-Out
+### Scaling Out Single-Replica Clusters
 
-Scaling out a KWDB single-replica cluster is straightforward—simply add the nodes to the existing cluster.
+To scale out a KWDB single-replica cluster, you only need to add the nodes to the cluster.
 
 **Prerequisites**
 
-- KWDB has been installed on the nodes to be added using the single-replica cluster deployment method. For detailed information, see [Cluster Deployment](../deployment/cluster-deployment/script-deployment.md).
+- KWDB is installed on the new nodes using the single-replica deployment method. For more information, see [Cluster Deployment](../deployment/cluster-deployment/script-deployment.md).
 - The target cluster is running.
-- If the cluster uses secure mode, the `kaiwudb_certs.tar.gz` file is available.
+- If the cluster is deployed in secure mode, the `kaiwudb_certs.tar.gz` file is available.
 
 **Steps**
 
 1. Log in to the node that needs to join the cluster.
 
-2. If the cluster uses secure mode, copy the `kaiwudb_certs.tar.gz` file generated in the installation directory after deployment to the current node.
+2. If the cluster is deployed in secure mode, copy the `kaiwudb_certs.tar.gz` file generated in the installation directory after deployment to the current node.
 
-3. Execute the command to join the cluster.
+3. Run the following command to join the node to the cluster.
 
    ::: warning Note
-   The following commands list only commonly used startup flags. For all startup flags supported by KWDB, see [Startup Flags](../db-operation/cluster-settings-config.md).
+   The following commands show only commonly used startup flags. For all startup flags supported by KWDB, see [Startup Flags](../db-operation/cluster-settings-config.md).
    :::
 
    - Secure mode
@@ -126,59 +125,61 @@ Scaling out a KWDB single-replica cluster is straightforward—simply add the no
       <kwbase_path>/kwbase start-single-replica --insecure --store=<data_dir> --brpc-addr=:27257 --listen-addr=<new_node>:26257 --http-addr=<new_node>:<rest_port> --join=<node_address_list> --background
       ```
 
-4. Check the cluster node status:
+4. Check the cluster node status using the following command:
 
-   - Secure mode
+   - Deployment script
 
       ```shell
-      <kwbase_path>/kwbase node status --certs-dir=<cert_path> [--host=<address_of_any_alive_node>]
+      kw-status
       ```
 
-   - Insecure mode
+   - kwbase command
 
-      ```bash
+      ```shell
+      # Secure mode
+      <kwbase_path>/kwbase node status --certs-dir=<cert_path> [--host=<address_of_any_alive_node>]
+      
+      # Insecure mode
       <kwbase_path>/kwbase node status --insecure [--host=<address_of_any_alive_node>]
       ```
 
-## Scaling Down a Cluster
+## Scale-Down Operations
 
 Currently, single-replica clusters do not support scale-down operations.
 
-In a multi-replica cluster, when you actively remove a node, KWDB will allow the node to complete requests currently being executed, reject any new requests, and migrate range replicas and leases on that node to other nodes to ensure smooth data migration. The removed node can be permanently decommissioned as needed, maximizing system availability and data integrity.
+In a multi-replica cluster, when a node is decommissioned, KWDB allows the node to complete requests currently in progress, rejects new requests, and migrates range replicas and range leases to other nodes to ensure smooth data migration. The decommissioned node can be permanently removed from the cluster if required, ensuring system availability and data integrity.
 
 ::: warning Note
 
-- When removing a node, you must ensure that other nodes are available to take over the range replicas from that node. If no other nodes are available, the removal operation will hang indefinitely.
+- When removing a node, you must ensure that other nodes are available to take over the range replicas from that node. If no other nodes are available, the decommission operation will not complete.
 - KWDB clusters use a three-replica mechanism with a minimum cluster node count of 3. Further scale-down is not allowed.
-- If replica constraints have been previously set through the `CONFIGURE ZONE` statement and the constraint rules include the node to be scaled down, this may affect the normal operation of cluster scale-down. In this case, the constraint rules need to be reconfigured to remove the node being scaled down from the rules before cluster scale-down can resume normally.
+- If replica constraints were set through the `CONFIGURE ZONE` statement and the constraint rules include the node to be scaled down, this may affect the scale-down operation. In this case, the constraint rules need to be reconfigured to remove the node being scaled down from the rules before the scale-down operation can proceed.
 
 :::
 
-During scale-down, the total disk capacity required by the cluster may temporarily increase due to data migration. Once scale-down is complete, the total disk capacity will return to pre-scale-down levels, with only minor differences.
+During the scale-down process, note the following: The total disk capacity required by the cluster may temporarily increase due to data migration but returns to normal levels once complete. DDL operations related to time-series indexes may fail and data queries may be incomplete due to data partition migration. However, after the operation completes, operations execute successfully and data queries are complete and accurate.
 
-During scale-down, DDL operations related to tag indexes may fail and data queries may be incomplete due to data partition migration. However, after scale-down completes, operations will execute successfully and data queries will be complete and accurate.
-
-When a decommissioned node rejoins the cluster, the data directory needs to be cleared before it can rejoin as a new node.
+If you want to add a decommissioned node back to the cluster, you must clear its data directory first.
 
 **Prerequisites**
 
-- All nodes in the cluster are in a live state (`is_available` and `is_live` are both `true`):
+- All nodes in the cluster are alive (`is_available` and `is_live` are both `true`).
 
-   - Execute the cluster node status view command in the installation directory:
+   - Use the deployment script:
 
       ```shell
-      ./deploy.sh cluster --status
+      kw-status
       ```
 
-   - View node status through the `kwbase node status` command:
+   - Use the `kwbase node status` command:
 
       ```shell
       <kwbase_path>/kwbase node status [--host=<ip:port>] [--insecure | --certs-dir=<path>]
       ```
 
-- The ID of the node to be decommissioned has been obtained:
+- You have obtained the ID of the node to be decommissioned.
 
-- There are no unavailable ranges under-replicated ranges.
+- There are no unavailable ranges and under-replicated ranges.
 
     ```sql
     SELECT sum((metrics->>'ranges.unavailable')::DECIMAL)::INT AS ranges_unavailable,
@@ -216,7 +217,7 @@ When a decommissioned node rejoins the cluster, the data directory needs to be c
      <kwbase_path>/kwbase node status --insecure [--host=<address_of_any_alive_node>] --decommission
      ```
 
-3. (Optional) If you need to completely remove the decommissioned node from the cluster, execute the following command:
+3. (Optional) To completely remove the decommissioned node from the cluster, execute the following command:
 
    - Secure mode
 
@@ -230,16 +231,20 @@ When a decommissioned node rejoins the cluster, the data directory needs to be c
      <kwbase_path>/kwbase quit --insecure --host=<decommissioned_node>
      ```
 
-4. (Optional) Check whether the cluster node has been removed:
+4. (Optional) Check whether the cluster node has been removed using the following command:
 
-   - Secure mode
-
-     ```shell
-     <kwbase_path>/kwbase node status --certs-dir=<cert_path> [--host=<address_of_any_alive_node>]
-     ```
-
-   - Insecure mode
+   - Deployment script
 
       ```shell
+      kw-status
+      ```
+
+   - kwbase command
+
+      ```shell
+      # Secure mode
+      <kwbase_path>/kwbase node status --certs-dir=<cert_path> [--host=<address_of_any_alive_node>]
+      
+      # Insecure mode
       <kwbase_path>/kwbase node status --insecure [--host=<address_of_any_alive_node>]
       ```

@@ -23,7 +23,7 @@ This section provides comprehensive uninstallation procedures for single-node KW
     ./deploy.sh uninstall 
     ```
 
-4. Confirm whether to delete the data directory.
+4. When prompted, choose whether to delete the data, certificates and logs.
 
     ```shell
     When uninstalling KWDB, you can either delete or keep all user data. Please confirm your choice: Do you want to delete the data? (y/n): 

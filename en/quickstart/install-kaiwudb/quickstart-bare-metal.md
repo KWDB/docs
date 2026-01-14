@@ -9,7 +9,7 @@ KWDB supports multiple deployment methods to meet different user needs:
 
 | Deployment Method                        | Features                                                      | Target Users/Scenarios                           | Technical Requirements        | Detailed Guide                                                                           |
 | ---------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------ | ----------------------------- | ---------------------------------------------------------------------------------------- |
-| **Script Deployment (Recommended)**      | One-click containerized deployment using built-in scripts     | Production environments requiring stable and rapid deployment | Basic Linux operational skills | [Deploy KWDB Using Scripts](#deploy-kwdb-using-scripts)                           |
+| **Script Deployment (Recommended)**      | One-click deployment using built-in scripts     | Production environments requiring stable and rapid deployment | Basic Linux operational skills | [Deploy KWDB Using Scripts](#deploy-kwdb-using-scripts)                           |
 | **Command Line Interface (CLI)**        | Fine-grained control and deep customization        | Advanced users with customization needs | Familiarity with database deployment processes and command-line operations  | [Deploy KWDB Using kwbase CLI](#deploy-kwdb-using-kwbase-cli) |
 
 ::: warning Note
@@ -26,7 +26,7 @@ The following specifications are required for KWDB deployment:
 
 | Item  | Requirements  |
 | ---------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| CPU and Memory | - Minimum: 4 CPU cores and 8 GB RAM per node <br> - For high-volume data, complex workloads, high concurrency, or performance-critical applications, allocate additional resources accordingly |
+| CPU and Memory | - Minimum: 4 CPU cores and 8 GB RAM per node <br> - For large data volumes, complex workloads, high concurrency, or performance-critical applications, allocate higher CPU and memory resources to ensure efficient system operation |
 | Disk       | - Recommended: SSD or NVMe devices<br>- Minimum performance: 500 IOPS and 30 MB/s throughput<br>- Storage: <1 GB for KWDB system, with additional space needed based on data volume<br>- Avoid shared storage (NFS, CIFS, CEPH)<br>- Avoid excessive device count and high write loads for deployment on HDDs, as concurrent writes can significantly degrade performance |
 | File System | ext4 recommended for optimal performance |
 
@@ -48,7 +48,7 @@ KWDB can be deployed on the following operating systems:
 
 ::: warning Note
 
-- Operating systems or versions not listed here **may** work with KWDB but are not officially supported.
+- Operating systems or versions not listed here **may** run KWDB but are not officially supported.
 - For installation packages not listed on the [download page](https://gitee.com/kwdb/kwdb/releases/), contact [KWDB Technical Support](https://www.kaiwudb.com/support/).
 :::
 
@@ -59,7 +59,7 @@ The following table lists the required dependencies:
 | Dependency    | Version   | Remarks |
 | ------------- | --------- | ----------- |
 | OpenSSL       | v1.1.1+   | N/A         |
-| libprotobuf      | v3.6.1 ~ v21.x   |  The default version of libprotobuf included in Ubuntu 18.04 is lower than the required version. Users need to install a compatible version beforehand (3.6.1 and 3.12.4 recommended).       |
+| libprotobuf      | v3.6.1 ~ v21.x   |  The default version of libprotobuf included in Ubuntu 18.04 is lower than required. You must install a compatible version beforehand (3.6.1 and 3.12.4 recommended).       |
 | GEOS          | v3.3.8+   | Optional    |
 | xz-libs       | v5.2.0+   | N/A         |
 | libgcc        | v7.3.0+   | N/A         |
@@ -138,7 +138,7 @@ Deployment logs are saved in the `log` directory within `kwdb_install`. Once dep
 
     ::: warning Note
 
-    By default, the `deploy.cfg` configuration file includes cluster configuration parameters. Remove or comment out the `[cluster]` section.
+    By default, the `deploy.cfg` configuration file contains cluster and primary-secondary cluster configuration parameters. Please delete or comment out the `[cluster]` and `[additional]` configuration item.
 
     :::
 
@@ -146,21 +146,34 @@ Deployment logs are saved in the `log` directory within `kwdb_install`. Once dep
 
     ```yaml
     [global]
+    # Whether to turn on secure mode
     secure_mode=tls
+    # Management KWDB user
     management_user=kaiwudb
+    # KWDB cluster http port
     rest_port=8080
+    # KWDB service port
     kaiwudb_port=26257
+    # KWDB brpc port
     brpc_port=27257
+    # KWDB data directory
     data_root=/var/lib/kaiwudb
-    cpu=1
+    # CPU usage[0-1]
+    # cpu=1
 
     [local]
-    node_addr=your-host-ip
+    # local node configuration
+    node_addr=127.0.0.1
 
     # [cluster]
-    # node_addr=your-host-ip, your-host-ip
+    # remote node addr,split by ','
+    # node_addr=127.0.0.2
+    # ssh info
     # ssh_port=22
     # ssh_user=admin
+
+    # [additional]
+    # IPs=127.0.0.3,127.0.0.4
     ```
 
     Parameters:
@@ -176,61 +189,74 @@ Deployment logs are saved in the `log` directory within `kwdb_install`. Once dep
     | | `cpu` | (Optional) Specifies CPU usage for KWDB on the node. The default is unlimited. The value range is [0,1], with a precision of up to two decimal places. <br>**Note:** If the deployment environment is **Ubuntu 18.04**, you need to modify the `CPUQuota` value in the `kaiwudb.service` file after deployment is complete. Specifically, change any decimal values to integers (e.g., change `180.0%` to `180%`) to ensure the setting takes effect. For instructions, see [CPU Usage Configuration](../../deployment/cluster-config/cluster-config-bare-metal.md#manage-cpu-resources). |
     | **local** | `node_addr` | The IP address for client and application connections. The default listening address is `0.0.0.0`, meaning the node will listen on `kaiwudb_port` across all IP addresses on the host. |
 
-2. Grant execution permission to the `deploy.sh` script.
-
-    ```shell
-    chmod +x ./deploy.sh
-    ```
-
-3. Install KWDB in single-node mode.
+2. Install KWDB in single-node mode.
 
     ```shell
     ./deploy.sh install --single
     ```
 
-    Upon successful execution, the console will display the following message:
+3. After verifying that the configuration is correct, enter `Y` or `y`. To return and modify the `deploy.cfg` configuration file, enter `N` or `n`.
 
     ```shell
-    INSTALL COMPLETED: KaiwuDB has been installed successfully!
+    ================= KaiwuDB Basic Info =================
+    Deploy Mode: bare-metal
+    Start Mode: single
+    RESTful Port: 8080
+    KaiwuDB Port: 26257
+    BRPC Port: 27257
+    Data Root: /var/lib/kaiwudb
+    Secure Mode: tls
+    CPU Usage Limit: unlimited
+    Local Node Address: 127.0.0.1
+    =========================================================
+    Please confirm the installation information above(Y/n):
     ```
 
-4. Reload the `systemd` daemon configuration.
+    Upon successful execution, the console displays the following message:
 
-    ```shell
-    systemctl daemon-reload
-    ```
+      ```shell
+      [INSTALL COMPLETED]:KaiwuDB has been installed successfully! ...
+      ```
 
-5. Start KWDB.
+4. Start KWDB.
 
     ```shell
     ./deploy.sh start
     ```
 
-    Upon successful execution, the console will display the following message:
+    Upon successful execution, the console displays the following message:
 
     ```shell
-    START COMPLETED: KaiwuDB has started successfully.
+    [START COMPLETED]:KaiwuDB start successfully.
     ```
 
-6. Check the database status.
+5. Check the database status using any of the following methods:
 
-    ```shell
-    ./deploy.sh status
-    ```
+    - The deployment script in the current directory
 
-    or
+        ```shell
+        ./deploy.sh status
+        ```
 
-    ```shell
-    systemctl status kaiwudb
-    ```
+    - The `systemctl` command from any directory
 
-7. (Optional) Enable KWDB to start automatically after a system reboot.
+        ```shell
+        systemctl status kaiwudb
+        ```
+
+    - The helper script from any directory (recommended)
+
+        ```shell
+        kw-status
+        ```
+
+6. (Optional) Enable KWDB to start automatically after a system reboot.
 
     ```shell
     systemctl enable kaiwudb
     ```
 
-8. (Optional) Run the `add_user.sh` script to create a database user. If skipped, the system will use the database deployment user by default, and no password is required to access the database.
+7. (Optional) Run the `add_user.sh` script to create a database user. If skipped, the system will use the database deployment user by default, and no password is required to access the database.
 
     ```bash
     ./add_user.sh
@@ -238,11 +264,13 @@ Deployment logs are saved in the `log` directory within `kwdb_install`. Once dep
     Please enter the password:
     ```
 
-    Upon successful execution, the following message will be displayed in the console:
+    Upon successful execution, the console displays the following message:
 
     ```plain
     [ADD USER COMPLETED]: User creation completed.
     ```
+
+8. Execute `kw-sql` to log in to the database as the `root` user, or use the [kwbase CLI tool to log in to the database](../access-kaiwudb/access-kaiwudb-cli.md).
 
 ### Deploy KWDB Using kwbase CLI
 

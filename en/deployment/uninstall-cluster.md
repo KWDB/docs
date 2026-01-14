@@ -42,7 +42,7 @@ For KWDB deployed using the installation script, perform the following steps:
         ./deploy.sh uninstall 
         ```
 
-    3. When prompted, choose whether to delete the data directory:
+    3. When prompted, choose whether to delete the data, certificates and logs:
 
          ```shell
          When uninstalling KaiwuDB, you can either delete or keep all user data. Please confirm your choice: Do you want to delete the data? (y/n): 
