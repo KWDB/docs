@@ -5,14 +5,14 @@ id: access-kaiwudb-cli
 
 # Connect to KWDB Using the kwbase CLI Tool
 
-This section explains how to connect to KWDB using kwbase, the built-in command-line interface (CLI) client. You can connect in either insecure mode for testing purposes or secure modes for production environments.
+This section explains how to connect to KWDB using kwbase, the built-in command-line interface (CLI) client. You can connect in either insecure mode for testing purposes or secure mode for production environments.
 
-When you deploy KWDB using scripts, the system automatically generates a `kw-sql` helper script and creates a symbolic link in the `/usr/bin` directory. This script wraps the kwbase connection command, allowing the root user to quickly access the database.
+When you deploy KWDB using scripts, the system automatically generates a `kw-sql` helper script and creates a symbolic link in the `/usr/bin` directory. This script wraps the kwbase commands, allowing the root user to quickly access the database.
 
 ## Quick Login Using the Helper Script
 
 ::: warning Note
-The `kw-sql` script does not support other users. To connect as a different user or use Separation of Duties mode, use the kwbase command instead.
+The `kw-sql` script does not support other users. To connect as a different user , use the kwbase command instead.
 :::
 
 **Prerequisites**
