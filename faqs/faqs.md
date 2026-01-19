@@ -453,3 +453,23 @@ id: faqs
     }
   }
   ```
+
+## . NET 框架
+
+### 实体类自动建表失败
+
+- **问题描述**
+
+  在 .NET 中使用 SqlSugar ORM 框架连接 KWDB 时，通过实体类自动创建表时失败，系统报错: `ERROR: 0A000: can not use multi-statement transactions involving a schema change under weak isolation levels`。
+
+- **问题解答**
+
+  该错误是由在 RC（Read Committed）隔离级别的显式事务中执行 DDL 语句引起。KWDB 目前不允许在隔离级别为 Read Committed 的显式事务（`BEGIN...COMMIT`）中执行 DDL 操作。可以在代码中将事务隔离级别设置为以下任一级别来解决：
+  - Repeatable Read（可重复读）
+  - Serializable（串行化，默认隔离级别）
+
+  SqlSugar 配置示例:
+
+  ```csharp
+  db.Ado.BeginTran(IsolationLevel.RepeatableRead);
+  ```
