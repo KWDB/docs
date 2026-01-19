@@ -40,8 +40,8 @@ SET CLUSTER SETTING kv.allocator.ts_consider_rebalance.enabled = false;
 
 - 待扩容节点已通过多副本集群部署方式完成 KWDB 安装（参见[集群部署](../deployment/cluster-deployment/script-deployment.md)）
 - 目标集群处于运行状态
-- 脚本扩容方式: 待扩容节点需使用脚本部署方式安装
-- 命令行扩容方式: 如采用安全部署模式，需准备 `kaiwudb_certs.tar.gz` 证书文件
+- 脚本扩容方式：待扩容节点需使用脚本部署方式安装
+- 命令行扩容方式：如采用安全部署模式，需准备 `kaiwudb_certs.tar.gz` 证书文件
 - 用户权限（仅安全模式需要）:
   - 主节点的 `sudo` 权限，用于准备和打包证书文件
   - 主节点到待扩容节点的 SSH 登录权限，用于传输证书
@@ -125,7 +125,7 @@ SET CLUSTER SETTING kv.allocator.ts_consider_rebalance.enabled = false;
 
 2. 如果集群采用安全部署模式，将 `kaiwudb_certs.tar.gz` 复制到当前节点并解压到 `/etc/kaiwudb/certs` 目录。
 
-3. 执行加入集群命令。
+3. 执行加入集群命令：
 
    ::: warning 提示
    以下命令仅列出了常用的启动参数，KWDB 支持的所有启动参数见[启动参数](../db-operation/cluster-settings-config.md)。
@@ -203,7 +203,7 @@ KWDB 单副本集群的扩容非常简单，只需要将待扩容节点加入到
 
 2. 如果集群采用安全部署模式，将 `kaiwudb_certs.tar.gz` 复制到当前节点并解压到 `/etc/kaiwudb/certs` 目录。
 
-3. 执行加入集群命令。
+3. 执行加入集群命令：
 
    ::: warning 提示
    以下命令仅列出了常用的启动参数，KWDB 支持的所有启动参数见[启动参数](../db-operation/cluster-settings-config.md)。
@@ -235,7 +235,7 @@ KWDB 单副本集群的扩容非常简单，只需要将待扩容节点加入到
       --background
       ```
 
-4. 使用以下命令检查集群节点状态。
+4. 使用以下命令检查集群节点状态：
 
    - 脚本部署
 
@@ -271,7 +271,7 @@ KWDB 多副本集群支持脚本缩容和命令行缩容两种方式。用户主
 
 ### 前提条件
 
-- 集群内所有节点均处于存活状态（`is_available` 和 `is_live` 均为 `true`）。
+- 集群内所有节点均处于存活状态（`is_available` 和 `is_live` 均为 `true`）：
 
    - 脚本部署
 
@@ -279,13 +279,13 @@ KWDB 多副本集群支持脚本缩容和命令行缩容两种方式。用户主
       kw-status
       ```
 
-   - 在安装包目录执行集群节点状态查看命令：
+   - 在安装包目录执行集群节点状态查看命令
 
       ```shell
       ./deploy.sh cluster --status
       ```
 
-   - 通过 `kwbase node status` 命令查看节点状态：
+   - 通过 `kwbase node status` 命令查看节点状态
 
       ```shell
       <kwbase_path>/kwbase node status [--host=<ip:port>] [--insecure | --certs-dir=<path>]
@@ -293,7 +293,7 @@ KWDB 多副本集群支持脚本缩容和命令行缩容两种方式。用户主
 
 - 已获得待退役节点的 ID。
 
-- 没有不可用分区和副本不足分区。
+- 没有不可用分区和副本不足分区：
 
    ```sql
    SELECT sum((metrics->>'ranges.unavailable')::DECIMAL)::INT AS ranges_unavailable,
@@ -367,7 +367,7 @@ KWDB 多副本集群支持脚本缩容和命令行缩容两种方式。用户主
      <kwbase_path>/kwbase quit --insecure --host=<decommissioned_node>
      ```
 
-4. （可选）使用以下命令确认节点已成功移除。
+4. （可选）使用以下命令确认节点已成功移除：
 
    - 脚本部署
 
