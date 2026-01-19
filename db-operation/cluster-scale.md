@@ -28,7 +28,7 @@ KWDB 多副本集群支持脚本扩容和命令行扩容两种方式。扩容完
 
 **数据重分布**
 
-扩容完成后，系统默认自动将现有数据均匀分布到所有节点。如需关闭自动重分布功能，可设置以下参数:
+扩容完成后，系统默认自动将现有数据均匀分布到所有节点。如需关闭自动重分布功能，可设置以下参数：
 
 ```sql
 SET CLUSTER SETTING kv.allocator.ts_consider_rebalance.enabled = false;
@@ -42,7 +42,7 @@ SET CLUSTER SETTING kv.allocator.ts_consider_rebalance.enabled = false;
 - 目标集群处于运行状态
 - 脚本扩容方式：待扩容节点需使用脚本部署方式安装
 - 命令行扩容方式：如采用安全部署模式，需准备 `kaiwudb_certs.tar.gz` 证书文件
-- 用户权限（仅安全模式需要）:
+- 用户权限（仅安全模式需要）：
   - 主节点的 `sudo` 权限，用于准备和打包证书文件
   - 主节点到待扩容节点的 SSH 登录权限，用于传输证书
   - 待扩容节点安装目录的写入权限
