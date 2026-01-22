@@ -1,27 +1,36 @@
 ---
-title: Overview
+title: Quick Start Overview
 id: overview
 ---
 
-# Overview
+# Quick Start Overview
 
-This section walks you through setting up KWDB on a single machine. For instructions on cluster deployment, see [Cluster Deployment](../deployment/overview.md).
+This section helps you quickly deploy, connect to, and start using the KWDB database.
 
-- **Deploying KWDB**
+## Step 1: Deploy KWDB
 
-  For non-production environments, you can deploy KWDB using any of the following methods:
+Choose the deployment method that best suits your needs:
 
-  - [Bare-Metal Deployment](./install-kaiwudb/quickstart-bare-metal.md): Deploy KWDB directly on your operating system
-  - [Container Deployment](./install-kaiwudb/quickstart-docker.md): Deploy KWDB using Docker containers
+- **[Quick Deployment](./install-kaiwudb/quick-deploy.md)** – One-click deployment using an automated script. Recommended for first-time users.
+- **[Bare-metal Deployment](./install-kaiwudb/quickstart-bare-metal.md)** – Native installation for optimal performance.
+- **[Container Deployment](./install-kaiwudb/quickstart-docker.md)** – Docker-based deployment with environment isolation.
 
-- **Connecting to and Managing KWDB**
+## Step 2: Connect to KWDB
 
-  Once deployed, you can connect to KWDB and perform data operations using any of the following methods:
+Select a connection method based on your workflow:
 
-  - **CLI tool**: [Connect to](./access-kaiwudb/access-kaiwudb-cli.md) and [manage](./use-kaiwudb/use-kaiwudb-cli.md) KWDB through the kwbase CLI tool
-  - **JDBC driver**: [Connect to](./access-kaiwudb/access-kaiwudb-jdbc.md) and [manage](./use-kaiwudb/use-kaiwudb-jdbc.md) KWDB through the KaiwuDB JDBC driver
-  - **Graphical tool**: [Connect to](./access-kaiwudb/access-kaiwudb-kdc.md) and [manage](./use-kaiwudb/use-kaiwudb-kdc.md) KWDB through the KaiwuDB Developer Center
+**Command-line Tools**
 
-- **Uninstalling KWDB**
+- kwbase CLI: [Connect](./access-kaiwudb/access-kaiwudb-cli.md) | [Use](./use-kaiwudb/use-kaiwudb-cli.md)
 
-  If you need to uninstall KWDB, see [Uninstall KWDB](./uninstall-kaiwudb/uninstall-db.md)
+**Graphical Tools**
+
+- KaiwuDB Developer Center (KDC): [Connect](./access-kaiwudb/access-kaiwudb-kdc.md) | [Use](./use-kaiwudb/use-kaiwudb-kdc.md)
+
+**Application Programming Interfaces**
+
+- KaiwuDB JDBC: [Connect](./access-kaiwudb/access-kaiwudb-jdbc.md) | [Use](./use-kaiwudb/use-kaiwudb-jdbc.md)
+
+## Uninstall KWDB
+
+If you need to remove KWDB, see [Uninstall KWDB](./uninstall-kaiwudb/uninstall-db.md).

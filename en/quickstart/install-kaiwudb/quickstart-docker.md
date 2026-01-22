@@ -145,7 +145,7 @@ Deployment logs are saved in the `log` directory within `kwdb_install`. The syst
 
     ::: warning Note
 
-    By default, the `deploy.cfg` configuration file includes cluster configuration parameters. Please remove or comment out the `[cluster]` section.
+    By default, the `deploy.cfg` configuration file contains cluster and primary-secondary cluster configuration parameters. Please delete or comment out the `[cluster]` and `[additional]` configuration item.
 
     :::
 
@@ -153,21 +153,34 @@ Deployment logs are saved in the `log` directory within `kwdb_install`. The syst
 
     ```yaml
     [global]
+    # Whether to turn on secure mode
     secure_mode=tls
+    # Management KWDB user
     management_user=kaiwudb
+    # KWDB cluster http port
     rest_port=8080
+    # KWDB service port
     kaiwudb_port=26257
+    # KWDB brpc port
     brpc_port=27257
+    # KWDB data directory
     data_root=/var/lib/kaiwudb
-    cpu=1
+    # CPU usage[0-1]
+    # cpu=1
 
     [local]
-    node_addr=your-host-ip
+    # local node configuration
+    node_addr=127.0.0.1
 
     # [cluster]
-    # node_addr=your-host-ip, your-host-ip
+    # remote node addr,split by ','
+    # node_addr=127.0.0.2
+    # ssh info
     # ssh_port=22
     # ssh_user=admin
+
+    # [additional]
+    # IPs=127.0.0.3,127.0.0.4
     ```
 
     Parameters:
@@ -183,61 +196,74 @@ Deployment logs are saved in the `log` directory within `kwdb_install`. The syst
     | | `cpu` | (Optional) Specifies CPU usage for KWDB on the node. The default is unlimited. The value range is [0,1], with a precision of up to two decimal places. |
     | **local** | `node_addr` | The IP address for client and application connections. The default listening address is `0.0.0.0`, meaning the node will listen on `kaiwudb_port` across all IP addresses on the host. |
 
-2. Grant execution permission to the `deploy.sh` script.
-
-    ```shell
-    chmod +x ./deploy.sh
-    ```
-
-3. Install KWDB in single-node mode.
+2. Install KWDB in single-node mode.
 
     ```shell
     ./deploy.sh install --single
     ```
 
-    Upon successful execution, the console will display the following message:
+3. After verifying that the configuration is correct, enter `Y` or `y`. To return and modify the `deploy.cfg` configuration file, enter `N` or `n`.
 
     ```shell
-    INSTALL COMPLETED: KaiwuDB has been installed successfuly! ...
+    ================= KaiwuDB Basic Info =================
+    Deploy Mode: container
+    Start Mode: single
+    RESTful Port: 8080
+    KaiwuDB Port: 26257
+    BRPC Port: 27257
+    Data Root: /var/lib/kaiwudb
+    Secure Mode: tls
+    CPU Usage Limit: unlimited
+    Local Node Address: 127.0.0.1
+    ======================================================
+    Please confirm the installation information above(Y/n):
     ```
 
-4. Reload the `systemd` daemon configuration.
+    Upon successful execution, the console displays the following message:
 
-    ```shell
-    systemctl daemon-reload
-    ```
+      ```shell
+      [INSTALL COMPLETED]:KaiwuDB has been installed successfully! ...
+      ```
 
-5. Start KWDB.
+4. Start KWDB.
 
     ```shell
     ./deploy.sh start
     ```
 
-    Upon successful execution, the console will display the following message:
+    Upon successful execution, the console displays the following message:
 
     ```shell
-    START COMPLETED: KaiwuDB has started successfuly.
+    [START COMPLETED]:KaiwuDB start successfully.
     ```
 
-6. Check the system status.
+5. Check the database status using any of the following methods:
 
-    ```shell
-    ./deploy.sh status
-    ```
+    - The deployment script in the current directory
 
-    or
+        ```shell
+        ./deploy.sh status
+        ```
 
-    ```shell
-    systemctl status kaiwudb
-    ```
+    - The `systemctl` command from any directory
 
-7. (Optional) Enable KWDB to start automatically after a system reboot.
+        ```shell
+        systemctl status kaiwudb
+        ```
+
+    - The helper script from any directory (recommended)
+
+        ```shell
+        kw-status
+        ```
+
+6. (Optional) Enable KWDB to start automatically after a system reboot.
 
     ```shell
     systemctl enable kaiwudb
     ```
 
-8. (Optional) Run the `add_user.sh` script to create a database user. If skipped, the system will use database deployment user by default, and no password is required to access the database.
+7. (Optional) Run the `add_user.sh` script to create a database user. If skipped, the system will use database deployment user by default, and no password is required to access the database.
 
     ```bash
     ./add_user.sh
@@ -245,11 +271,13 @@ Deployment logs are saved in the `log` directory within `kwdb_install`. The syst
     Please enter the password:
     ```
 
-    Upon successful execution, the following message will be displayed in the console:
+    Upon successful execution, the console displays the following message:
 
     ```shell
     [ADD USER COMPLETED]: User creation completed.
     ```
+
+8. Execute `kw-sql` to log in to the database as the `root` user, or use the [kwbase CLI tool to log in to the database](../access-kaiwudb/access-kaiwudb-cli.md).
 
 ### Deploy KWDB using YAML Files
 

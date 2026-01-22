@@ -29,7 +29,7 @@ id: overview
 
 **应用程序接口**
 
-- KWDB JDBC: [连接](./access-kaiwudb/access-kaiwudb-jdbc.md) | [使用](./use-kaiwudb/use-kaiwudb-jdbc.md)
+- KaiwuDB JDBC: [连接](./access-kaiwudb/access-kaiwudb-jdbc.md) | [使用](./use-kaiwudb/use-kaiwudb-jdbc.md)
 
 ## 卸载 KWDB
 
