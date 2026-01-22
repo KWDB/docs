@@ -85,7 +85,7 @@ SET CLUSTER SETTING kv.allocator.ts_consider_rebalance.enabled = false;
    6. 将压缩包传输到待扩容节点：
 
       ```shell
-      scp kaiwudb_certs.tar.gz admin@<new_node_ip>:<install_dir>
+      scp kaiwudb_certs.tar.gz <username>@<new_node_ip>:<install_dir>
       ```
 
 2. 登录待扩容节点，在安装包目录执行加入集群命令：
