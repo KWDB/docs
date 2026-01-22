@@ -82,13 +82,7 @@ SET CLUSTER SETTING kv.allocator.ts_consider_rebalance.enabled = false;
       sudo tar -czf kaiwudb_certs.tar.gz ./ca.key ./ca.crt
       ```
 
-   6. 将压缩包所有者修改为 `admin` 用户：
-
-      ```shell
-      sudo chown admin:admin kaiwudb_certs.tar.gz
-      ```
-
-   7. 将压缩包传输到待扩容节点：
+   6. 将压缩包传输到待扩容节点：
 
       ```shell
       scp kaiwudb_certs.tar.gz admin@<new_node_ip>:<install_dir>
