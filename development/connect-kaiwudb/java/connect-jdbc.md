@@ -272,7 +272,7 @@ while(resultSet.next()){
 
 | SQL       | JDBC                 | 关系引擎支持 | 时序引擎支持 |
 |-----------|----------------------|-------------|-------------|
-| BIT       | java.lang.Boolean    | 是           | 否           |
+| BIT       | java.lang.String    | 是           | 否           |
 | BOOL      | java.lang.Boolean    | 是           | 是           |
 | SMALLINT  | java.lang.Integer    | 是           | 是           |
 | INTEGER   | java.lang.Integer    | 是           | 是           |
