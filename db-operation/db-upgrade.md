@@ -19,7 +19,7 @@ id: db-upgrade
 ::: warning 说明
 
 - 升级后无法简单降级至之前版本。如果需要降级，必须先卸载当前版本，再使用原有版本安装 KWDB，然后使用卸载前创建的备份将数据还原到数据库。有关卸载单机版数据库的详细信息，参见[卸载数据库](../quickstart/uninstall-kaiwudb/uninstall-db.md)。有关卸载集群版本的详细信息，参见[卸载集群](../deployment/uninstall-cluster.md)。
-- KWDB 支持通过导入导出方式将之前任一版本升级至最新版本。具体操作，参见[数据导出](../db-administration/import-export-data/export-data.md)和[数据导入](../db-administration/import-export-data/import-data.md)。注意：使用导入导出升级方式升级后，多副本集群的高可用性可能会受到影响。
+- KWDB 支持通过导入导出方式将之前任一版本升级至最新版本。具体操作，参见[数据导出](../db-administration/import-export-data/export-data.md)和[数据导入](../db-administration/import-export-data/import-data.md)。**注意**：从 2.x 版本升级时，导出的 `meta.sql` 文件中包含时序表的 `PARTITION INTERVAL` 语法。由于 3.1.0 版本的时序表已废弃该语法（注：时序库仍然支持），导入前需手动删除文件中的相关语法，否则会导致导入失败；使用导入导出升级方式升级后，多副本集群的高可用性可能会受到影响。
 :::
 
 ### 单机升级
