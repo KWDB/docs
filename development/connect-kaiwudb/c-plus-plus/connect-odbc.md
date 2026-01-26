@@ -411,8 +411,6 @@ int main() {
 
 ### 安装 PostgreSQL ODBC 驱动
 
-以下示例以 Kylin V10 操作系统为例，下载并安装 PostgreSQL ODBC 驱动 `13.00.0000-1`。
-
 1. 下载并安装 PostgreSQL ODBC 驱动。
 
     ```bash

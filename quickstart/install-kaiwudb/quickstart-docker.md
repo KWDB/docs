@@ -50,8 +50,6 @@ KWDB 支持在以下已安装 Docker 的操作系统中进行容器部署。
 | CentOS       | 7          |            | ✓          |
 |              | 8          |            | ✓          |
 | Debian       | V11        | ✓          |            |
-| KylinOS      | V10 SP2    | ✓          | ✓          |
-|              | V10 SP3 2403    | ✓          | ✓          |
 | openEuler    | 24.03      |            | ✓          |
 | Ubuntu       | V20.04     | ✓          | ✓          |
 |              | V22.04     | ✓          | ✓          |

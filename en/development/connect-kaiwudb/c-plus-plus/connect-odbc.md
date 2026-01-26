@@ -415,8 +415,6 @@ int main() {
 
 ### Install PostgreSQL ODBC Driver
 
-The following example demonstrates how to install PostgreSQL ODBC driver version `13.00.0000-1` on Kylin V10 operating system:
-
 1. Download and install the driver:
 
     ```bash

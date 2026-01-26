@@ -64,28 +64,6 @@ KWDB can be deployed on the following operating systems.
             <td></td>
         </tr>
         <tr>
-            <td rowspan="3" class="os-name">KylinOS</td>
-            <td>V10 SP2</td>
-            <td class="check">✓</td>
-            <td class="check">✓</td>
-            <td class="check">✓</td>
-            <td class="check">✓</td>
-        </tr>
-        <tr>
-            <td>V10 SP3 2303</td>
-            <td class="check">✓</td>
-            <td class="check">✓</td>
-            <td class="check"></td>
-            <td class="check"></td>
-        </tr>
-        <tr>
-            <td>V10 SP3 2403</td>
-            <td class="check">✓</td>
-            <td class="check">✓</td>
-            <td class="check">✓</td>
-            <td class="check">✓</td>
-        </tr>
-        <tr>
             <td class="os-name">openEuler</td>
             <td>24.03</td>
             <td></td>

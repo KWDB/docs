@@ -28,9 +28,6 @@ KWDB can be deployed on the following operating systems:
 | Operating System | Version                   | ARM_64 | x86_64 |
 | :----------- | :--------------------------- | :--------- | :--------- |
 | Anolis       | 8                          | ✓          | ✓          |
-| KylinOS      | V10 SP2                      | ✓          | ✓          |
-|              | V10 SP3 2303                 | ✓          | ✓          |
-|              | V10 SP3 2403                 | ✓          | ✓          |
 | Ubuntu       | V20.04                       | ✓          | ✓          |
 |              | V22.04                       | ✓          | ✓          |
 |              | V24.04                       | ✓          | ✓          |
@@ -83,8 +80,6 @@ The KWDB repository currently provides [DEB or RPM installation packages](https:
 
 - Ubuntu V20.04 x86_64
 - Ubuntu V22.04 x86_64
-- Kylin V10_2403 x86_64
-- Kylin V10_2403 ARM_64
 
 :::
 
