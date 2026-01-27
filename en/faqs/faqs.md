@@ -34,7 +34,7 @@ id: faqs
   [INFO] 2024-08-28 09:35:57 start init directory /etc/kaiwudb/data/kaiwudb
   [INFO] 2024-08-28 09:35:57 init directory success
   [INFO] 2024-08-28 09:35:57 start install binaries and libraries to /usr/local/kaiwudb
-  [ERROR] 2024-08-28 09:35:57 error: Failed dependencies: squashfs-tools is needed by kaiwudb-server-2.0.3.2-kylin.kyl0.aarch64
+  [ERROR] 2024-08-28 09:35:57 error: Failed dependencies: squashfs-tools is needed by ...
   ```
 
 ## Storage FAQ

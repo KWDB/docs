@@ -32,8 +32,6 @@ KWDB can be deployed on the following operating systems with Docker installed:
 | CentOS       | 7          |            | ✓          |
 |              | 8          |            | ✓          |
 | Debian       | V11        | ✓          |            |
-| KylinOS      | V10 SP2    | ✓          | ✓          |
-|              | V10 SP3 2403    | ✓          | ✓          |
 | openEuler    | 24.03      |            | ✓          |
 | Ubuntu       | V20.04     | ✓          | ✓          |
 |              | V22.04     | ✓          | ✓          |

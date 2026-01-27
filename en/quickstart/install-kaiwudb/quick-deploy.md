@@ -18,7 +18,7 @@ Two usage modes are supported:
 
 The script automatically detects the operating system and selects an appropriate deployment method:
 
-- **Bare-metal deployment**: Ubuntu 20.04/22.04, Kylin V10 SP3  
+- **Bare-metal deployment**: Ubuntu 20.04/22.04 
 - **Container deployment**: Other Linux distributions
 
 ## Prerequisites
@@ -136,7 +136,7 @@ Example:
 
 ### Which operating systems are supported by the quick deployment script?
 
-Bare-metal deployment supports Ubuntu 20.04/22.04 and Kylin V10 SP3. For other Linux distributions, the script automatically selects container deployment.
+Bare-metal deployment supports Ubuntu 20.04/22.04. For other Linux distributions, the script automatically selects container deployment.
 
 ### How can I troubleshoot deployment failures?
 

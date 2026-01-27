@@ -86,7 +86,7 @@ The tool supports CPU monitoring and IoT scenarios with 26 query types to meet d
 
 KWDB supports multiple popular programming languages including C/C++, Java, C#, and Python, enabling developers to use their preferred language and reduce development costs. For more details, see [Development](../development/overview.md).
 
-KWDB runs on major operating systems including Ubuntu, CentOS, Kylin, and UOS. For a complete list of supported operating systems and CPU architectures, see [Supported Operating Systems and CPU Architectures](./product-metrics.md#operating-systems-and-cpu-architectures).
+KWDB runs on major operating systems including Ubuntu, CentOS, and UOS. For a complete list of supported operating systems and CPU architectures, see [Supported Operating Systems and CPU Architectures](./product-metrics.md#operating-systems-and-cpu-architectures).
 
 #### Third-Party Ecosystem Tools
 
