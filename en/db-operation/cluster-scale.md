@@ -41,8 +41,8 @@ Avoid frequently executing `ALTER` statements during redistribution, as this may
 - KWDB is installed on the nodes to be added using the multi-replica cluster deployment method (see [Cluster Deployment](../deployment/cluster-deployment/script-deployment.md))
 - The target cluster is running
 - **Additional requirements by method:**
-  - **Using deployment script**: The deployment script (`deploy.sh`) must be available in the installation directory
-  - **Using kwbase commands**: If using secure deployment mode, the `kaiwudb_certs.tar.gz` certificate file must be available
+  - **Using deployment script**: The nodes to be added are deployed using the script (`deploy.sh`)
+  - **Using kwbase commands**: If using secure mode, the `kaiwudb_certs.tar.gz` certificate file must be available
 - User permissions (required only for secure mode):
   - `sudo` permission on the master node to prepare and package certificate files
   - SSH login permission from the master node to the nodes to be added for certificate transfer
@@ -50,7 +50,7 @@ Avoid frequently executing `ALTER` statements during redistribution, as this may
 
 #### Using Deployment Script
 
-1. (Optional) If the cluster uses secure deployment mode, prepare and transfer certificate files from the master node to the nodes to be added.
+1. (Optional) If the cluster uses secure mode, prepare and transfer certificate files from the master node to the nodes to be added.
 
    1. Log in to the cluster master node (the initial deployment node) and navigate to the installation directory:
 
@@ -105,7 +105,7 @@ Avoid frequently executing `ALTER` statements during redistribution, as this may
 
    Parameters:
 
-   - `<any_cluster_node_ip>`: The IP address of any healthy node in the cluster (e.g., `192.168.122.221`)
+   - `<any_cluster_node_ip>`: The IP address of any alive node in the cluster (e.g., `192.168.122.221`)
    - `<port>`: The KWDB service port (default: `26257`)
 
 3. Verify that the new node has successfully joined:
@@ -118,7 +118,7 @@ Avoid frequently executing `ALTER` statements during redistribution, as this may
 
 1. Log in to the node to be added.
 
-2. If the cluster uses secure deployment mode, copy `kaiwudb_certs.tar.gz` to the current node and extract it to the `/etc/kaiwudb/certs` directory.
+2. If the cluster uses secure mode, copy `kaiwudb_certs.tar.gz` to the current node and extract it to the `/etc/kaiwudb/certs` directory.
 
 3. Start the KWDB node and join it to the cluster:
 
@@ -146,7 +146,7 @@ Avoid frequently executing `ALTER` statements during redistribution, as this may
       --insecure \
       --store=<data_dir> \
       --brpc-addr=:27257 \
-      --listen-addr=<new_node_ip>:26257 \
+      --listen-addr=<new_node_ip>:<kaiwudb_port> \
       --http-addr=<new_node_ip>:<rest_port> \
       --join=<node_address_list> \
       --background
@@ -180,7 +180,7 @@ Avoid frequently executing `ALTER` statements during redistribution, as this may
 
    - `<kwbase_path>`: Directory containing the kwbase binary (default: `/usr/local/kaiwudb/bin` for bare-metal, `/kaiwudb/bin` for container deployment)
    - `<cert_path>`: Certificate directory (default: `/etc/kaiwudb/certs`)
-   - `--host=<address_of_any_alive_node>`: (Optional) Node on which to execute the command (must be healthy; format: `<ip>:<port>`; default: `127.0.0.1:26257`)
+   - `--host=<address_of_any_alive_node>`: (Optional) Node on which to execute the command (must be alive; format: `<ip>:<port>`; default: `127.0.0.1:26257`)
   
 ### Single-Replica Cluster Scale-Out
 
@@ -224,7 +224,7 @@ KWDB single-replica cluster scale-out is straightforward—simply add new nodes 
       --insecure \
       --store=<data_dir> \
       --brpc-addr=:27257 \
-      --listen-addr=<new_node_ip>:26257 \
+      --listen-addr=<new_node_ip>:<kaiwudb_port> \
       --http-addr=<new_node_ip>:<rest_port> \
       --join=<node_address_list> \
       --background
@@ -274,7 +274,7 @@ To add a decommissioned node back to the cluster, you must first clear its data 
       kw-status
       ```
 
-  - Use the cluster status command (in the installation package directory):
+  - Use the cluster status command (in the installation directory):
 
       ```shell
       ./deploy.sh cluster --status

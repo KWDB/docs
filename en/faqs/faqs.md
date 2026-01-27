@@ -456,9 +456,9 @@ id: faqs
   }
   ```
 
-## .NET Framework
+### .NET Framework
 
-### SqlSugar Auto-Table Creation Failure
+#### SqlSugar Auto-Table Creation Failure
 
 - **Issue Description**
 
