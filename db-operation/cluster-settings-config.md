@@ -5,12 +5,11 @@ id: cluster-settings-config
 
 # 集群参数配置
 
-部署 KWDB 集群后，用户可以通过修改**启动参数**、**环境变量**或**实时集群参数**，自定义集群配置：
+部署 KWDB 集群后，用户可以通过修改**启动参数**或**实时集群参数**，自定义集群配置：
 
 |<div style="width: 70px;">**参数类型**</div>     | **影响范围**                                      | **生效方式**                                | **配置方式**                                                 |
 | :--------------- | :---------------------------------------------- | :------------------------------------------ | :----------------------------------------------------------- |
 | **启动参数**     | 作用于集群节点，影响单个节点的数据库服务。            | 仅在节点启动时生效，修改后需重启服务。       | 修改裸机部署的 `kaiwudb_env` 文件、容器部署的 `docker-compose.yml` 文件。其中，`kaiwudb_env` 和 `docker-compose.yml` 文件均位于 `/etc/kaiwudb/script/`。 |
-| **环境变量** | 操作系统级别的参数，影响用户或操作系统级别下所有数据库实例的行为。  | 仅在数据库进程启动时读取，修改后需要重启服务才能生效。 | 可以在系统或用户级的 shell 配置文件（如 .bashrc 或 .bash_profile）中配置，或在系统服务（如 systemd）中配置。 |
 | **实时集群参数** | 作用于整个集群，影响集群内所有的节点。  | 实时生效，并自动同步至集群各节点，无需重启服务。 | 通过 SQL 语句修改，变更将持久化至系统表。 |
 
 ## 启动参数
@@ -150,52 +149,6 @@ id: cluster-settings-config
     systemctl restart kaiwudb
     ```
 
-## 环境变量
-
-### 参数说明
-
-环境变量是操作系统级别的参数，影响用户或操作系统级别下所有数据库实例的行为。
-
-要查看当前的 KWDB 配置和其他环境变量，请运行 `env` 命令。节点启动时使用的环境变量会被打印到节点日志中。
-
-KWDB 配置的优先级顺序(从高到低)为：
-
-- 启动参数
-- 环境变量
-- 默认值
-
-下表列出了目前支持配置的环境变量：
-
-| 参数名称 | 说明 | 默认值 |
-|---------|------|--------|
-| `KWBASE_ENABLE_FOLLOWER_READ` | 控制是否允许从多副本集群数据分片(range)的 follower 副本中读取数据。<br><br>集群发生严重故障，存活节点数少于副本总数的一半且无法恢复故障节点时，可通过启用该参数连接存活节点，从 follower 副本中查询时序和关系数据。<br><br>**注意**:<br>- 启用后会影响写入功能，**正常运行的集群不应启用此参数**<br>- 由于副本间数据同步可能存在延迟，从 follower 副本读取的数据可能慢于 leaseholder 副本，不适用于强一致性要求的场景<br>- 仅能查询存活节点上的数据，未在存活节点分布的数据无法访问<br>- 对于超过 5 节点的集群，由于元数据默认副本数为 5，存活节点重启后可能无法正常查询 | `false` |
-
-### 环境变量配置
-
-::: warning 提示
-环境变量是节点级别的配置。如需修改整个集群的配置，需要在集群的每个节点上分别完成配置。
-:::
-
-步骤：
-
-1. 登录待修改环境变量的集群节点，停止 KWDB 服务。
-
-    ```shell
-    systemctl stop kaiwudb
-    ```
-
-2. 设置环境变量：
-
-    ```bash
-    export KWBASE_ENABLE_FOLLOWER_READ=true
-    ```
-
-3. 重新启动 KWDB 服务。
-
-    ```shell
-    systemctl start kaiwudb
-    ```
-
 ## 实时参数
 
 KWDB 支持通过 `SET CLUSTER SETTING` 语句修改集群设置，设置后立即生效。
@@ -237,7 +190,6 @@ KWDB 支持通过 `SET CLUSTER SETTING` 语句修改集群设置，设置后立�
 | `kv.allocator.ts_store_dead_rebalance.enabled`                | 控制节点死亡后的副本自动迁移行为。启用时，副本队列会根据节点状态自动进行副本迁移、替换和补足；禁用时，即使节点死亡也不会进行副本补足。注意：在 5 节点三副本集群中禁用该功能后，将无法承受连续节点故障。                                                                                                                                                                                                                                                                                                                                    | `true`      | bool    |
 | `kv.bulk_io_write.max_rate`                             | 批量输入/输出（IO）操作向磁盘写入数据时的速率限制。                                                                                                                                                                                                                                                                                                                                                                          | `1.0 TiB`    | byte size      |
 | `kv.closed_timestamp.follower_reads_enabled`            | 所有副本基于封闭时间戳的信息提供一致的历史读取。                                                                                                                                                                                                                                                                                                                                                                           | `TRUE`      | bool     |
-| `kv.kvserver.qps_ts_follower_read_threshold` | 设置热点时序数据分片（range）的 QPS（每秒查询次数）阈值，以控制是否允许从 follower 副本中读取数据。当某个时序数据分片的 QPS 超过该阈值时，系统将允许从该数据分片的 follower 副本中读取数据，以分担 leaseholder 副本的查询压力，降低高负载节点的资源使用，提升整体查询效率。<br>该参数适用于集群内存在热点数据分片或某些数据分片负载较高的场景。<br>默认值为 `0`，表示不启用该功能。<br>**注意**：由于副本间数据同步可能存在延迟，从 follower 副本读取的数据可能慢于 leaseholder 副本，无法完全保证数据的强一致性。建议根据集群的实际 QPS 负载情况合理设置阈值，在查询性能和数据一致性之间取得平衡。<br>**提示**：可通过 `SELECT range_id, lease_holder, lease_holder_qps FROM kwdb_internal.ranges` SQL 命令查看各个时序数据分片的 QPS 情况，根据实际负载设置合适的阈值。 | `0` | float |
 | `kv.kvserver.ts_split_by_timestamp.enabled`            | 控制时序数据分片是否按照时间戳进行拆分，设置为 `false` 时只根据哈希点进行拆分。设置为 `true` 且 `kv.kvserver.ts_split_interval` 设置为 `1` 时，时序数据分片将根据哈希点和时间戳进行拆分。                                                                                                                                                                                                                                                                              | `FALSE`      | bool     |
 | `kv.kvserver.ts_split_interval`            | 时序数据分片拆分间隔，默认值为 `10`。                                                                                                                                                                                                                                                                                                                                                                           | `10`      | int     |
 | `kv.protectedts.reconciliation.interval`                | 通过受保护的时间戳记录协调作业的频率。                                                                                                                                                                                                                                                                                                                                                                                       | `5m0s`      | duration |
