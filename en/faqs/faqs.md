@@ -455,4 +455,27 @@ id: faqs
     }
   }
   ```
-  
+
+## .NET Framework
+
+### SqlSugar Auto-Table Creation Failure
+
+- **Issue Description**
+
+  When using the SqlSugar ORM framework in .NET to connect to KWDB, automatic table creation through entity classes fails with the error: `ERROR: 0A000: cannot use multi-statement transactions involving a schema change under weak isolation levels`.
+
+- **Solution**
+
+  This error occurs because KWDB does not support DDL (Data Definition Language) operations within explicit transactions (`BEGIN...COMMIT`) when using the `read committed` isolation level.
+
+  You may set the transaction isolation level to one of the following supported levels:
+
+  - `repeatable read`
+  - `serializable` (KWDB's default isolation level)
+
+  SqlSugar configuration example:
+
+  ```csharp
+  db.Ado.BeginTran(IsolationLevel.RepeatableRead);
+  ```
+    
