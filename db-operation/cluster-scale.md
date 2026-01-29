@@ -145,7 +145,7 @@ SET CLUSTER SETTING kv.allocator.ts_consider_rebalance.enabled = false;
       --insecure \
       --store=<data_dir> \
       --brpc-addr=:27257 \
-      --listen-addr=<new_node_ip>:26257 \
+      --listen-addr=<new_node_ip>:<kaiwudb_port> \
       --http-addr=<new_node_ip>:<rest_port> \
       --join=<node_address_list> \
       --background
@@ -223,7 +223,7 @@ KWDB 单副本集群的扩容非常简单，只需要将待扩容节点加入到
       --insecure \
       --store=<data_dir> \
       --brpc-addr=:27257 \
-      --listen-addr=<new_node_ip>:26257 \
+      --listen-addr=<new_node_ip>:<kaiwudb_port> \
       --http-addr=<new_node_ip>:<rest_port> \
       --join=<node_address_list> \
       --background
