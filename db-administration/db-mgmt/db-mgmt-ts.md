@@ -14,21 +14,21 @@ id: db-mgmt-ts
 ### 语法格式
 
 ```sql
-CREATE TS DATABASE [IF NOT EXISTS] <db_name> [RETENTIONS <keep_duration>] [PARTITION INTERVAL <interval>] [COMMENT [=] <'comment_text'>];
+CREATE TS DATABASE <db_name> [RETENTIONS <keep_duration>] [COMMENT [=] <'comment_text'>];
 ```
 
 ### 参数说明
 
 :::warning 说明
-配置可选参数时，必须严格按照 `[RETENTIONS <keep_duration>] [PARTITION INTERVAL <interval>] [COMMENT [=] <'comment_text'>]` 的顺序，否则系统将会报错。
+- 配置可选参数时，必须严格按照 `[RETENTIONS <keep_duration>] [COMMENT [=] <'comment_text'>]` 的顺序，否则系统将会报错。
+- 3.0.0 版本数据库分区间隔仅支持 10 天，其他配置值无效。
+
 :::
 
 | 参数 | 说明 |
 | --- | --- |
-| `IF NOT EXISTS` | 可选关键字。当使用 `IF NOT EXISTS` 关键字时，如果目标数据库不存在，系统创建目标数据库。如果目标数据库存在，系统不会创建数据库，但不会报错。当未使用 `IF NOT EXISTS` 关键字时，如果目标数据库不存在，系统创建目标数据库。如果目标数据库存在，系统报错，提示目标数据库已存在。 |
 | `db_name` | 待创建的数据库的名称。该名称必须唯一，且遵循[数据库标识符规则](../../sql-reference/sql-identifiers.md)。目前，数据库名称不支持中文字符，最大长度不能超过 63 个字节。|
 | `keep_duration` | 可选参数，设置数据库的数据生命周期。数据超过此时长后将被系统自动清除。<br>默认值： `0s`（永久保留）<br>时间单位：<br>- 秒：`s` 或 `second`<br>- 分钟：`m` 或 `minute`<br>- 小时：`h` 或 `hour`<br>- 天：`d` 或 `day`<br>- 周：`w` 或 `week`<br>- 月：`mon` 或 `month`<br>- 年：`y` 或 `year`<br>取值范围：正整数，上限为 1000 年<br>**说明：**<br>- 表级设置优先于库级设置。<br>- 保留时长越长，存储空间占用越大，请根据业务需求合理配置。<br>- 如果待写入的数据已超过生命周期限制，系统会直接丢弃该数据，不予写入。|
-| `interval` | 可选参数，指定数据库数据目录分区的时间范围。如未指定，则默认为 `10d`，即每 10 天进行一次分区。支持配置的时间单位包括：天（D 或 DAY）、周（W 或 WEEK）、月（MON 或 MONTH）、年（Y 或 YEAR）。取值必须是整数值，最大值不得超过 `1000` 年。|
 | `comment_text` | 可选参数。指定数据库的注释信息。 |
 
 ### 语法示例
@@ -67,20 +67,6 @@ CREATE TS DATABASE [IF NOT EXISTS] <db_name> [RETENTIONS <keep_duration>] [PARTI
 
     ```sql
     CREATE TS DATABASE ts_db_power COMMENT = 'database for power statistics';
-    ```
-
-    执行成功后，控制台输出以下信息：
-
-    ```sql
-    CREATE TS DATABASE
-    ```
-
-- 创建数据库时，指定数据库的分区时间范围。
-
-    以下示例创建一个名为 `iot` 的数据库，并将数据库的分区时间范围设置为 `2d`。
-
-    ```sql
-    CREATE TS DATABASE iot PARTITION INTERVAL 2d;
     ```
 
     执行成功后，控制台输出以下信息：

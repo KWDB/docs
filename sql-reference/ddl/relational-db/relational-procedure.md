@@ -20,6 +20,7 @@ KWDB 关系引擎支持创建、修改、查看、删除、执行存储过程。
 - `LEAVE`
 - 事务语句
 - 特殊函数（`ROW_COUNT()`）
+- `PREPARE`、`EXECUTE`、`DEALLOCATE`
 
 ::: warning 说明
 
@@ -84,7 +85,7 @@ KWDB 关系引擎支持创建、修改、查看、删除、执行存储过程。
 | `upsert_stmt`| 更新插入语句，用于更新、插入数据。 |
 | `delete_stmt`| 删除语句，用于删除目标表中的行数据，格式为 `DELETE FROM .... RETURNING target_list INTO select_into_targets`。|
 | `declare_stmt`| 用于声明自定义变量、处理程序以及游标。有关详细信息，参见[声明](../../other-sql-statements/declare-sql.md)语句。|
-| `proc_set_stmt` | 用于设置自定义变量，格式为 `SET var_name = a_expr`。<br>- `var_name`：自定义变量的名称。<br>- `a_expr`：自定义变量赋值的表达式。|
+| `proc_set_stmt` | 用于设置自定义变量，格式为 `SET var_name = a_expr`。其中，`var_name` 表示自定义变量的名称，`a_expr` 表示自定义变量赋值的表达式，支持正常的自定义变量取值和存储过程中定义的临时变量（`DECLARE` 语句声明的变量）。<br > 在存储过程中设置的自定义变量仅对当前会话有效，会话结束后自动失效。<br > 在存储过程中设置的自定义变量，在调用存储过程后，用户仍可在外部会话中访问和修改该自定义变量。<br > 在存储过程中设置自定义变量的类型后，不支持修改自定义变量的类型。后续赋值必须与初始类型一致，否则系统报错。<br > 如果存储过程外部设置了自定义变量，在创建存储过程中设置自定义变量时，系统检查存储过程外部是否已存在具有相同名称的自定义变量。如果存在且类型一致，则成功设置自定义变量。否则，系统将报错。<br >**说明** <br > 在存储过程内设置的自定义变量值不受 `COMMIT`、`ROLLBACK` 事务语句的影响。|
 | `proc_if_stmt` | `IF` 条件语句，用于根据给定的条件执行不同的 SQL 语句块，格式为 `IF a_expr THEN proc_stmt_list opt_stmt_elsifs opt_stmt_else ENDIF`。<br>- `a_expr`：`IF` 语句的条件表达式，该表达式必须是返回布尔值的表达式。<br>- `proc_stmt_list`：满足条件后需要执行的语句。支持的语句与 `CREATE PROCEDURE` 语句支持的语句相同。 <br>- `opt_stmt_elsifs`：可选项，`IF` 语句的其他条件分支。 <br>- `opt_stmt_else`：可选项，`IF` 语句的 `ELSE` 条件分支。|
 | `proc_while_stmt` | `WHILE` 循环语句，用于在指定条件为真时重复执行一段代码，格式为 `opt_loop_label WHILE a_expr DO proc_stmt_list ENDWHILE opt_label`。<br>- `opt_loop_label`：`WHILE` 循环语句的标签，格式为 `LABEL label_name：`。 <br>-`a_expr`：`WHILE` 循环语句的条件判断表达式。 <br>-`proc_stmt_list`：满足条件后需要执行的语句。支持的语句与 `CREATE PROCEDURE` 语句支持的语句相同。 <br>- `opt_label`：`WHILE` 循环语句的标签，与 `opt_loop_label` 参数成对出现，格式为 `label_name`。 |
 | `begin_stmt` | 启动事务语句。 |
@@ -96,58 +97,112 @@ KWDB 关系引擎支持创建、修改、查看、删除、执行存储过程。
 | `fetch_cursor_stmt` | 获取游标语句。有关详细信息，参见[获取游标](../../other-sql-statements/cursor-sql.md#获取游标)。 |
 | `close_cursor_stmt` | 关闭游标语句。有关详细信息，参见[关闭游标](../../other-sql-statements/cursor-sql.md#关闭游标)。 |
 | `proc_leave_stmt`| 在使用 `LABEL` 关键字为存储过程体或 `WHILE` 语句定义标签时，可以使用 `LEAVE` 语句跳出存储过程体或 `WHILE` 循环，格式为 `LEAVE label_name`。 |
+| `prepare_stmt` | 预处理语句，格式为 `PREPARE stmt_name AS stmt_sql`。预处理语句名称在当前会话中必须全局唯一。在存储过程中创建预处理语句时，若与已存在的预处理语句重名，系统将报错。在存储过程中创建的预处理语句仅对当前会话有效，会话结束后自动清理。<br > 在存储过程中，预处理语句定义的 SQL 语句必须是存储过程支持的单个完整 SQL 语句。SQL 语句的参数占位符仅支持美元符号（`$`）且仅能替换 SQL 中的值（如 `WHERE id = $1`），不能替换表名、列名、关键字等标识符。<br > 在存储过程中，预处理语句支持 `SELECT`、`INSERT`、`UPDATE`、`UPSERT`、`DELETE` 语句。<br > 在存储过程中，预处理语句不支持事务语句（`BEGIN`、`START TRANSACTION`、`COMMIT`、`ROLLBACK`）、会话控制语句（`USE`）、存储过程的流程控制语句、存储过程相关的语句（`CREATE PROCEDURE`、`ALTER PROCEDURE`、`DROP PROCEDURE`、`CALL PROCEDURE`）、`SELECT INTO` 语句、DDL 语句。<br > 存储过程内部可以使用在存储过程外部定义的预处理语句。反之，如果系统未主动释放存储过程中创建的预处理语句，在存储过程外部也可以使用该预处理语句。<br >**说明** <br >- 不支持预处理语句中嵌套另一个预处理语句。<br >- 预处理语句中不能包含存储过程中定义的临时变量（`DECLARE` 语句声明的变量）和自定义变量。<br >- 运行预处理语句后，如果未显式执行 `DEALLOCATE PREPARE` 语句，预处理对象会保留在当前会话中。此时，如果在存储过程外部创建具有相同名称的预处理对象，系统会报错。 |
+| `execute_stmt` | 执行预处理语句，格式为 `EXECUTE stmt_name para_value`。<br >**说明** <br > 执行预处理语句中不能包含存储过程中定义的临时变量（`DECLARE` 语句声明的变量）或传入参数。用户需要通过 `SET @var = variable` 语句提前进行转换。 |
+| `deallocate_stmt` | 释放预处理语句，格式为 `DEALLOCATE PREPARE stmt`。如需删除所有的预处理语句，使用 `DEALLOCATE ALL` 或者 `DEALLOCATE PREPARE ALL` 语句。|
 
 ### 语法示例
 
-以下示例创建一个名为 `test` 的存储过程。
+- 创建存储过程。
 
-```sql
--- 设置分隔符。
-delimiter \\
+    以下示例创建一个名为 `test` 的存储过程。
 
--- 创建存储过程。
-create procedure test() 
-label test:
-begin 
-        declare a int;
-        declare b int;
-        declare err int;
-        declare exit HANDLER FOR NOT FOUND,SQLEXCEPTION
-        BEGIN
-          SET err = -1;
-          SELECT a,b;
-          ROLLBACK;
-        ENDHANDLER;
-        
-        START TRANSACTION;
-        set a = 10;
-        select a, b from t1;
-        update t1 set a =  a + 1 where b > 0;
-        insert into t1 values (a, b);
-        label my_loop:
-        WHILE b <= 10 DO 
-                declare d int;
-                set d = b + 2;
-                if d > 9 then 
-                        select * from t1; 
-                        leave my_loop;
-                elsif b > 5 then 
-                        select * from t2; 
-                endif;
-                set b = b + 1; 
-        ENDWHILE my_loop; 
-        IF err = 0 THEN
-                SELECT a,b;
-        ENDIF;
-        COMMIT;
-end test\\
-delimiter ;
-CREATE PROCEDURE
-```
+    ```sql
+    -- 设置分隔符。
+    delimiter \\
+
+    -- 创建存储过程。
+    create procedure test() 
+    label test:
+    begin 
+            declare a int;
+            declare b int;
+            declare err int;
+            declare exit HANDLER FOR NOT FOUND,SQLEXCEPTION
+            BEGIN
+            SET err = -1;
+            SELECT a,b;
+            ROLLBACK;
+            ENDHANDLER;
+            
+            START TRANSACTION;
+            set a = 10;
+            select a, b from t1;
+            update t1 set a =  a + 1 where b > 0;
+            insert into t1 values (a, b);
+            label my_loop:
+            WHILE b <= 10 DO 
+                    declare d int;
+                    set d = b + 2;
+                    if d > 9 then 
+                            select * from t1; 
+                            leave my_loop;
+                    elsif b > 5 then 
+                            select * from t2; 
+                    endif;
+                    set b = b + 1; 
+            ENDWHILE my_loop; 
+            IF err = 0 THEN
+                    SELECT a,b;
+            ENDIF;
+            COMMIT;
+    end test\\
+    delimiter ;
+    CREATE PROCEDURE
+    ```
+
+- 创建存储过程，并在存储过程中设置自定义变量。
+
+    ```sql
+    -- 设置分隔符。
+    DELIMITER \\
+
+    -- 创建存储过程。
+    CREATE PROCEDURE proc1()
+    BEGIN
+    declare a int;
+    set a = 10;
+    set @b = 1;
+    select @b;
+    
+    set @b = a;
+    select @b;
+    
+    END //
+    CREATE PROCEDURE
+    Time: 60.4819ms
+    ```
+
+- 创建存储过程，并在存储过程中使用 `PREPARE`、`EXECUTE`、`DEALLOCATE` 语句。
+
+    ```sql
+    -- 设置分隔符。
+    DELIMITER \\
+
+    -- 创建存储过程。    
+    CREATE PROCEDURE proc1()
+    BEGIN
+      PREPARE stmt as SELECT 1;
+      EXECUTE stmt;
+      DEALLOCATE PREPARE stmt;
+    END //
+
+    CREATE PROCEDURE
+    Time: 60.4819ms
+    ```
 
 ## 调用存储过程
 
 `CALL` 语句用于调用存储过程。
+
+::: warning 说明
+
+- 如果在创建存储过程时定义了自定义变量，在调用存储过程时，系统检查存储过程外部是否已存在具有相同名称的自定义变量。如果存在且类型一致，系统将成功调用存储过程并用新的自定义变量值覆盖原有值。否则，系统将报错。
+- 如果在创建存储过程时定义了预处理语句，在调用存储过程时，系统检查预处理语句的语法。如果不符合语法，系统将报错。
+- 如果在创建存储过程时定义了执行预处理语句，在调用存储过程时，系统检查执行预处理语句的对象是否存在。如果不存在，系统将报错。
+- 如果在创建存储过程时定义了释放预处理语句，在调用存储过程时，系统检查释放预处理语句的对象是否存在。如果不存在，系统将报错。
+
+:::
 
 ### 所需权限
 
