@@ -1,92 +1,112 @@
 ---
-title: 3.0.0 Release Notes
-id: 3.0.0-release-notes
+title: 3.1.0 Release Notes
+id: 3.1.0-release-notes
 ---
 
-# KWDB 3.0.0 Release Notes
+# KWDB 3.1.0 Release Notes
 
 KWDB is a distributed, multi-model database, designed for AIoT scenarios. It seamlessly integrates time-series and relational databases within the same instance, enabling efficient multi-model data processing. With high-performance time-series capabilities, it supports connections for tens of millions of devices, real-time insertion of millions of records within seconds, and query responses in just a few seconds for hundreds of millions of records. Built for stability, security, high availability, and easy maintenance, KWDB is ideal for industrial IoT, digital energy, connected vehicles, and smart industries, providing a unified platform for data storage, management, and analysis.
 
-KWDB 3.0.0 delivers comprehensive optimizations and enhancements across database object management, data management and querying, and distributed architecture.
+KWDB 3.1.0 retains all existing features while delivering comprehensive optimizations and enhancements across database object management, data ingestion and querying, operations and security, stability, and performance.
 
 ## Version Details
 
 | Version | Release Date |
 |:--------|:-------------|
-| 3.0.0   | 2025.11.12   |
+| 3.1.0   | 2026.02.03   |
 
 ## New Features
 
 ### Database Object Management
 
-- **Large Object Support**: The relational engine now supports BLOB (Binary Large Objects) and CLOB (Character Large Objects) with comprehensive DDL, DML, and DCL lifecycle management
-- **Trigger Support**: The relational engine supports creating, modifying, and deleting triggers with flexible trigger conditions and event configurations
-- **Stored Procedure Support**: Supports creation, viewing, altering, validation, execution, renaming, and deletion, with full compatibility for standard SQL syntax and special syntax structures
-- **Enhanced Comment Support**: Supports adding comments during creation of time-series databases, relational databases, time-series tables, and relational tables, eliminating the need for separate subsequent operations
+#### Time-Series Database and Table Creation Enhancements
 
-### Data Management and Querying
+- Supports `IF NOT EXISTS` clause when creating time-series databases and tables to prevent duplicate creation errors
+- Supports custom time partition intervals when creating time-series databases (default: 10 days), with tables automatically inheriting the configuration from their parent database
 
-#### Data Storage and Compression
+#### Stored Procedure Optimization
 
-- **Real-time Compression**: Supports real-time compression of time-series data during write operations, with automatic algorithm selection based on data type for optimal compression efficiency
+- Supports setting custom variables within stored procedures
+- Supports `PREPARE`, `EXECUTE`, and `DEALLOCATE` statements within stored procedures
 
-#### Query Enhancements
+### Data Ingestion and Processing
 
-- **Contextual Min/Max Query**: When querying time-series data using `min()` or `max()` function, the system can retrieve additional fields from the rows containing the minimum or maximum values
+#### Data Deduplication Strategy
 
-### Session Management
+- Supports configuring data deduplication strategy to `merge`, which deduplicates and consolidates data with identical timestamps for the same device—ideal for scenarios with duplicate writes from data sources or multi-path data collection
 
-- **Custom Variables**: Supports user-defined variables prefixed with "@" in SQL statements. Variables can be assigned values, referenced in queries, and used in calculations
+#### Time-Series Data Performance Optimization
 
-#### Data Import/Export
+- Introduces a dedicated storage engine for Raft log, improving read/write performance on mechanical hard drives
 
-- **Import/Export Enhancements**: Supports exporting data in SQL format
+#### Time-Series Data Compression Management
 
-#### Time-Series Data Processing
+- New `ts.compress.last_segment.enabled` cluster parameter controls whether compression is enabled for the last segment (most recent data segment)
+- New `ts.compress.stage` cluster parameter controls time-series data compression levels, supporting no compression, single-level compression, and dual-level compression
+- New `SHOW DISTRIBUTION` statement views storage space usage and compression ratios for specified time-series databases or tables
 
-- **Stream Computing**: Supports creating and managing real-time stream computations. Features include multiple trigger modes, configurable strategies for handling out-of-order and expired data, and capabilities to subscribe to and publish computation results
+### Data Querying and Analysis
 
-### Distributed Architecture
+#### Query Performance Optimization
 
-- **Data Distribution Optimization**:
-  - **Relational Data**:
-    - Supports hash, range, or list partitioning when creating or altering tables, with configurable zones for each partition
-    - Provides hash-sharded index functionality, allowing hash-partitioned primary keys to be defined during table creation and hash partitions to be created during table alteration
-  - **Time-Series Data**:
-    - Supports hash partitioning when altering tables, with configurable zones for each partition
-    - Allows hash size to be specified during table creation to determine the maximum number of data ranges
-    - Provides control over automatic data rebalancing and replica replenishment for failed nodes
-- **Write Performance Optimization**: Supports extended raft log flush cycles and the option to merge raft logs with WAL to improve write performance in multi-replica clusters
-- **Data Synchronization Monitoring**: Displays data synchronization lag between leaseholders and followers
+- New `ts.last_cache_size.max_limit` cluster parameter sets memory limit for time-series `last_row()` cache, improving response speed for `last()` and `last_row()` queries
+
+#### Enhanced Connection Capacity
+
+- Maximum concurrent connections increases to 50,000
+
+#### SQL Function Enhancements
+
+- New `to_timestamp()` function converts timestamp formats to standard time formats
+
+### Operations and Management
+
+#### Cluster Operations
+
+- Supports multi-replica cluster scaling operations via deployment scripts
+- Supports manually triggering reorganization operations via the `VACUUM TS DATABASES` SQL statement to immediately free storage space or optimize query performance
+
+#### Job Management
+
+- `SHOW JOBS` statement now displays information related to stream computing jobs
+
+### Security and Auditing
+
+#### Audit Function Enhancements
+
+- Operations on `DATABASE`, `TABLE`, `INDEX`, `JOB`, and `SCHEDULE` objects upgraded from statement-level to system-level auditing and added to the default audit policy
 
 ## Important Changes
 
-### Operating Systems and Environments
+### Installation and Deployment
 
-- Added support for KylinOS V10 SP2
+#### Deployment Script Optimization
+
+- **Deployment configuration confirmation mechanism**: Configuration information from `deploy.cfg` is summarized and displayed in the terminal; installation proceeds only after user confirmation, otherwise installation is canceled
+- **New convenient operation scripts**: `kw-status.sh` and `kw-sql.sh` scripts are automatically generated during installation for viewing cluster status and connecting to the database
+- **Uninstallation optimization**: Database uninstallation now supports certificate retention
+
+#### Quick Deployment Script
+
+- Added `quick_deploy.sh` script that automates the complete deployment process, including system detection, parameter configuration, installation package download, and deployment
 
 ### Development Tools
 
-- **KaiwuDB Developer Center**:
-  - Added support for macOS with Apple M-series chips
-  - Added stored procedure and trigger management capabilities
-  - Added ability to copy and paste database connections
-- **Performance Testing Tool (kwdb-tsbs)**: A TSBS-based performance testing tool for time-series databases that generates standardized datasets and benchmarks KWDB read and write performance
+#### KaiwuDB Developer Center
 
-### Ecosystem Support
+- Supports BLOB and CLOB large object data types
 
-- **Deep Flink Integration**: The KaiwuDB Flink Connector enables bidirectional data flow via the DataStream API and Flink Table API. Features include automatic type mapping, flexible parameter configuration, and optimized concurrent read operations
-- **Kafka Data Ingestion**: Supports direct data writes from Kafka to the KWDB relational engine
+### Ecosystem Compatibility
 
-## Feature Adjustments
+#### KaiwuDB JDBC Driver
 
-The following features are not available in this release and may be added in future versions:
-
-- **Database/Table Settings**: Time-series databases do not support custom partition intervals; time-series tables do not support active time and partition interval settings
-- **Data Writing**: Deduplication strategy does not support merge mode (merging duplicate data with identical timestamps)
-- **Data Storage**: Pre-allocated space management; `df.sh` script for monitoring disk usage
-- **Data Compression**: Periodic compression (replaced by real-time compression); custom compression algorithm and level settings; on-demand compression
+- Upgraded to secure version, eliminating known security vulnerabilities; supports additional data types
 
 ## Upgrade Notes
 
-KWDB 3.0.0 supports upgrades from versions 2.x using the import/export method. For instructions, see [Data Export](../db-administration/import-export-data/export-data.md) and [Data Import](../db-administration/import-export-data/import-data.md)
+- **Multi-replica clusters**: offline upgrade from 3.0.0 to 3.1.0
+- **Single-replica clusters**: offline upgrade from 3.0.0 to 3.1.0
+- **Standalone deployments**: offline upgrade from 3.0.0 to 3.1.0
+- **KWDB 2.x**: data export and import
+
+For instructions, see [Database Upgrade](../db-operation/db-upgrade.md), [Data Export](../db-administration/import-export-data/export-data.md), and [Data Import](../db-administration/import-export-data/import-data.md).

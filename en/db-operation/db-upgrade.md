@@ -22,7 +22,7 @@ Script-based upgrades are the most common method for KWDB instances installed th
 ::: warning Note
 
 - Direct downgrades to the previous version are not supported after an upgrade. To perform a downgrade, you must first uninstall the current version, then install the original version of KWDB. Afterward, restore the data from the backup created before uninstallation. For instructions, see [Uninstall Standalone Databases](../quickstart/uninstall-kaiwudb/uninstall-db.md) or [Uninstall Clusters](../deployment/uninstall-cluster.md).
-- KWDB supports upgrading from any previous version to the latest version through import-export method. For specific operations, see [Data Export](../db-administration/import-export-data/export-data.md) and [Data Import](../db-administration/import-export-data/import-data.md). Note: After upgrading using the import-export method, high availability of multi-replica clusters may be affected.
+- KWDB supports upgrading from any previous version to the latest version through import-export method. For specific operations, see [Data Export](../db-administration/import-export-data/export-data.md) and [Data Import](../db-administration/import-export-data/import-data.md). **Note**: When upgrading from version 2.x, the exported `meta.sql` file contains `PARTITION INTERVAL` syntax for time-series tables. This syntax has been deprecated in version 3.1.0 (it remains supported for time-series databases). You must manually remove this syntax from the file before importing; failure to do so will cause the import to fail. Additionally, upgrading via the import-export method may impact high availability in multi-replica clusters.
 :::
 
 ### Upgrading Standalone Instances
