@@ -7,7 +7,7 @@ id: product-architecture
 
 相比传统的数据库，KWDB 提供多模数据管理能力，支持不同数据模型的统一存储，助力企业跨部门、跨业务统一管理数据，实现多业务数据融合，支撑多样化的应用服务。KWDB 的产品架构如下图所示：
 
-<img src="../static/about-kaiwudb/kwdb-architecture.png" alt="KWDB 产品架构" style="max-width: 100%; height: auto;" />
+<img src="../static/about-kaiwudb/kwdb-architecture.png" alt="KWDB 产品架构" style="max-width: 80%; height: auto;" />
 
 **接口连接层**：支持 JDBC、ODBC、RESTful API 等多种标准化接口协议，确保与各类应用程序和开发工具良好兼容。
 

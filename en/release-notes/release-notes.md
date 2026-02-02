@@ -35,7 +35,7 @@ KWDB 3.1.0 retains all existing features while delivering comprehensive optimiza
 
 - Supports configuring data deduplication strategy to `merge`, which deduplicates and consolidates data with identical timestamps for the same device—ideal for scenarios with duplicate writes from data sources or multi-path data collection
 
-#### Time-series Data Performance Optimization
+#### Time-Series Data Performance Optimization
 
 - Introduces a dedicated storage engine for Raft log, improving read/write performance on mechanical hard drives
 
