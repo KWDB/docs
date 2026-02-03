@@ -17,7 +17,7 @@ The user must be a member of the `admin` role or have been granted the `CREATE` 
 
 ### Syntax
 
-![](../../../../static/sql-reference/create_table_ts.png)
+![](../../../../static/sql-reference/createtable.png)
 
 ### Parameters
 
@@ -25,20 +25,21 @@ The user must be a member of the `admin` role or have been granted the `CREATE` 
 
 - Currently, the table name, column name, and tag name do not support Chinese characters.
 - The optional parameters must be configured in an order of `[RETENTIONS <keep_duration>] [DICT ENCODING] [COMMENT [=] <'comment_text'>]`. Otherwise, the system returns an error.
-- In version 3.0.0, the `activetime` and `partition interval` configurations are ignored.
+- For KWDB 3.1.0, the partition interval configuration of a table is inherited from that of its parent database.
 
 :::
 
 | Parameter | Description |
 | --- | --- |
+| `IF NOT EXISTS` | Optional. <br>- When the `IF NOT EXISTS` keyword is used, the system creates a new table only if a table of the same name does not already exist. Otherwise, the system fails to create a new table without returning an error. <br>- When the `IF NOT EXISTS` keyword is not used, the system creates a new table only if a table of the same name does not already exist. Otherwise, the system fails to create a new table and returns an error.<br > **Note** <br > `IF NOT EXISTS` checks the table name only. It does not check if an existing table has the same columns, indexes, constraints, etc., of the new table.|
 | `table_name`| The name of the table to create, which must be unique within its database and follow these [Identifier Rules](../../sql-identifiers.md). The table name supports up to 128 bytes. |
 | `column_list`| A comma-separated list of columns. You can specify two or more columns. Each column requires a name, data type, and default value. Each table supports up to 4096 columns. <br > The column name supports up to 128 bytes. You can set the data type to NOT NULL. By default, the data type is set to NULL. For non-TIMESTAMP data columns, the default value must be a constant. For TIMESTAMP-typed columns, the default value can either be a constant or the `now()` function. If the data type of the default value is not matched with that of the column, the system returns an error. KWDB supports setting NULL as the default value. <br > Support adding comments to data columns after the data type. |
 | `tag_list`| A comma-separated list of tags. You can specify one or more tags. Each table supports up to 128 tags. Each tag requires a name and data type. The tag name supports up to 128 bytes. You can set the data type to NOT NULL. By default, the data type is set to NULL. KWDB does not support setting TIMESTAMP, TIMESTAMPTZ, NVARCHAR or GEOMETRY data types for time-series tables.  <br > Support adding comments to tag columns after the nullable condition.  |
 | `primary_tag_list`| A comma-separated list of primary tags. You can specify one or more primary tags. Each table supports up to 4 primary tags. Primary tags must be included in the list of tags and set to NOT NULL. Currently, primary tags does not support floating-point and variable-length data types, except for the VARCHAR data type. By default, a VARCHAR-typed data length is `64` bytes. The maximum of a VARCHAR-typed data length is `128` bytes. |
-| `keep_duration`| Optional. Defines the data retention period for the database. Data older than this duration will be automatically purged.<br>Default: `0s` (retain indefinitely)<br>Time units:<br>- Seconds: `s` or `second`<br>- Minutes: `m` or `minute`<br>- Hours: `h` or `hour`<br>- Days: `d` or `day`<br>- Weeks: `w` or `week`<br>- Months: `mon` or `month`<br>- Years: `y` or `year`<br>Valid range: Positive integer up to 1000 years<br>Note:<br>- Table-level retention settings override database-level settings.<br>- Longer retention periods consume more storage. Configure based on your business needs.<br>- Data that already exceeds the retention period at write time will be rejected and not stored. |
+| `keep_duration`| Optional. Define the data retention period for the database. Data older than this duration will be automatically purged.<br>Default: `0s` (retain indefinitely)<br>Time units:<br>- Seconds: `s` or `second`<br>- Minutes: `m` or `minute`<br>- Hours: `h` or `hour`<br>- Days: `d` or `day`<br>- Weeks: `w` or `week`<br>- Months: `mon` or `month`<br>- Years: `y` or `year`<br>Valid range: Positive integer up to 1000 years<br>Note:<br>- Table-level retention settings override database-level settings.<br>- Longer retention periods consume more storage. Configure based on your business needs.<br>- Data that already exceeds the retention period at write time will be rejected and not stored. |
 | `DICT ENCODING`| Optional. Enable dictionary encoding to improve the compression capability of STRING-typed data. The higher the repetition rate of the STRING-typed data is, the better the data is compressed. This function is only applied to CHAR- and VARCHAR-typed data whose length is less than or equal to `1023`. You can only enable it when creating a table. Once enabled, you cannot disable it. |
 | `comment_text` | Optional. Specify the comment to be associated to the table.|
-| `hash_value`| Optional. Defines the HASH ring size in a distributed cluster, which determines the maximum number of data ranges. For example, `HASH(100)` allows up to 100 distinct ranges.<br><br>Default: 2000 (up to 2000 ranges)<br>Valid range: [1, 50000]<br><br>Performance considerations:<br>- Too small: Data from multiple devices concentrates in fewer ranges, causing write hotspots<br>- Too large: Excessive ranges increase management overhead<br><br>Recommended values based on device count:<br>- ≤ 1,000 devices: `hash_value` < 20<br>- ≤ 50,000 devices: `hash_value` < 2,000<br>- ≤ 1,000,000 devices: `hash_value` < 10,000|
+| `hash_value`| Optional. Define the HASH ring size in a distributed cluster, which determines the maximum number of data ranges. For example, `HASH(100)` allows up to 100 distinct ranges.<br><br>Default: 2000 (up to 2000 ranges)<br>Valid range: [1, 50000]<br><br>Performance considerations:<br>- Too small: Data from multiple devices concentrates in fewer ranges, causing write hotspots<br>- Too large: Excessive ranges increase management overhead<br><br>Recommended values based on device count:<br>- ≤ 1,000 devices: `hash_value` < 20<br>- ≤ 50,000 devices: `hash_value` < 2,000<br>- ≤ 1,000,000 devices: `hash_value` < 10,000|
 
 ### Examples
 
@@ -72,7 +73,6 @@ The user must be a member of the `admin` role or have been granted the `CREATE` 
                   |     sensor_type VARCHAR(30) NOT NULL ) PRIMARY TAGS(sensor_id)
                   |     retentions 864000s
                   |     activetime 1d
-                  |     partition interval 10d
     (1 row)
     ```
 
@@ -233,7 +233,6 @@ The user must have any privilege on the specified table(s).
                 |     ptag INT4 NOT NULL ) PRIMARY TAGS(ptag)
                 |     retentions 0s
                 |     activetime 1d
-                |     partition interval 10d
     (1 row)
     ```
 
@@ -255,7 +254,6 @@ The user must have any privilege on the specified table(s).
                     |     site INT4 NOT NULL ) PRIMARY TAGS(site)
                     |     retentions 0s
                     |     activetime 0s
-                    |     partition interval 10d
     (1 row)
     ```
 
@@ -334,7 +332,7 @@ The `ALTER TABLE` statement performs the following operations:
 | `new_table_name` | The new name of the table. It supports up to 128 bytes. |
 | `old_name` | The current name of the column or tag. Currently, KWDB does not support modifying names of primary tags.|
 | `new_name` | The new name of the column. The new name must be unique within the table and supports up to 128 bytes. |
-| `keep_duration`|Optional. Defines the data retention period for the database. Data older than this duration will be automatically purged.<br>Default: `0s` (retain indefinitely)<br>Time units:<br>- Seconds: `s` or `second`<br>- Minutes: `m` or `minute`<br>- Hours: `h` or `hour`<br>- Days: `d` or `day`<br>- Weeks: `w` or `week`<br>- Months: `mon` or `month`<br>- Years: `y` or `year`<br>Valid range: Positive integer up to 1000 years<br>Note:<br>- Table-level retention settings override database-level settings.<br>- Longer retention periods consume more storage. Configure based on your business needs.<br>- Data that already exceeds the retention period at write time will be rejected and not stored.  |
+| `keep_duration`| Optional. Define the data retention period for the database. Data older than this duration will be automatically purged.<br>Default: `0s` (retain indefinitely)<br>Time units:<br>- Seconds: `s` or `second`<br>- Minutes: `m` or `minute`<br>- Hours: `h` or `hour`<br>- Days: `d` or `day`<br>- Weeks: `w` or `week`<br>- Months: `mon` or `month`<br>- Years: `y` or `year`<br>Valid range: Positive integer up to 1000 years<br>Note:<br>- Table-level retention settings override database-level settings.<br>- Longer retention periods consume more storage. Configure based on your business needs.<br>- Data that already exceeds the retention period at write time will be rejected and not stored.  |
 
 ### Examples
 

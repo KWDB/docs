@@ -17,21 +17,20 @@ The user must be a member of the `admin` role. By default, the `root` user belon
 
 ### Syntax
 
-![](../../../../static/sql-reference/create-db-ts.png)
+![](../../../../static/sql-reference/create_ts_db.png)
 
 ### Parameters
 
 :::warning Note
-
-- The optional parameters must be configured in an order of `[RETENTIONS <keep_duration>] [COMMENT [=] <'comment_text'>]`. Otherwise, the system returns an error.
-- Version 3.0.0 only supports a 10-day database partition interval. Other configuration values are not valid.
-
+The optional parameters must be configured in an order of `[RETENTIONS <keep_duration>] [PARTITION INTERVAL <interval>] [COMMENT [=] <'comment_text'>]`. Otherwise, the system returns an error.
 :::
 
 | Parameter | Description |
 | --- | --- |
+| `IF NOT EXISTS` | Optional. <br>- When the `IF NOT EXISTS` keyword is used, the system creates a new database only if a database of the same name does not already exist. Otherwise, the system fails to create a new database without returning an error. <br>- When the `IF NOT EXISTS` keyword is not used, the system creates a new database only if a database of the same name does not already exist. Otherwise, the system fails to create a new database and returns an error.|
 | `database_name` | The name of the database to create, which must be unique and follow these [Identifier Rules](../../sql-identifiers.md). Currently, the name does not support Chinese characters and supports up to 63 bytes.|
-| `keep_duration` | Optional. Defines the data retention period for the database. Data older than this duration will be automatically purged.<br>Default: `0s` (retain indefinitely)<br>Time units:<br>- Seconds: `s` or `second`<br>- Minutes: `m` or `minute`<br>- Hours: `h` or `hour`<br>- Days: `d` or `day`<br>- Weeks: `w` or `week`<br>- Months: `mon` or `month`<br>- Years: `y` or `year`<br>Valid range: Positive integer up to 1000 years<br>Note:<br>- Table-level retention settings override database-level settings.<br>- Longer retention periods consume more storage. Configure based on your business needs.<br>- Data that already exceeds the retention period at write time will be rejected and not stored. |
+| `keep_duration` | Optional. Define the data retention period for the database. Data older than this duration will be automatically purged.<br>Default: `0s` (retain indefinitely)<br>Time units:<br>- Seconds: `s` or `second`<br>- Minutes: `m` or `minute`<br>- Hours: `h` or `hour`<br>- Days: `d` or `day`<br>- Weeks: `w` or `week`<br>- Months: `mon` or `month`<br>- Years: `y` or `year`<br>Valid range: Positive integer up to 1000 years<br>Note:<br>- Table-level retention settings override database-level settings.<br>- Longer retention periods consume more storage. Configure based on your business needs.<br>- Data that already exceeds the retention period at write time will be rejected and not stored.|
+| `interval` | Optional. Specify the interval to partition the database. If not specified, it is set to `10d` by default. <br>Time units: <br>- Days: `d` or `day`<br>- Weeks: `w` or `week`<br>- Months: `mon` or `month`<br>- Years: `y` or `year`<br> Valid range: Positive integer up to 1000 years |
 | `comment_text` | Optional. Specify the comment to be associated to the database.|
 
 ### Examples
@@ -84,6 +83,20 @@ The user must be a member of the `admin` role. By default, the `root` user belon
 
     ```sql
     CREATE TS DATABASE ts_db_power COMMENT = 'database for power statistics';
+    ```
+
+    If you succeed, you should see an output similar to the following:
+
+    ```sql
+    CREATE TS DATABASE
+    ```
+
+- Create a database and specify an interval to partition the database.
+
+    This example creates a database named `iot` and specifies the partition interval to `2d`.
+
+    ```sql
+    CREATE TS DATABASE iot PARTITION INTERVAL 2d;
     ```
 
     If you succeed, you should see an output similar to the following:
@@ -256,7 +269,7 @@ The `ALTER DATABASE` statement applies a name, retention, or zone configurations
 | `old_name` | The name of the database to change. |
 | `new_name` | The new name of the database, which must be unique and follow these [Identifier Rules](../../sql-identifiers.md). Currently, the name does not support Chinese characters and supports up to 63 bytes.|
 | `database_name` | The name of the database to change. |
-| `keep_duration` |Optional. Defines the data retention period for the database. Data older than this duration will be automatically purged.<br>Default: `0s` (retain indefinitely)<br>Time units:<br>- Seconds: `s` or `second`<br>- Minutes: `m` or `minute`<br>- Hours: `h` or `hour`<br>- Days: `d` or `day`<br>- Weeks: `w` or `week`<br>- Months: `mon` or `month`<br>- Years: `y` or `year`<br>Valid range: Positive integer up to 1000 years<br>Note:<br>- Table-level retention settings override database-level settings.<br>- Longer retention periods consume more storage. Configure based on your business needs.<br>- Data that already exceeds the retention period at write time will be rejected and not stored.  |
+| `keep_duration` | Optional. Define the data retention period for the database. Data older than this duration will be automatically purged.<br>Default: `0s` (retain indefinitely)<br>Time units:<br>- Seconds: `s` or `second`<br>- Minutes: `m` or `minute`<br>- Hours: `h` or `hour`<br>- Days: `d` or `day`<br>- Weeks: `w` or `week`<br>- Months: `mon` or `month`<br>- Years: `y` or `year`<br>Valid range: Positive integer up to 1000 years<br>Note:<br>- Table-level retention settings override database-level settings.<br>- Longer retention periods consume more storage. Configure based on your business needs.<br>- Data that already exceeds the retention period at write time will be rejected and not stored.  |
 | `variable` | The name of the variable to modify. The following variables are supported: <br>- `range_min_bytes`: the minimum size in bytes for a data range. When a range is smaller than this value, KWDB merges it with an adjacent range. Default: 256 MiB. The value must be greater than 1 MiB (1048576 bytes) and smaller than the maximum size of the range. <br>- `range_max_bytes`: the maximum size in bytes for a data range. When a range exceeds this value, KWDB splits it into two ranges. Default: 512 MiB. The value must not be smaller than 5 MiB (5242880 bytes).  <br>- `num_replicas`: the number of replicas. Default: 3. For the `system` database and the `meta`, `liveness`, and `system` ranges, the default number of replicas is 5. **Note**: The number of replicas cannot be reduced when unavailable nodes exist in the cluster. <br>- `constraints`: required (+) and/or prohibited (-) constraints for where replicas can be placed. For example, `constraints = '{"+region=NODE1": 1, "+region=NODE2": 1, "+region=NODE3": 1}'` places one replica on each of nodes 1, 2, and 3. Currently only supports the `region=NODEx` format. <br>- `lease_preferences`: an ordered list of required (+) and/or prohibited (-) constraints for where the leaseholder should be placed. For example, `lease_preferences = '[[+region=NODE1]]'` prefers placing the leaseholder on node 1. If this isn't possible, KWDB tries the next preference in the list. If no preferences can be satisfied, KWDB uses the default lease distribution algorithm, which balances leases across nodes based on their current lease count. Each value in the list can contain multiple constraints. <br>- `ts_merge.days`: the merging time for time-series data ranges. After ranges in the same time-series table at the same hash point are split by timestamp, ranges that exceed this time are automatically merged and won't be automatically split again. Default: 10 (10 days). The value must be greater than or equal to 0. When set to 0, time-series data ranges are automatically merged immediately after being split by timestamp. If network or other failures are caused by too many system ranges, you can reduce this value to mitigate data volume issues. <br><br>**Tips**: <br>- `lease_preferences` can be defined independently from the `constraints` field. <br>- When setting `constraints`, you must also set `num_replicas`, and the number of constraints must be less than or equal to the number of replicas. The order of `constraints` doesn't matter. <br>- By default, KWDB only splits ranges based on hash points, so the range merging by time is disabled by default. To support merging ranges by time, set the `kv.kvserver.ts_split_interval` runtime parameter to `1` and the `kv.kvserver.ts_split_by_timestamp.enabled` runtime parameter to `true` to enable splitting ranges by both hash points and timestamps.|
 | `value` | The value of the variable to change. |
 |`COPY FROM PARENT`| Use the settings of the parent zone. |
