@@ -7,7 +7,7 @@ id: 3.1.0-release-notes
 
 KWDB is a distributed, multi-model database, designed for AIoT scenarios. It seamlessly integrates time-series and relational databases within the same instance, enabling efficient multi-model data processing. With high-performance time-series capabilities, it supports connections for tens of millions of devices, real-time insertion of millions of records within seconds, and query responses in just a few seconds for hundreds of millions of records. Built for stability, security, high availability, and easy maintenance, KWDB is ideal for industrial IoT, digital energy, connected vehicles, and smart industries, providing a unified platform for data storage, management, and analysis.
 
-KWDB 3.1.0 retains all existing features while delivering comprehensive optimizations and enhancements across database object management, data ingestion and querying, operations and security, stability, and performance.
+KWDB 3.1.0 retains all existing features while delivering comprehensive optimizations and enhancements across database object management, data ingestion and querying, operations, stability, and performance.
 
 ## Version Details
 
@@ -69,12 +69,6 @@ KWDB 3.1.0 retains all existing features while delivering comprehensive optimiza
 #### Job Management
 
 - `SHOW JOBS` statement now displays information related to stream computing jobs
-
-### Security and Auditing
-
-#### Audit Function Enhancements
-
-- Operations on `DATABASE`, `TABLE`, `INDEX`, `JOB`, and `SCHEDULE` objects upgraded from statement-level to system-level auditing and added to the default audit policy
 
 ## Important Changes
 
