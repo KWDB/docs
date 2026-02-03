@@ -73,7 +73,6 @@ id: ts-table
                   |     sensor_type VARCHAR(30) NOT NULL ) PRIMARY TAGS(sensor_id)
                   |     retentions 864000s
                   |     activetime 1d
-                  |     partition interval 10d
     (1 row)
     ```
 
@@ -244,7 +243,6 @@ id: ts-table
                 |     ptag INT4 NOT NULL ) PRIMARY TAGS(ptag)
                 |     retentions 0s
                 |     activetime 1d
-                |     partition interval 10d
     (1 row)
     ```
 
@@ -268,7 +266,6 @@ id: ts-table
                     |     site INT4 NOT NULL ) PRIMARY TAGS(site)
                     |     retentions 0s
                     |     activetime 1d
-                    |     partition interval 10d
         (1 row)
     ```
 
