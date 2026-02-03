@@ -80,7 +80,6 @@ PRIMARY [TAGS|ATTRIBUTES] (<primary_tag_list>)
                   |     sensor_type VARCHAR(30) NOT NULL ) PRIMARY TAGS(sensor_id)
                   |     retentions 864000s
                   |     activetime 1d
-                  |     partition interval 10d
     (1 row)
     ```
 
@@ -251,7 +250,6 @@ SHOW CREATE [TABLE] [<database_name>.] <table_name>;
                 |     ptag INT4 NOT NULL ) PRIMARY TAGS(ptag)
                 |     retentions 0s
                 |     activetime 1d
-                |     partition interval 10d
     (1 row)
     ```
 
@@ -275,7 +273,6 @@ SHOW CREATE [TABLE] [<database_name>.] <table_name>;
                     |     site INT4 NOT NULL ) PRIMARY TAGS(site)
                     |     retentions 0s
                     |     activetime 1d
-                    |     partition interval 10d
         (1 row)
     ```
 
