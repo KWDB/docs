@@ -59,7 +59,7 @@ For details, see [CREATE PROCEDURE](../../../sql-reference/ddl/relational-db/rel
 | `upsert_stmt`| The `UPSERT` statement to update and insert data into tables. |
 | `delete_stmt`| The `DELETE` statement to remove one row of data from tables. It is in a format of`DELETE FROM .... RETURNING target_list INTO select_into_targets`. |
 | `declare_stmt`| The `DECLARE` statement to declare user-defined variables, handlers, and cursors. For details, see [Declarations](../../../sql-reference/other-sql-statements/declare-sql.md).|
-| `proc_set_stmt` | The `SET` statement to set values for user-defined variables. It is in a format of `SET var_name = a_expr`. <br>- `var_name`: The name of the user-defined variable. <br>- `a_expr`: The expression of values applied to user-defined variables. |
+| `proc_set_stmt` | The `SET` statement to set values for user-defined variables or variables declared using the `DECLARE` statement. It is in a format of `SET var_name = a_expr`, where `var_name` refers to the name of the variable and `a_expr` refers to the expression of values applied to variables. <br > User-defined variables set within a stored procedure are only valid for the current session. <br> User-defined variables set within a stored procedure remain accessible and modifiable by the user in the external session after the stored procedure is called. <br > Once the type of a user-defined variable is set within a stored procedure, do not support modifying its type. Subsequent assignments must be consistent with the initial type. Otherwise, the system returns an error. <br > If a user-defined variable is set outside the stored procedure, when creating a stored procedure that sets a user-defined variable with the same name, the system checks whether a variable with the same name already exists. If it exists and the types are consistent, the variable is successfully set. Otherwise, the system returns an error. <br >**Note** <br > The value of a user-defined variable set within a stored procedure is not affected by `COMMIT` or `ROLLBACK` transaction statements. |
 | `proc_if_stmt` | The `IF` statement to execute various SQL statement blocks based on the specified condition. It is in a format of `IF a_expr THEN proc_stmt_list opt_stmt_elsifs opt_stmt_else ENDIF`. <br>- `a_expr`: The conditional expression of the `IF` statement. `a_expr` must be an expression that returns Boolean values. <br>- `proc_stmt_list`: The SQL statement to execute after the condition is met. The SQL statements supported by the `IF` statement are identical to those supported by the `CREATE PROCEDURE` statement. <br>- `opt_stmt_elsifs`: Optional. Other conditions of the `IF` statement. <br>- `opt_stmt_else`: Optional. The `ELSE` condition of the `IF` statement. |
 | `proc_while_stmt` | The `WHILE` statement to repeatedly execute codes when the specified condition is met. It is in a format of `opt_loop_label WHILE a_expr DO proc_stmt_list ENDWHILE opt_label`. <br>- `opt_loop_label`: The label of the `WHILE` statement. <br>-`a_expr`: The conditional expression of the `WHILE` statement. <br>-`proc_stmt_list`: The SQL statement to execute after the condition is met. The SQL statements supported by the `WHILE` statement are identical to those supported by the `CREATE PROCEDURE` statement. <br>- `opt_label`: The label of the `WHILE` statement, in a format of `label_name`. The `opt_loop_label` and `opt_label` parameters must come in pairs. |
 | `begin_stmt` | The statement to begin a transaction. |
@@ -71,58 +71,112 @@ For details, see [CREATE PROCEDURE](../../../sql-reference/ddl/relational-db/rel
 | `fetch_cursor_stmt` | The statement to fetch a cursor. For details, see [FETCH](../../../sql-reference/other-sql-statements/cursor-sql.md#fetch). |
 | `close_cursor_stmt` | The statement to close a cursor. For details, see [CLOSE](../../../sql-reference/other-sql-statements/cursor-sql.md#close). |
 | `proc_leave_stmt`| When using the `LABEL` keyword to define labels for the stored procedure body or `WHILE` statement, you can use the `LEAVE` statement to step out the stored procedure body or the `WHILE` loop. It is in a format of `LEAVE label_name`. |
+| `prepare_stmt` | The `PREPARE` statement in a format of `PREPARE stmt_name AS stmt_sql`. The name of a `PREPARE` statement must be globally unique within the current session. When creating a `PREPARE` statement within a stored procedure, if its name duplicates an existing `PREPARE` statement, the system returns an error. `PREPARE` statements created within a stored procedure are only valid for the current session and are automatically cleaned up after the session ends. <br > Within a stored procedure, the SQL statement defined in a `PREPARE` statement must be a single complete SQL statement supported by the stored procedure. Parameter placeholders in the SQL statement only support the dollar sign (`$`) and can only replace values in the SQL (e.g., `WHERE id = $1`). They cannot replace identifiers such as table names, column names, or keywords. <br > Within a stored procedure, `PREPARE` statements support `SELECT`, `INSERT`, `UPDATE`, `UPSERT`, and `DELETE` statements. <br > Within a stored procedure, `PREPARE` statements do not support transaction statements (`BEGIN`, `START TRANSACTION`, `COMMIT`, and `ROLLBACK`), session control statement (`USE`), flow control statements of stored procedures, stored procedure-related statements (`CREATE PROCEDURE`, `ALTER PROCEDURE`, `DROP PROCEDURE`, `CALL PROCEDURE`), `SELECT INTO` statements, or DDL statements. <br > `PREPARE` statements defined outside a stored procedure can be used within the stored procedure. Conversely, if the system does not actively release a `PREPARE` statement created within a stored procedure, that `PREPARE` statement can also be used outside the stored procedure.<br >**Note** <br >- Do not support nested `PREPARE` statements (one `PREPARE` statement inside another).<br >- The `PREPARE` statements cannot include temporary variables (declared using the `DECLARE` statement) or user-defined variables defined within the stored procedure. <br >- After executing a `PREPARE` statement, if the `DEALLOCATE PREPARE` statement is not explicitly executed, the prepared object remains in the current session. In this case, if a prepared object with the same name is created outside the stored procedure, the system returns an error. |
+| `execute_stmt` | The `EXECUTE` statement in a format of  `EXECUTE stmt_name para_value`. <br >**Note** <br > The `EXECUTE` statements cannot include temporary variables (declared using the `DECLARE` statement) or IN parameters defined within the stored procedure. You need to convert them using the `SET @var = variable` statement. |
+| `deallocate_stmt` | The `DEALLOCATE` statement in a format of `DEALLOCATE PREPARE stmt`. To remove all `PREPARE` statements, use the `DEALLOCATE ALL` or `DEALLOCATE PREPARE ALL` statement. |
 
 ### Examples
 
-This example creates a stored procedure named `test`.
+- Create a stored procedure.
 
-```sql
--- Set the delimiter to double backslash.
-delimiter \\
+    This example creates a stored procedure named `test`.
 
--- Create a stored procedure.
-create procedure test() 
-label test:
-begin 
-        declare a int;
-        declare b int;
-        declare err int;
-        declare exit HANDLER FOR NOT FOUND,SQLEXCEPTION
-        BEGIN
-          SET err = -1;
-          SELECT a,b;
-          ROLLBACK;
-        ENDHANDLER;
-        
-        START TRANSACTION;
-        set a = 10;
-        select a, b from t1;
-        update t1 set a =  a + 1 where b > 0;
-        insert into t1 values (a, b);
-        label my_loop:
-        WHILE b <= 10 DO 
-                declare d int;
-                set d = b + 2;
-                if d > 9 then 
-                        select * from t1; 
-                        leave my_loop;
-                elsif b > 5 then 
-                        select * from t2; 
-                endif;
-                set b = b + 1; 
-        ENDWHILE my_loop; 
-        IF err = 0 THEN
-                SELECT a,b;
-        ENDIF;
-        COMMIT;
-end test\\
-delimiter ;
-CREATE PROCEDURE
-```
+    ```sql
+    -- Set the delimiter to double backslash.
+    delimiter \\
+
+    -- Create a stored procedure.
+    create procedure test() 
+    label test:
+    begin 
+            declare a int;
+            declare b int;
+            declare err int;
+            declare exit HANDLER FOR NOT FOUND,SQLEXCEPTION
+            BEGIN
+            SET err = -1;
+            SELECT a,b;
+            ROLLBACK;
+            ENDHANDLER;
+            
+            START TRANSACTION;
+            set a = 10;
+            select a, b from t1;
+            update t1 set a =  a + 1 where b > 0;
+            insert into t1 values (a, b);
+            label my_loop:
+            WHILE b <= 10 DO 
+                    declare d int;
+                    set d = b + 2;
+                    if d > 9 then 
+                            select * from t1; 
+                            leave my_loop;
+                    elsif b > 5 then 
+                            select * from t2; 
+                    endif;
+                    set b = b + 1; 
+            ENDWHILE my_loop; 
+            IF err = 0 THEN
+                    SELECT a,b;
+            ENDIF;
+            COMMIT;
+    end test\\
+    delimiter ;
+    CREATE PROCEDURE
+    ```
+
+- Create a stored procedure and set user-defined variables within the stored procedure.
+
+    ```sql
+    -- Set the delimiter to double backslash.
+    DELIMITER \\
+
+    -- Create a stored procedure.
+    CREATE PROCEDURE proc1()
+    BEGIN
+    declare a int;
+    set a = 10;
+    set @b = 1;
+    select @b;
+    
+    set @b = a;
+    select @b;
+    
+    END //
+    CREATE PROCEDURE
+    Time: 60.4819ms
+    ```
+
+- Create a stored procedure and use the `PREPARE`, `EXECUTE`, and `DEALLOCATE` statements.
+
+    ```sql
+    -- Set the delimiter to double backslash.
+    DELIMITER \\
+
+    -- Create a stored procedure.s   
+    CREATE PROCEDURE proc1()
+    BEGIN
+      PREPARE stmt as SELECT 1;
+      EXECUTE stmt;
+      DEALLOCATE PREPARE stmt;
+    END //
+
+    CREATE PROCEDURE
+    Time: 60.4819ms
+    ```
 
 ## CALL
 
 The `CALL` statement calls a stored procedure.
+
+::: warning Note
+
+- If user-defined variables are defined when creating a stored procedure, the system checks whether a user-defined variable with the same name already exists outside the stored procedure when the procedure is called. If it exists and the types are consistent, the system will successfully call the stored procedure and overwrite the original value with the new user-defined variable value. Otherwise, the system returns an error.
+- If a `PREPARE` statement is defined when creating a stored procedure, the system checks the syntax of the `PREPARE` statement when the procedure is called. If the syntax is invalid, the system returns an error.
+- If the execution of a `PREPARE` statement is defined when creating a stored procedure, the system checks whether the object of the `PREPARE` statement to be executed exists when the procedure is called. If it does not exist, the system returns an error.
+- If the deallocation of a `PREPARE` statement is defined when creating a stored procedure, the system checks whether the object of the `PREPARE` statement to be deallocated exists when the procedure is called. If it does not exist, the system returns an error.
+
+:::
 
 ### Privileges
 
