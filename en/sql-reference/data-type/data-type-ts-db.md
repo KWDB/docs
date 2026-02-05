@@ -26,7 +26,7 @@ This table lists the original data types, default width, maximum width, and conv
 | CHAR               | 1 byte        | 1023             | NCHAR, VARCHAR, NVARCHAR                             | When converting CHAR-typed values to NCHAR-typed or NVARCHAR-typed values, the NCHAR-typed or NVARCHAR-typed data width should not be shorter than a quarter of the original data width.                                  |
 | VARCHAR            | 254 bytes     | 65534 bytes      | CHAR, NCHAR, NVARCHAR, INT2, INT4, INT8, REAL, FLOAT | When converting VARCHAR-typed values to NCHAR-typed or NVARCHAR-typed values, the NCHAR-typed or NVARCHAR-typed data width should not be shorter than a quarter of the original data width.                               |
 | NCHAR              | 1 character   | 254 characters   | CHAR, VARCHAR, NVARCHAR                              | When converting NCHAR-typed values to CHAR-typed or VARCHAR-typed values, the CHAR-typed or VARCHAR-typed data width should not be shorter than 4 times of the original data width.                                       |
-| NVARCHAR           | 63 characters | 16384 characters | CHAR, VARCHAR, NCHAR                                 | When converting NVARCHAR-typed values to CHAR-typed or VARCHAR-typed values, the CHAR-typed or VARCHAR-typed data width should not be shorter than 4 times of the original data width. It is unavailable for TAG columns. |
+| NVARCHAR           | 63 characters | 16383 characters | CHAR, VARCHAR, NCHAR                                 | When converting NVARCHAR-typed values to CHAR-typed or VARCHAR-typed values, the CHAR-typed or VARCHAR-typed data width should not be shorter than 4 times of the original data width. It is unavailable for TAG columns. |
 
 ::: warning Note
 
@@ -533,7 +533,7 @@ To limit the length of a NVARCHAR-typed value, use `NVARCHAR(n)`, where `n` repr
 
 | Name     | Storage Space        |
 |----------|----------------------|
-| NVARCHAR | 0 ~ 16384 characters |
+| NVARCHAR | 0 ~ 16383 characters |
 
 #### Examples
 
@@ -542,7 +542,7 @@ This example creates a table with NVARCHAR-typed columns and then inserts data i
 ```sql
 -- 1. Create a table named nvarchars.
 
-CREATE TABLE nvarchars(ts timestamp not null,c1 nvarchar,c2 nvarchar(16384)) tags (tag1 int not null) primary tags (tag1);
+CREATE TABLE nvarchars(ts timestamp not null,c1 nvarchar,c2 nvarchar(16383)) tags (tag1 int not null) primary tags (tag1);
 CREATE TABLE
 
 -- 2. Check columns of the table.
@@ -552,7 +552,7 @@ SHOW COLUMNS FROM nvarchars;
 --------------+-----------------+-------------+----------------+-----------------------+-----------+-----------+---------
   ts          | TIMESTAMPTZ     |    false    | NULL           |                       | {primary} |   false   | false
   c1          | NVARCHAR(63)    |    true     | NULL           |                       | {}        |   false   | false
-  c2          | NVARCHAR(16384) |    true     | NULL           |                       | {}        |   false   | false
+  c2          | NVARCHAR(16383) |    true     | NULL           |                       | {}        |   false   | false
   tag1        | INT4            |    false    | NULL           |                       | {}        |   false   | true
 (4 rows)
 
