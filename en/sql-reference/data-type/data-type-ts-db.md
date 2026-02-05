@@ -24,7 +24,7 @@ This table lists the original data types, default width, maximum width, and conv
 | FLOAT4             | 4 bytes       | -                | FLOAT, VARCHAR                                       | When converting FLOAT4-typed values to VARCHAR-typed values, the minimum VARCHAR-typed data width is 30.                                                                                                                     |
 | FLOAT8             | 8 bytes       | -                | VARCHAR                                              | When converting FLOAT8-typed values to VARCHAR-typed values, the minimum VARCHAR-typed data width is 30.                                                                                                                    |
 | CHAR               | 1 byte        | 1023             | NCHAR, VARCHAR, NVARCHAR                             | When converting CHAR-typed values to NCHAR-typed or NVARCHAR-typed values, the NCHAR-typed or NVARCHAR-typed data width should not be shorter than a quarter of the original data width.                                  |
-| VARCHAR            | 254 bytes     | 65536 bytes      | CHAR, NCHAR, NVARCHAR, INT2, INT4, INT8, REAL, FLOAT | When converting VARCHAR-typed values to NCHAR-typed or NVARCHAR-typed values, the NCHAR-typed or NVARCHAR-typed data width should not be shorter than a quarter of the original data width.                               |
+| VARCHAR            | 254 bytes     | 65534 bytes      | CHAR, NCHAR, NVARCHAR, INT2, INT4, INT8, REAL, FLOAT | When converting VARCHAR-typed values to NCHAR-typed or NVARCHAR-typed values, the NCHAR-typed or NVARCHAR-typed data width should not be shorter than a quarter of the original data width.                               |
 | NCHAR              | 1 character   | 254 characters   | CHAR, VARCHAR, NVARCHAR                              | When converting NCHAR-typed values to CHAR-typed or VARCHAR-typed values, the CHAR-typed or VARCHAR-typed data width should not be shorter than 4 times of the original data width.                                       |
 | NVARCHAR           | 63 characters | 16384 characters | CHAR, VARCHAR, NCHAR                                 | When converting NVARCHAR-typed values to CHAR-typed or VARCHAR-typed values, the CHAR-typed or VARCHAR-typed data width should not be shorter than 4 times of the original data width. It is unavailable for TAG columns. |
 
@@ -489,7 +489,7 @@ To limit the length of a VARCHAR-typed value, use `VARCHAR(n)`, where `n` repres
 
 | Name    | Storage Space |
 |---------|---------------|
-| VARCHAR | 0 ~ 64K bytes |
+| VARCHAR | 0 ~ 65534 bytes |
 
 #### Examples
 
@@ -498,7 +498,7 @@ This example creates a table with VARCHAR-typed columns and then inserts data in
 ```sql
 -- 1. Create a table named varchars.
 
-CREATE TABLE varchars(ts timestamp not null,c1 varchar,c2 varchar(65536)) tags (tag1 int not null) primary tags (tag1);
+CREATE TABLE varchars(ts timestamp not null,c1 varchar,c2 varchar(65534)) tags (tag1 int not null) primary tags (tag1);
 CREATE TABLE
 
 -- 2. Check columns of the table.
@@ -508,7 +508,7 @@ show columns from varchars;
 --------------+----------------+-------------+----------------+-----------------------+-----------+-----------+---------
   ts          | TIMESTAMPTZ    |    false    | NULL           |                       | {primary} |   false   | false
   c1          | VARCHAR(254)   |    true     | NULL           |                       | {}        |   false   | false
-  c2          | VARCHAR(65536) |    true     | NULL           |                       | {}        |   false   | false
+  c2          | VARCHAR(65534) |    true     | NULL           |                       | {}        |   false   | false
   tag1        | INT4           |    false    | NULL           |                       | {}        |   false   | true
 (4 rows)
 
