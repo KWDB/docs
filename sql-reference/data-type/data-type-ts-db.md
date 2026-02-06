@@ -24,9 +24,9 @@ KWDB 时序数据支持以下数据类型：
 | FLOAT4      | 4 字节   | -          | FLOAT、VARCHAR                                       | REAL 转 VARCHAR 时，VARCHAR 的最小宽度为 30。                                                   |
 | FLOAT8      | 8 字节   | -          | VARCHAR                                              | FLOAT 转 VARCHAR 时，VARCHAR 的最小宽度为 30。                                                  |
 | CHAR        | 1 字节   | 1023       | NCHAR、VARCHAR、NVARCHAR                             | CHAR 转 NCHAR 或 NVARCHAR 时，NCHAR 或 NVARCHAR 的宽度不得小于原宽度的 ¼。                     |
-| VARCHAR     | 254 字节 | 65536 字节 | CHAR、NCHAR、NVARCHAR、INT2、INT4、INT8、REAL、FLOAT | VARCHAR 转 NCHAR 或 NVARCHAR 时，NCHAR 和 NVARCHAR 的宽度不得小于原宽度的 ¼。                  |
+| VARCHAR     | 254 字节 | 65534 字节 | CHAR、NCHAR、NVARCHAR、INT2、INT4、INT8、REAL、FLOAT | VARCHAR 转 NCHAR 或 NVARCHAR 时，NCHAR 和 NVARCHAR 的宽度不得小于原宽度的 ¼。                  |
 | NCHAR       | 1 字符   | 254 字符   | CHAR、VARCHAR、NVARCHAR                              | NCHAR 转 CHAR 或 VARCHAR 时，CHAR 和 VARCHAR 的宽度不得小于原宽度的 4 倍。                      |
-| NVARCHAR    | 63 字符  | 16384 字符 | CHAR、VARCHAR、NCHAR                                 | NVARCHAR 转 CHAR 或 VARCHAR 时，CHAR 和 VARCHAR 的宽度不得小于原宽度的 4 倍。标签不支持该类型。 |
+| NVARCHAR    | 63 字符  | 16383 字符 | CHAR、VARCHAR、NCHAR                                 | NVARCHAR 转 CHAR 或 VARCHAR 时，CHAR 和 VARCHAR 的宽度不得小于原宽度的 4 倍。标签不支持该类型。 |
 
 ::: warning 说明
 
@@ -324,7 +324,7 @@ VARBYTES 类型的数据基于二进制值进行存储和排序。
 
 | 名称 | 存储空间 |
 | ----------------------------------- | --------------------------------------- |
-| VARBYTES                            | 0 ~ 64K 字节                           |
+| VARBYTES                            | 0 ~ 65534 字节                           |
 
 #### 示例
 
@@ -333,7 +333,7 @@ VARBYTES 类型的数据基于二进制值进行存储和排序。
 ```sql
 -- 1. 创建表 varbytes。
 
-create table varbytes(ts timestamp not null,c1 varbytes,c2 varbytes(65536)) tags (tag1 int not null) primary tags (tag1);
+create table varbytes(ts timestamp not null,c1 varbytes,c2 varbytes(65534)) tags (tag1 int not null) primary tags (tag1);
 CREATE TABLE
 
 -- 2. 查看表的列。
@@ -343,7 +343,7 @@ show columns from varbytes;
 --------------+-----------------+-------------+----------------+-----------------------+-----------+-----------+---------
   ts          | TIMESTAMPTZ     |    false    | NULL           |                       | {primary} |   false   | false
   c1          | VARBYTES(254)   |    true     | NULL           |                       | {}        |   false   | false
-  c2          | VARBYTES(65536) |    true     | NULL           |                       | {}        |   false   | false
+  c2          | VARBYTES(65534) |    true     | NULL           |                       | {}        |   false   | false
   tag1        | INT4            |    false    | NULL           |                       | {}        |   false   |  true
 (4 rows)
 ```
@@ -453,7 +453,7 @@ VARCHAR 类型的格式为 `VARCHAR[n)`，其中 `n` 为字节数。如果未指
 
 | 名称 | 存储空间 |
 | ----------------------------------- | --------------------------------------- |
-| VARCHAR                             | 0 ~ 64K 字节                           |
+| VARCHAR                             | 0 ~ 65534 字节                           |
 
 #### 示例
 
@@ -462,7 +462,7 @@ VARCHAR 类型的格式为 `VARCHAR[n)`，其中 `n` 为字节数。如果未指
 ```sql
 -- 1. 创建表 varchars。
 
-create table varchars(ts timestamp not null,c1 varchar,c2 varchar(65536)) tags (tag1 int not null) primary tags (tag1);
+create table varchars(ts timestamp not null,c1 varchar,c2 varchar(65534)) tags (tag1 int not null) primary tags (tag1);
 CREATE TABLE
 
 -- 2. 查看表的列。
@@ -472,7 +472,7 @@ show columns from varchars;
 --------------+----------------+-------------+----------------+-----------------------+-----------+-----------+---------
   ts          | TIMESTAMPTZ    |    false    | NULL           |                       | {primary} |   false   | false
   c1          | VARCHAR(254)   |    true     | NULL           |                       | {}        |   false   | false
-  c2          | VARCHAR(65536) |    true     | NULL           |                       | {}        |   false   | false
+  c2          | VARCHAR(65534) |    true     | NULL           |                       | {}        |   false   | false
   tag1        | INT4           |    false    | NULL           |                       | {}        |   false   |  true
 (4 rows)
 
@@ -492,7 +492,7 @@ NVARCHAR 类型的格式为 `NVARCHAR[n)`，其中 `n` 为字符数。如果未�
 
 | 名称 | 存储空间 |
 | ----------------------------------- | --------------------------------------- |
-| NVARCHAR                            | 0 ~ 16384 字符                         |
+| NVARCHAR                            | 0 ~ 16383 字符                         |
 
 #### 示例
 
@@ -501,7 +501,7 @@ NVARCHAR 类型的格式为 `NVARCHAR[n)`，其中 `n` 为字符数。如果未�
 ```sql
 -- 1. 创建表 nvarchars。
 
-create table nvarchars(ts timestamp not null,c1 nvarchar,c2 nvarchar(16384)) tags (tag1 int not null) primary tags (tag1);
+create table nvarchars(ts timestamp not null,c1 nvarchar,c2 nvarchar(16383)) tags (tag1 int not null) primary tags (tag1);
 CREATE TABLE
 
 -- 2. 查看表的列。
@@ -511,7 +511,7 @@ show columns from nvarchars;
 --------------+-----------------+-------------+----------------+-----------------------+-----------+-----------+---------
   ts          | TIMESTAMPTZ     |    false    | NULL           |                       | {primary} |   false   | false
   c1          | NVARCHAR(63)    |    true     | NULL           |                       | {}        |   false   | false
-  c2          | NVARCHAR(16384) |    true     | NULL           |                       | {}        |   false   | false
+  c2          | NVARCHAR(16383) |    true     | NULL           |                       | {}        |   false   | false
   tag1        | INT4            |    false    | NULL           |                       | {}        |   false   |  true
 (4 rows)
 
