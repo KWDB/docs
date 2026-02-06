@@ -347,7 +347,7 @@ VARBYTES-typed values are stored and sorted based on binary values.
 
 | Name     | Storage Space |
 |----------|---------------|
-| VARBYTES | 0 ~ 64K bytes |
+| VARBYTES | 0 ~ 65534 bytes |
 
 #### Examples
 
@@ -356,7 +356,7 @@ This example creates a table with VARBYTES-typed columns.
 ```sql
 -- 1. Create a table named varbytes.
 
-CREATE TABLE varbytes(ts timestamp not null,c1 varbytes,c2 varbytes(65536)) tags (tag1 int not null) primary tags (tag1);
+CREATE TABLE varbytes(ts timestamp not null,c1 varbytes,c2 varbytes(65534)) tags (tag1 int not null) primary tags (tag1);
 CREATE TABLE
 
 -- 2. Check columns of the table.
@@ -366,7 +366,7 @@ show columns from varbytes;
 --------------+-----------------+-------------+----------------+-----------------------+-----------+-----------+---------
   ts          | TIMESTAMPTZ     |    false    | NULL           |                       | {primary} |   false   | false
   c1          | VARBYTES(254)   |    true     | NULL           |                       | {}        |   false   | false
-  c2          | VARBYTES(65536) |    true     | NULL           |                       | {}        |   false   | false
+  c2          | VARBYTES(65534) |    true     | NULL           |                       | {}        |   false   | false
   tag1        | INT4            |    false    | NULL           |                       | {}        |   false   |  true
 (4 rows)
 ```

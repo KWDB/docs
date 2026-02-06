@@ -324,7 +324,7 @@ VARBYTES 类型的数据基于二进制值进行存储和排序。
 
 | 名称 | 存储空间 |
 | ----------------------------------- | --------------------------------------- |
-| VARBYTES                            | 0 ~ 64K 字节                           |
+| VARBYTES                            | 0 ~ 65534 字节                           |
 
 #### 示例
 
@@ -333,7 +333,7 @@ VARBYTES 类型的数据基于二进制值进行存储和排序。
 ```sql
 -- 1. 创建表 varbytes。
 
-create table varbytes(ts timestamp not null,c1 varbytes,c2 varbytes(65536)) tags (tag1 int not null) primary tags (tag1);
+create table varbytes(ts timestamp not null,c1 varbytes,c2 varbytes(65534)) tags (tag1 int not null) primary tags (tag1);
 CREATE TABLE
 
 -- 2. 查看表的列。
@@ -343,7 +343,7 @@ show columns from varbytes;
 --------------+-----------------+-------------+----------------+-----------------------+-----------+-----------+---------
   ts          | TIMESTAMPTZ     |    false    | NULL           |                       | {primary} |   false   | false
   c1          | VARBYTES(254)   |    true     | NULL           |                       | {}        |   false   | false
-  c2          | VARBYTES(65536) |    true     | NULL           |                       | {}        |   false   | false
+  c2          | VARBYTES(65534) |    true     | NULL           |                       | {}        |   false   | false
   tag1        | INT4            |    false    | NULL           |                       | {}        |   false   |  true
 (4 rows)
 ```
@@ -462,7 +462,7 @@ VARCHAR 类型的格式为 `VARCHAR[n)`，其中 `n` 为字节数。如果未指
 ```sql
 -- 1. 创建表 varchars。
 
-create table varchars(ts timestamp not null,c1 varchar,c2 varchar(65536)) tags (tag1 int not null) primary tags (tag1);
+create table varchars(ts timestamp not null,c1 varchar,c2 varchar(65534)) tags (tag1 int not null) primary tags (tag1);
 CREATE TABLE
 
 -- 2. 查看表的列。
@@ -472,7 +472,7 @@ show columns from varchars;
 --------------+----------------+-------------+----------------+-----------------------+-----------+-----------+---------
   ts          | TIMESTAMPTZ    |    false    | NULL           |                       | {primary} |   false   | false
   c1          | VARCHAR(254)   |    true     | NULL           |                       | {}        |   false   | false
-  c2          | VARCHAR(65536) |    true     | NULL           |                       | {}        |   false   | false
+  c2          | VARCHAR(65534) |    true     | NULL           |                       | {}        |   false   | false
   tag1        | INT4           |    false    | NULL           |                       | {}        |   false   |  true
 (4 rows)
 
