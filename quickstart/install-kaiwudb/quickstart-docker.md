@@ -110,14 +110,22 @@ tar -zxvf <install_package_name>
 
 KWDB 支持通过以下方式获取容器镜像：
 
-- [安装包](https://gitee.com/kwdb/kwdb/releases)：下载系统环境对应的安装包，解压后在 `kwdb_install/packages` 目录下导入 `KaiwuDB.tar` 文件。注意：目前最新的 release v3.1.0 包中移除了 `KaiwuDB.tar` 文件，请通过第二种方式即 `docker pull` 命令获取镜像。
+- KWDB 3.1.0 之前的版本
 
-    ```bash
-    docker load < KaiwuDB.tar
-    Loaded image: "image-name"
-    ```
+  [下载](https://gitee.com/kwdb/kwdb/releases)系统环境对应的安装包，解压后在 `kwdb_install/packages` 目录下导入 `KaiwuDB.tar` 文件。
 
-- Docker 命令：执行 `docker pull kwdb/kwdb:<version>` 获取镜像。如获取最新的镜像版本：`docker pull kwdb/kwdb:latest"`。
+  ```bash
+  docker load < KaiwuDB.tar
+  Loaded image: "image-name"
+  ```
+
+- KWDB 3.1.0 及以后的版本
+
+  运行以下命令，获取 KWDB Docker 镜像。如获取最新的镜像版本，运行 `docker pull kwdb/kwdb:latest"` 命令。
+
+  ``` bash
+  docker pull kwdb/kwdb:<version>
+  ```
 
 ## 部署 KWDB
 
