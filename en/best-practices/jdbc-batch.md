@@ -19,7 +19,7 @@ Currently, the batch write functionality is only available for the standalone ve
 
 For more information, see:
 
-- Database connection methods, basic usage, data types, and exception handling: [Connect to KWDB using JDBC](../development/connect-kaiwudb/java/connect-jdbc.md)
+- Database connection methods, basic usage, data types, and exception handling: [Connect to KWDB using JDBC](../development/java/connect-jdbc.md)
 - Error codes: [KaiwuDB JDBC Driver Error Codes](../db-operation/error-code/error-code-jdbc-driver.md)
 - Troubleshooting: [KaiwuDB JDBC Driver Troubleshooting](../troubleshooting-guide/troubleshooting.md#kaiwudb-jdbc)
 

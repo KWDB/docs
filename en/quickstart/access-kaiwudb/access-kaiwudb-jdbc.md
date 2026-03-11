@@ -5,7 +5,7 @@ id: access-kaiwudb-jdbc
 
 # Connect to KWDB Using the KaiwuDB JDBC Driver
 
-This section explains how to connect to KWDB using the [KaiwuDB JDBC Driver](../../development/connect-kaiwudb/java/connect-jdbc.md) after KWDB is deployed and started.
+This section explains how to connect to KWDB using the [KaiwuDB JDBC Driver](../../development/java/connect-jdbc.md) after KWDB is deployed and started.
 
 ## Install the KaiwuDB JDBC Driver
 
@@ -66,4 +66,4 @@ public Connection getConnection() throws Exception {
 }
 ```
 
-For more information on connection methods and parameters, see [Connection Methods](../../development/connect-kaiwudb/java/connect-jdbc.md#connection-methods) and [Connection Parameters](../../development/connect-kaiwudb/java/connect-jdbc.md#connection-parameters).
+For more information on connection methods and parameters, see [Connection Methods](../../development/java/connect-jdbc.md#connection-methods) and [Connection Parameters](../../development/java/connect-jdbc.md#connection-parameters).

@@ -86,7 +86,7 @@ The cluster startup flags can be modified using any of the following methods:
 - The `docker-compose.yml` file for container deployments
 - The `kwbase start` command
 
-This section explains how to modify the `kaiwudb_env` and `docker-compose.yml` files to change the startup flag configurations. For information on the `kwbase start` command, see [kwbase start](../tool-command-reference/client-tool/kwbase-sql-reference.md).
+This section explains how to modify the `kaiwudb_env` and `docker-compose.yml` files to change the startup flag configurations. For information on the `kwbase start` command, see [kwbase start](../kaiwudb-tools/kwbase-cli-tool.md).
 
 ::: warning Note
 Startup flags are node-level configurations. To apply changes cluster-wide, you must configure each node separately.

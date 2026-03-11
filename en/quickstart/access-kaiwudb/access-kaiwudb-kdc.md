@@ -5,7 +5,7 @@ id: access-kaiwudb-kdc
 
 # Connect to KWDB Using KaiwuDB Developer Center
 
-This section explains how to install and use the [KaiwuDB Developer Center](../../kaiwudb-developer-center/overview.md) to connect to KWDB. KaiwuDB Developer Center provides a user-friendly visual interface for managing your databases efficiently.
+This section explains how to install and use the [KaiwuDB Developer Center](../../kaiwudb-tools/kaiwudb-developer-center/overview.md) to connect to KWDB. KaiwuDB Developer Center provides a user-friendly visual interface for managing your databases efficiently.
 
 ::: warning Note
 The KaiwuDB Developer Center interface is currently available in Chinese only.

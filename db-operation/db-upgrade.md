@@ -247,7 +247,7 @@ id: db-upgrade
 ### 步骤
 
 1. 按照 [KWDB 编译文档](https://gitee.com/kwdb/kwdb#%E7%BC%96%E8%AF%91%E5%92%8C%E5%AE%89%E8%A3%85)编译新版本。
-2. 使用与原版本相同的[启动命令](../tool-command-reference/client-tool/kwbase-sql-reference.md#kwbase-start)启动服务。
+2. 使用与原版本相同的[启动命令](../kaiwudb-tools/kwbase-cli-tool.md#kwbase-start)启动服务。
 3. 验证服务是否正常运行。
 
 ## 容器镜像部署升级

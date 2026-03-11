@@ -98,4 +98,4 @@ KWDB 提供自动重组和手动重组两种数据重组方式：
 
 :::
 
-启动命令的更多信息和示例，参见[kwbase start](../tool-command-reference/client-tool/kwbase-sql-reference.md#kwbase-start)。
+启动命令的更多信息和示例，参见[kwbase start](../kaiwudb-tools/kwbase-cli-tool.md#kwbase-start)。

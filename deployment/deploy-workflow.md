@@ -29,11 +29,11 @@ id: deploy-workflow
   - **脚本部署**
     - 裸机安装部署后，系统生成 `kaiwudb_env` 和 `kaiwudb.service` 文件，用于配置 KWDB 启动参数和 CPU 资源占用, 有关详细信息，参见[裸机部署配置集群](./cluster-config/cluster-config-bare-metal.md)。
     - 容器安装部署后，系统在 `/etc/kaiwudb/script` 目录下生成 Docker Compose 配置文件 `docker-compose.yml` 。用户可以修改通过该文件来配置 KWDB 的启动参数和 CPU 资源占用。有关详细信息，参见[容器部署配置集群](./cluster-config/cluster-config-docker.md)。
-  - **kwbase CLI 和 Docker Run 部署**: 用户可以通过 `kwbase start` 和 `kwbase start-single-replica` 命令设置集群启动参数，有关详细信息，参见 [kwbase start](../tool-command-reference/client-tool/kwbase-sql-reference.md#kwbase-start) 和 [kwbase start-single-replica](../tool-command-reference/client-tool/kwbase-sql-reference.md#kwbase-start-single-replica)。
+  - **kwbase CLI 和 Docker Run 部署**: 用户可以通过 `kwbase start` 和 `kwbase start-single-replica` 命令设置集群启动参数，有关详细信息，参见 [kwbase start](../kaiwudb-tools/kwbase-cli-tool.md#kwbase-start) 和 [kwbase start-single-replica](../kaiwudb-tools/kwbase-cli-tool.md#kwbase-start-single-replica)。
 
 - **连接集群**：用户可以使用以下任一方式，连接集群，进行数据操作：
   - [`kwbase` CLI 工具](../quickstart/access-kaiwudb/access-kaiwudb-cli.md)
-  - [KaiwuDB 开发者中心](../kaiwudb-developer-center/overview.md)
+  - [KaiwuDB 开发者中心](../kaiwudb-tools/kaiwudb-developer-center/overview.md)
   - KWDB 支持的[连接器](../development/overview.md)
 
 ## 集群管理

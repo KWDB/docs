@@ -144,9 +144,14 @@ class MarkdownLinkChecker:
         """提取 Markdown 中的所有链接"""
         links = []
         
-        # 1. 匹配 [text](link) 格式的链接
-        # 改进：不允许 text 和 link 部分包含换行符，避免跨行匹配表格内容
-        markdown_links = re.findall(r'\[([^\]\n]+)\]\(([^\)\n]+)\)', content)
+        # 1. 匹配 [text](link) 和 ![alt](image) 格式的链接
+        # 改进：不允许 text/alt 和 link 部分包含换行符，避免跨行匹配表格内容
+        markdown_links = re.findall(r"""!?
+            \[([^\]\n]*)\]  # Link text / image alt text (可以为空)
+            \(
+                ([^\)\n]+)    # URL
+            \)
+        """, content, re.VERBOSE)
         links.extend(markdown_links)
         
         # 2. 匹配 <link> 格式的链接(但排除 HTML 标签)
@@ -158,6 +163,18 @@ class MarkdownLinkChecker:
                        if not link.startswith(('http://', 'https://', 'mailto:', 'tel:'))]
         links.extend(angle_links)
         
+        # 3. 匹配 HTML 图片标签 (<img src="..." />)
+        # 这类图片链接在 Markdown 中也常见，需要检查是否为有效的内部链接
+        img_src_pattern = r'<img\s[^>]*?src=["\']([^"\']+)["\']'
+        img_links = re.findall(img_src_pattern, content, flags=re.IGNORECASE)
+        links.extend([('<img src>', src) for src in img_links])
+
+        # 4. 匹配 HTML 链接标签 (<a href="...">)
+        # 这类链接在表格/HTML 片段中也可能出现，且常用于内部锚点
+        a_href_pattern = r'<a\s+[^>]*?href=["\']([^"\']+)["\']'
+        a_links = re.findall(a_href_pattern, content, flags=re.IGNORECASE)
+        links.extend([('<a href>', href) for href in a_links])
+
         return links
     
     def is_internal_link(self, link):
