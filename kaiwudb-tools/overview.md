@@ -12,7 +12,7 @@ KWDB 提供一套完整的配套工具，覆盖数据库可视化管理、AI 智
 | 工具 | 说明 |
 |------|------|
 | [KaiwuDB 开发者中心](#kaiwudb-开发者中心) | 图形化数据库管理平台，提供连接管理、对象管理、数据编辑、SQL 编辑等可视化操作能力 |
-| [KaiwuDB 智能体工具（KAT）](#kaiwudb-智能体工具kat) | 基于 MCP 协议的数据库智能体工具，支持通过自然语言完成数据库运维、数据分析等任务 |
+| [KaiwuDB 智能体工具](#kaiwudb-智能体工具) | 基于 MCP 协议的数据库智能体工具，支持通过自然语言完成数据库运维、数据分析等任务 |
 | [KWDB MCP Server](#kwdb-mcp-server) | 面向应用开发的 MCP 协议连接器，供 LLM Agent 直接连接 KWDB 执行数据读写和 DDL 操作 |
 | [kwbase CLI 工具](#kwbase-cli-工具) | 命令行管理工具，支持节点启动、集群初始化、证书管理、SQL 操作及节点运维等操作 |
 | [TSBS MCP Server](#性能测试工具) | 基于 MCP 协议的时序数据库基准测试服务端 |
@@ -20,11 +20,11 @@ KWDB 提供一套完整的配套工具，覆盖数据库可视化管理、AI 智
 
 ## KaiwuDB 开发者中心
 
-KaiwuDB Developer Center（KDC）是专为 KWDB 设计的图形化数据库管理平台，可将数据库的日常操作可视化，替代传统命令行操作。KDC 支持连接管理、数据库与表对象管理、数据编辑、SQL 编辑、用户与权限管理等功能，适用于开发和日常运维场景。有关详细信息，参见 [KaiwuDB 开发者中心](./kaiwudb-developer-center/overview.md)。
+KaiwuDB 开发者中心（英文名 KaiwuDB Developer Center，简称 KDC）是专为 KWDB 设计的图形化数据库管理平台，可将数据库的日常操作可视化，替代传统命令行操作。KDC 支持连接管理、数据库与表对象管理、数据编辑、SQL 编辑、用户与权限管理等功能，适用于开发和日常运维场景。有关详细信息，参见 [KaiwuDB 开发者中心](./kaiwudb-developer-center/overview.md)。
 
-## KaiwuDB 智能体工具（KAT）
+## KaiwuDB 智能体工具
 
-KaiwuDB Agent Tools（KAT）是基于 MCP（Model Context Protocol，模型上下文协议）协议构建的数据库智能体工具，包含 KWDB MCP Server 和 AI 助手两个组件。KAT 将自然语言处理能力与 KWDB 深度融合，用户通过对话即可完成数据库安装部署、数据读写、分析查询等操作，兼容 Cline 等主流 MCP 客户端。有关详细信息，参见 [KaiwuDB 智能体工具](./kat/kat-overview.md)。
+KaiwuDB 智能体工具（英文名 KaiwuDB Agent Tools，简称 KAT）是基于 MCP（Model Context Protocol，模型上下文协议）协议构建的数据库智能体工具，包含 KWDB MCP Server 和 AI 助手两个组件。KAT 将自然语言处理能力与 KWDB 深度融合，用户通过对话即可完成数据库安装部署、数据读写、分析查询等操作，兼容 Cline 等主流 MCP 客户端。有关详细信息，参见 [KaiwuDB 智能体工具](./kat/kat-overview.md)。
 
 ## KWDB MCP Server
 
