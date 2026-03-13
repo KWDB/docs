@@ -1,5 +1,5 @@
 ---
-title: KaiwuDB JDBC
+title: JDBC
 id: connect-jdbc
 ---
 

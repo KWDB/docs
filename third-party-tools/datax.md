@@ -1,9 +1,9 @@
 ---
-title: DataX 读写数据
+title: DataX
 id: datax
 ---
 
-# DataX 读写数据
+# 使用 DataX 读写数据
 
 [DataX](https://github.com/alibaba/DataX) 是一款广泛使用的离线数据同步工具，能够实现 [MySQL](https://www.mysql.com/)、[SQL Server](https://www.microsoft.com/zh-cn/sql-server/)、[Oracle](https://www.oracle.com/)、[PostgreSQL](https://www.postgresql.org/)、[Hadoop HDFS](https://hadoop.apache.org/)、[Apache Hive](https://hive.apache.org/)、[Apache HBase](https://hbase.apache.org/)、[OTS](https://www.aliyun.com/product/ots) 等各种异构数据源之间的数据同步。
 

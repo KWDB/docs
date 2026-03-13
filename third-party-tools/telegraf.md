@@ -1,9 +1,9 @@
 ---
-title: Telegraf 读写数据
+title: Telegraf
 id: telegraf
 ---
 
-# Telegraf 读写数据
+# 使用 Telegraf 读写数据
 
 [Telegraf](https://www.influxdata.com/time-series-platform/telegraf/) 是一款基于插件化的开源指标收集工具。KWDB 提供了专用的 RESTful API 接口，支持将 Telegraf 收集的数据直接写入 KWDB 数据库。该接口接收符合 InfluxDB Line Protocol 格式的数据，并通过标准 HTTP 请求完成数据传输。更多接口相关的信息，参见 [Telegraf 接口](../development/restful-api/connect-restful-api.md#telegraf-接口)。
 

@@ -21,7 +21,7 @@ id: kat-install
 - [联系](https://www.kaiwudb.com/support/) KaiwuDB 技术支持人员，获取 KWDB Agent Server 镜像。
 - [联系](https://www.kaiwudb.com/support/) KaiwuDB 技术支持人员，获取 KWDB Agent UI 镜像。
 - [联系](https://www.kaiwudb.com/support/) KaiwuDB 技术支持人员，获取 KWDB Agent VIS 镜像。
-- （可选）如需以安全模式连接 KaiwuDB 数据库，用户需要生成 CA 证书和密钥、客户端证书和密钥、节点证书和密钥。有关详细信息，参见 [`kwdb cert` 命令参考](../kwbase-cli-tool.md#kwbase-cert)。
+- （可选）如需以安全模式连接 KWDB 数据库，用户需要生成 CA 证书和密钥、客户端证书和密钥、节点证书和密钥。有关详细信息，参见 [`kwdb cert` 命令参考](../kwbase-cli-tool.md#kwbase-cert)。
 
 ### 步骤
 
@@ -49,7 +49,7 @@ id: kat-install
         network_mode: host
         volumes:
           - /your/local/path/data/:/app/data/
-          - /your/local/path/certs:/app/certs # 如需以安全模式连接 KaiwuDB 数据库。
+          - /your/local/path/certs:/app/certs # 如需以安全模式连接 KWDB 数据库。
           - /your/local/path/kwdb-mcp-server:/user/local/bin/kwdb-mcp-server # （可选）挂载 KWDB MCP Server 二进制安装包。
         command: ["/app/entrypoint.sh"]
 
@@ -85,7 +85,7 @@ id: kat-install
         - `LANGSMITH_PROJECT`：待追踪的项目名称。
         - `LANGSMITH_ENDPOINT`：LangSmith 收集过程数据的 API 地址。默认设置为 `https://api.smith.langchain.com`。
         - `LANGSMITH_API_KEY`：LangSmith API 密钥。
-        - `KNOWLEDGE_API_URL`：KaiwuDB 知识库的 API 地址，默认设置为 `http://117.73.9.174:8001/proxy/knowledge`。
+        - `KNOWLEDGE_API_URL`：KWDB 知识库的 API 地址，默认设置为 `http://117.73.9.174:8001/proxy/knowledge`。
       - `kat-server.network_mode`: 配置 KWDB Agent Server 的网络访问模式。支持设置为 `host`，表示 KWDB Agent Server 容器直接使用宿主机的网络配置，而无需创建独立的虚拟网络环境。
       - `kat-server.volumns`：数据库的映射目录。
       - `kat-server.command`：容器启动后，默认执行的命令。

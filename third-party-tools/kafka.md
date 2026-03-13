@@ -1,9 +1,9 @@
 ---
-title: Kafka 读写数据
+title: Kafka
 id: kafka
 ---
 
-# Kafka 读写数据
+# 使用 Kafka 读写数据
 
 KaiwuDB Kafka Connector 是 KWDB 基于 Kafka Connect API 和 Confluent 平台开发的功能模块，用于实现 Kafka 与 KWDB 之间的双向数据同步。该模块包含两个核心连接器：
 

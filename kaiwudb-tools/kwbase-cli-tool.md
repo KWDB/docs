@@ -1,15 +1,33 @@
 ---
-title: kwbase 
-id: kwbase-sql-reference
+title: kwbase CLI 工具
+id: kwbase-cli-tool
 ---
 
-# kwbase 命令参考
+# kwbase CLI 工具
+
+`kwbase` 是 KWDB 提供的命令行工具，支持启动数据库节点、初始化集群、管理安全证书、执行 SQL 查询及运维集群节点等操作。通过 `kwbase`，用户无需图形界面即可完成数据库的全生命周期管理。
+
+## 命令总览
+
+| 命令 | 用途 |
+|------|------|
+| [`kwbase start`](#kwbase-start) | 启动多副本集群的节点 |
+| [`kwbase start-single-replica`](#kwbase-start-single-replica) | 启动单副本集群的节点 |
+| [`kwbase start-single-node`](#kwbase-start-single-node) | 启动单节点 |
+| [`kwbase init`](#kwbase-init) | 初始化集群 |
+| [`kwbase cert`](#kwbase-cert) | 管理 TLS 证书 |
+| [`kwbase sql`](#kwbase-sql) | 打开交互式 SQL Shell |
+| [`kwbase auth-session`](#kwbase-auth-session) | 管理 HTTP 会话令牌 |
+| [`kwbase node`](#kwbase-node) | 查看和管理集群节点 |
+| [`kwbase gen`](#kwbase-gen) | 生成辅助配置文件 |
+| [`kwbase version`](#kwbase-version) | 查看版本信息 |
+| [`kwbase help`](#kwbase-help) | 查看帮助信息 |
 
 ## kwbase start
 
 ### 功能描述
 
-`kwbase start` 命令用于启动 KWDB 节点。
+`kwbase start` 用于在多副本集群中启动一个 KWDB 节点。所有节点启动后，需配合 `kwbase init` 完成集群初始化。
 
 ### 命令格式
 
@@ -50,7 +68,7 @@ id: kwbase-sql-reference
 
 ### 使用举例
 
-以下示例开启一个多节点 KWDB 集群。
+以下示例演示如何启动多副本集群。
 
 - TLS 安全模式
 
@@ -90,7 +108,7 @@ id: kwbase-sql-reference
 
 ### 功能描述
 
-`kwbase start-single-replica` 命令用于启动一个单副本节点。
+`kwbase start-single-replica` 用于在单副本集群中启动一个 KWDB 节点。所有节点启动后，需配合 `kwbase init` 完成集群初始化
 
 ### 命令格式
 
@@ -129,7 +147,7 @@ id: kwbase-sql-reference
 
 ### 使用举例
 
-以下示例开启一个单副本节点。
+以下示例演示如何启动单副本集群的节点。
 
 ```bash
 ./kwbase start-single-replica \
@@ -146,7 +164,7 @@ id: kwbase-sql-reference
 
 ### 功能描述
 
-`kwbase start-single-node` 命令用于启动一个单节点集群。
+`kwbase start-single-node` 命令用于启动一个单节点集群。使用此命令启动的集群无需执行 `kwbase init`。
 
 ### 命令格式
 

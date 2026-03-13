@@ -1,9 +1,9 @@
 ---
-title: EMQX 读写数据
+title: EMQX
 id: emqx
 ---
 
-# EMQX 读写数据
+# 使用 EMQX 读写数据
 
 [EMQX](https://www.emqx.io/) 是一款开源的高可用分布式 MQTT 消息服务器。KWDB 提供了 RESTful API 功能，可以将 EMQX 管理的数据同步写入 KWDB 数据库。
 
