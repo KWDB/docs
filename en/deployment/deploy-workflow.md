@@ -35,13 +35,13 @@ After the cluster is deployed and started, complete the following operations:
   - Container: `docker-compose.yml`. For details, see [Configure Container Deployments](./cluster-config/cluster-config-docker.md).
 
 - kwbase CLI and Docker Run Deployment: set cluster startup flags through the following commands:
-  - [`kwbase start`](../tool-command-reference/client-tool/kwbase-sql-reference.md#kwbase-start) for multi-replica clusters
-  - [`kwbase start-single-replica`](../tool-command-reference/client-tool/kwbase-sql-reference.md#kwbase-start-single-replica) for for single-replica clusters
+  - [`kwbase start`](../kaiwudb-tools/kwbase-cli-tool.md#kwbase-start) for multi-replica clusters
+  - [`kwbase start-single-replica`](../kaiwudb-tools/kwbase-cli-tool.md#kwbase-start-single-replica) for for single-replica clusters
 
 **3. Connect to Cluster**: Connect to the cluster for data operations using any of the following methods:
 
 - [`kwbase` CLI tool](../quickstart/access-kaiwudb/access-kaiwudb-cli.md)
-- [KaiwuDB Developer Center](../kaiwudb-developer-center/overview.md)
+- [KaiwuDB Developer Center](../kaiwudb-tools/kaiwudb-developer-center/overview.md)
 - [Connectors](../development/overview.md) supported by KWDB
 
 ## Cluster Management

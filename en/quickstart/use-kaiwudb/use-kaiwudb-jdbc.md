@@ -5,7 +5,7 @@ id: use-kaiwudb-jdbc
 
 # Manage KWDB Using the KaiwuDB JDBC Driver
 
-This section explains how to use the [KaiwuDB JDBC Driver](../../development/connect-kaiwudb/java/connect-jdbc.md) to manage both time-series and relational data in KWDB. You'll learn how to create and manage databases and tables, and perform basic data operations.
+This section explains how to use the [KaiwuDB JDBC Driver](../../development/java/connect-jdbc.md) to manage both time-series and relational data in KWDB. You'll learn how to create and manage databases and tables, and perform basic data operations.
 
 ## Time-Series Data
 

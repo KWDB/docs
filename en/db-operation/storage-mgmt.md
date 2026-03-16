@@ -102,4 +102,4 @@ To enable RaftLog Store, add the `--use-raft-store` flag to your node startup co
 
 :::
 
-For detailed startup command information and examples, see [kwbase start](../tool-command-reference/client-tool/kwbase-sql-reference.md#kwbase-start).
+For detailed startup command information and examples, see [kwbase start](../kaiwudb-tools/kwbase-cli-tool.md#kwbase-start).

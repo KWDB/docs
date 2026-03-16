@@ -5,7 +5,7 @@ id: use-kaiwudb-kdc
 
 # Manage KWDB Using KaiwuDB Developer Center
 
-This section demonstrates how to use the [KaiwuDB Developer Center](../../kaiwudb-developer-center/overview.md)’s graphical interface  to manage the KWDB multi-model database, including:
+This section demonstrates how to use the [KaiwuDB Developer Center](../../kaiwudb-tools/kaiwudb-developer-center/overview.md)’s graphical interface  to manage the KWDB multi-model database, including:
 
 - **Relational Data Operations**: Manage relatively static data, such as device information and user profiles
 - **Time-Series Data Operations**: Process dynamic time-series data, such as sensor readings and monitoring metrics

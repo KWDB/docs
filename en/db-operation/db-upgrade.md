@@ -251,7 +251,7 @@ For KWDB instances installed by compiling from source code, you can upgrade by c
 ### Steps
 
 1. Compile the new version following the [KWDB compilation documentation](https://gitee.com/kwdb/kwdb#%E7%BC%96%E8%AF%91%E5%92%8C%E5%AE%89%E8%A3%85).
-2. Start the service using the same [startup command](../tool-command-reference/client-tool/kwbase-sql-reference.md#kwbase-start) as the previous version.
+2. Start the service using the same [startup command](../kaiwudb-tools/kwbase-cli-tool.md#kwbase-start) as the previous version.
 3. Verify that the service is running as expected.
 
 ## Upgrade for Container Image Deployment

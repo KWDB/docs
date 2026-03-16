@@ -91,7 +91,7 @@ id: cluster-settings-config
 - 修改容器部署的 `docker-compose.yml` 文件
 - 使用 `kwbase start` 命令
 
-本节介绍如何通过`kaiwudb_env` 或`docker-compose.yml` 文件修改启动参数配置，`kwbase start` 命令相关信息，参见[kwbase start](../tool-command-reference/client-tool/kwbase-sql-reference.md)。
+本节介绍如何通过`kaiwudb_env` 或`docker-compose.yml` 文件修改启动参数配置，`kwbase start` 命令相关信息，参见[kwbase start](../kaiwudb-tools/kwbase-cli-tool.md)。
 
 ::: warning 提示
 启动参数是节点级别的配置。如需修改整个集群的配置，需要登录到集群中的每个节点并完成相应的参数配置。
