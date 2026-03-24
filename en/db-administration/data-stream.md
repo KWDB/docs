@@ -32,10 +32,9 @@ Stream computing includes data filtering, scalar function calculations, and wind
     - If aliases are specified, the aliases should be identical to the column names in the target table and the target table should contain all non-null columns (including data columns and tag columns). If you need to specify aliases, all columns should have an alias.
     - To stop and resume a stream, KWDB records the begin time (`window_start`) and end time (`window_end`) of each aggregate window to the target table as the first two output columns and takes the begin time of the window as the time to insert data into the target table.
   - When filtering data using the `WHERE` clause, the captured data might not contain common Tag data. Therefore, the system needs to read common Tag data from the time-series table in real time. This may bring additional performance overhead.
-  - When dividing a data set using the `GROUP BY` clause
-    - The `GROUP BY` clause must contain window functions (`SESSION_WINDOW,` `STATE_WINDOW`, `TIME_WINDOW`, `EVENT_WINDOW`, and `COUNT_WINDOW`) or the `Timebucket` function. All the window functions and the `Timebucket` function must be used with all Primary Tag columns.
-    - The window functions only support `GROUP BY [<ptag>,]` and `group_window_function`.
-    - Do not support using the `GROUP BY` clause for parts of Primary Tag columns, common Tag columns, or data columns.
+  - When dividing a data set using the `GROUP BY` clause, the `GROUP BY` clause must contain window functions (`SESSION_WINDOW,` `STATE_WINDOW`, `TIME_WINDOW`, `EVENT_WINDOW`, and `COUNT_WINDOW`) or the `Timebucket` function.
+    - When using window functions, grouping columns support primary tags, regular tags, data columns, and any combination thereof, and must precede the window function.
+    - The `Timebucket` function must be used with all primary tags.
     - When recomputing expired data using the `count_window` function, the inserted expired data will have an effect on all following windows. Therefore, the query result may be inconsistent with those that is queried by the `SELECT` statement in a streaming computing job.
   - Support computing data using functions (time functions and character functions), which works like the simple `SELECT` statement. The functions can follow any option of the `stream_query` parameter, including the `select_list` clause or `WHERE` clause.
   - Do not support the `ORDER BY` clause. If you use the `ORDER BY` clause on the non timestamp-typed columns or use the reverted `ORDER BY` clause on the timestamp-typed columns, the system fails to perform aggregate computing before inserting data into the source table.
