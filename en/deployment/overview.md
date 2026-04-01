@@ -32,8 +32,8 @@ KWDB provides multiple cluster deployment methods to meet different user needs a
 | Deployment Method | Characteristics | Target Users/Scenarios | Technical Requirements | Supported Environments |
 |---------|------|---------|------|---------|
 | **[Script Deployment (Recommended)](./cluster-deployment/script-deployment.md)** | Simplest cluster deployment method with built-in fault detection and node recovery mechanisms | Users who need to quickly set up test or production environments | Basic Linux operation experience | Bare metal, Containerized |
-| **[kwbase CLI](./cluster-deployment/kwbase-cli-deployment.md)** | Supports deep customization of the deployment process | Users with technical background who want deep customization | Familiar with database deployment process and command-line operations | Bare metal |
 | **[Docker Run](./cluster-deployment/docker-deployment.md)** | Containerized technology deployment | Users who prefer containerized technology | Familiar with Docker command-line operations | Containerized |
+| **[kwbase CLI](./cluster-deployment/kwbase-cli-deployment.md)** | Supports deep customization of the deployment process | Users with technical background who want deep customization | Familiar with database deployment process and command-line operations | Bare metal |
 
 ### Cluster Management
 

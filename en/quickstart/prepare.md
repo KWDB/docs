@@ -97,6 +97,31 @@ The extracted directory contains these files:
 | `add_user.sh` | Creates users for the KWDB database after installation and startup. |
 | `deploy.cfg` | Configuration file for setting up node IP addresses, ports, and other deployment settings. |
 | `deploy.sh` | Deployment script for installation, uninstallation, startup, status checks, shutdown, and restart operations. |
-| `packages` directory | Contains DEB, RPM, and Docker image packages.<br>**Note**: Specific files included vary by package type. |
+| `packages` directory | Contains DEB or RPM packages.<br>**Note**: Specific files included vary by package type. |
 | `utils` directory | Contains utility scripts. |
+
+### Container Images
+
+KWDB supports obtaining container images through the following methods:
+
+- **KWDB versions before 3.1.0**
+
+  [Download](https://gitee.com/kwdb/kwdb/releases) the installation package for your system, then import the `KaiwuDB.tar` file from the `kwdb_install/packages` directory.
+
+  ```bash
+  docker load < KaiwuDB.tar
+  Loaded image: "image-name"
+  ```
+
+- **KWDB 3.1.0 and later versions**
+
+  Run the following command to obtain the KWDB Docker image. To get the latest version, run `docker pull kwdb/kwdb:latest`.
+
+  ```bash
+  docker pull kwdb/kwdb:<version>
+  ```
+
+### Source Code Compilation and Installation
+
+Follow the [KWDB Compilation and Installation Instructions](https://gitee.com/kwdb/kwdb#compilation-and-installation) to download, compile, and install from source code.
 

@@ -1,6 +1,6 @@
 ---
 title: 服务管理
-id: local-start-stop-docker
+id: local-start-stop
 ---
 
 # 服务管理

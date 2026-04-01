@@ -184,3 +184,19 @@ All deployment activities are logged in the `log` directory within `kwdb_install
     ```shell
     systemctl enable kaiwudb
     ```
+
+7. (Optional) Execute the `add_user.sh` script to create a database user. If this step is skipped, the system will default to using the user that deployed the database without requiring a password to access the database.
+
+    ```shell
+    ./add_user.sh
+    Please enter the username: 
+    Please enter the password:
+    ```
+
+    After successful execution, the console outputs the following information:
+
+    ```shell
+    [ADD USER COMPLETED]:User creation completed.
+    ```
+
+8. Connect to and manage KWDB via [kwbase CLI](../../quickstart/access/access-cli.md), [KaiwuDB Supported Connectors](../../development/overview.md), or [KaiwuDB Developer Center](../../kaiwudb-tools/kaiwudb-developer-center/overview.md).
