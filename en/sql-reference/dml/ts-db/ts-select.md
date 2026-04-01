@@ -186,9 +186,8 @@ KWDB supports grouping data based on specific conditions​ (e.g., time interval
 
 ::: warning Note
 
-- ​Group window queries must be used with the `GROUP BY` clause. The `GROUP BY` clause ​supports specifying the table's primary tags.
-- Currently​, group window queries only support single-table queries​ and do not support nested queries, JOIN queries, UNION queries, or other grouping conditions.
-
+- Group window queries must be used with the `GROUP BY` clause, and grouping columns must precede the window function. Grouping columns support primary tags, regular tags, data columns, and any combination of these.
+- Currently, group window queries only support single-table queries and do not support nested queries, JOIN queries, or UNION queries. Grouping conditions only support data columns or tag columns, and do not support expressions (e.g., `a+b`, `abs(a)`).
 :::
 
 KWDB supports the following group window functions:
@@ -251,7 +250,7 @@ The user must be a member of the `admin` role or have been granted the `SELECT` 
 
 | Parameter | Description |
 | --- | --- |
-| `primary_tag_list` | Optional. Specify the primary tags of the time-series table.|
+| `column_list` | Optional. Specify one or more grouping columns (primary tags, regular tags, or data columns), separated by commas.|
 | `row_limit` | In the count window, it is used to specify the number of rows in a group. |
 | `sliding_rows` | In the count window, it is used to specify the gap between the starting points of adjacent windows​ to control the ​degree of overlap​ between windows. This value should be smaller than or equal to the value of the `row_limit` parameter.|
 | `start_condition` | In the event window, it is used to specify the conditions to start a window. It can be any expression or involve different columns. |
