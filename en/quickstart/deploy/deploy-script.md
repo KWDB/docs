@@ -22,7 +22,7 @@ For specific configuration steps, see [Cluster Parameter Configuration](../../db
 
 ## Prerequisites
 
-- Obtained KWDB [installation package](../prepare.md#installation-package).
+- Obtained KWDB [installation package](../prepare.md#installation-packages).
 - The hardware, operating system, software dependencies, and ports of the node to be deployed meet the [installation deployment requirements](../prepare.md).
 - Installation user is root or a regular user with `sudo` privileges.
   - Root users and regular users configured with `sudo` passwordless access do not need to enter a password when executing deployment scripts.

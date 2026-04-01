@@ -23,7 +23,7 @@ The script automatically detects the operating system and selects an appropriate
 
 ## Prerequisites
 
-- **Hardware**: 4 CPU cores and 8 GB RAM or higher (see [Hardware Requirements](./quickstart-bare-metal.md#hardware))
+- **Hardware**: 4 CPU cores and 8 GB RAM or higher (see [Hardware Requirements](../prepare.md#hardware))
 - **Permissions**: Root user or a user with `sudo` privileges
 - **Network**: Access to the installation package download address
 - **Quick deployment script**: Downloaded from [Gitee](https://gitee.com/kwdb/kwdb/releases), [GitHub](https://github.com/KWDB/KWDB/releases), or [GitCode](https://gitcode.com/kwdb/kwdb)
@@ -150,5 +150,5 @@ Check the following items:
 
 To change the configuration after a quick deployment:
 
-1. Uninstall the current deployment (see [Uninstall KWDB](../uninstall-kaiwudb/uninstall-db.md)).
-2. Redeploy using [Bare-metal Deployment](./quickstart-bare-metal.md) or [Container Deployment](./quickstart-docker.md) for more advanced configuration options.
+1. Uninstall the current deployment (see [Uninstall Clusters](../../deployment/uninstall-cluster.md)).
+2. Redeploy using [script](./deploy-script.md) or [container](./deploy-docker-run.md) for more advanced configuration options.

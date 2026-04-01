@@ -60,9 +60,7 @@ KaiwuDB 开发者中心的安装需满足以下环境要求：
 
    <img src="../../static/kdc/create-connect-02.png" style="zoom: 67%;" />
 
-3. （可选）单击**测试链接**，检查连接是否成功。连接成功后，将显示以下信息：
-
-   <img src="../../static/kdc/license.png" style="zoom:67%;" />
+3. （可选）单击**测试链接**，检查连接是否成功。
 
 4. 单击**确定**。
 

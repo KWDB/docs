@@ -7,7 +7,7 @@ id: quickstart-cli
 
 ## Prerequisites
 
-- Obtained KWDB [bare-metal installation package](../prepare.md#installation-package).
+- Obtained KWDB [bare-metal installation package](../prepare.md#installation-packages).
 - The hardware configuration, operating system, software dependencies, and ports of the node to be deployed meet the [installation deployment requirements](../prepare.md).
 - Installation user is `root` or a regular user with `sudo` privileges.
 

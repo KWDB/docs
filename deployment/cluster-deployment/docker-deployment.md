@@ -9,8 +9,8 @@ id: docker-deployment
 
 ## 前提条件
 
-- 已获取 [KWDB 容器镜像](../prepare/before-deploy-docker.md#获取容器镜像)。
-- 待部署节点的硬件、操作系统、软件依赖和端口满足[安装部署要求](../prepare/before-deploy-docker.md#硬件)。
+- 已获取 [KWDB 容器镜像](../cluster-prepare.md#容器镜像)。
+- 待部署节点的硬件、操作系统、软件依赖和端口满足[安装部署要求](../cluster-prepare.md#硬件)。
 - 安装用户为 root 用户或者拥有 `sudo` 权限的普通用户。
   - root 用户和配置 `sudo` 免密的普通用户在执行部署脚本时无需输入密码。
   - 未配置 `sudo` 免密的普通用户在执行部署脚本时，需要输入密码进行提权。
@@ -182,3 +182,19 @@ id: docker-deployment
       - `--insecure`：（仅非安全模式）指定以非安全模式运行。
       - `--certs-dir=<certs_dir>`：（安全模式）指定证书目录位置。
       - `--host=<host1>:26257`：指定连接的主机地址及端口。
+
+4. （可选）创建数据库用户并授予用户管理员权限。如果跳过该步骤，系统将默认使用部署数据库时的用户，且无需密码访问数据库。
+
+      - 非安全模式（不带密码）：
+
+          ```bash
+          docker exec kaiwudb bash -c "./kwbase sql --insecure --host=$host_ip -e \"create user $username;grant admin to $username with admin option;\""
+          ```
+
+      - 安全模式（带密码）：
+
+          ```bash
+          docker exec kaiwudb bash -c "./kwbase sql --host=$host_ip --certs-dir=$cert_path -e \"create user $username with password \\\"$user_password\\\";grant admin to $username with admin option;\""
+          ```
+
+5. 部署完成后，可通过 [kwbase CLI](../../quickstart/access/access-cli.md) 、[KaiwuDB 支持的连接器](../../development/overview.md)或 [KaiwuDB 开发者中心](../../kaiwudb-tools/kaiwudb-developer-center/overview.md)连接并管理 KWDB。

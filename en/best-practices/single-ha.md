@@ -55,7 +55,7 @@ KWDB's primary-secondary high availability solution prioritizes rapid failover w
 
 ### Environment Requirements
 
-In addition to meeting the standard KWDB environment requirements for [bare-metal installation](../quickstart/install-kaiwudb/quickstart-bare-metal.md) or [container installation](../quickstart/install-kaiwudb/quickstart-docker.md), the DRBD-based high availability solution requires:
+In addition to meeting the [standard KWDB environment requirements for installation](../quickstart/prepare.md), the DRBD-based high availability solution requires:
 
 - Network: Gigabit or 10-Gigabit Ethernet
 - DRBD: version 9.11.0
@@ -584,7 +584,7 @@ Steps:
          pcs node unstandby <primary_node>
          ```
 
-   2. Deploy KWDB. For detailed instructions, see [Single-node Bare Metal Deployment](../quickstart/install-kaiwudb/quickstart-bare-metal.md) or [Single-node Container Deployment](../quickstart/install-kaiwudb/quickstart-docker.md).
+   2. Deploy KWDB. For detailed instructions, see [Single-node Deployment](../quickstart/deploy/deploy-script.md).
 
       ::: warning Warning
 

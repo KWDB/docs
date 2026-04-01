@@ -5,11 +5,12 @@ id: cluster-settings-config
 
 # 集群参数配置
 
-部署 KWDB 集群后，用户可以通过修改**启动参数**或**实时集群参数**，自定义集群配置：
+部署 KWDB 集群后，用户可以通过修改启动参数、CPU 资源占用率或实时集群参数，自定义集群配置：
 
 |<div style="width: 70px;">**参数类型**</div>     | **影响范围**                                      | **生效方式**                                | **配置方式**                                                 |
 | :--------------- | :---------------------------------------------- | :------------------------------------------ | :----------------------------------------------------------- |
-| **启动参数**     | 作用于集群节点，影响单个节点的数据库服务。            | 仅在节点启动时生效，修改后需重启服务。       | 修改裸机部署的 `kaiwudb_env` 文件、容器部署的 `docker-compose.yml` 文件。其中，`kaiwudb_env` 和 `docker-compose.yml` 文件均位于 `/etc/kaiwudb/script/`。 |
+| **启动参数**     | 作用于集群节点，影响单个节点的数据库服务。            | 仅在节点启动时生效，修改后需重启服务。       | - 脚本部署：修改 `kaiwudb_env` 文件（裸机）、 `docker-compose.yml` 文件（容器），`kaiwudb_env` 和 `docker-compose.yml` 文件均位于 `/etc/kaiwudb/script/`<br>- 其他部署方式：使用 `kwbase start` 命令调整 |
+| **CPU 资源占用率** | 作用于集群节点，影响单个节点的 CPU 资源使用上限。 | 实时生效，无需重启服务。 | - 裸机脚本部署：修改 `/etc/systemd/system/kaiwudb.service` 文件中的 `CPUQuota` 参数（裸机）<br>- 容器脚本部署：使用 `docker update` 命令或修改 `docker-compose.yml` 文件中的 `cpus` 参数。 |
 | **实时集群参数** | 作用于整个集群，影响集群内所有的节点。  | 实时生效，并自动同步至集群各节点，无需重启服务。 | 通过 SQL 语句修改，变更将持久化至系统表。 |
 
 ## 启动参数
@@ -87,67 +88,155 @@ id: cluster-settings-config
 
 启动参数支持以下配置方式：
 
-- 修改裸机部署的 `kaiwudb_env` 文件
-- 修改容器部署的 `docker-compose.yml` 文件
-- 使用 `kwbase start` 命令
+- 脚本部署：修改 `kaiwudb_env` 文件（裸机）、 `docker-compose.yml` 文件（容器）
+- 其他部署方式：使用 `kwbase start` 命令调整 
 
-本节介绍如何通过`kaiwudb_env` 或`docker-compose.yml` 文件修改启动参数配置，`kwbase start` 命令相关信息，参见[kwbase start](../kaiwudb-tools/kwbase-cli-tool.md)。
+通常情况下，如果用户没有配置启动参数，系统会使用参数默认值启动 KWDB。用户配置启动参数后，KWDB 启动时会优先使用配置的启动参数。
+
+本节介绍如何通过 `kaiwudb_env` 或 `docker-compose.yml` 文件修改启动参数配置，`kwbase start` 命令相关信息，参见 [kwbase start](../kaiwudb-tools/kwbase-cli-tool.md)。
 
 ::: warning 提示
 启动参数是节点级别的配置。如需修改整个集群的配置，需要登录到集群中的每个节点并完成相应的参数配置。
 :::
 
-如需修改集群启动参数配置，遵循以下步骤。
+#### 裸机脚本部署
 
-1. 登录集群中待修改的节点，进入 KWDB 安装包目录。
-2. 停止 KWDB 服务。
+1. 停止 KWDB 服务。
 
     ```shell
     systemctl stop kaiwudb
     ```
 
-3. 打开配置文件。
+2. 进入 `/etc/kaiwudb/script` 目录，打开 `kaiwudb_env` 文件。
 
-    - 裸机部署：进入 `/etc/kaiwudb/script` 目录，打开 `kaiwudb_env` 文件。
-    - 容器部署：进入 `/etc/kaiwudb/script` 目录，打开 `docker-compose.yml` 文件。
+3. 根据需要，在 `KAIWUDB_START_ARG` 开头的启动命令后添加或修改启动参数和参数值。
 
-4. 根据需要添加或者修改配置文件中的启动命令参数。
+    以下示例添加 `--cache` 启动参数，并将参数值设置为 `25%`。
 
-    - 裸机部署：在 `KAIWUDB_START_ARG` 开头的启动命令后添加或者修改启动参数和参数值。
+    ```yaml
+    KAIWUDB_START_ARG="--cache=25%"
+    ```
 
-        配置示例：
+4. 保存 `kaiwudb_env` 文件并重新加载文件。
 
-        以下示例添加 `--cache` 启动参数，并肩参数值设置为 `25%`。
+    ```shell
+    systemctl daemon-reload
+    ```
 
-        ```yaml
-        KAIWUDB_START_ARG="--cache=25%"
-        ```
-
-    - 容器部署：在 `/kaiwudb/bin/` 开头的启动命令后添加或者修改启动参数和参数值。
-
-        ::: warning 注意
-
-        请勿删除默认启动命令参数，否则可能导致无法启动修改后的集群。
-
-        :::
-
-        配置示例：
-
-        以下示例添加 `--cache` 启动参数，并肩参数值设置为 `25%`。
-
-        ```yaml
-          command: 
-            - /bin/bash
-            - -c
-            - |
-              /kaiwudb/bin/kwbase  start-single-node --certs-dir=<certs_dir> --listen-addr=0.0.0.0:26257 --advertise-addr=your-host-ip:port --store=/kaiwudb/deploy/kwdb-container --cache=25%
-        ```
-
-5. 保存配置后，重新启动 KWDB 服务。
+5. 重新启动 KWDB 服务。
 
     ```shell
     systemctl restart kaiwudb
     ```
+
+#### 容器脚本部署
+
+::: warning 注意
+请勿删除默认启动命令参数，否则可能导致无法启动修改后的集群。
+:::
+
+1. 进入 `/etc/kaiwudb/script` 目录，停止并删除 KWDB 容器。
+
+    ```shell
+    docker-compose down
+    ```
+
+2. 打开 `docker-compose.yml` 文件。
+
+3. 根据需要，在启动命令后添加启动参数或修改已有参数值。
+
+    以下示例添加 `--cache` 启动参数，并将参数值设置为 `25%`。
+
+    ```yaml
+      command: 
+        - /bin/bash
+        - -c
+        - |
+          /kaiwudb/bin/kwbase  start-single-node --certs-dir=/kaiwudb/certs --listen-addr=0.0.0.0:26257 --advertise-addr=your-host-ip:port --store=/kaiwudb/deploy/kaiwudb-container --cache=25%
+    ```
+
+4. 保存配置，重新创建并启动 KWDB 容器。
+
+    ```shell
+    systemctl start kaiwudb
+    ```
+
+## CPU 资源占用率
+
+KWDB 支持实时修改 CPU 资源占用率。CPU 资源占用率配置为节点级配置。如需修改整个集群的配置，需要登录到集群中的每个节点并完成相应的配置。
+
+### 裸机脚本部署
+
+使用裸机脚本部署时，CPU 资源占用率的具体计算公式为：CPU 占用率 x 服务器 CPU 核数 x 100%。例如，假设节点所在服务器的 CPU 核数为 6，计划将 CPU 占用率调整为 0.3，则对应的 `CPUQuota` 的值应为 `0.3 x 6 x 100% = 180%`。
+
+1. 进入 `/etc/systemd/system` 目录，打开 `kaiwudb.service` 文件。
+
+2. 根据需要，修改 KWDB 的 CPU 资源占用率（`CPUQuota`）。
+
+    以下示例将 CPU 资源占用率设置为 `180%`。
+
+    ```yaml
+    ...
+    [Service]
+    ...
+    CPUQuota=180%
+    ...
+    ```
+
+3. 保存 `kaiwudb.service` 文件并重新加载文件。
+
+    ```shell
+    systemctl daemon-reload
+    ```
+
+4. 确认新的 CPU 资源占用率是否生效。
+
+    ```shell
+    systemctl show KWDB | grep CPUQuota
+    ```
+
+### 容器脚本部署
+
+使用容器脚本方式部署 KWDB 后，用户可以使用 `docker update` 命令或者修改 `docker-compose.yml` 文件来配置 KWDB 的 CPU 资源占用率（`cpus`）。
+
+具体计算公式为：CPU 占用率 x 服务器 CPU 核数。例如，假设节点所在服务器的 CPU 核数为 6，计划将 CPU 占用率调整为 0.3，则对应的 `cpus` 的值应为 `0.3 x 6 = 1.8`。
+
+- 使用 `docker update` 命令：
+
+    ```shell
+    docker update --cpus <value> kwdb-container
+    ```
+
+- 修改 `docker-compose.yml` 文件：
+
+    1. 进入 `/etc/kaiwudb/script` 目录，停止并删除 KWDB 容器。
+
+        ```shell
+        docker-compose down
+        ```
+
+    2. 打开 `docker-compose.yml` 文件。
+
+    3. 根据需要，修改 KWDB 的 CPU 资源占用率。
+
+        以下示例将 CPU 资源占用率（`cpus`）设置为 `1.8`。
+
+        ```yaml
+        version: '3.3'
+        services:
+          ...
+          deploy:
+            resources:
+              limits:
+                cpus: '1.8'
+        ...
+        ```
+
+    4. 保存配置，重新创建并启动 KWDB 容器。
+
+        ```shell
+        systemctl start kaiwudb
+        ```
 
 ## 实时参数
 

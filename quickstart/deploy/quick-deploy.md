@@ -23,7 +23,7 @@ KWDB 为首次体验的用户提供了自动化部署工具——快速部署脚
 
 ## 前提条件
 
-- **硬件**：4核8G及以上（详见[硬件要求](./quickstart-bare-metal.md#硬件)）
+- **硬件**：4核8G及以上（详见[硬件要求](../prepare.md#硬件)）
 - **权限**：root 或具有 sudo 权限的用户
 - **网络**：能够访问安装包下载地址
 - **快速部署脚本**：通过 [Gitee](https://gitee.com/kwdb/kwdb/releases)、[Github](https://github.com/KWDB/KWDB/releases) 或 [GitCode](https://gitcode.com/kwdb/kwdb) 获取快速部署脚本
@@ -150,5 +150,5 @@ KWDB 为首次体验的用户提供了自动化部署工具——快速部署脚
 
 快速部署后如需修改配置，需要执行以下步骤：
 
-1. 卸载当前部署（参见[卸载 KWDB](../uninstall-kaiwudb/uninstall-db.md)）
-2. 使用[裸机部署](./quickstart-bare-metal.md)或[容器部署](./quickstart-docker.md)重新部署，进行详细配置
+1. 卸载当前部署（参见[卸载 KWDB](../../deployment/uninstall-cluster.md)）
+2. 使用[脚本](./deploy-script.md)或[容器](./deploy-docker-run.md)重新部署，进行详细配置

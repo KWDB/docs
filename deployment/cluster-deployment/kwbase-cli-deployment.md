@@ -9,7 +9,7 @@ id: kwbase-cli-deployment
 
 **前提条件**
 
-- 节点的硬件配置、操作系统、软件依赖和端口满足[部署要求](../prepare/before-deploy-bare-metal.md#硬件)
+- 节点的硬件配置、操作系统、软件依赖和端口满足[部署要求](../cluster-prepare.md#硬件)
 - 安装用户为 `root` 用户或拥有 `sudo` 权限的普通用户
 - 已完成[源码编译和安装](https://gitee.com/kwdb/kwdb#%E7%BC%96%E8%AF%91%E5%92%8C%E5%AE%89%E8%A3%85)
 
@@ -211,3 +211,22 @@ id: kwbase-cli-deployment
         ```bash
         ./kwbase node status --certs-dir=<certs_dir> --host=<address_of_any_alive_node>
         ```
+6. （可选）创建数据库用户并授予用户管理员权限。如果跳过该步骤，系统将默认使用部署数据库时的用户，且无需密码访问数据库。
+
+    - 非安全模式（不带密码）：
+
+        ```bash
+        ./kwbase sql --host=127.0.0.1:$local_port --insecure \
+        -e "create user $username; \
+            grant admin to $username with admin option;"
+        ```
+
+    - 安全模式（带密码）：
+
+        ```bash
+        ./kwbase sql --certs-dir=/usr/local/kaiwudb/certs --host=127.0.0.1:$local_port \
+        -e "create user $username with password \"$user_password\"; \
+            grant admin to $username with admin option;"
+        ```
+
+7. 部署完成后，可通过 [kwbase CLI](../../quickstart/access/access-cli.md) 、[KaiwuDB 支持的连接器](../../development/overview.md)或 [KaiwuDB 开发者中心](../../kaiwudb-tools/kaiwudb-developer-center/overview.md)连接并管理 KWDB。

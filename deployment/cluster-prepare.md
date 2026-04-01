@@ -87,16 +87,18 @@ KWDB 支持在以下操作系统进行安装部署：
 | `26257` | 数据库服务端口、节点监听端口和对外连接端口 |
 | `27257` | 数据库时序引擎间的 brpc 通信端口 |
 
-## 安装包和可视化安装程序
+## 安装包、编译版本和容器镜像
 
-根据不同的使用场景，获取安装包或可视化安装程序：
-
-- 安装包：适用于生产环境部署和具备 Linux 操作经验的用户。支持[脚本](./cluster-deployment/script-deployment.md)、[Docker Run 命令](./cluster-deployment/docker-deployment.md)和 [kwbase CLI](./cluster-deployment/kwbase-cli-deployment.md) 部署方式，可灵活配置集群参数，具备完整的命令行管理功能。
-- 可视化安装程序：适用于初学者和偏好图形化操作的用户。通过直观的向导界面简化[部署流程](./cluster-deployment/gui-deployment.md)，降低技术门槛，使用前需确保目标机器具备图形化桌面环境支持。
+根据不同的使用场景，获取安装包、容器镜像或源码编译版本：
 
 ### 安装包
 
-获取系统环境对应的安装包，将安装包复制到待安装 KWDB 的目标机器上，然后解压缩安装包：
+目前 KWDB 开源仓库提供了以下系统与架构的 [DEB 或 RPM 安装包](https://gitee.com/kwdb/kwdb/releases/)，如需其它系统或架构的安装包，请联系 [KWDB 技术支持](https://www.kaiwudb.com/support/)：
+
+- Ubuntu V20.04 x86_64
+- Ubuntu V20.04 ARM_64
+
+获取系统环境对应的 DEB 或 RPM 安装包，将安装包复制到待安装 KWDB 的目标机器上，然后解压缩安装包：
 
 ```shell
 tar -zxvf <package_name>
@@ -109,8 +111,33 @@ tar -zxvf <package_name>
 | `add_user.sh`     | 安装、启动 KWDB 后，为 KWDB 数据库创建用户。             |
 | `deploy.cfg`      | 安装部署配置文件，用于配置部署节点的 IP 地址、端口等配置信息。 |
 | `deploy.sh`       | 安装部署脚本，用于安装、卸载、启动、状态获取、关停和重启等操作。  |
-| `packages` 目录   | 存放 DEB、RPM 和 Docker 镜像包。<br>**说明**：具体包含的文件因安装包类型而异。                                      |
+| `packages` 目录   | 存放 DEB 或 RPM 包。<br>**说明**：具体包含的文件因安装包类型而异。                                      |
 | `utils` 目录      | 存放工具类脚本。                                             |
+
+### 容器镜像
+
+KWDB 支持通过以下方式获取容器镜像：
+
+- KWDB 3.1.0 之前的版本
+
+  [下载](https://gitee.com/kwdb/kwdb/releases)系统环境对应的安装包，解压后在 `kwdb_install/packages` 目录下导入 `KaiwuDB.tar` 文件。
+
+  ```bash
+  docker load < KaiwuDB.tar
+  Loaded image: "image-name"
+  ```
+
+- KWDB 3.1.0 及以后的版本
+
+  运行以下命令，获取 KWDB Docker 镜像。如获取最新的镜像版本，运行 `docker pull kwdb/kwdb:latest"` 命令。
+
+  ``` bash
+  docker pull kwdb/kwdb:<version>
+  ```
+
+### 源码编译和安装
+
+根据 [KWDB 编译和安装说明](https://gitee.com/kwdb/kwdb#%E7%BC%96%E8%AF%91%E5%92%8C%E5%AE%89%E8%A3%85)完成源码下载、编译和安装。
 
 ## 节点配置
 

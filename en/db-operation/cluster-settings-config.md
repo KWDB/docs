@@ -1,11 +1,15 @@
 # Cluster Configuration
 
-After deploying KWDB, you can customize its behavior by modifying **startup flags** or **real-time cluster parameters**:
+# Cluster Configuration
+
+After deploying KWDB, you can customize its behavior by modifying **startup flags**, **CPU resource usage** or **real-time cluster parameters**:
 
 | **Parameter Type**       | **Scope**                          | **When Changes Take Effect**                           | **How to Configure**                                          |
-| :---------------------- | :----------------------------------------- | :------------------------------------------ | :---------------------------------------------------------------- |
-| **Startup flags**  | Individual node | At node startup only (requires service restart)|• Bare-metal script deployment: Edit `/etc/kaiwudb/script/kaiwudb_env`<br>• Container script deployment: Edit `/etc/kaiwudb/script/docker-compose.yml`<br>• Command line: Pass flags with `kwbase start` command |
-| **Cluster parameters** | Entire cluster (all nodes)| Immediately (no restart required)| Execute SQL statements (stored in system tables) |
+| :---------------------- | :--------------------------------- | :------------------------------------------ | :---------------------------------------------------------------- |
+| **Startup flags**  | Individual node | At node startup only (requires service restart)| • Bare-metal script deployment: Edit `/etc/kaiwudb/script/kaiwudb_env`<br>• Container script deployment: Edit `/etc/kaiwudb/script/docker-compose.yml`<br>• Other deployment methods: Pass flags with `kwbase start` command |
+| **CPU resource usage** | Individual node | Immediately (no restart required)| • Bare-metal script deployment: Modify the `CPUQuota` parameter in `/etc/systemd/system/kaiwudb.service`<br>• Container script deployment: Use the `docker update` command or modify the `cpus` parameter in `docker-compose.yml` |
+| **Real-time cluster parameters** | Entire cluster (all nodes)| Immediately (no restart required), automatically synchronized to all nodes| Execute SQL statements (stored in system tables) |
+
 
 ## Startup Flags
 
@@ -80,19 +84,21 @@ By default, the system writes all information to log files and does not output a
 
 ### Startup Flag Configuration
 
-The cluster startup flags can be modified using any of the following methods:
+Startup flags support the following configuration methods:
 
-- The `kaiwudb_env` file for bare-metal deployments
-- The `docker-compose.yml` file for container deployments
-- The `kwbase start` command
+- Bare-metal script deployment: Modify the `kaiwudb_env` file
+- Container script deployment: Modify the `docker-compose.yml` file
+- Other deployment methods: Adjust using the `kwbase start` command
 
-This section explains how to modify the `kaiwudb_env` and `docker-compose.yml` files to change the startup flag configurations. For information on the `kwbase start` command, see [kwbase start](../kaiwudb-tools/kwbase-cli-tool.md).
+If startup flags are not configured, KWDB starts with default values. Configured startup flags take precedence at startup.
+
+This section describes how to modify startup flag configurations through the `kaiwudb_env` or `docker-compose.yml` files. For information about the `kwbase start` command, see [kwbase start](../kaiwudb-tools/kwbase-cli-tool.md).
 
 ::: warning Note
 Startup flags are node-level configurations. To apply changes cluster-wide, you must configure each node separately.
 :::
 
-To modify cluster startup flags, follow these steps:
+#### Bare-metal Script Deployment
 
 1. Log in to the target node and stop the KWDB service:
 
@@ -100,56 +106,142 @@ To modify cluster startup flags, follow these steps:
     systemctl stop kaiwudb
     ```
 
-2. Navigate to the `/etc/kaiwudb/script` directory and open the configuration file.
+2. Navigate to the `/etc/kaiwudb/script` directory and open the `kaiwudb_env` file.
 
-    - For bare-metal deployment: open the `kaiwudb_env` file.
-    - For container deployment: open the `docker-compose.yml` file.
+3. Add or modify startup flags and their values after the startup command beginning with `KAIWUDB_START_ARG` as needed.
 
-3. Add or modify the startup flags in the configuration file as needed.
+    The following example adds the `--cache` startup flag and sets the value to `25%`.
 
-    - For bare-metal deployment:
+    ```yaml
+    KAIWUDB_START_ARG="--cache=25%"
+    ```
 
-        Add or modify the startup flags and their values after the startup command beginning with `KAIWUDB_START_ARG`.
+4. Save the `kaiwudb_env` file and reload it.
 
-        Example:
+    ```shell
+    systemctl daemon-reload
+    ```
 
-        The following example adds the `--cache` startup flag and sets the value to `25%`.
-
-        ```yaml
-        KAIWUDB_START_ARG="--cache=25%"
-        ```
-
-    - For container deployment:
-
-        Add or modify startup flags and their values in the startup command beginning with `/kaiwudb/bin/`.
-
-        ::: warning Note
-
-        Do not remove the default startup command flags, as doing so may prevent the modified cluster from starting.
-
-        :::
-
-        Example:
-
-        The following example adds the `--cache` startup flag and sets the value to `25%`.
-
-        ```yaml
-          command: 
-            - /bin/bash
-            - -c
-            - |
-              /kaiwudb/bin/kwbase start-single-node --certs-dir=<certs_dir> --listen-addr=0.0.0.0:26257 --advertise-addr=your-host-ip:port --store=/kaiwudb/deploy/kwdb-container --cache=25%
-        ```
-
-4. Restart the KWDB service.
+5. Restart the KWDB service.
 
     ```shell
     systemctl restart kaiwudb
     ```
 
+#### Container Script Deployment
+
+::: warning Note
+
+Do not remove the default startup command flags, otherwise the modified cluster may fail to start.
+
+:::
+
+1. Navigate to the `/etc/kaiwudb/script` directory, stop and delete the KWDB container.
+
+    ```shell
+    docker-compose down
+    ```
+
+2. Open the `docker-compose.yml` file.
+
+3. Add startup flags or modify existing parameter values after the startup command as needed.
+
+    The following example adds the `--cache` startup flag and sets the value to `25%`.
+
+    ```yaml
+      command: 
+        - /bin/bash
+        - -c
+        - |
+          /kaiwudb/bin/kwbase  start-single-node --certs-dir=/kaiwudb/certs --listen-addr=0.0.0.0:26257 --advertise-addr=your-host-ip:port --store=/kaiwudb/deploy/kaiwudb-container --cache=25%
+    ```
+
+4. Save the configuration, then recreate and start the KWDB container.
+
+    ```shell
+    systemctl start kaiwudb
+    ```
+
+## CPU Resource Usage Configuration
+
+KWDB supports real-time modification of CPU resource usage. CPU resource usage is a node-level configuration. To modify the configuration for the entire cluster, you need to log in to each node and complete the corresponding configuration.
+
+### Bare-metal Script Deployment
+
+For bare-metal deployments, calculate CPU usage as: CPU usage rate × number of CPU cores × 100%. For example, if the server where the node is located has 6 CPU cores and you plan to adjust the CPU usage rate to 0.3, then the corresponding `CPUQuota` value should be `0.3 x 6 x 100% = 180%`.
+
+1. Navigate to the `/etc/systemd/system` directory and open the `kaiwudb.service` file.
+
+2. Modify the KWDB CPU resource usage (`CPUQuota`) as needed.
+
+    The following example sets the CPU resource usage to `180%`.
+
+    ```yaml
+    ...
+    [Service]
+    ...
+    CPUQuota=180%
+    ...
+    ```
+
+3. Save the `kaiwudb.service` file and reload it.
+
+    ```shell
+    systemctl daemon-reload
+    ```
+
+4. Verify whether the new CPU resource usage has taken effect.
+
+    ```shell
+    systemctl show kaiwudb | grep CPUQuota
+    ```
+
+### Container Script Deployment
+
+After deploying KWDB using the container script method, you can use the `docker update` command or modify the `docker-compose.yml` file to configure KWDB's CPU resource usage (`cpus`).
+
+The formula is: CPU usage rate × number of CPU cores. For example, if the server where the node is located has 6 CPU cores and you plan to adjust the CPU usage rate to 0.3, then the corresponding `cpus` value should be `0.3 x 6 = 1.8`.
+
+- Use the `docker update` command:
+
+    ```shell
+    docker update --cpus <value> kaiwudb-container
+    ```
+
+- Modify the `docker-compose.yml` file:
+
+    1. Navigate to the `/etc/kaiwudb/script` directory, stop and delete the KWDB container.
+
+        ```shell
+        docker-compose down
+        ```
+
+    2. Open the `docker-compose.yml` file.
+
+    3. Modify the KWDB CPU resource usage as needed.
+
+        The following example sets the CPU resource usage (`cpus`) to `1.8`.
+
+        ```yaml
+        version: '3.3'
+        services:
+          ...
+          deploy:
+            resources:
+              limits:
+                cpus: '1.8'
+        ...
+        ```
+
+    4. Save the configuration, then recreate and start the KWDB container.
+
+        ```shell
+        systemctl start kaiwudb
+        ```
+
 ## Cluster Parameters
 
-KWDB supports modifying cluster settings through the `SET CLUSTER SETTING` statement, which takes effect immediately.
+KWDB supports modifying cluster settings through the `SET CLUSTER SETTING` statement. Changes take effect immediately and are automatically synchronized to all nodes in the cluster.
 
 ::: warning Note
 

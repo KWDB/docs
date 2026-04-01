@@ -32,8 +32,9 @@ KWDB 集群部署提供多种方式，满足不同用户和场景的需求：
 | 部署方式 | 特点 | 适用用户/场景 | 技术要求 | 支持环境 |
 |---------|------|---------|------|---------|
 | **[脚本部署（推荐）](./cluster-deployment/script-deployment.md)** | 最简便的集群部署方式，内置故障检测和节点恢复机制 | 需要快速搭建测试或生产环境的用户 | 基本 Linux 操作经验 | 裸机、容器化 |
-| **[kwbase CLI](./cluster-deployment/kwbase-cli-deployment.md)** | 支持深度定制部署过程 | 有技术背景、希望深度定制的用户 | 熟悉数据库部署流程和命令行操作 | 裸机 |
 | **[Docker Run](./cluster-deployment/docker-deployment.md)** | 容器化技术部署 | 偏好容器化技术的用户 | 熟悉 Docker 命令行操作 | 容器化 |
+| **[kwbase CLI](./cluster-deployment/kwbase-cli-deployment.md)** | 支持深度定制部署过程 | 有技术背景、希望深度定制的用户 | 熟悉数据库部署流程和命令行操作 | 裸机 |
+
 
 ### 集群管理
 

@@ -63,7 +63,7 @@ During installation, KWDB checks dependencies. If dependencies are missing, the 
 
 ### Container Deployment
 
-When using [script](./install-kaiwudb/quick-deploy.md) for deployment, the target machine needs to have Docker Compose (version 1.20.0 and above) installed.
+When using [script](./deploy/deploy-script.md) for deployment, the target machine needs to have Docker Compose (version 1.20.0 and above) installed.
 
 - Online installation: See [Docker Compose Official Installation Documentation](https://docs.docker.com/compose/install/)
 - Offline installation: See [Docker Compose Offline Installation Guide](https://docs.docker.com/compose/install/standalone/)
