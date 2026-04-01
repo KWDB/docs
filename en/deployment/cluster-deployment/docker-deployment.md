@@ -11,14 +11,14 @@ This section describes how to deploy a KWDB cluster on a single machine using th
 
 ## Prerequisites
 
-- The hardware, operating system, software dependencies, and ports of the nodes to be deployed meet the [deployment requirements](../prepare/before-deploy-docker.md#hardware).
+- The hardware, operating system, software dependencies, and ports of the nodes to be deployed meet the [deployment requirements](../cluster-prepare.md).
 - One of the following user permissions:
   - Root user access
   - Regular user with `sudo` privileges:
     - Users with passwordless `sudo` won't need to enter passwords during installation.
     - Users without passwordless `sudo` will be prompted for passwords when needed.
     - Regular users must be in the docker group (add with `sudo usermod -aG docker $USER`).
-- The [KWDB image](../prepare/before-deploy-docker.md#obtaining-container-images) is obtained.
+- The [KWDB image](../cluster-prepare.md) is obtained.
 
 ## Steps
 

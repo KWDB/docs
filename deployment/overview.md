@@ -1,11 +1,13 @@
 ---
-title: 集群部署概述
+title: 概述
 id: overview
 ---
 
-# 集群部署概述
+# 概述
 
-KWDB 支持使用部署以下集群：
+## 集群类型
+
+KWDB 支持以下集群部署类型：
 
 |    类别       | 多副本集群                                                   | 单副本集群                                                   |
 | ---------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
@@ -17,21 +19,23 @@ KWDB 支持使用部署以下集群：
 
 单节点部署与集群部署方式略有不同，单节点部署详细信息，参见[单节点部署](../quickstart/overview.md)。
 
-本节包含以下文档：
+## 部署流程
 
-- [部署流程](./deploy-workflow.md)
-- 部署准备
-  - [裸机部署准备](./prepare/before-deploy-bare-metal.md)
-  - [容器部署准备](./prepare/before-deploy-docker.md)
-- 集群部署
-  - [使用脚本部署](./cluster-deployment/script-deployment.md)
-  - [使用 kwbase CLI 部署](./cluster-deployment/kwbase-cli-deployment.md)
-  - [使用 Docker Run 部署](./cluster-deployment/docker-deployment.md)
-- 集群配置
-  - [创建用户](./user-config.md)
-  - 配置集群
-    - [裸机集群配置](./cluster-config/cluster-config-bare-metal.md)
-    - [容器集群配置](./cluster-config/cluster-config-docker.md)
-- 集群管理
-  - [启动与停止 KWDB 服务](./local-start-stop.md)
-  - [卸载集群](./uninstall-cluster.md)
+### 部署准备
+
+部署 KWDB 集群前，请根据[部署准备](./cluster-prepare.md)检查待部署节点的硬件、操作系统、软件依赖和端口等是否满足要求。
+
+### 集群部署
+
+KWDB 集群部署提供多种方式，满足不同用户和场景的需求：
+
+| 部署方式 | 特点 | 适用用户/场景 | 技术要求 | 支持环境 |
+|---------|------|---------|------|---------|
+| **[脚本部署（推荐）](./cluster-deployment/script-deployment.md)** | 最简便的集群部署方式，内置故障检测和节点恢复机制 | 需要快速搭建测试或生产环境的用户 | 基本 Linux 操作经验 | 裸机、容器化 |
+| **[kwbase CLI](./cluster-deployment/kwbase-cli-deployment.md)** | 支持深度定制部署过程 | 有技术背景、希望深度定制的用户 | 熟悉数据库部署流程和命令行操作 | 裸机 |
+| **[Docker Run](./cluster-deployment/docker-deployment.md)** | 容器化技术部署 | 偏好容器化技术的用户 | 熟悉 Docker 命令行操作 | 容器化 |
+
+### 集群管理
+
+- 如需停止或重启集群中的单个节点，参见[启动与停止 KWDB 服务](./local-start-stop.md)。
+- 如需卸载集群，参见[卸载 KWDB](./uninstall-cluster.md)。

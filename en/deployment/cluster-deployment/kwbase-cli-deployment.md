@@ -11,7 +11,7 @@ This section describes how to deploy a KWDB cluster on a single machine using th
 
 ## Prerequisites
 
-- The hardware, operating system, software dependencies, and ports of the nodes to be deployed meet the [deployment requirements](../prepare/before-deploy-bare-metal.md#hardware).
+- The hardware, operating system, software dependencies, and ports of the nodes to be deployed meet the [deployment requirements](../cluster-prepare.md).
 - One of the following user permissions:
   - Root user access
   - Regular user with `sudo` privileges:
