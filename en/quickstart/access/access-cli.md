@@ -5,7 +5,7 @@ id: access-cli
 
 # kwbase CLI
 
-kwbase is a built-in command-line tool provided by KaiwuDB. Users can connect to KWDB through kwbase for database operations and management, supporting both secure mode (for production environments) and non-secure mode (for testing).
+kwbase is a built-in command-line tool provided by KaiwuDB. Users can connect to KWDB through kwbase for database operations and management, supporting both secure mode (for production environments) and insecure mode (for testing).
 
 If KWDB is deployed using scripts, the system will also automatically generate a convenient `kw-sql` script and create a soft link `kw-sql` in the `/usr/bin` directory. This script encapsulates the kwbase connection command, allowing root users to quickly log in to the database.
 
@@ -38,14 +38,14 @@ docker exec -it <container-name> ./kwbase sql [security-options] --host=<your-ho
 ```
 :::
 
-#### Non-Secure Mode
+#### Insecure Mode
 
 ::: warning Tip
-Non-secure mode should only be used in testing environments.
+Insecure mode should only be used in testing environments.
 :::
 
 **Prerequisites**
-- KWDB deployed and started in non-secure mode.
+- KWDB deployed and started in insecure mode.
 
 **Steps**
 

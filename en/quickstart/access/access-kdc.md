@@ -56,7 +56,7 @@ The following steps use the first connection as an example to illustrate how to 
 
    <img src="../../../static/quickstart/FU8sbwC1yoqPchxh3ttcptgan4d.png" style="zoom: 67%;" />
 
-2. In the **General** tab, set the host, port, and database. Select the database authentication method as needed (default is native database authentication), then complete the corresponding user and password settings (no password required if using non-secure mode).
+2. In the **General** tab, set the host, port, and database. Select the database authentication method as needed (default is native database authentication), then complete the corresponding user and password settings (no password required if using insecure mode).
 
    <img src="../../../static/kdc/create-connect-02.png" style="zoom: 67%;" />
 

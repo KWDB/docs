@@ -585,7 +585,7 @@ DRBD 镜像数据具有以下特点：
          pcs node unstandby <primary_node>
          ```
 
-   2. 安装部署 KWDB，具体安装步骤见[单节点部署](../quickstart/deploy/deploy-script.md)。
+   2. 安装部署 KWDB，具体安装步骤见[单节点脚本部署](../quickstart/deploy/deploy-script.md)。
 
       ::: warning 注意
       - 确保在`deploy.cfg`配置文件中，将 `data_root` 配置为文件系统资源，示例中KaiwuFS 指定的目录。
@@ -596,7 +596,7 @@ DRBD 镜像数据具有以下特点：
 
    1. 确保 DRBD 和 Filesystem 资源的活跃节点为主节点。
 
-   2. 安装部署 KWDB，具体安装步骤见[单节点部署](../quickstart/deploy/deploy-script.md)。
+   2. 安装部署 KWDB，具体安装步骤见[单节点脚本部署](../quickstart/deploy/deploy-script.md)。
 
    3. 配置主节点证书允许通过备节点 IP 和 VIP 访问。
 

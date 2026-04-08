@@ -48,7 +48,7 @@ id: quickstart-docker
 
 3. Start the KWDB database.
 
-    - Non-secure mode
+    - Insecure mode
 
       ```shell
       docker run -d --privileged --name kaiwudb \
@@ -101,11 +101,11 @@ id: quickstart-docker
     | `--ipc shareable` | Allow other containers to share this container's IPC namespace. |
     | `-w /kaiwudb/bin` | Set the working directory in the container to `/kaiwudb/bin`. |
     | `$kwdb_image` | Container image variable, needs to be replaced with the actual image name and tag, for example `kwdb:3.0.0`. |
-    | `./kwbase start` | Database startup command running in the container, which varies depending on secure and non-secure modes:<br>- `--insecure`: (Non-secure mode only) Run in non-secure mode.<br>- `--certs-dir=/kaiwudb/certs`: (Secure mode) Certificate directory location.<br>- `--listen-addr=0.0.0.0:26257`: Database listening address and port.<br>- `--http-addr=0.0.0.0:8080`: HTTP interface listening address and port.<br>- `--store=/kaiwudb/deploy/kaiwudb-container`: Specify data storage location.|
+    | `./kwbase start` | Database startup command running in the container, which varies depending on secure and Insecure modes:<br>- `--insecure`: (Insecure mode only) Run in Insecure mode.<br>- `--certs-dir=/kaiwudb/certs`: (Secure mode) Certificate directory location.<br>- `--listen-addr=0.0.0.0:26257`: Database listening address and port.<br>- `--http-addr=0.0.0.0:8080`: HTTP interface listening address and port.<br>- `--store=/kaiwudb/deploy/kaiwudb-container`: Specify data storage location.|
 
 4. (Optional) Create a database user and grant admin privileges. If this step is skipped, the system will default to using the user that deployed the database without requiring a password to access the database.
 
-      - Non-secure mode (without password):
+      - Insecure mode (without password):
 
           ```bash
           docker exec kaiwudb bash -c "./kwbase sql --insecure --host=$host_ip -e \"create user $username;grant admin to $username with admin option;\""

@@ -44,6 +44,7 @@ KWDB 支持在以下操作系统进行安装部署：
 
 - 容器部署需要目标机器已安装 Docker。如未安装，请参考 [Docker 官方安装文档](https://docs.docker.com/desktop/install/linux-install/) 进行安装。对于无法联网的环境，可下载 Docker 二进制包进行离线安装，详见 [Docker 离线安装指南](https://docs.docker.com/engine/install/binaries/)。
 - 未提及的操作系统版本**也许可以**运行 KWDB，但尚未得到 KWDB 官方支持。
+- 如需获取[下载页面](https://gitee.com/kwdb/kwdb/releases/)未提供的对应版本安装包，请联系 [KWDB 技术支持](https://www.kaiwudb.com/support/)。
 
 :::
 
@@ -151,7 +152,7 @@ KWDB 支持通过以下方式获取容器镜像：
 
    参数说明：
 
-   - `-f ~/.ssh/id_rsa`：指定生成的密钥对文件目录。
+   - `-f`：指定生成的密钥对文件名。
    - `-N`：将密钥密码设置为空，以实现免密登录。
 
 2. 将密钥分发至集群其它节点。

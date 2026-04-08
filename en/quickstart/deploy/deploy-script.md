@@ -75,13 +75,13 @@ For specific configuration steps, see [Cluster Parameter Configuration](../../db
 
     | Level | Parameter | Description |
     |---|---|---|
-    | **global** <br>(Global configuration) | `secure_mode` | Whether to enable secure mode. Supports the following values:<br>- `insecure`: Use non-secure mode.<br>- `tls`: (Default) Enable TLS secure mode. When enabled, KWDB generates corresponding TLS certificates as credentials for clients or applications to connect to the database. Generated client certificates are stored in the `/etc/kaiwudb/certs` directory. |
+    | **global** <br>(Global configuration) | `secure_mode` | Whether to enable secure mode. Supports the following values:<br>- `insecure`: Use insecure mode.<br>- `tls`: (Default) Enable TLS secure mode. When enabled, KWDB generates corresponding TLS certificates as credentials for clients or applications to connect to the database. Generated client certificates are stored in the `/etc/kaiwudb/certs` directory. |
     | | `management_user` | KWDB management user, defaults to `kaiwudb`. After installation and deployment, KWDB creates the corresponding management user and a user group with the same name as the management user. |
     | | `rest_port` | KWDB Web service port, defaults to `8080`. |
     | | `kaiwudb_port` | KWDB service port, defaults to `26257`. |
     | | `brpc_port` | brpc communication port between KWDB time-series engines for inter-node communication. This setting is automatically ignored for single-node deployment. |
     | | `data_root` | Data directory, defaults to `/var/lib/kaiwudb`. |
-    | | `cpu` | Optional parameter to specify the proportion of CPU resources that the KWDB service occupies on the current node server. No limit by default. Value range is `[0,1]`, with maximum precision of two decimal places.<br>**Note**: If the deployment environment is Ubuntu 18.04, after deployment is complete, you need to modify `CPUQuota` in the `kaiwudb.service` file to an integer value, for example, change `180.0%` to `180%` to ensure the setting takes effect. For specific operation steps, see [Configure CPU Resource Usage](../../db-operation/cluster-settings-config.md). |
+    | | `cpu` | Optional parameter to specify the proportion of CPU resources that the KWDB service occupies on the current node server. No limit by default. Value range is `[0,1]`, with maximum precision of two decimal places.<br>**Note**: If the deployment environment is Ubuntu 18.04, after deployment is complete, you need to modify `CPUQuota` in the `kaiwudb.service` file to an integer value, for example, change `180.0%` to `180%` to ensure the setting takes effect. For specific operation steps, see [Configure CPU Resource Usage](../../db-operation/cluster-settings-config.md#cpu-resource-usage-configuration). |
     | **local** <br>(Local node configuration) | `node_addr` | IP address for external service of the local node, listening address is `0.0.0.0`, port is the KWDB service port. |
 
 2. Execute the single-node deployment installation command.

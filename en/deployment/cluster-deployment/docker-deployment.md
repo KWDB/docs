@@ -18,7 +18,7 @@ This section describes how to deploy a KWDB cluster on a single machine using th
     - Users with passwordless `sudo` won't need to enter passwords during installation.
     - Users without passwordless `sudo` will be prompted for passwords when needed.
     - Regular users must be in the docker group (add with `sudo usermod -aG docker $USER`).
-- The [KWDB image](../cluster-prepare.md) is obtained.
+- The [KWDB image](../cluster-prepare.md#container-images) is obtained.
 
 ## Steps
 
@@ -175,7 +175,7 @@ This section describes how to deploy a KWDB cluster on a single machine using th
 
 4. (Optional) Create a database user and grant admin privileges. If this step is skipped, the system will default to using the user that deployed the database without requiring a password to access the database.
 
-      - Non-secure mode (without password):
+      - Insecure mode (without password):
 
           ```bash
           docker exec kaiwudb bash -c "./kwbase sql --insecure --host=$host_ip -e \"create user $username;grant admin to $username with admin option;\""

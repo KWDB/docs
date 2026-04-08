@@ -205,7 +205,7 @@ This section describes how to deploy a KWDB cluster on a single machine using th
 
 6. (Optional) Create a database user and grant admin privileges. If this step is skipped, the system will default to using the user that deployed the database without requiring a password to access the database.
 
-    - Non-secure mode (without password):
+    - Insecure mode (without password):
 
         ```bash
         ./kwbase sql --host=127.0.0.1:$local_port --insecure \

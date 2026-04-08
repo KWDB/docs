@@ -584,7 +584,7 @@ Steps:
          pcs node unstandby <primary_node>
          ```
 
-   2. Deploy KWDB. For detailed instructions, see [Single-node Deployment](../quickstart/deploy/deploy-script.md).
+   2. Deploy KWDB. For detailed instructions, see [Single-node Script Deployment](../quickstart/deploy/deploy-script.md).
 
       ::: warning Warning
 

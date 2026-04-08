@@ -40,7 +40,7 @@ KWDB 支持在以下操作系统进行安装部署：
 
 - 容器部署需要目标机器已安装 Docker。如未安装，请参考 [Docker 官方安装文档](https://docs.docker.com/desktop/install/linux-install/) 进行安装。对于无法联网的环境，可下载 Docker 二进制包进行离线安装，详见 [Docker 离线安装指南](https://docs.docker.com/engine/install/binaries/)。
 - 未提及的操作系统版本**也许可以**运行 KWDB，但尚未得到 KWDB 官方支持。
-
+- 如需获取[下载页面](https://gitee.com/kwdb/kwdb/releases/)未提供的对应版本安装包，请联系 [KWDB 技术支持](https://www.kaiwudb.com/support/)。
 :::
 
 ## 软件依赖

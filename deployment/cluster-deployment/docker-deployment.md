@@ -197,4 +197,4 @@ id: docker-deployment
           docker exec kaiwudb bash -c "./kwbase sql --host=$host_ip --certs-dir=$cert_path -e \"create user $username with password \\\"$user_password\\\";grant admin to $username with admin option;\""
           ```
 
-5. 部署完成后，可通过 [kwbase CLI](../../quickstart/access/access-cli.md) 、[KaiwuDB 支持的连接器](../../development/overview.md)或 [KaiwuDB 开发者中心](../../kaiwudb-tools/kaiwudb-developer-center/overview.md)连接并管理 KWDB。
+5. 部署完成后，可通过 [kwbase CLI](../../quickstart/access/access-cli.md) 、[KWDB 支持的连接器](../../development/overview.md)或 [KaiwuDB 开发者中心](../../kaiwudb-tools/kaiwudb-developer-center/overview.md)连接并管理 KWDB。

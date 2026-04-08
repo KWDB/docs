@@ -2,13 +2,13 @@
 
 # Cluster Configuration
 
-After deploying KWDB, you can customize its behavior by modifying **startup flags**, **CPU resource usage** or **real-time cluster parameters**:
+After deploying KWDB, you can customize its behavior by modifying **startup flags**, **CPU resource usage** or **cluster parameters**:
 
 | **Parameter Type**       | **Scope**                          | **When Changes Take Effect**                           | **How to Configure**                                          |
 | :---------------------- | :--------------------------------- | :------------------------------------------ | :---------------------------------------------------------------- |
 | **Startup flags**  | Individual node | At node startup only (requires service restart)| • Bare-metal script deployment: Edit `/etc/kaiwudb/script/kaiwudb_env`<br>• Container script deployment: Edit `/etc/kaiwudb/script/docker-compose.yml`<br>• Other deployment methods: Pass flags with `kwbase start` command |
 | **CPU resource usage** | Individual node | Immediately (no restart required)| • Bare-metal script deployment: Modify the `CPUQuota` parameter in `/etc/systemd/system/kaiwudb.service`<br>• Container script deployment: Use the `docker update` command or modify the `cpus` parameter in `docker-compose.yml` |
-| **Real-time cluster parameters** | Entire cluster (all nodes)| Immediately (no restart required), automatically synchronized to all nodes| Execute SQL statements (stored in system tables) |
+| **Cluster parameters** | Entire cluster (all nodes)| Immediately (no restart required), automatically synchronized to all nodes| Execute SQL statements (stored in system tables) |
 
 
 ## Startup Flags

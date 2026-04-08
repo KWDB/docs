@@ -197,4 +197,4 @@ cluster-config/cluster-config-bare-metal.md#配置-cpu-资源占用率)。
     [ADD USER COMPLETED]:User creation completed.
     ```
 
-8. 通过 [kwbase CLI](../../quickstart/access/access-cli.md) 、[KaiwuDB 支持的连接器](../../development/overview.md)或 [KaiwuDB 开发者中心](../../kaiwudb-tools/kaiwudb-developer-center/overview.md)连接并管理 KaiwuDB。
+8. 通过 [kwbase CLI](../../quickstart/access/access-cli.md) 、[KWDB 支持的连接器](../../development/overview.md)或 [KaiwuDB 开发者中心](../../kaiwudb-tools/kaiwudb-developer-center/overview.md)连接并管理 KaiwuDB。

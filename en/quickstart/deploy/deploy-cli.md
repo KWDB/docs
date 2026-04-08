@@ -64,7 +64,7 @@ The kwbase CLI deployment method described in this section **only applies to bar
 
 5. Start the database.
 
-    - Non-secure mode:
+    - Insecure mode:
 
         ```bash
         ./kwbase start-single-node --insecure \
@@ -85,7 +85,7 @@ The kwbase CLI deployment method described in this section **only applies to bar
 
 6. Check database status.
 
-    - Non-secure mode:
+    - Insecure mode:
 
         ```bash
         ./kwbase node status --insecure --host=<address_of_any_alive_node>
@@ -99,7 +99,7 @@ The kwbase CLI deployment method described in this section **only applies to bar
 
 7. (Optional) Create a database user and grant admin privileges. If this step is skipped, the system will default to using the user that deployed the database without requiring a password to access the database.
 
-    - Non-secure mode (without password):
+    - Insecure mode (without password):
 
         ```bash
         ./kwbase sql --host=127.0.0.1:$local_port --insecure \

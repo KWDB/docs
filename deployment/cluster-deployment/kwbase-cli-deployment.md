@@ -229,4 +229,4 @@ id: kwbase-cli-deployment
             grant admin to $username with admin option;"
         ```
 
-7. 部署完成后，可通过 [kwbase CLI](../../quickstart/access/access-cli.md) 、[KaiwuDB 支持的连接器](../../development/overview.md)或 [KaiwuDB 开发者中心](../../kaiwudb-tools/kaiwudb-developer-center/overview.md)连接并管理 KWDB。
+7. 部署完成后，可通过 [kwbase CLI](../../quickstart/access/access-cli.md) 、[KWDB 支持的连接器](../../development/overview.md)或 [KaiwuDB 开发者中心](../../kaiwudb-tools/kaiwudb-developer-center/overview.md)连接并管理 KWDB。
