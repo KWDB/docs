@@ -13,7 +13,7 @@ id: quickstart-cli
 
 ::: warning 说明
 
-本节介绍的 kwbase CLI 部署方式**仅适用于裸机部署**，不适用于容器部署。如需容器部署，请参考 [Docker Run 部署](./deploy-docker-run.md)。
+本节介绍的 kwbase CLI 部署方式**仅适用于裸机部署**。
 
 :::
 

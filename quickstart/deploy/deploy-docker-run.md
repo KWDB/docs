@@ -7,7 +7,7 @@ id: quickstart-docker
 
 ## 前提条件
 
-- 已获取 KWDB [容器安装包](../prepare.md#安装包)。
+- 已获取 KWDB [容器镜像](../prepare.md#容器镜像)。
 - 待部署节点的硬件、操作系统、软件依赖和端口满足[安装部署要求](../prepare.md)。
 - 安装用户为 root 用户或者拥有 `sudo` 权限的普通用户。
   - root 用户和配置 `sudo` 免密的普通用户在执行部署脚本时无需输入密码。
@@ -16,14 +16,7 @@ id: quickstart-docker
 
 ## 步骤
 
-1. 在 `kwdb_install/packages` 目录下导入 `KaiwuDB.tar` 文件，获取镜像名称。
-
-    ```shell
-    docker load < KaiwuDB.tar
-    Loaded image: "$kwdb_image"
-    ```
-
-2. （可选）如需以安全模式部署 KWDB, 使用以下命令创建数据库证书颁发机构、`root` 用户的客户端证书以及节点服务器证书。
+1. （可选）如需以安全模式部署 KWDB, 使用以下命令创建数据库证书颁发机构、`root` 用户的客户端证书以及节点服务器证书。
 
     ```shell
     docker run --rm --privileged \
@@ -46,7 +39,7 @@ id: quickstart-docker
     | `$kwdb_image` | 容器镜像，需填入实际的镜像名以及标签，例如 `kwdb:3.0.0`。 |
     | `bash -c` | 在容器中执行后面的证书创建命令，其中：<br>- `./kwbase cert create-ca`：创建证书颁发机构(CA)，生成 CA 证书和密钥。<br>- `./kwbase cert create-client root`：为 `root` 用户创建客户端证书和密钥。<br>- `./kwbase cert create-node 127.0.0.1 localhost 0.0.0.0`：创建节点证书和密钥，支持通过三种网络标识符访问：本地回环地址 (`127.0.0.1`)、本地主机名 (`localhost`) 和所有网络接口 (`0.0.0.0`)。<br>- 所有命令均使用 `--certs-dir=/kaiwudb/certs` 指定证书存储目录，使用 `--ca-key=/kaiwudb/certs/ca.key` 指定密钥路径。 |
 
-3. 启动 KWDB 数据库。
+2. 启动 KWDB 数据库。
 
     - 非安全模式
 
@@ -69,7 +62,7 @@ id: quickstart-docker
 
     - 安全模式
 
-        ```bash
+        ```shell
         docker run -d --privileged --name kaiwudb \
           --ulimit memlock=-1 \
           --ulimit nofile=$max_files \
@@ -103,7 +96,7 @@ id: quickstart-docker
     | `$kwdb_image` | 容器镜像变量，需替换为实际的镜像名称及标签，例如 `kwdb:3.0.0`。 |
     | `./kwbase start` | 容器内运行的数据库启动命令，根据安全模式和非安全模式有所不同：<br>- `--insecure`：（仅非安全模式）以非安全模式运行。<br>- `--certs-dir=/kaiwudb/certs`：（安全模式）证书目录位置。<br>- `--listen-addr=0.0.0.0:26257`：数据库监听的地址和端口。<br>- `--http-addr=0.0.0.0:8080`：HTTP 接口监听的地址和端口。<br>- `--store=/kaiwudb/deploy/kaiwudb-container`：指定数据存储位置。|
 
-4. （可选）创建数据库用户并授予用户管理员权限。如果跳过该步骤，系统将默认使用部署数据库时的用户，且无需密码访问数据库。
+3. （可选）创建数据库用户并授予用户管理员权限。如果跳过该步骤，系统将默认使用部署数据库时的用户，且无需密码访问数据库。
 
       - 非安全模式（不带密码）：
 
@@ -117,4 +110,4 @@ id: quickstart-docker
           docker exec kaiwudb bash -c "./kwbase sql --host=$host_ip --certs-dir=$cert_path -e \"create user $username with password \\\"$user_password\\\";grant admin to $username with admin option;\""
           ```
 
-5. 部署完成后，可通过 [kwbase CLI ](../access/access-cli.md) 、[KaiwuDB JDBC](../access/access-jdbc.md)或 [KaiwuDB 开发者中心](../access/access-kdc.md)连接并管理 KWDB。
+4. 部署完成后，可通过 [kwbase CLI ](../access/access-cli.md) 、[KaiwuDB JDBC](../access/access-jdbc.md)或 [KaiwuDB 开发者中心](../access/access-kdc.md)连接并管理 KWDB。

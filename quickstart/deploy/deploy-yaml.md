@@ -7,7 +7,7 @@ id: quickstart-yaml
 
 ## 前提条件
 
-- 已获取 KWDB [容器安装包](../prepare.md#安装包)。
+- 已获取 KWDB [容器镜像](../prepare.md#容器镜像)。
 - 待部署节点的硬件、操作系统、软件依赖和端口满足[安装部署要求](../prepare.md)。
 - 安装用户为 root 用户或者拥有 `sudo` 权限的普通用户。
   - root 用户和配置 `sudo` 免密的普通用户在执行部署脚本时无需输入密码。
@@ -16,14 +16,7 @@ id: quickstart-yaml
 
 ## 步骤
 
-1. 在 `kwdb_install/packages` 目录下导入 `KaiwuDB.tar` 文件，获取镜像名称。
-
-    ```shell
-    docker load < KaiwuDB.tar
-    Loaded image: "$kwdb_image"
-    ```
-
-2. 创建 `docker-compose.yml` 配置文件。
+1. 创建 `docker-compose.yml` 配置文件。
 
     ::: warning 说明
     `image` 参数的取值必须是导入 `KaiwuDB.tar` 文件后获取的镜像名称。
@@ -59,9 +52,9 @@ id: quickstart-yaml
             /kaiwudb/bin/kwbase start-single-node --insecure --listen-addr=0.0.0.0:26257 --advertise-addr=127.0.0.1:26257 --http-addr=0.0.0.0:8080 --store=/kaiwudb/deploy/kaiwudb
     ```
 
-3. 快速启动 KWDB。
+2. 快速启动 KWDB。
 
     ```shell
     docker-compose up -d
     ```
-4. 部署完成后，可通过 [kwbase CLI ](../access/access-cli.md) 、[KaiwuDB JDBC](../access/access-jdbc.md)或 [KaiwuDB 开发者中心](../access/access-kdc.md)连接并管理 KWDB。
+3. 部署完成后，可通过 [kwbase CLI ](../access/access-cli.md) 、[KaiwuDB JDBC](../access/access-jdbc.md)或 [KaiwuDB 开发者中心](../access/access-kdc.md)连接并管理 KWDB。

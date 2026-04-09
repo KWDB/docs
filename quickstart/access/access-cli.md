@@ -45,7 +45,8 @@ docker exec -it <container-name> ./kwbase sql [security-options] --host=<your-ho
 :::
 
 **前提条件**
-- 以非安全模式部署并启动 KWDB
+
+以非安全模式部署并启动 KWDB。
 
 **步骤**
 
@@ -78,11 +79,11 @@ docker exec -it <container-name> ./kwbase sql [security-options] --host=<your-ho
 
 #### 安全模式连接
 
-KWDB 默认支持用户使用证书或密码登录数据库。以下示例说明管理员用户和普通用户如何在标准安全模式下使用证书安全登录数据库。有关其他认证方式的详细信息，参见[身份鉴别与认证](../../db-security/identity-authn.md)。
+KWDB 默认支持用户使用证书或密码登录数据库。以下示例说明管理员用户和普通用户如何使用证书安全登录数据库。有关其他认证方式的详细信息，参见[身份鉴别与认证](../../db-security/identity-authn.md)。
 
 **前提条件**
 
-- 安全模式部署并启动 KWDB。
+以安全模式部署并启动 KWDB。
 
 **步骤**
 

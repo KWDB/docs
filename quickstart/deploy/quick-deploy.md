@@ -26,7 +26,7 @@ KWDB 为首次体验的用户提供了自动化部署工具——快速部署脚
 - **硬件**：4核8G及以上（详见[硬件要求](../prepare.md#硬件)）
 - **权限**：root 或具有 sudo 权限的用户
 - **网络**：能够访问安装包下载地址
-- **快速部署脚本**：通过 [Gitee](https://gitee.com/kwdb/kwdb/releases)、[Github](https://github.com/KWDB/KWDB/releases) 或 [GitCode](https://gitcode.com/kwdb/kwdb) 获取快速部署脚本
+- **快速部署脚本**：通过 [Gitee](https://gitee.com/kwdb/kwdb/releases)、[Github](https://github.com/KWDB/KWDB/releases) 或 [AtomGit](https://atomgit.com/kwdb/kwdb) 获取快速部署脚本
 
 ## 部署步骤
 
@@ -142,13 +142,13 @@ KWDB 为首次体验的用户提供了自动化部署工具——快速部署脚
 
 检查以下内容：
 
-1. 终端输出的错误信息
-2. 安装目录下的日志文件（通常在 `/var/log/kaiwudb/` 或安装目录的 `log` 目录）
-3. 确认硬件、操作系统、端口等是否满足要求
+- 终端输出的错误信息
+- 安装目录下的日志文件（通常在 `/var/log/kaiwudb/` 或安装目录的 `log` 目录）
+- 确认硬件、操作系统、端口等是否满足要求
 
 ### 如何修改已部署的配置？
 
 快速部署后如需修改配置，需要执行以下步骤：
 
-1. 卸载当前部署（参见[卸载 KWDB](../../deployment/uninstall-cluster.md)）
-2. 使用[脚本](./deploy-script.md)或[容器](./deploy-docker-run.md)重新部署，进行详细配置
+1. 卸载当前部署（参见[卸载 KWDB](../../deployment/uninstall-cluster.md)）。
+2. 使用[脚本](./deploy-script.md)或[Docker Run](./deploy-docker-run.md)重新部署，进行详细配置。

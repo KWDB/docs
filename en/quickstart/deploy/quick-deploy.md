@@ -26,7 +26,7 @@ The script automatically detects the operating system and selects an appropriate
 - **Hardware**: 4 CPU cores and 8 GB RAM or higher (see [Hardware Requirements](../prepare.md#hardware))
 - **Permissions**: Root user or a user with `sudo` privileges
 - **Network**: Access to the installation package download address
-- **Quick deployment script**: Downloaded from [Gitee](https://gitee.com/kwdb/kwdb/releases), [GitHub](https://github.com/KWDB/KWDB/releases), or [GitCode](https://gitcode.com/kwdb/kwdb)
+- **Quick deployment script**: Downloaded from [Gitee](https://gitee.com/kwdb/kwdb/releases), [GitHub](https://github.com/KWDB/KWDB/releases), or [AtomGit](https://atomgit.com/kwdb/kwdb)
 
 ## Steps
 
@@ -142,13 +142,13 @@ Bare-metal deployment supports Ubuntu 20.04/22.04. For other Linux distributions
 
 Check the following items:
 
-1. Error messages displayed in the terminal
-2. Log files in the installation directory (typically under `/var/log/kaiwudb/` or the `log` directory within the installation path)
-3. Whether hardware, operating system, network, and port requirements are satisfied
+- Error messages displayed in the terminal
+- Log files in the installation directory (typically under `/var/log/kaiwudb/` or the `log` directory within the installation path)
+- Whether hardware, operating system, network, and port requirements are satisfied
 
 ### How can I modify the configuration after deployment?
 
 To change the configuration after a quick deployment:
 
 1. Uninstall the current deployment (see [Uninstall Clusters](../../deployment/uninstall-cluster.md)).
-2. Redeploy using [script](./deploy-script.md) or [container](./deploy-docker-run.md) for more advanced configuration options.
+2. Redeploy using [script](./deploy-script.md) or [Docker Run](./deploy-docker-run.md) for more advanced configuration options.

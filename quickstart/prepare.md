@@ -82,7 +82,7 @@ KWDB 支持在以下操作系统进行安装部署：
 | `8080` | 数据库 Web 服务端口 |
 | `26257` | 数据库服务端口和对外连接端口 |
 
-## 安装包、编译版本和容器镜像
+## 安装包、容器镜像和编译版本
 
 根据不同的使用场景，获取安装包、容器镜像或源码编译版本：
 
@@ -93,7 +93,7 @@ KWDB 支持在以下操作系统进行安装部署：
 - Ubuntu V20.04 x86_64
 - Ubuntu V20.04 ARM64
 
-获取系统环境对应的 DEB 或 RPM 安装包，将安装包复制到待安装 KWDB 的目标机器上，然后解压缩安装包：
+获取系统环境对应的 DEB 或 RPM 安装包后，将安装包复制到待安装 KWDB 的目标机器上，然后解压缩安装包：
 
 ```shell
 tar -zxvf <package_name>
@@ -115,7 +115,7 @@ KWDB 支持通过以下方式获取容器镜像：
 
 - KWDB 3.1.0 之前的版本
 
-  [下载](https://gitee.com/kwdb/kwdb/releases)系统环境对应的安装包，解压后在 `kwdb_install/packages` 目录下导入 `KaiwuDB.tar` 文件。
+  [下载](https://gitee.com/kwdb/kwdb/releases)容器安装包，解压后在 `kwdb_install/packages` 目录下导入 `KaiwuDB.tar` 文件。
 
   ```bash
   docker load < KaiwuDB.tar

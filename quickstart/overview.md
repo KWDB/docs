@@ -25,7 +25,7 @@ KWDB 提供多种部署方式，满足不同用户和场景的需求：
 
 
 ::: warning 提示
-KWDB 单节点部署支持 [基于 DRBD 的主备复制](../best-practices/single-ha.md)高可用方案。如果您计划实施高可用方案，请先参阅相关文档。
+KWDB 单节点部署支持[基于 DRBD 的主备复制](../best-practices/single-ha.md)高可用方案。如果您计划实施高可用方案，请先参阅相关文档。
 :::
 
 ## 使用 KWDB

@@ -11,7 +11,7 @@ id: uninstall-cluster
 
 对于通过脚本部署的 KWDB，在待卸载节点上执行以下操作：
 
-1. 登录安装部署 KWDB的初始节点。
+1. 登录安装部署 KWDB 的初始节点。
 2. 如果是集群部署，将 `kwdb_install` 目录传输到集群的所有其他节点。
     1. 登录远程节点。
 
@@ -29,7 +29,7 @@ id: uninstall-cluster
         ...    
         ```
 
-3. 在部署 KWDB的每个节点执行以下操作：
+3. 在部署 KWDB 的每个节点执行以下操作：
     1. 停止 KWDB 服务。
 
         ```shell
