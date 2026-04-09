@@ -97,6 +97,8 @@ The KWDB repository currently provides [DEB or RPM installation packages](https:
 
 - Ubuntu V20.04 x86_64
 - Ubuntu V20.04 ARM64
+- Ubuntu V22.04 x86_64
+- Ubuntu V22.04 ARM64
 
 After obtaining the DEB or RPM installation package for your system environment, copy the package to the target machine, then extract the installation package:
 

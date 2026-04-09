@@ -98,6 +98,8 @@ KWDB 支持在以下操作系统进行安装部署：
 
 - Ubuntu V20.04 x86_64
 - Ubuntu V20.04 ARM64
+- Ubuntu V22.04 x86_64
+- Ubuntu V22.04 ARM64
 
 获取系统环境对应的 DEB 或 RPM 安装包后，将安装包复制到待安装 KWDB 的目标机器上，然后解压缩安装包：
 
