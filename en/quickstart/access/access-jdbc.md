@@ -1,9 +1,9 @@
 ---
-title: Using JDBC Tool
+title: Using KaiwuDB JDBC
 id: access-jdbc
 ---
 
-# Using JDBC Tool
+# Using KaiwuDB JDBC
 
 After deploying KWDB, use KaiwuDB JDBC to connect and manage the database. This guide shows how to access and manage KWDB using JDBC.
 
