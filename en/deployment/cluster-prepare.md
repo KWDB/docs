@@ -122,7 +122,7 @@ KWDB supports obtaining container images through the following methods:
 
 - **KWDB versions before 3.1.0**
 
-  [Download](https://gitee.com/kwdb/kwdb/releases) the container installation package for your system, then import the `KaiwuDB.tar` file from the `kwdb_install/packages` directory.
+  [Download](https://gitee.com/kwdb/kwdb/releases) the container installation package, then import the `KaiwuDB.tar` file from the `kwdb_install/packages` directory.
 
   ```bash
   docker load < KaiwuDB.tar
@@ -139,7 +139,7 @@ KWDB supports obtaining container images through the following methods:
 
 ### Source Code Compilation and Installation
 
-Complete source code download and compilation according to the [KWDB Compilation and Installation Instructions](https://gitee.com/kwdb/kwdb/blob/master/README.en.md#compilation-and-installation).
+Follow the [KWDB Compilation and Installation Instructions](https://gitee.com/kwdb/kwdb#compilation-and-installation) to download, compile, and install from source code.
 
 ## Node Configuration
 

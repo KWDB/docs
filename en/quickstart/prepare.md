@@ -7,17 +7,17 @@ id: quickstart-prepare
 
 ## Hardware
 
-The following table lists the required hardware specifications for KWDB deployment.
+The following specifications are required for KWDB deployment:
 
-| Item | Requirements |
-| --- | --- |
-| CPU and Memory | We recommend a minimum of 4 CPU cores and 8GB RAM for single-node deployment. For workloads with large data volumes, complex operations, high concurrency, and high-performance scenarios, configure higher CPU and memory resources to ensure efficient system operation. |
-| Disk | - Use SSD or NVMe devices; avoid shared storage systems like NFS, CIFS, or CEPH.<br>- The disk must achieve 500 IOPS and 30 MB/s processing efficiency.<br>- When deploying single-node version using HDD disks, avoid using too many devices or too high write operations per second, as this significantly decreases data write performance.<br>- KWDB system startup requires minimal disk capacity (less than 1GB). The actual required disk size mainly depends on your workload. |
-| File System | We recommend using the ext4 file system. |
+| Item  | Requirements  |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| CPU and Memory | - Minimum: 4 CPU cores and 8 GB RAM per node <br> - For high-volume data, complex workloads, high concurrency, or performance-critical applications, allocate additional resources accordingly |
+| Disk       | - Recommended: SSD or NVMe devices<br>- Minimum performance: 500 IOPS and 30 MB/s throughput<br>- Storage: <1 GB for KWDB system, with additional space needed based on data volume<br>- Avoid shared storage (NFS, CIFS, CEPH)<br> - HDDs not recommended for distributed cluster deployments |
+| File System | ext4 recommended for optimal performance |
 
 ## Operating System
 
-KWDB supports the following operating systems:
+KWDB can be deployed on the following operating systems:
 
 | Operating System | Version | Bare Metal |Bare Metal | Container |Container |
 |---------|------|---------------|---------------|---------------|---------------|
@@ -38,35 +38,35 @@ KWDB supports the following operating systems:
 
 ::: warning Note
 
-- Container deployment requires Docker to be installed on the target machine. If not installed, see [Docker Official Installation Documentation](https://docs.docker.com/desktop/install/linux-install/) for installation. For environments without internet access, download Docker binary packages for offline installation. For details, see [Docker Offline Installation Guide](https://docs.docker.com/engine/install/binaries/).
-- Unmentioned operating system versions **may** run KWDB, but are not officially supported.
-
+- Container deployment requires Docker installed on the target machine. For new Docker installations, follow [Install Docker Engine](https://docs.docker.com/engine/install/). For offline Docker installations, see [Install Docker Engine from Binaries](https://docs.docker.com/engine/install/binaries/) and [Linux Post-Installation Steps for Docker Engine](https://docs.docker.com/engine/install/linux-postinstall/).
+- Operating systems or versions not listed above **may** work with KWDB but are not officially supported.
+- For installation packages not available on the [download page](https://gitee.com/kwdb/kwdb/releases/), contact [KWDB Technical Support](https://www.kaiwudb.com/support/).
 :::
 
 ## Software Dependencies
 
 ### Bare-Metal Deployment
 
-The following table lists the required dependencies for the target machine:
+The following table lists the dependencies that need to be installed on the target machine.
 
 | Dependency | Version | Description |
 | --- | --- | --- |
 | OpenSSL | v1.1.1+ | N/A |
-| libprotobuf | v3.6.1 ~ v21.x | The default libprotobuf version in Ubuntu 18.04 is lower than required. You need to install a higher version before deployment. |
+| libprotobuf | v3.6.1 ~ v21.x | **Note**: The default libprotobuf version in Ubuntu 18.04 does not meet the requirements. Users need to install the required version in advance (3.6.1 and 3.12.4 are recommended).|
 | GEOS | v3.3.8+ | Optional dependency |
 | xz-libs | v5.2.0+ | N/A |
 | libgcc | v7.3.0+ | N/A |
 | libgflags | System default | N/A |
 | libkrb5 | System default | N/A |
 
-During installation, KWDB checks dependencies. If dependencies are missing, the installation exits and prompts for missing dependencies. If the target machine cannot access the internet, download all dependency files on a machine with internet access, then copy them to the target machine for installation.
+During installation, KWDB verifies the necessary dependencies. If any are missing, the installation process will halt and prompt you to install them. If the target machine is offline, you will need to download the required dependencies from an internet-connected device and then transfer the files to the target machine.
 
 ### Container Deployment
 
-When using [script](./deploy/deploy-script.md) for deployment, the target machine needs to have Docker Compose (version 1.20.0 and above) installed.
+For deployment using scripts, Docker Compose (version 1.20.0 or higher) is required.
 
-- Online installation: See [Docker Compose Official Installation Documentation](https://docs.docker.com/compose/install/)
-- Offline installation: See [Docker Compose Offline Installation Guide](https://docs.docker.com/compose/install/standalone/)
+- For online installation instructions, see [Install Docker Compose](https://docs.docker.com/compose/install/).
+- For offline installation instructions, see [Install Docker Compose Standalone](https://docs.docker.com/compose/install/standalone/).
 - Quick installation for Ubuntu/Debian systems:
 
     ```shell
@@ -75,27 +75,27 @@ When using [script](./deploy/deploy-script.md) for deployment, the target machin
 
 ## Port Requirements
 
-The following table lists the default ports used by KWDB services. You can modify these ports during installation and deployment if needed.
+Ensure these default ports are available and not blocked by firewalls. Port settings can be modified during installation.
 
-| Port | Description |
-| --- | --- |
-| `8080` | Database web service port |
-| `26257` | Database service port and external connection port |
+| Port        | Description |
+| ----------- | ----------- |
+| `8080`      | Port for HTTP requests and web services |
+| `26257`     | Port for connections of clients, applications, and other nodes |
 
 ## Installation Packages, Container Images, and Compilation Versions
 
-Obtain installation packages, container images, or source code compilation versions based on different usage scenarios:
+Obtain installation packages, container images, or source code compilation versions based on your scenarios:
 
 ### Installation Packages
 
-Currently, the KWDB open-source repository provides [DEB or RPM installation packages](https://gitee.com/kwdb/kwdb/releases/) for the following systems and architectures. For installation packages of other systems or architectures, please contact [KWDB Technical Support](https://www.kaiwudb.com/support/):
+The KWDB repository currently provides [DEB or RPM installation packages](https://gitee.com/kwdb/kwdb/releases/) for the following systems and architectures. For packages for other systems or architectures, please contact [KWDB Technical Support](https://www.kaiwudb.com/support/).
 
 - Ubuntu V20.04 x86_64
 - Ubuntu V20.04 ARM64
 - Ubuntu V22.04 x86_64
 - Ubuntu V22.04 ARM64
 
-After obtaining the DEB or RPM installation package for your system environment, copy the package to the target machine where KWDB will be installed, then extract the installation package:
+After obtaining the DEB or RPM installation package for your system environment, copy the package to the target machine, then extract the installation package:
 
 ```shell
 tar -zxvf <package_name>
@@ -103,13 +103,13 @@ tar -zxvf <package_name>
 
 The extracted directory contains the following files:
 
-| File | Description |
-| --- | --- |
-| `add_user.sh` | Creates users for the KWDB database after installation and startup. |
-| `deploy.cfg` | Configuration file for setting up node IP addresses, ports, and other deployment settings. |
-| `deploy.sh` | Deployment script for installation, uninstallation, startup, status checks, shutdown, and restart operations. |
-| `packages` directory | Contains DEB or RPM packages.<br>**Note**: Specific files included vary by package type. |
-| `utils` directory | Contains utility scripts. |
+| File/Folder         | Description                                               |
+|-------------------|-----------------------------------------------------------|
+| `add_user.sh`     | Script for creating KWDB users after installation and startup.           |
+| `deploy.cfg`      | Configuration file for node IP addresses, ports, and other options. |
+| `deploy.sh`       | Script for KWDB installation, uninstallation, start, status check, and stop operations. |
+| `packages`  | Stores DEB or RPM packages. <br>**Note**: Specific files included vary by installation package type.                                   |
+| `utils`      | Stores utility scripts.                                             |
 
 ### Container Images
 
@@ -117,7 +117,7 @@ KWDB supports obtaining container images through the following methods:
 
 - **KWDB versions before 3.1.0**
 
-  [Download](https://gitee.com/kwdb/kwdb/releases) the installation package for your system, then import the `KaiwuDB.tar` file from the `kwdb_install/packages` directory.
+  [Download](https://gitee.com/kwdb/kwdb/releases) the container installation package, then import the `KaiwuDB.tar` file from the `kwdb_install/packages` directory.
 
   ```bash
   docker load < KaiwuDB.tar
