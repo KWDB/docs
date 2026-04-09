@@ -39,4 +39,4 @@ After deployment, you can connect to KWDB and manage database operations using a
 
 ## Uninstalling KWDB
 
-If you need to uninstall KWDB, see [Uninstall KWDB Database](../deployment/uninstall-cluster.md).
+If you need to uninstall KWDB, see [Uninstall KWDB](../deployment/uninstall-cluster.md).

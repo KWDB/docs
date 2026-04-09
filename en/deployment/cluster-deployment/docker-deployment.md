@@ -187,4 +187,4 @@ This section describes how to deploy a KWDB cluster on a single machine using th
           docker exec kaiwudb bash -c "./kwbase sql --host=$host_ip --certs-dir=$cert_path -e \"create user $username with password \\\"$user_password\\\";grant admin to $username with admin option;\""
           ```
 
-5. After deployment is complete, you can connect to and manage KWDB via [kwbase CLI](../../quickstart/access/access-cli.md), [KaiwuDB Supported Connectors](../../development/overview.md), or [KaiwuDB Developer Center](../../kaiwudb-tools/kaiwudb-developer-center/overview.md).
+5. After deployment is complete, you can connect to and manage KWDB via [kwbase CLI](../../quickstart/access/access-cli.md), [KWDB Supported Connectors](../../development/overview.md), or [KaiwuDB Developer Center](../../kaiwudb-tools/kaiwudb-developer-center/overview.md).

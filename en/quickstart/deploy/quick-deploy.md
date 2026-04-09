@@ -150,5 +150,5 @@ Check the following items:
 
 To change the configuration after a quick deployment:
 
-1. Uninstall the current deployment (see [Uninstall Clusters](../../deployment/uninstall-cluster.md)).
+1. Uninstall the current deployment (see [Uninstall KWDB](../../deployment/uninstall-cluster.md)).
 2. Redeploy using [script](./deploy-script.md) or [Docker Run](./deploy-docker-run.md) for more advanced configuration options.

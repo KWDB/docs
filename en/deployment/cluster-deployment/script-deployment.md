@@ -9,6 +9,15 @@ During deployment, the system verifies configuration files, runtime environment,
 
 All deployment activities are logged in the `log` directory within `kwdb_install`. If an error occurs during deployment, you can find error prompts in the terminal output and detailed information in the log files.
 
+After bare-metal script deployment, the system packages KWDB as a system service (named `kaiwudb`) and generates the following files:
+
+- `kaiwudb.service`: Configures KWDB CPU resource usage.
+- `kaiwudb_env`: Configures KWDB startup flags.
+
+After container script deployment, the system generates a Docker Compose configuration file `docker-compose.yml` for configuring KWDB startup flags and CPU resource usage.
+
+For specific configuration instructions, see [Cluster Configuration](../../db-operation/cluster-settings-config.md).
+
 ## Prerequisites
 
 **System Requirements**:
@@ -80,7 +89,7 @@ All deployment activities are logged in the `log` directory within `kwdb_install
     | | `kaiwudb_port` | Port for client, application and node connections (default: `26257`). |
     | | `brpc_port` | The brpc communication port between KWDB time-series engines, used for inter-node communication (default: `27257`). |
     | | `data_root` | Data directory (default: `/var/lib/kaiwudb`). |
-    | | `cpu` | (Optional) Specifies CPU usage for KWDB on the node. The default is unlimited. The value range is [0,1], with a precision of up to two decimal places. After deployment, you can also adjust the CPU resource limit for KWDB. For more information, see [Cluster Settings Configuration](../../db-operation/cluster-settings-config.md).<br>**Note:** For bare-metal deployment, if the environment is Ubuntu 18.04, you need to modify the `CPUQuota` value in the `kaiwudb.service` file after the deployment is complete. Specifically, change any decimal values to integers (e.g., change `180.0%` to `180%`) to ensure the setting takes effect. For instructions, see [Configure CPU Resource Usage](../../db-operation/cluster-settings-config.md#cpu-resource-usage-configuration). |
+    | | `cpu` | (Optional) Specifies CPU usage for KWDB on the node. The default is unlimited. The value range is [0,1], with a precision of up to two decimal places. After deployment, you can also adjust the CPU resource limit for KWDB.<br>**Note:** For bare-metal deployment, if the environment is Ubuntu 18.04, you need to modify the `CPUQuota` value in the `kaiwudb.service` file after the deployment is complete. Specifically, change any decimal values to integers (e.g., change `180.0%` to `180%`) to ensure the setting takes effect. For instructions, see [Configure CPU Resource Usage](../../db-operation/cluster-settings-config.md#cpu-resource-usage-configuration). |
     | **local** | `node_addr` | The IP address for client and application connection. The default listening address is `0.0.0.0`, meaning the node will listen on `kaiwudb_port` across all IP addresses on the host. |
     | **cluster** | `cluster_node_ips` | The IP addresses of remote nodes. The IP addresses of each node should be separated by commas (`,`), and there must be at least two remote nodes. |
     | | `ssh_port` | The SSH port used for remote node access; it must be identical across all nodes. |
@@ -199,4 +208,4 @@ All deployment activities are logged in the `log` directory within `kwdb_install
     [ADD USER COMPLETED]:User creation completed.
     ```
 
-8. Connect to and manage KWDB via [kwbase CLI](../../quickstart/access/access-cli.md), [KaiwuDB Supported Connectors](../../development/overview.md), or [KaiwuDB Developer Center](../../kaiwudb-tools/kaiwudb-developer-center/overview.md).
+8. Connect to and manage KWDB via [kwbase CLI](../../quickstart/access/access-cli.md), [KWDB Supported Connectors](../../development/overview.md), or [KaiwuDB Developer Center](../../kaiwudb-tools/kaiwudb-developer-center/overview.md).

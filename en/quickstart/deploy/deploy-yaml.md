@@ -7,37 +7,30 @@ id: quickstart-yaml
 
 ## Prerequisites
 
-- Obtained KWDB [container installation package](../prepare.md#installation-packages).
+- Obtained KWDB [docker image](../prepare.md#installation-packages-container-images-and-compilation-versions).
 - The hardware, operating system, software dependencies, and ports of the node to be deployed meet the [installation deployment requirements](../prepare.md).
-- Installation user is root or a regular user with `sudo` privileges.
-  - Root users and regular users configured with `sudo` passwordless access do not need to enter a password when executing deployment scripts.
-  - Regular users without `sudo` passwordless configuration need to enter a password for privilege escalation when executing deployment scripts.
-- For non-root installation users, the user needs to be added to the `docker` group using `sudo usermod -aG docker $USER`.
+- The user performing the installation is the `root` user or a regular user with `sudo` privileges:
+  - `root` users or users with passwordless `sudo` configured will not be prompted for a password during script execution.
+  - Users without passwordless `sudo` will be prompted to enter a password to escalate privileges.
+- If the user is not a `root` user, add the user to the `docker` group by running `sudo usermod -aG docker $USER`.
 
 ## Steps
 
-1. Import the `KaiwuDB.tar` file in the `kwdb_install/packages` directory to get the image name.
-
-    ```shell
-    docker load < KaiwuDB.tar
-    Loaded image: "$kwdb_image"
-    ```
-
-2. Create a `docker-compose.yml` configuration file.
+1. Create the `docker-compose.yml` configuration file.
 
     ::: warning Note
-    The value of the `image` parameter must be the image name obtained after importing the `KaiwuDB.tar` file.
+    The `image` parameter must match the image name obtained after importing the `KaiwuDB.tar` file or the pulled image name.
     :::
 
-    Configuration file example:
+    Example:
 
     ```yaml
     version: '3.3'
     services:
       kwdb-container:
-        image: "$kwdb_image"
-        container_name: kwdb-experience
-        hostname: kwdb-experience
+        image: "kwdb/kwdb:3.0.0"
+        container_name: kaiwudb-experience
+        hostname: kaiwudb-experience
         ports:
           - 8080:8080
           - 26257:26257
@@ -59,9 +52,9 @@ id: quickstart-yaml
             /kaiwudb/bin/kwbase start-single-node --insecure --listen-addr=0.0.0.0:26257 --advertise-addr=127.0.0.1:26257 --http-addr=0.0.0.0:8080 --store=/kaiwudb/deploy/kaiwudb
     ```
 
-3. Quickly start KWDB.
+2. Sart KWDB.
 
-    ```shell
+    ```bash
     docker-compose up -d
     ```
-4. After deployment is complete, you can connect to and manage KWDB via [kwbase CLI](../access/access-cli.md), [KaiwuDB JDBC](../access/access-jdbc.md), or [KaiwuDB Developer Center](../access/access-kdc.md).
+3. After deployment is complete, you can connect to and manage KWDB via [kwbase CLI](../access/access-cli.md), [KaiwuDB JDBC](../access/access-jdbc.md), or [KaiwuDB Developer Center](../access/access-kdc.md).

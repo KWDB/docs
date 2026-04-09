@@ -82,15 +82,24 @@ The following table lists the default ports used by KWDB services. You can modif
 | `8080` | Database web service port |
 | `26257` | Database service port and external connection port |
 
-## Installation Packages
+## Installation Packages, Container Images, and Compilation Versions
 
-Obtain the appropriate installation package for your system, copy it to the target machine, and extract it:
+Obtain installation packages, container images, or source code compilation versions based on different usage scenarios:
+
+### Installation Packages
+
+Currently, the KWDB open-source repository provides [DEB or RPM installation packages](https://gitee.com/kwdb/kwdb/releases/) for the following systems and architectures. For installation packages of other systems or architectures, please contact [KWDB Technical Support](https://www.kaiwudb.com/support/):
+
+- Ubuntu V20.04 x86_64
+- Ubuntu V20.04 ARM64
+
+After obtaining the DEB or RPM installation package for your system environment, copy the package to the target machine where KWDB will be installed, then extract the installation package:
 
 ```shell
 tar -zxvf <package_name>
 ```
 
-The extracted directory contains these files:
+The extracted directory contains the following files:
 
 | File | Description |
 | --- | --- |

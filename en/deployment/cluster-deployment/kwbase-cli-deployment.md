@@ -221,4 +221,4 @@ This section describes how to deploy a KWDB cluster on a single machine using th
             grant admin to $username with admin option;"
         ```
 
-7. After deployment is complete, you can connect to and manage KWDB via [kwbase CLI](../../quickstart/access/access-cli.md), [KaiwuDB Supported Connectors](../../development/overview.md), or [KaiwuDB Developer Center](../../kaiwudb-tools/kaiwudb-developer-center/overview.md).
+7. After deployment is complete, you can connect to and manage KWDB via [kwbase CLI](../../quickstart/access/access-cli.md), [KWDB Supported Connectors](../../development/overview.md), or [KaiwuDB Developer Center](../../kaiwudb-tools/kaiwudb-developer-center/overview.md).

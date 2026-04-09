@@ -7,7 +7,7 @@ id: quickstart-docker
 
 ## Prerequisites
 
-- Obtained KWDB [container installation package](../prepare.md#installation-packages).
+- Obtained KWDB [docker image](../prepare.md#installation-packages-container-images-and-compilation-versions).
 - The hardware, operating system, software dependencies, and ports of the node to be deployed meet the [installation deployment requirements](../prepare.md).
 - Installation user is root or a regular user with `sudo` privileges.
   - Root users and regular users configured with `sudo` passwordless access do not need to enter a password when executing deployment scripts.
@@ -16,14 +16,7 @@ id: quickstart-docker
 
 ## Steps
 
-1. Import the `KaiwuDB.tar` file in the `kwdb_install/packages` directory to get the image name.
-
-    ```shell
-    docker load < KaiwuDB.tar
-    Loaded image: "$kwdb_image"
-    ```
-
-2. (Optional) To deploy KWDB in secure mode, use the following command to create the database certificate authority, client certificate for the `root` user, and node server certificate.
+1. (Optional) To deploy KWDB in secure mode, use the following command to create the database certificate authority, client certificate for the `root` user, and node server certificate.
 
     ```shell
     docker run --rm --privileged \
@@ -39,14 +32,14 @@ id: quickstart-docker
     
     | Parameter | Description |
     |---|---|
-    | `--rm` | Automatically delete the container after it stops. |
-    | `--privileged` | Grant extended privileges to the container. |
-    | `-v` | Set container directory mapping, mounting the host's `/etc/kaiwudb/certs` directory to the container's `/kaiwudb/certs` directory for storing certificates and keys. |
-    | `-w /kaiwudb/bin` | Set the working directory in the container to `/kaiwudb/bin`. |
-    | `$kwdb_image` | Container image, needs to be filled with the actual image name and tag, for example `kwdb:3.0.0`. |
-    | `bash -c` | Execute the following certificate creation commands in the container, where:<br>- `./kwbase cert create-ca`: Create certificate authority (CA), generate CA certificate and key.<br>- `./kwbase cert create-client root`: Create client certificate and key for `root` user.<br>- `./kwbase cert create-node 127.0.0.1 localhost 0.0.0.0`: Create node certificate and key, supporting access through three network identifiers: local loopback address (`127.0.0.1`), local hostname (`localhost`), and all network interfaces (`0.0.0.0`).<br>- All commands use `--certs-dir=/kaiwudb/certs` to specify certificate storage directory and `--ca-key=/kaiwudb/certs/ca.key` to specify key path. |
+    | `--rm` | Automatically removes the container after it stops. |
+    | `--privileged` | Grants extended privileges to the container. |
+    | `-v` | Mounts the host's `/etc/kaiwudb/certs` directory to the container's `<certs_dir>` directory for certificate and key storage. |
+    | `-w /kaiwudb/bin` | Sets the working directory inside the container to `/kaiwudb/bin`. |
+    | `kwdb_image` | Container image name and tag (e.g., `kwdb:3.0.0`). |
+    | `bash -c` | Executes the following certificate creation commands within the container:<br>- `./kwbase cert create-ca`: Creates a certificate authority (CA), generating CA certificates and keys.<br>- `./kwbase cert create-client root`: Creates client certificates and keys for the `root` user.<br>- `./kwbase cert create-node 127.0.0.1 localhost 0.0.0.0`: Creates node server certificates and keys, supporting access through three network identifiers: local loopback address (`127.0.0.1`), local hostname (`localhost`), and all network interfaces (`0.0.0.0`).<br>- `--certs-dir=<certs_dir>`: Specifies the certificate storage directory.<br>- `--ca-key=<certs_dir>/ca.key`: Specifies the CA key path.|
 
-3. Start the KWDB database.
+2. Start the KWDB database.
 
     - Insecure mode
 
@@ -91,30 +84,30 @@ id: quickstart-docker
 
     | Parameter | Description |
     |---|---|
-    | `-d` | Run container in background and return container ID. |
-    | `--name` | Specify container name for subsequent management. |
-    | `--privileged` | Grant extended privileges to the container. |
-    | `--ulimit memlock=-1` | Remove container memory size limit. |
-    | `--ulimit nofile=$max_files` | Set the maximum number of files that processes in the container can open. |
-    | `-p` | Port mapping, mapping database service port (26257) and HTTP port (8080) respectively.|
-    | `-v` | Set container directory mapping:<br>- Mount the host's `/var/lib/kaiwudb` directory to the container's `/kaiwudb/deploy/kaiwudb-container` directory for persistent data storage.<br>- In secure mode, mount the host's `/etc/kaiwudb/certs` directory to the container's `/kaiwudb/certs` directory for storing certificates and keys. |
-    | `--ipc shareable` | Allow other containers to share this container's IPC namespace. |
-    | `-w /kaiwudb/bin` | Set the working directory in the container to `/kaiwudb/bin`. |
-    | `$kwdb_image` | Container image variable, needs to be replaced with the actual image name and tag, for example `kwdb:3.0.0`. |
-    | `./kwbase start` | Database startup command running in the container, which varies depending on secure and Insecure modes:<br>- `--insecure`: (Insecure mode only) Run in Insecure mode.<br>- `--certs-dir=/kaiwudb/certs`: (Secure mode) Certificate directory location.<br>- `--listen-addr=0.0.0.0:26257`: Database listening address and port.<br>- `--http-addr=0.0.0.0:8080`: HTTP interface listening address and port.<br>- `--store=/kaiwudb/deploy/kaiwudb-container`: Specify data storage location.|
+    | `-d` | Runs the container in the background and returns the container ID. |
+    | `--name` | Specifies the container name for easier management. |
+    | `--privileged` | Grants extended privileges to the container. |
+    | `--ulimit memlock=-1` | Removes container memory size limit. |
+    | `--ulimit nofile=$max_files` | Sets the maximum number of file descriptors that can be opened concurrently by processes within the container. |
+    | `-p` | Maps ports between host and container (database service port 26257 and HTTP port 8080). |
+    | `-v` | Sets up volume mounts:<br>- Mounts host's `/var/lib/kaiwudb` directory to container's `/kaiwudb/deploy/kwdb-container` directory for persistent data storage.<br>- In secure mode, mounts host's `/etc/kaiwudb/certs` directory to container's `<certs_dir>` directory for certificate and key storage. |
+    | `--ipc shareable` | Allows other containers to share this container's IPC namespace. |
+    | `-w /kaiwudb/bin` | Sets the working directory inside the container to `/kaiwudb/bin`. |
+    | `kwdb_image` | Container image variable (replace with actual image name and tag, e.g., `kwdb:3.0.0`). |
+    | `./kwbase start` | Database startup command with different flags for different mode:<br>- `--insecure`: (Insecure mode only) Runs in insecure mode.<br>- `--certs-dir=<certs_dir>`: (Secure mode) Specifies certificate directory location.<br>- `--listen-addr=0.0.0.0:26257`: Address and port for database client connections.<br>- `--http-addr=0.0.0.0:8080`: Address and port for the web-based admin UI and API endpoints.<br>- `--store=/kaiwudb/deploy/kwdb-container`: Specifies data storage location.|
 
-4. (Optional) Create a database user and grant admin privileges. If this step is skipped, the system will default to using the user that deployed the database without requiring a password to access the database.
+3. (Optional) Create a database user and grant administrator privileges to the user. If skipped, the system will use database deployment user by default, and no password is required to access the database.
 
       - Insecure mode (without password):
 
           ```bash
-          docker exec kaiwudb bash -c "./kwbase sql --insecure --host=$host_ip -e \"create user $username;grant admin to $username with admin option;\""
+          docker exec kwdb bash -c "./kwbase sql --insecure --host=<host_ip> -e \"create user <username>;grant admin to <username> with admin option;\""
           ```
 
       - Secure mode (with password):
 
           ```bash
-          docker exec kaiwudb bash -c "./kwbase sql --host=$host_ip --certs-dir=$cert_path -e \"create user $username with password \\\"$user_password\\\";grant admin to $username with admin option;\""
+          docker exec kwdb bash -c "./kwbase sql --host=<host_ip> --certs-dir=<cert_dir> -e \"create user <username> with password \\\"<user_password>\\\";grant admin to <username> with admin option;\""
           ```
 
-5. After deployment is complete, you can connect to and manage KWDB via [kwbase CLI](../access/access-cli.md), [KaiwuDB JDBC](../access/access-jdbc.md), or [KaiwuDB Developer Center](../access/access-kdc.md).
+4. After deployment is complete, you can connect to and manage KWDB via [kwbase CLI](../access/access-cli.md), [KaiwuDB JDBC](../access/access-jdbc.md), or [KaiwuDB Developer Center](../access/access-kdc.md).

@@ -5,7 +5,7 @@ id: access-jdbc
 
 # KaiwuDB JDBC
 
-KaiwuDB JDBC 驱动程序是 KaiwuDB 官方提供的 Java 连接器，支持执行查询、插入、更新和删除等数据库操作。
+KaiwuDB JDBC 驱动程序是 KWDB 官方提供的 Java 连接器，支持执行查询、插入、更新和删除等数据库操作。
 
 本文介绍如何使用 KaiwuDB JDBC 访问和管理 KWDB 数据库。
 

@@ -7,62 +7,46 @@ id: quickstart-cli
 
 ## Prerequisites
 
-- Obtained KWDB [bare-metal installation package](../prepare.md#installation-packages).
+- KWDB source code is compiled and installed according to [KWDB Compilation and Installation Instructions](https://gitee.com/kwdb/kwdb/blob/master/README.en.md#compilation-and-installation)..
 - The hardware configuration, operating system, software dependencies, and ports of the node to be deployed meet the [installation deployment requirements](../prepare.md).
 - Installation user is `root` or a regular user with `sudo` privileges.
 
 ::: warning Note
 
-The kwbase CLI deployment method described in this section **only applies to bare-metal deployment** and is not suitable for container deployment. For container deployment, please refer to [Docker Run Deployment](./deploy-docker-run.md).
+The kwbase CLI deployment method described in this section **only applies to bare-metal deployment**.
 
 :::
 
 ## Steps
 
-1. Log in to the node to be deployed and enter the `packages` directory under the installation package directory.
-
-2. Install dependency packages and server components.
-
-   - DEB package systems (Debian/Ubuntu):
-
-     ```bash
-     dpkg -i ./kaiwudb-libcommon-<version>.deb ./kaiwudb-server-<version>.deb
-     ```
-
-   - RPM package systems (CentOS/RHEL):
-
-     ```bash
-     rpm -ivh ./kaiwudb-libcommon-<version>.rpm ./kaiwudb-server-<version>.rpm
-     ```
-
-3. Switch to the program directory:
+1. Navigate to the directory where the `kwbase` script is located:
 
    ```bash
-   cd /usr/local/kaiwudb/bin
+   cd /home/go/src/gitee.com/kwbasedb/install/bin
    ```
 
-4. (Optional) If you need to use secure deployment mode, execute the following steps to create certificates:
+2. (Optional) For secure mode, create certificates and keys by following these steps:
 
-    1. Create certificate storage directory:
+   1. Create a directory to store the certificates and keys:
 
         ```bash
-        mkdir -p /usr/local/kaiwudb/certs
+        mkdir -p <certs_dir>
         ```
 
-    2. Generate certificates and keys.
+   2. Generate certificates and keys:
 
         ```bash
         # Create database certificate authority and key
-        ./kwbase cert create-ca --certs-dir=/usr/local/kaiwudb/certs --ca-key=/usr/local/kaiwudb/certs/ca.key && \
-        
-        # Create client certificate and key for database installation user (replace USERNAME with actual username)
-        ./kwbase cert create-client $USERNAME --certs-dir=/usr/local/kaiwudb/certs --ca-key=/usr/local/kaiwudb/certs/ca.key && \
-        
-        # Create node server certificate and key
-        ./kwbase cert create-node 127.0.0.1 localhost 0.0.0.0 --certs-dir=/usr/local/kaiwudb/certs --ca-key=/usr/local/kaiwudb/certs/ca.key
+        ./kwbase cert create-ca --certs-dir=<certs_dir> --ca-key=<certs_dir>/ca.key && \
+
+        # Create client certificate and key for database installation user (replace username with actual username)
+        ./kwbase cert create-client <username> --certs-dir=<certs_dir> --ca-key=<certs_dir>/ca.key && \
+
+        # Create node certificate and key
+        ./kwbase cert create-node 127.0.0.1 localhost 0.0.0.0 --certs-dir=<certs_dir> --ca-key=<certs_dir>/ca.key
         ```
 
-5. Start the database.
+3. Start the database.
 
     - Insecure mode:
 
@@ -77,13 +61,13 @@ The kwbase CLI deployment method described in this section **only applies to bar
 
         ```bash
         ./kwbase start-single-node \
-            --certs-dir=/usr/local/kaiwudb/certs \
+            --certs-dir=<certs_dir> \
             --listen-addr=0.0.0.0:26257 \
             --http-addr=0.0.0.0:8080 \
             --store=/var/lib/kaiwudb
         ```
 
-6. Check database status.
+4. Check database status.
 
     - Insecure mode:
 
@@ -94,25 +78,25 @@ The kwbase CLI deployment method described in this section **only applies to bar
     - Secure mode:
 
         ```bash
-        ./kwbase node status --certs-dir=/usr/local/kaiwudb/certs --host=<address_of_any_alive_node>
+        ./kwbase node status --certs-dir=<certs_dir> --host=<address_of_any_alive_node>
         ```
 
-7. (Optional) Create a database user and grant admin privileges. If this step is skipped, the system will default to using the user that deployed the database without requiring a password to access the database.
+5. (Optional) Create a database user and grant administrator privileges to the user. If this step is skipped, the system will use database deployment user by default, and no password is required to access the database.
 
     - Insecure mode (without password):
 
         ```bash
-        ./kwbase sql --host=127.0.0.1:$local_port --insecure \
-        -e "create user $username; \
-            grant admin to $username with admin option;"
+        ./kwbase sql --host=127.0.0.1:<local_port> --insecure \
+        -e "create user <username>; \
+            grant admin to <username> with admin option;"
         ```
 
     - Secure mode (with password):
 
         ```bash
-        ./kwbase sql --certs-dir=/usr/local/kaiwudb/certs --host=127.0.0.1:$local_port \
-        -e "create user $username with password \"$user_password\"; \
-            grant admin to $username with admin option;"
+        ./kwbase sql --certs-dir=<certs_dir> --host=127.0.0.1:<local_port> \
+        -e "create user <username> with password \"<user_password>\"; \
+            grant admin to <username> with admin option;"
         ```
 
-8. After deployment is complete, you can connect to and manage KWDB via [kwbase CLI](../access/access-cli.md), [KaiwuDB JDBC](../access/access-jdbc.md), or [KaiwuDB Developer Center](../access/access-kdc.md).
+6. After deployment, connect to and manage KWDB using [kwbase CLI](../access/access-cli.md), [KaiwuDB JDBC](../access/access-jdbc.md), or [KaiwuDB Developer Center](../access/access-kdc.md).

@@ -1,38 +1,41 @@
 ---
-title: kwbase CLI
+title: Using the kwbase CLI Tool
 id: access-cli
 ---
 
-# kwbase CLI
+# Using the kwbase CLI Tool
 
-kwbase is a built-in command-line tool provided by KaiwuDB. Users can connect to KWDB through kwbase for database operations and management, supporting both secure mode (for production environments) and insecure mode (for testing).
+This section explains how to connect to and manage KWDB using kwbase, the built-in command-line interface (CLI) client. You can connect in either insecure mode for testing purposes or secure modes for production environments.
 
-If KWDB is deployed using scripts, the system will also automatically generate a convenient `kw-sql` script and create a soft link `kw-sql` in the `/usr/bin` directory. This script encapsulates the kwbase connection command, allowing root users to quickly log in to the database.
+When you deploy KWDB using scripts, the system automatically generates a `kw-sql` helper script and creates a symbolic link in the `/usr/bin` directory. This script wraps the kwbase connection command, allowing the root user to quickly access the database.
 
-## Connecting to KWDB
+## Connect to KWDB
 
-### Quick Login Using Convenient Script
+### Quick Login Using the Helper Script
 
 ::: warning Note
-`kw-sql` does not support specifying other users. If you need to use other users or three-role separation mode, please use the kwbase command to log in.
+The `kw-sql` script does not support other users. To connect as a different user, use the kwbase command instead.
 :::
 
-**Prerequisites**:
+**Prerequisites**
 
-KWDB has been deployed and started using the `deploy.sh` script.
+KWDB is deployed and started using the `deploy.sh` script.
 
-**Steps**:
+**Steps**
 
-1. Execute the following command at any location on the node to connect to the database using the root user:
+1. Run the following command from anywhere on the node to connect as root:
 
     ```shell
     kw-sql
     ```
 
-### Connecting Using kwbase Command
+### Connect Using the kwbase Command
 
-::: warning Tip
-If using container deployment, use the following command format to connect to the database:
+You can also connect directly using the kwbase command. This method lets you specify different users and configure various connection parameters for more flexibility.
+
+::: warning Note
+For containerized deployments, use this command format:
+
 ```bash
 docker exec -it <container-name> ./kwbase sql [security-options] --host=<your-host-ip> [-u <user-name>]
 ```
@@ -40,37 +43,38 @@ docker exec -it <container-name> ./kwbase sql [security-options] --host=<your-ho
 
 #### Insecure Mode
 
-::: warning Tip
-Insecure mode should only be used in testing environments.
+::: warning Note
+Use insecure mode only in testing environments.
 :::
 
 **Prerequisites**
-- KWDB deployed and started in insecure mode.
+
+- KWDB deployed and running in insecure mode
 
 **Steps**
 
-- Connect to KWDB using the user who deployed the database.
+- Connect as the database deployment user.
 
     ```shell
     ./kwbase sql --insecure --host=<your-host-ip>
     ```
 
-- Regular user connecting to KWDB.
+- Create and connect as a regular user.
 
-    1. Connect to KWDB using the user who deployed the database.
+    1. Connect as the database deployment user.
 
         ```shell
         ./kwbase sql --insecure --host=<your-host-ip>
         ```
 
-    2. Create a regular user.
+    2. Create a user.
 
         ```sql
         CREATE USER user1;
         ```
 
-    3. Exit the login.
-    4. New user connects to KWDB.
+    3. Log out.
+    4. Connect as the new user.
 
         ```shell
         ./kwbase sql --insecure --host=<your-host-ip> -u user1
@@ -78,68 +82,69 @@ Insecure mode should only be used in testing environments.
 
 #### Secure Mode
 
-KWDB supports users logging in with certificates or passwords by default. The following examples demonstrate how administrator users and regular users log in to the database securely in standard secure mode. For details on other authentication methods, see [Identity Authentication and Authorization](../../db-security/identity-authn.md).
+The following examples show how administrators and regular users can securely log in to KWDB using a certificate. By default, KWDB supports authentication via certificate or password. For more information on other authentication methods, see [Identity Authentication](../../db-security/identity-authn.md).
 
 **Prerequisites**
 
-- KWDB deployed and started in secure mode.
+- KWDB deployed and running in secure mode
 
 **Steps**
 
-- Connect to KWDB using the user who deployed the database.
+- Connect as the database deployment user.
 
     ```shell
     ./kwbase sql --certs-dir=<certs-dir> --host=<your-host-ip> 
     ```
 
-- Regular user connecting to KWDB.
-
-    1. Connect to KWDB using the user who deployed the database.
+- Create and connect as a regular user.
+    1. Connect as the database deployment user.
 
         ```shell
         ./kwbase sql --certs-dir=<certs-dir> --host=<your-host-ip> 
         ```
 
-    2. Create a regular user.
+    2. Create a user.
 
         ```sql
         CREATE USER user1;
         ```
 
-    3. Generate a certificate for the new user.
+    3. Log out.
+    4. Generate a certificate for the new user.
 
         ```shell
         ./kwbase cert create-client user1 --certs-dir=<certs-dir> --ca-key=<certs-dir>/ca.key
         ```
 
-    4. Exit the login.
-    5. New user connects to KWDB.
+    5. Connect as the new user.
 
         ```shell
         ./kwbase sql --certs-dir=<certs-dir> --host=<your-host-ip> -u user1
         ```
 
-## Managing KWDB
+## Manage KWDB
 
-This section demonstrates how to use the kwbase CLI tool to manage KWDB's multi-model database through monitoring scenarios, including:
+This section demonstrates how to use kwbase CLI to manage KWDB multi-model database through monitoring scenarios, including:
 
-- **Relational data operations**: Managing relatively static basic data, such as device information, user profiles, etc.
-- **Time-series data operations**: Processing dynamic data that changes over time series, such as sensor readings, monitoring metrics, etc.
-- **Cross-modal queries**: Achieving multi-model data fusion analysis through joint queries of relational and time-series databases.
+- Relational Data Operations: Managing relatively static data, such as device information and user profiles
+- Time-Series Data Operations: Processing time-varying dynamic data, such as sensor readings and monitoring metrics
+- Cross-Model Queries: Performing queries across relational and time-series databases for comprehensive multi-model data analytics
 
 ### Relational Data Operations
 
-#### Creating Database and Tables
+#### Create Relational Database and Table
 
-1. Create and use relational databases:
+1. Create and use a relational database:
+
     ```sql
-    -- Create relational database
+    -- Create a relational database
     CREATE DATABASE device_info;
-    -- Switch to specified database
+    -- Switch to the specified database
     USE device_info;
     ```
 
-2. Create device tables:
+2. Create a devices table:
+
     ```sql
     CREATE TABLE devices (
         device_id INT PRIMARY KEY,        -- Device ID
@@ -149,117 +154,125 @@ This section demonstrates how to use the kwbase CLI tool to manage KWDB's multi-
     );
     ```
 
-#### Writing Data
+#### Insert Data
 
 ```sql
--- Batch insert device basic information
+-- Insert device data in batch
 INSERT INTO devices VALUES
     (101, 'Sensor A', 'Server Room 1', 'active'),
     (102, 'Sensor B', 'Server Room 2', 'active'),
     (103, 'Sensor C', 'Server Room 1', 'active');
 ```
 
-#### Querying Data
+#### Query Data
 
 ```sql
 -- Query all device information
 SELECT * FROM devices;
 ```
 
-Example query results:
+Expected output:
+
 ```plain
 device_id | device_name | location      | status
 ----------+-------------+---------------+--------
-      101 | Sensor A    | Server Room 1 | active
-      102 | Sensor B    | Server Room 2 | active
-      103 | Sensor C    | Server Room 1 | active
+    101 | Sensor A    | Server Room 1 | active
+    102 | Sensor B    | Server Room 2 | active
+    103 | Sensor C    | Server Room 1 | active
 ```
 
 ### Time-Series Data Operations
 
-Time-series tables have special structural requirements:
-- **Timestamp column**: Must be the first column of the table
-- **Tag columns (TAGS)**: Used to identify static device attributes
-- **Primary tags (PRIMARY TAGS)**: Used to distinguish different entity objects
+Time-series tables require:
 
-#### Creating Time-Series Database and Tables
+- **Timestamp column**: Must be the first column
+- **Tags**: Identify static device attributes
+- **Primary tags**: Distinguish different entities
 
-1. Create time-series database:
+The following example shows basic time-series operations using real-time sensor data.
+
+#### Create Time-Series Database and Table
+
+1. Create a time-series database:
+
     ```sql
-    -- Create time-series database
+    -- Create a time-series database
     CREATE TS DATABASE monitoring;
-    -- Switch to time-series database
+    -- Switch to the time-series database
     USE monitoring;
     ```
 
-2. Create monitoring data table:
+2. Create a time-series table:
+
     ```sql
     CREATE TABLE sensor_data (
-        ts TIMESTAMP NOT NULL,            -- Timestamp (must be first column)
+        ts TIMESTAMP NOT NULL,            -- Timestamp (must be the first column)
         temperature FLOAT,                -- Temperature
-        humidity FLOAT                  -- Humidity
+        humidity FLOAT                    -- Humidity
     ) TAGS (
-        device_id INT NOT NULL,          -- Device ID (tag)
-        sensor_type VARCHAR NOT NULL     -- Sensor type (tag)
-    ) PRIMARY TAGS(device_id);         -- Primary tags
+        device_id INT NOT NULL,           -- Device ID (as tag)
+        sensor_type VARCHAR NOT NULL      -- Sensor type (as tag)
+    ) PRIMARY TAGS(device_id);            -- Primary tag
     ```
 
-#### Writing Data
+#### Insert Data
 
 ```sql
--- Insert current time sensor monitoring data
+-- Insert sensor data with current timestamp
 INSERT INTO sensor_data VALUES
     (NOW(), 25.5, 60.2, 101, 'temperature'),
     (NOW(), 26.1, 58.7, 102, 'temperature'),
     (NOW(), 24.8, 62.1, 103, 'temperature');
 ```
 
-#### Querying Data
+#### Query Data
 
 ```sql
--- Query latest 5 sensor records in descending time order
+-- Query the latest 5 sensor readings, ordered by timestamp in descending order
 SELECT * FROM sensor_data 
 ORDER BY ts DESC 
 LIMIT 5;
 ```
 
-Example query results:
+Expected output:
+
 ```plain
         ts                    | temperature | humidity | device_id | sensor_type
----------------------------+-------------+----------+-----------+-------------
+-------------------------------+-------------+----------+-----------+-------------
 2025-08-01 10:30:15.123+00:00 |        24.8 |     62.1 |       103 | temperature
 2025-08-01 10:30:15.123+00:00 |        26.1 |     58.7 |       102 | temperature
 2025-08-01 10:30:15.123+00:00 |        25.5 |     60.2 |       101 | temperature
 ```
 
-### Cross-Modal Queries
+### Cross-Model Queries
 
-KWDB's core advantage lies in supporting joint queries across time-series and relational databases, achieving deep multi-model data fusion analysis.
+KWDB excels at combining time-series and relational data for comprehensive analytics.
 
-#### Query Device Basic Information and Latest Monitoring Data
+#### Query Device Information with Latest Monitoring Data
 
 ```sql
--- Joint query of device basic information and latest monitoring data
--- Use DISTINCT ON to get the latest data record for each device
+-- Query combining device information with the latest monitoring data
+-- Use DISTINCT ON to retrieve the most recent record for each device
 SELECT 
-    d.device_name,          -- Device name
-    d.location,             -- Device location
-    s.temperature,          -- Latest temperature
-    s.humidity,             -- Latest humidity
-    s.ts as last_update     -- Last update time
+    d.device_name,           -- Device name
+    d.location,              -- Device location
+    s.temperature,           -- Latest temperature
+    s.humidity,              -- Latest humidity
+    s.ts as last_update      -- Last update time
 FROM device_info.devices d
 JOIN (
-    -- Subquery: get latest monitoring data for each device
+    -- Subquery: Retrieve the latest monitoring data for each device
     SELECT DISTINCT ON (device_id) 
         device_id, temperature, humidity, ts
     FROM monitoring.sensor_data 
     ORDER BY device_id, ts DESC
 ) s ON d.device_id = s.device_id
-WHERE d.status = 'active'   -- Only query active status devices
+WHERE d.status = 'active'    -- Only query active devices
 ORDER BY d.device_id;
 ```
 
-Example query results:
+Expected output:
+
 ```plain
 device_name | location      | temperature | humidity |        last_update
 ------------+---------------+-------------+----------+---------------------------
@@ -268,10 +281,10 @@ Sensor B    | Server Room 2 |        26.1 |     58.7 | 2025-08-01 10:30:15.123+0
 Sensor C    | Server Room 1 |        24.8 |     62.1 | 2025-08-01 10:30:15.123+00:00
 ```
 
-#### Statistics Average Temperature and Humidity by Location
+#### Calculate Average Temperature and Humidity by Location
 
 ```sql
--- Statistics average temperature and humidity by device location in the last 1 hour
+-- Calculate average temperature and humidity by device location for the last hour
 SELECT 
     d.location,                      -- Device location
     COUNT(*) as device_count,        -- Number of devices at this location
@@ -284,7 +297,8 @@ GROUP BY d.location                     -- Group by location
 ORDER BY d.location;
 ```
 
-Example query results:
+Expected output:
+
 ```plain
 location      | device_count | avg_temp | avg_humidity
 --------------+--------------+----------+--------------

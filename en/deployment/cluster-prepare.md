@@ -8,20 +8,21 @@ id: cluster-prepare
 ## Hardware
 
 :::warning Note
-To improve availability and reduce the risk of data loss, it is recommended to run only one node on a single computer. KWDB uses a cross-node replication mechanism. If multiple nodes are running on one computer, data is more likely to be lost when the computer fails.
+KWDB uses cross-node replication to maintain data redundancy across multiple nodes. To maintain high availability and protect against data loss, deploy each KWDB node on a separate physical or virtual machine.
 :::
 
-The following table lists the hardware specifications required for deploying KWDB.
+The following specifications are required for KWDB deployment:
 
-| Item | Requirements |
+| Item  | Requirements  |
 | ---------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| CPU and Memory | Single-node configuration should not be lower than 4 cores and 8GB. For large data volumes, complex workloads, high concurrency, and high-performance scenarios, higher CPU and memory resources are recommended to ensure efficient system operation. |
-| Disk | - SSD or NVMe devices are recommended. Avoid using shared storage such as NFS, CIFS, CEPH, etc.<br> - Disks must achieve 500 IOPS and 30 MB/s processing efficiency.<br>- HDD is not recommended for distributed cluster deployment.<br> - KWDB system startup does not consume excessive disk capacity (less than 1GB). Actual disk requirements mainly depend on user business volume.|
-| File System | ext4 file system is recommended. |
+| CPU and Memory | - Minimum: 4 CPU cores and 8 GB RAM per node <br> - For high-volume data, complex workloads, high concurrency, or performance-critical applications, allocate additional resources accordingly |
+| Disk       | - Recommended: SSD or NVMe devices<br>- Minimum performance: 500 IOPS and 30 MB/s throughput<br>- Storage: <1 GB for KWDB system, with additional space needed based on data volume<br>- Avoid shared storage (NFS, CIFS, CEPH)<br> - HDDs not recommended for distributed cluster deployments |
+| File System | ext4 recommended for optimal performance |
+
 
 ## Operating System
 
-KWDB supports installation and deployment on the following operating systems:
+KWDB can be deployed on the following operating systems:
 
 | Operating System | Version | Bare Metal | Bare Metal | Container | Container |
 |---------|------|---------------|---------------|---------------|---------------|
@@ -42,16 +43,14 @@ KWDB supports installation and deployment on the following operating systems:
 
 :::warning Note
 
-- Container deployment requires Docker to be installed on the target machine. If not installed, please refer to the [Docker Official Installation Documentation](https://docs.docker.com/desktop/install/linux-install/). For offline environments, you can download Docker binary packages for offline installation. See [Docker Offline Installation Guide](https://docs.docker.com/engine/install/binaries/).
-- Operating system versions not mentioned **may** run KWDB but are not officially supported by KWDB.
-
+- Container deployment requires Docker installed on the target machine. For new Docker installations, follow [Install Docker Engine](https://docs.docker.com/engine/install/). For offline Docker installations, see [Install Docker Engine from Binaries](https://docs.docker.com/engine/install/binaries/) and [Linux Post-Installation Steps for Docker Engine](https://docs.docker.com/engine/install/linux-postinstall/).
+- Operating systems or versions not listed above **may** work with KWDB but are not officially supported.
+- For installation packages not available on the [download page](https://gitee.com/kwdb/kwdb/releases/), contact [KWDB Technical Support](https://www.kaiwudb.com/support/).
 :::
 
 ## Software Dependencies
 
 ### Bare Metal Deployment
-
-During installation, KWDB will check for dependencies. If dependencies are missing, the installation will exit and prompt for missing dependencies. If the target machine cannot connect to the internet, users need to download all dependency files on a machine that can connect to the internet according to the target machine's operating system, then copy the dependency files to the target machine for installation.
 
 The following table lists the dependencies that need to be installed on the target machine.
 
@@ -65,31 +64,41 @@ The following table lists the dependencies that need to be installed on the targ
 | libgflags | System default | N/A |
 | libkrb5 | System default | N/A |
 
+During installation, KWDB verifies the necessary dependencies. If any are missing, the installation process will halt and prompt you to install them. If the target machine is offline, you will need to download the required dependencies from an internet-connected device and then transfer the files to the target machine.
+
 ### Container Deployment
 
-When deploying using [scripts](./cluster-deployment/script-deployment.md), the target machine needs to have Docker Compose (version 1.20.0 and above) installed.
+For deployment using scripts, Docker Compose (version 1.20.0 or higher) is required.
 
-- Online installation: Refer to [Docker Compose Official Installation Documentation](https://docs.docker.com/compose/install/)
-- Offline installation: Refer to [Docker Compose Offline Installation Guide](https://docs.docker.com/compose/install/standalone/)
+- For online installation instructions, see [Install Docker Compose](https://docs.docker.com/compose/install/).
+- For offline installation instructions, see [Install Docker Compose Standalone](https://docs.docker.com/compose/install/standalone/).
 - Quick installation for Ubuntu/Debian systems:
 
     ```shell
     sudo apt-get install docker-compose
     ```
-
 ## Port Requirements
 
-The following table lists the default ports used by KWDB services. If you need to use other ports, you can modify them during the installation and deployment process.
+Ensure these default ports are available and not blocked by firewalls. Port settings can be modified during installation.
 
-| Port Number | Description |
-|--------|------|
-| `8080` | Database Web service port |
-| `26257` | Database service port, node listening port, and external connection port |
-| `27257` | brpc communication port between database time-series engines |
+| Port        | Description |
+| ----------- | ----------- |
+| `8080`      | Port for HTTP requests and web services |
+| `26257`     | Port for connections of clients, applications, and other nodes |
+|`27257`| Port for inter-node brpc communication between KWDB time-series engines|
 
-## Installation Packages
+## Installation Packages, Container Images, and Compilation Versions
 
-Obtain the installation package corresponding to your system environment, copy the package to the target machine where KWDB will be installed, then extract the installation package:
+Obtain installation packages, container images, or source code compilation versions based on your scenarios:
+
+### Installation Packages
+
+The KWDB repository currently provides [DEB or RPM installation packages](https://gitee.com/kwdb/kwdb/releases/) for the following systems and architectures. For packages for other systems or architectures, please contact [KWDB Technical Support](https://www.kaiwudb.com/support/).
+
+- Ubuntu V20.04 x86_64
+- Ubuntu V20.04 ARM64
+
+After obtaining the DEB or RPM installation package for your system environment, copy the package to the target machine, then extract the installation package:
 
 ```shell
 tar -zxvf <package_name>
@@ -97,13 +106,13 @@ tar -zxvf <package_name>
 
 The extracted directory contains the following files:
 
-| File | Description |
+| File/Folder         | Description                                               |
 |-------------------|-----------------------------------------------------------|
-| `add_user.sh` | After installing and starting KWDB, create users for the KWDB database. |
-| `deploy.cfg` | Installation deployment configuration file for configuring IP addresses, ports, and other deployment settings. |
-| `deploy.sh` | Installation deployment script for installation, uninstallation, startup, status retrieval, shutdown, and restart operations. |
-| `packages` directory | Contains DEB or RPM packages.<br>**Note**: Specific files included vary by installation package type. |
-| `utils` directory | Contains utility scripts. |
+| `add_user.sh`     | Script for creating KWDB users after installation and startup.           |
+| `deploy.cfg`      | Configuration file for node IP addresses, ports, and other options. |
+| `deploy.sh`       | Script for KWDB installation, uninstallation, start, status check, and stop operations. |
+| `packages`  | Stores DEB or RPM packages. <br>**Note**: Specific files included vary by installation package type.                                   |
+| `utils`      | Stores utility scripts.                                             |
 
 ### Container Images
 
@@ -111,7 +120,7 @@ KWDB supports obtaining container images through the following methods:
 
 - **KWDB versions before 3.1.0**
 
-  [Download](https://gitee.com/kwdb/kwdb/releases) the installation package for your system, then import the `KaiwuDB.tar` file from the `kwdb_install/packages` directory.
+  [Download](https://gitee.com/kwdb/kwdb/releases) the container installation package for your system, then import the `KaiwuDB.tar` file from the `kwdb_install/packages` directory.
 
   ```bash
   docker load < KaiwuDB.tar
@@ -128,68 +137,70 @@ KWDB supports obtaining container images through the following methods:
 
 ### Source Code Compilation and Installation
 
-Follow the [KWDB Compilation and Installation Instructions](https://gitee.com/kwdb/kwdb#compilation-and-installation) to download, compile, and install from source code.
+Complete source code download and compilation according to the [KWDB Compilation and Installation Instructions](https://gitee.com/kwdb/kwdb/blob/master/README.en.md#compilation-and-installation).
 
 ## Node Configuration
 
 ### SSH Passwordless Login
 
-1. Log in to the current node and generate a public-private key pair.
+To enable secure communication between cluster nodes, configure passwordless SSH authentication:
+
+1. Log into a node and generate a public/private key pair.
 
    ```shell
    ssh-keygen -f ~/.ssh/id_rsa -N ""
    ```
 
-   Parameter description:
+   Parameters:
 
-   - `-f ~/.ssh/id_rsa`: Specifies the directory for the generated key pair files.
-   - `-N`: Sets the key password to empty to achieve passwordless login.
+   - `-f ~/.ssh/id_rsa`: Sets the output path for the key files.
+   - `-N`: Creates the key without a passphrase, necessary for automated authentication.
 
-2. Distribute the keys to other nodes in the cluster.
+2. Copy the public key to each cluster node.
 
    ```shell
    ssh-copy-id -f -i ~/.ssh/id_rsa.pub -o StrictHostKeyChecking=no <target_node>
    ```
 
-3. Confirm whether you can use SSH passwordless login to other nodes in the cluster.
+3. Verify SSH connectivity with each node.
 
    ```shell
    ssh <target_node>
    ```
 
-### Clock Synchronization
+### Time Synchronization
 
-KWDB uses a moderate-strength clock synchronization mechanism to maintain data consistency. When a node detects that its machine time error with at least 50% of the nodes in the cluster exceeds 80% of the cluster's maximum allowed time error (default is 500 ms), the node will automatically stop to avoid violating data consistency and bringing the risk of reading and writing stale data. Each node must run NTP (Network Time Protocol) or other clock synchronization software to prevent clock drift.
+KWDB requires synchronized time across all nodes to maintain data consistency. If a node's system time differs by more than 80% of the allowed error (default 500 ms) from at least half of the other nodes, it will stop automatically to avoid data inconsistencies. Ensure every node runs NTP or another time synchronization service.
 
-The following example uses CentOS 7 to introduce how to configure clock synchronization.
+The following example demonstrates how to configure time synchronization on CentOS 7.
 
-1. Use SSH to log in to the node where the cluster will be deployed.
+1. SSH into the target node.
 
-2. Stop the timesyncd service.
+2. Disable the `timesyncd` service.
 
    ```shell
    timedatectl set-ntp no
    ```
 
-3. Install NTP service.
+3. Install the NTP package.
 
    ```shell
    sudo apt install ntp
    ```
 
-4. Stop the NTP background process.
+4. Stop any running NTP processes.
 
    ```shell
    service ntp stop
    ```
 
-5. Synchronize machine time through NTP service.
+5. Synchronize time with a public NTP server.
 
    ```shell
    ntpdate -u 0.cn.pool.ntp.org
    ```
 
-6. Open the `/etc/ntp.conf` file, find the `server` and `pool` related configurations and modify them as follows.
+6. Configure NTP servers by editing `/etc/ntp.conf`.
 
    ```shell
    server 0.cn.pool.ntp.org iburst
@@ -198,10 +209,10 @@ The following example uses CentOS 7 to introduce how to configure clock synchron
    server 3.cn.pool.ntp.org iburst
    ```
 
-7. Start NTP service.
+7. Start and enable the NTP service.
 
    ```shell
    service ntp start
    ```
 
-8. Repeat the above steps on all cluster nodes where KWDB services will be installed.
+8. Repeat these steps on every node in the cluster.

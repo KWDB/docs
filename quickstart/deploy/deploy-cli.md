@@ -7,7 +7,7 @@ id: quickstart-cli
 
 ## 前提条件
 
-- 已获取 KWDB [裸机安装包](../prepare.md#安装包)。
+- 已完成[源码编译和安装](https://gitee.com/kwdb/kwdb#%E7%BC%96%E8%AF%91%E5%92%8C%E5%AE%89%E8%A3%85)。
 - 待部署节点的硬件配置、操作系统、软件依赖和端口满足[安装部署要求](../prepare.md)
 - 安装用户为 `root` 用户或拥有 `sudo` 权限的普通用户
 
@@ -19,50 +19,34 @@ id: quickstart-cli
 
 ## 步骤
 
-1. 登录待部署节点，进入安装包目录下的 `packages` 目录。
-
-2. 安装依赖包和服务器组件。
-
-   - DEB 包系统（Debian/Ubuntu）：
-
-     ```bash
-     dpkg -i ./kaiwudb-libcommon-<版本号>.deb ./kaiwudb-server-<版本号>.deb
-     ```
-
-   - RPM 包系统（CentOS/RHEL）：
-
-     ```bash
-     rpm -ivh ./kaiwudb-libcommon-<版本号>.rpm ./kaiwudb-server-<版本号>.rpm
-     ```
-
-3. 切换至程序目录：
+1. 进入 `kwbase` 脚本所在目录：
 
    ```bash
-   cd /usr/local/kaiwudb/bin
+   cd /home/go/src/gitee.com/kwbasedb/install/bin
    ```
 
-4. (可选）如需采用安全部署模式，执行以下步骤创建证书：
+2. (可选）如需采用安全模式，执行以下步骤创建证书：
 
     1. 创建证书存放目录：
 
         ```bash
-        mkdir -p /usr/local/kaiwudb/certs
+        mkdir -p <certs_dir>
         ```
 
-    2. 生成证书和密钥。
+    2. 生成证书和密钥：
 
         ```bash
         # 创建数据库证书颁发机构及密钥
-        ./kwbase cert create-ca --certs-dir=/usr/local/kaiwudb/certs --ca-key=/usr/local/kaiwudb/certs/ca.key && \
+        ./kwbase cert create-ca --certs-dir=<certs_dir> --ca-key=<certs_dir>/ca.key
         
-        # 创建安装数据库用户的客户端证书及密钥（USERNAME 替换为实际用户名）
-        ./kwbase cert create-client $USERNAME --certs-dir=/usr/local/kaiwudb/certs --ca-key=/usr/local/kaiwudb/certs/ca.key && \
+        # 创建 root 用户或安装数据库用户的客户端证书及密钥
+        ./kwbase cert create-client <username> --certs-dir=<certs_dir> --ca-key=<certs_dir>/ca.key
         
         # 创建节点服务器证书及密钥
-        ./kwbase cert create-node 127.0.0.1 localhost 0.0.0.0 --certs-dir=/usr/local/kaiwudb/certs --ca-key=/usr/local/kaiwudb/certs/ca.key
+        ./kwbase cert create-node 127.0.0.1 localhost 0.0.0.0 --certs-dir=<certs_dir> --ca-key=<certs_dir>/ca.key
         ```
 
-5. 启动数据库。
+3. 启动数据库:
 
     - 非安全模式：
 
@@ -77,13 +61,13 @@ id: quickstart-cli
 
         ```bash
         ./kwbase start-single-node \
-            --certs-dir=/usr/local/kaiwudb/certs \
+            --certs-dir=<certs_dir> \
             --listen-addr=0.0.0.0:26257 \
             --http-addr=0.0.0.0:8080 \
             --store=/var/lib/kaiwudb
         ```
 
-6. 查看数据库状态。
+4. 查看数据库状态
 
     - 非安全模式：
 
@@ -94,25 +78,25 @@ id: quickstart-cli
     - 安全模式：
 
         ```bash
-        ./kwbase node status --certs-dir=/usr/local/kaiwudb/certs --host=<address_of_any_alive_node>
+        ./kwbase node status --certs-dir=<certs_dir> --host=<address_of_any_alive_node>
         ```
 
-7. （可选）创建数据库用户并授予用户管理员权限。如果跳过该步骤，系统将默认使用部署数据库时的用户，且无需密码访问数据库。
+5. （可选）创建数据库用户并授予用户管理员权限。如果跳过该步骤，系统将默认使用源码编译安装时使用的用户，且无需密码访问数据库。
 
     - 非安全模式（不带密码）：
 
         ```bash
-        ./kwbase sql --host=127.0.0.1:$local_port --insecure \
-        -e "create user $username; \
-            grant admin to $username with admin option;"
+        ./kwbase sql --host=127.0.0.1:<local_port> --insecure \
+        -e "create user <username>; \
+            grant admin to <username> with admin option;"
         ```
 
     - 安全模式（带密码）：
 
         ```bash
-        ./kwbase sql --certs-dir=/usr/local/kaiwudb/certs --host=127.0.0.1:$local_port \
-        -e "create user $username with password \"$user_password\"; \
-            grant admin to $username with admin option;"
+        ./kwbase sql --certs-dir=<certs_dir> --host=127.0.0.1:<local_port> \
+        -e "create user <username> with password \"<user_password>\"; \
+            grant admin to <username> with admin option;"
         ```
 
-8. 部署完成后，可通过 [kwbase CLI ](../access/access-cli.md) 、[KWDB JDBC](../access/access-jdbc.md)或 [KWDB 开发者中心](../access/access-kdc.md)连接并管理 KWDB。
+6. 部署完成后，可通过 [kwbase CLI ](../access/access-cli.md) 、[KaiwuDB JDBC](../access/access-jdbc.md)或 [KWDB 开发者中心](../access/access-kdc.md)连接并管理 KWDB。

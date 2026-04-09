@@ -1,254 +1,272 @@
 ---
-title: KaiwuDB Developer Center
+title: Using KaiwuDB Developer Center
 id: access-kdc
 ---
 
-# KaiwuDB Developer Center
+# Using KaiwuDB Developer Center
 
-KaiwuDB Developer Center is the official graphical management tool provided by KaiwuDB, supporting database connection, SQL editing, data visualization, and object management functions. Through an intuitive interface, users can efficiently manage and operate KWDB databases.
+After deploying KWDB, use KaiwuDB Developer Center to connect and manage the database. This guide shows how to use this visual tool to access and manage KWDB.
 
-This article describes how to use KaiwuDB Developer Center to connect to and manage KWDB databases.
+::: warning Note The KaiwuDB Developer Center interface is currently available in Chinese only. :::
 
-## Installing KaiwuDB Developer Center
+## Install KaiwuDB Developer Center
+
+This section covers supported operating systems, environment requirements, and installation steps.
 
 ### Supported Operating Systems
 
 ::: warning Note
-Interface may vary slightly across different operating system versions, but all functions are identical.
+Interface appearance may vary slightly across operating systems, but functionality remains identical.
 :::
 
 KaiwuDB Developer Center supports the following operating systems:
 
-- Windows 7 and above 64-bit systems
-- Linux kernel 2.6 and above systems
-- Mac operating system (macOS)
+- Windows 7 or later (64-bit)
+- Linux kernel 2.6 or later
+- macOS: All supported versions
 
 ### Environment Requirements
 
-KaiwuDB Developer Center installation must meet the following environment requirements:
+Installation of KaiwuDB Developer Center requires the following environment requirements:
 
 | Environment | Requirements |
 |------|------|
-| Hardware Environment | - Memory: 1G and above <br> - Disk: 10G and above |
-| Software Environment | - KWDB 2.0 and above <br> - OpenJRE 8 and above |
+| Hardware | - RAM: 1GB or more <br> - Disk: 10GB or more |
+| Software | - KWDB 2.0 or later <br> - OpenJRE 8 or later |
 
 ### Installation Steps
 
 To install KaiwuDB Developer Center, follow these steps:
 
-1. Merge and extract the installation package. The file directory is as follows:
+1. Extract the installation package. The directory structure is as follows:
 
    ![](../../../static/quickstart/JD1MbIGlXoE7qzxwqOjcc8Wtn4e.png)
 
-2. Double-click to run KaiwuDB Developer Center application.
+2. Double-click the KaiwuDB Developer Center application to run it.
 
-## Connecting to KWDB
+## Connect to KWDB
 
 ### First Connection
 
-When establishing a connection for the first time or after all connections in the software have been deleted, the software will automatically display the **New Connection** wizard upon startup to guide users in establishing a connection.
+When you launch KaiwuDB Developer Center for the first time, or after removing all existing connections, the **创建新连接 (Create Connection)** wizard will appear automatically.
 
 ![Database Connection](../../../static/quickstart/VfcqbD99roY3zbxdCQdcCRFenBc.png)
 
-The following steps use the first connection as an example to illustrate how to connect to the database.
+Follow these steps to create your first connection:
 
-1. In the **Create New Connection** window, select the KWDB driver, then click **Next**.
+1. In the **创建新连接 (Create New Connection)** window, select the KaiwuDB driver and click **下一步(Next)**.
 
-   <img src="../../../static/quickstart/FU8sbwC1yoqPchxh3ttcptgan4d.png" style="zoom: 67%;" />
+   <img src="../../static/quickstart/create-connect-01.png" style="width: 67%; height: auto;" />
 
-2. In the **General** tab, set the host, port, and database. Select the database authentication method as needed (default is native database authentication), then complete the corresponding user and password settings (no password required if using insecure mode).
+2. In the **常规 (General)** tab, enter the enter the connection details:
+   - host address
+   - port number
+   - database name
+   - username
+   - password (not required for insecure deployment mode)
 
    <img src="../../../static/kdc/create-connect-02.png" style="zoom: 67%;" />
 
-3. (Optional) Click **Test Connection** to check if the connection is successful. 
+3. (Optional) Click **测试链接 (Test Connection)** to verify your configuration. A success message appears if the connection settings are correct.
 
-4. Click **OK**.
+   <img src="../../static/quickstart/license.png" style="width: 67%; height: auto;" />
 
-   The database navigation area will automatically update to display databases that the user has permission to access.
+4. Click **确定 (OK)**. The database navigation panel refreshes to display all databases you have permission to access.
 
-   <img src="../../../static/quickstart/TLQcbBq6eoTndRxSYQucuY7bn9e.png" style="zoom: 80%;" />
+   ![](../../static/quickstart/kdc-navigation.png)
 
-### Other Connection Methods
+### Additional Connection Methods
 
-In other cases, if you need to create a connection, you can choose either of the following operations:
+You can create new connections at any time using either of these methods:
 
-- Click the **New Connection** button in the toolbar or database navigation area toolbar:
+- **Toolbar:** Click the **New Connection** button on the toolbar or the database navigation toolbar.
 
-   <img src="../../../static/quickstart/RSxWbFLxYoqf5dxHTHkcpyN3nle.png" style="zoom: 80%;" />
+   <img src="../../static/quickstart/kdc-connection-button.png" style="width: 50%; height: auto;" />
 
-- In the menu bar, click **Database**, then select **New Connection** from the dropdown menu:
+- **Menu:** Select **数据库 (Database)** from the menu bar, then click **新建连接 (New Connection)**.
 
-   <img src="../../../static/quickstart/WcrObb1VhorfioxESFJcxGtgnAd.png" style="zoom: 80%;" />
+   <img src="../../static/quickstart/kdc-connection-menu.png" style="width: 50%; height: auto;" />
 
+## Manage KWDB
 
-## Managing KWDB
+This section demonstrates managing KWDB using KaiwuDB Developer Center:
 
-This section demonstrates how to use KaiwuDB Developer Center to manage KWDB databases, including:
-
-- **Relational data operations**: Managing relatively static basic data, such as device information, user profiles, etc.
-- **Time-series data operations**: Processing dynamic data that changes over time series, such as sensor readings, monitoring metrics, etc.
-- **Cross-modal queries**: Achieving multi-model data fusion analysis through joint queries of relational and time-series databases.
+- **Relational Data**: Static data like device information
+- **Time-Series Data**: Dynamic data like sensor readings
+- **Cross-Model Queries**: Combining relational and time-series data for analysis
 
 ### Relational Data Operations
 
-#### Creating Relational Database
+#### Create Relational Database
 
 **Prerequisites**
 
-User is a member of the `admin` role. By default, the `root` user belongs to the `admin` role.
+User is a member of the `admin` role. By default, `root` belongs to `admin`.
 
 **Steps**
 
-1. In the database navigation area, right-click **Relational Database** and select **New Relational Database**:
+1. In the Database Navigator, right-click **关系数据库 (Relational Databases)** and select **新建关系数据库 (Create Relational Database)**.
 
    <img src="../../../static/quickstart/create-r-db-0.png" style="zoom:67%;" />
 
-2. In the **Create Database** window, fill in the database name and click **OK**:
+2. In the **创建数据库 (Create Database)** dialog, enter the database name and click **确定 (OK)**.
 
    <img src="../../../static/quickstart/create-r-db.png" style="zoom:67%;" />
 
-   After successful creation, the new database will automatically appear in the database navigation area, inheriting the KWDB database system's role and user settings.
+   After successful creation, the new database will automatically appear in the Database Navigator and inherit KWDB's role and user settings.
 
-#### Creating Relational Table
+#### Create Relational Table
 
 **Prerequisites**
 
-User is a member of the `admin` role or has CREATE permission for the database. By default, the `root` user belongs to the `admin` role.
+User is a member of `admin` or has CREATE permission on the target database. By default, `root` belongs to `admin`.
 
 **Steps**
 
-1. In the database navigation area, select the database and schema to operate on.
-2. Right-click **Table** and select **New Table**:
+1. In the Database Navigator, select the target database and schema.
+
+2. Right-click **表 (Tables)** and select **新建表 (Create Table)**.
 
    <img src="../../../static/quickstart/create-r-table.png" style="zoom:67%;" />
 
-   The system will automatically create a table named `newtable` and open the object window.
+   The system will automatically create a table named `newtable` and open the Object window.
 
-3. In the object window, fill in the table name, add fields, and click **Save**:
+3. In the Object window, enter the table name, add fields, and click **保存 (Save)**.
 
    <img src="../../../static/quickstart/create-r-table-1.png" style="zoom:67%;" />
 
-4. In the **Execute Changes** window, confirm the SQL statement is correct and click **Execute**.
+4. In the **执行修改 (Persist Changes)** dialog, review the SQL statement and click **执行 (Execute)**.
 
-#### Writing Relational Data
+
+#### Write Relational Data
 
 **Prerequisites**
 
-User is a member of the `admin` role or has INSERT permission for the target table. By default, the `root` user belongs to the `admin` role.
+User is a member of `admin` or has INSERT permission on the target table. By default, `root` belongs to `admin`.
 
 **Steps**
 
-1. In the database navigation area, double-click the table that needs to be modified.
-2. In the **Data** tab, click the **Add New Row** button below the table to add corresponding data to the table:
+1. In the Database Navigator, double-click the table you want to modify.
+
+2. In the **数据 (Data)** tab, click the **添加新行 (Add New Row)** button at the bottom to add new data.
 
    <img src="../../../static/quickstart/insert-r-data.png" style="zoom:67%;" />
 
-3. Click **Save**.
+3. Click **保存 (Save)**.
 
-#### Querying Relational Data
+#### Query Relational Data
 
-**Prerequisites**: User is a member of the `admin` role or has SELECT permission for the target table. By default, the `root` user belongs to the `admin` role.
+**Prerequisites**
 
-**Steps**: In the database navigation area, double-click the table you want to view to see the table data in the **Data** tab:
+User is a member of `admin` or has SELECT permission on the target table. By default, `root` belongs to `admin`.
+
+**Steps**
+
+1. In the Database Navigator, double-click the table you want to view. The table data will be displayed in the **数据 (Data)** tab.
 
    <img src="../../../static/quickstart/view-r-data.png" style="zoom:67%;" />
 
-### Time-Series Data Operations
+### Time Series Data Operations
 
-#### Creating Time-Series Database
+#### Create Time Series Database
 
 **Prerequisites**
 
-User is a member of the `admin` role. By default, the `root` user belongs to the `admin` role.
+User is a member of the `admin` role. By default, `root` belongs to `admin`.
 
 **Steps**
 
-1. In the database navigation area, right-click **Time-Series Database** and select **New Time-Series Database**:
+1. In the Database Navigator, right-click **时序数据库 (Time-Series Databases)** and select **新建时序数据库 (Create Time-Series Database)**.
 
    <img src="../../../static/quickstart/create-ts-database.png" style="zoom:67%;" />
 
-2. In the **Create Time-Series Database** window, fill in the database name and click **OK**:
+2. In the **创建时序数据库 (Create Time-Series Database)** dialog, enter the database name and click **确定 (OK)**.
 
    <img src="../../../static/quickstart/create-ts-database-1.png" style="zoom:67%;" />
 
-   After successful creation, the new database will automatically appear in the database navigation area, inheriting the KWDB database system's role and user settings.
+   After successful creation, the new database will automatically appear in the Database Navigator and inherit KWDB's role and user settings.
 
-#### Creating Time-Series Table
+#### Create Time Series Table
 
 **Prerequisites**
 
-User is a member of the `admin` role or has CREATE permission for the database. By default, the `root` user belongs to the `admin` role.
+User is a member of `admin` or has CREATE permission on the target database. By default, `root` belongs to `admin`.
 
 **Steps**
 
-1. In the database navigation area, select the database and schema to operate on.
-2. Right-click **Time-Series Table** and select **New Time-Series Table**:
+1. In the Database Navigator, select the target database and schema.
+
+2. Right-click **时序表 (Time-Series Tables)** and select **新建时序表 (Create Time-Series Table)**.
 
    <img src="../../../static/quickstart/create-ts-table.png" style="zoom:67%;" />
 
-   The system will automatically create a table named `newtable` and open the object window.
+   The system will automatically create a table named `newtable` and open the Object window.
 
-3. In the **Properties** tab, fill in the table name.
-4. In the **Fields** tab, modify or create new fields, setting field name, data type, length, whether non-null, default value, and description information. Note that the data type of the first field must be `timestamp` or `timestamptz` and non-null:
+3. In the **属性 (Properties)** tab, enter the table name.
+
+4. In the **字段 (Fields)** tab, modify or create fields by specifying the field name, data type, length, null/not null constraint, default value, and description. Note that the first field must be of type `timestamp` or `timestamptz` and cannot be null.
 
    <img src="../../../static/quickstart/create-ts-table-1.png" style="zoom:67%;" />
 
-5. In the **Tags** tab, modify or add tags, setting tag name, data type, length, whether it is a primary tag, whether non-null, and description information, then click **Save**:
+5. In the **标签 (Tags)** tab, modify or add tags by specifying the tag name, data type, length, primary tag, not null constraint, and description. Then click **保存 (Save)**.
 
    ::: warning Note
-   - Each time-series table must have at least one primary tag set, and the primary tag must be a non-null tag.
-   - Tag names do not support Chinese characters temporarily, with a maximum length of 128 bytes.
+
+   - Each time-series table must have at least one primary tag, and primary tags cannot be null.
+   - Tag names do not currently support Chinese characters and have a maximum length of 128 bytes.
+
    :::
 
-   <img src="../../../static/quickstart/create-ts-table-2.png" style="zoom:67%;" />
+    <img src="../../../static/quickstart/create-ts-table-2.png" style="zoom:67%;" />
 
-6. In the **Execute Changes** window, confirm the SQL statement is correct, then click **Execute**.
+6. In the **执行修改 (Persist Changes)** dialog, review the SQL statement and click **执行 (Execute)**.
 
-#### Writing Time-Series Data
+#### Write Time Series Data
 
 **Prerequisites**
 
-User is a member of the `admin` role or has INSERT permission for the target table. By default, the `root` user belongs to the `admin` role.
+User is a member of `admin` or has INSERT permission on the target table. By default, `root` belongs to `admin`.
 
 **Steps**
 
-1. In the database navigation area, right-click the table that needs data editing and select **Edit Data**.
-2. In the **Data** page, click the **Add New Row** button below the page to add corresponding data to the table:
+1. In the Database Navigator, right-click the table you want to edit and select **编辑数据 (Edit Data)**.
+
+2. In the **数据 (Data)** tab, click the **添加新行 (Add New Row)** button at the bottom to add new data to the table.
 
    <img src="../../../static/quickstart/insert-ts-table.png" style="zoom:67%;" />
 
-3. Click **Save**.
+3. Click **保存 (Save)**.
 
-#### Querying Time-Series Data
+#### Query Time Series Data
 
 **Prerequisites**
 
-User is a member of the `admin` role or has SELECT permission for the target table. By default, the `root` user belongs to the `admin` role.
+User is a member of `admin` or has SELECT permission on the target table. By default, `root` belongs to `admin`.
 
 **Steps**
 
-1. In the database navigation area, double-click the table you want to view to see the table data in the **Data** tab:
+1. In the Database Navigator, double-click the table you want to view. The table data will be displayed in the **数据 (Data)** tab.
 
    <img src="../../../static/quickstart/view-ts-table.png" style="zoom:67%;" />
 
-### Cross-Modal Queries
+### Cross-Model Query
 
-KaiwuDB Developer Center supports using the SQL editor to complete KWDB cross-modal query operations.
+KaiwuDB Developer Center supports cross-model queries using the SQL editor.
 
 **Prerequisites**
 
-User is a member of the `admin` role or has SELECT permission for the target table. By default, the `root` user belongs to the `admin` role.
+User is a member of `admin` or has SELECT permission on the target table. By default, `root` belongs to `admin`.
 
 **Steps**
 
-1. Click the SQL editor in the menu bar and select **New SQL Editor**:
+1. Click **SQL 编辑器 (SQL Editor)** in the Menu bar and select **新建 SQL 编辑器 (New SQL Editor)**.
 
    <img src="../../../static/quickstart/create-sql-editor.png" style="zoom:67%;" />
 
-2. In the new SQL editor page, enter the cross-modal query SQL statement:
+2. In the new SQL Editor page, enter your cross-model query statement.
 
    <img src="../../../static/quickstart/insert-data.png" style="zoom:67%;" />
 
-3. Click the **Execute SQL Statement** button on the left to get the query results:
+3. Click the **执行 SQL 语句 (Execute SQL Statement)** button on the left to run the query and retrieve the results.
 
    <img src="../../../static/quickstart/cmq.png" style="zoom:67%;" />
