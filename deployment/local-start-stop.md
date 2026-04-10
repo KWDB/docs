@@ -1,9 +1,9 @@
 ---
-title: 启动与停止 KWDB 服务
-id: local-start-stop-docker
+title: 服务管理
+id: local-start-stop
 ---
 
-# 启动与停止 KWDB 服务
+# 服务管理
 
 本文介绍如何启动、停止、重启集群中的单个 KWDB 节点。执行所有命令时都需要 `root` 或 `sudo` 权限。
 

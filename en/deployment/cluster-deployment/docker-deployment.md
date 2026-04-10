@@ -11,14 +11,14 @@ This section describes how to deploy a KWDB cluster on a single machine using th
 
 ## Prerequisites
 
-- The hardware, operating system, software dependencies, and ports of the nodes to be deployed meet the [deployment requirements](../prepare/before-deploy-docker.md#hardware).
+- The hardware, operating system, software dependencies, and ports of the nodes to be deployed meet the [deployment requirements](../cluster-prepare.md).
 - One of the following user permissions:
   - Root user access
   - Regular user with `sudo` privileges:
     - Users with passwordless `sudo` won't need to enter passwords during installation.
     - Users without passwordless `sudo` will be prompted for passwords when needed.
     - Regular users must be in the docker group (add with `sudo usermod -aG docker $USER`).
-- The [KWDB image](../prepare/before-deploy-docker.md#obtaining-container-images) is obtained.
+- The [KWDB image](../cluster-prepare.md#container-images) is obtained.
 
 ## Steps
 
@@ -172,3 +172,19 @@ This section describes how to deploy a KWDB cluster on a single machine using th
     |---|---|
     | `docker exec kwdb1` | Executes commands inside the container named `kwdb1`. |
     | `./kwbase init` | Executes the cluster initialization command:<br>- `--insecure`: (Insecure mode only) Enables insecure mode.<br>- `--certs-dir=<certs_dir>`: (Secure mode) Specify certificate directory location.<br>- `--host=<host1>:26257`: Specifies the host address and port to connect to.|
+
+4. (Optional) Create a database user and grant admin privileges. If this step is skipped, the system will default to using the user that deployed the database without requiring a password to access the database.
+
+      - Insecure mode (without password):
+
+          ```bash
+          docker exec kaiwudb bash -c "./kwbase sql --insecure --host=$host_ip -e \"create user $username;grant admin to $username with admin option;\""
+          ```
+
+      - Secure mode (with password):
+
+          ```bash
+          docker exec kaiwudb bash -c "./kwbase sql --host=$host_ip --certs-dir=$cert_path -e \"create user $username with password \\\"$user_password\\\";grant admin to $username with admin option;\""
+          ```
+
+5. After deployment is complete, you can connect to and manage KWDB via [kwbase CLI](../../quickstart/access/access-cli.md), [KWDB Supported Connectors](../../development/overview.md), or [KaiwuDB Developer Center](../../kaiwudb-tools/kaiwudb-developer-center/overview.md).

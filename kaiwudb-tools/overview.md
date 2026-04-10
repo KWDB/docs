@@ -32,7 +32,7 @@ KWDB MCP Server 是面向应用开发场景的 MCP 协议连接器，供兼容 M
 
 ## kwbase CLI 工具
 
-`kwbase` 是 KWDB 提供的命令行管理工具，适用于无图形界面的部署和运维场景，是管理 KWDB 集群的核心工具。`kwbase` 支持节点启动与初始化、TLS/TLCP 证书管理、SQL 交互、节点状态管理、HTTP 会话管理及辅助配置文件生成等操作。有关各命令的详细说明，参见 [kwbase CLI 工具](./kwbase-cli-tool.md)。
+`kwbase` 是 KWDB 提供的命令行管理工具，适用于无图形界面的部署和运维场景，是管理 KWDB 集群的核心工具。`kwbase` 支持节点启动与初始化、TLS 证书管理、SQL 交互、节点状态管理、HTTP 会话管理及辅助配置文件生成等操作。有关各命令的详细说明，参见 [kwbase CLI 工具](./kwbase-cli-tool.md)。
 
 ## 性能测试工具
 

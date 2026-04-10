@@ -54,7 +54,7 @@ DRBD 镜像数据具有以下特点：
 
 ### 环境要求
 
-除需满足 KWDB [裸机安装部署](../quickstart/install-kaiwudb/quickstart-bare-metal.md)或[容器安装部署](../quickstart/install-kaiwudb/quickstart-docker.md)的环境要求外，单机高可用性方案还需额外满足以下环境要求：
+除需满足 KWDB [安装部署的环境要求](../quickstart/prepare.md)外，单机高可用性方案还需额外满足以下环境要求：
 
 - 网卡：千兆或万兆
 - DRBD: 9.11.0
@@ -585,7 +585,7 @@ DRBD 镜像数据具有以下特点：
          pcs node unstandby <primary_node>
          ```
 
-   2. 安装部署 KWDB，具体安装步骤见[单节点裸机部署](../quickstart/install-kaiwudb/quickstart-bare-metal.md)或[单节点容器部署](../quickstart/install-kaiwudb/quickstart-docker.md)。
+   2. 安装部署 KWDB，具体安装步骤见[单节点脚本部署](../quickstart/deploy/deploy-script.md)。
 
       ::: warning 注意
       - 确保在`deploy.cfg`配置文件中，将 `data_root` 配置为文件系统资源，示例中KaiwuFS 指定的目录。
@@ -596,7 +596,7 @@ DRBD 镜像数据具有以下特点：
 
    1. 确保 DRBD 和 Filesystem 资源的活跃节点为主节点。
 
-   2. 安装部署 KWDB，具体安装步骤见[单节点裸机部署](../quickstart/install-kaiwudb/quickstart-bare-metal.md)或[单节点容器部署](../quickstart/install-kaiwudb/quickstart-docker.md)。
+   2. 安装部署 KWDB，具体安装步骤见[单节点脚本部署](../quickstart/deploy/deploy-script.md)。
 
    3. 配置主节点证书允许通过备节点 IP 和 VIP 访问。
 

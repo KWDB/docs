@@ -18,9 +18,9 @@ KWDB can be deployed on the following operating systems.
             <th colspan="2">Container Deployment</th>
         </tr>
         <tr>
-            <th>ARM_64</th>
+            <th>ARM64</th>
             <th>x86_64</th>
-            <th>ARM_64</th>
+            <th>ARM64</th>
             <th>x86_64</th>
         </tr>
     </thead>

@@ -7,7 +7,7 @@ id: product-metrics
 
 ## 操作系统及架构
 
-KWDB 支持在以下服务器操作系统进行安装部署。
+KWDB 支持在以下操作系统进行安装部署。
 
 <table>
     <thead>
@@ -18,9 +18,9 @@ KWDB 支持在以下服务器操作系统进行安装部署。
             <th colspan="2">容器部署</th>
         </tr>
         <tr>
-            <th>ARM_64</th>
+            <th>ARM64</th>
             <th>x86_64</th>
-            <th>ARM_64</th>
+            <th>ARM64</th>
             <th>x86_64</th>
         </tr>
     </thead>

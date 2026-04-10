@@ -9,11 +9,20 @@ During deployment, the system verifies configuration files, runtime environment,
 
 All deployment activities are logged in the `log` directory within `kwdb_install`. If an error occurs during deployment, you can find error prompts in the terminal output and detailed information in the log files.
 
+After bare-metal script deployment, the system packages KWDB as a system service (named `kaiwudb`) and generates the following files:
+
+- `kaiwudb.service`: Configures KWDB CPU resource usage.
+- `kaiwudb_env`: Configures KWDB startup flags.
+
+After container script deployment, the system generates a Docker Compose configuration file `docker-compose.yml` for configuring KWDB startup flags and CPU resource usage.
+
+For specific configuration instructions, see [Cluster Configuration](../../db-operation/cluster-settings-config.md).
+
 ## Prerequisites
 
 **System Requirements**:
 
-- All target nodes meet the requirements for hardware, operating system, and software dependencies.
+- All target nodes meet the requirements for hardware, operating system, and software dependencies. See [Cluster Preparation](../cluster-prepare.md).
 - Network requirements:
   - Network connectivity: All nodes are network-connected.
   - Location: All nodes are located in the same data center.
@@ -80,9 +89,9 @@ All deployment activities are logged in the `log` directory within `kwdb_install
     | | `kaiwudb_port` | Port for client, application and node connections (default: `26257`). |
     | | `brpc_port` | The brpc communication port between KWDB time-series engines, used for inter-node communication (default: `27257`). |
     | | `data_root` | Data directory (default: `/var/lib/kaiwudb`). |
-    | | `cpu` | (Optional) Specifies CPU usage for KWDB on the node. The default is unlimited. The value range is [0,1], with a precision of up to two decimal places. After deployment, you can also adjust the CPU resource limit for KWDB. For more information, see [Configure Bare-Metal Cluster](../cluster-config/cluster-config-bare-metal.md) or [Configure Container Cluster](../cluster-config/cluster-config-docker.md).<br>**Note:** For bare-metal deployment, if the environment is Ubuntu 18.04, you need to modify the `CPUQuota` value in the `kaiwudb.service` file after the deployment is complete. Specifically, change any decimal values to integers (e.g., change `180.0%` to `180%`) to ensure the setting takes effect. For instructions, see [CPU usage configuration](../cluster-config/cluster-config-bare-metal.md#manage-cpu-resources). |
+    | | `cpu` | (Optional) Specifies CPU usage for KWDB on the node. The default is unlimited. The value range is [0,1], with a precision of up to two decimal places. After deployment, you can also adjust the CPU resource limit for KWDB.<br>**Note:** For bare-metal deployment, if the environment is Ubuntu 18.04, you need to modify the `CPUQuota` value in the `kaiwudb.service` file after the deployment is complete. Specifically, change any decimal values to integers (e.g., change `180.0%` to `180%`) to ensure the setting takes effect. For instructions, see [Configure CPU Resource Usage](../../db-operation/cluster-settings-config.md#cpu-resource-usage-configuration). |
     | **local** | `node_addr` | The IP address for client and application connection. The default listening address is `0.0.0.0`, meaning the node will listen on `kaiwudb_port` across all IP addresses on the host. |
-    | **cluster** | `cluster_node_ips` | The IP addresses of remote nodes. The IP addresses of each node should be separated by commas (`,`), and there must be at least two remote nodes. |
+    | **cluster** | `node_addr` | The IP addresses of remote nodes. The IP addresses of each node should be separated by commas (`,`), and there must be at least two remote nodes. |
     | | `ssh_port` | The SSH port used for remote node access; it must be identical across all nodes. |
     | | `ssh_user` | The SSH username for remote node login; it must be identical across all nodes. |
     | **additional** <br>(Primary-standby node configuration) | `IPs` | (Optional) Used when deploying primary-standby clusters in secure mode, not supported by KWDB. |
@@ -184,3 +193,19 @@ All deployment activities are logged in the `log` directory within `kwdb_install
     ```shell
     systemctl enable kaiwudb
     ```
+
+7. (Optional) Execute the `add_user.sh` script to create a database user. If this step is skipped, the system will default to using the user that deployed the database without requiring a password to access the database.
+
+    ```shell
+    ./add_user.sh
+    Please enter the username: 
+    Please enter the password:
+    ```
+
+    After successful execution, the console outputs the following information:
+
+    ```shell
+    [ADD USER COMPLETED]:User creation completed.
+    ```
+
+8. Connect to and manage KWDB via [kwbase CLI](../../quickstart/access/access-cli.md), [KWDB Supported Connectors](../../development/overview.md), or [KaiwuDB Developer Center](../../kaiwudb-tools/kaiwudb-developer-center/overview.md).

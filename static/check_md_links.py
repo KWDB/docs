@@ -13,6 +13,7 @@ Markdown 内部链接检查器
 """
 
 import os
+
 import re
 import sys
 from pathlib import Path

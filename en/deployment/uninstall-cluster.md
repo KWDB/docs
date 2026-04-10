@@ -1,11 +1,11 @@
 ---
-title: Uninstall KWDB Cluster
+title: Uninstall KWDB
 id: uninstall-cluster
 ---
 
-# Uninstall KWDB Cluster
+# Uninstall KWDB
 
-This section describes how to uninstall KWDB clusters for different deployment scenarios, including script deployment, kwbase CLI deployment, and container image deployment. Choose the appropriate uninstallation method based on your deployment approach.
+This section describes the uninstallation methods for KWDB database under different deployment scenarios, including script deployment, source compilation deployment, and container image deployment. Choose the appropriate uninstallation solution according to your actual deployment method.
 
 ## Uninstall Script Deployment
 
@@ -44,20 +44,17 @@ For KWDB deployed using the installation script, perform the following steps:
 
     3. When prompted, choose whether to delete the data, certificates and logs:
 
-         ```shell
-         When uninstalling KaiwuDB, you can either delete or keep all user data. Please confirm your choice: Do you want to delete the data? (y/n): 
-         ```
+        ```shell
+        When uninstalling KaiwuDB, you can either delete or keep all user data. Please confirm your choice: Do you want to delete the data? (y/n): 
+        ```
 
-         - Enter `y`: Delete the data directory.
-         - Enter `n`: Keep the data directory for future use.
+## Source Compilation Deployment
 
-## Uninstall kwbase CLI Deployment
-
-For KWDB deployed using kwbase CLI, perform the following steps on each node to be uninstalled:
+For KWDB deployed through source code compilation, perform the following operations on each node:
 
 ::: warning
 
-Before proceeding, ensure all important data has been backed up. These operations will permanently delete all KWDB data and configurations.
+Before performing deletion operations, ensure all important data has been backed up. The following operations will permanently delete all KWDB data and configurations.
 
 :::
 
@@ -74,6 +71,8 @@ Before proceeding, ensure all important data has been backed up. These operation
    ```bash
    sudo rm -rf <data_path>
    ```
+
+4. Delete the compiled binary files and libraries.
 
 ## Uninstall Container Image Deployment
 

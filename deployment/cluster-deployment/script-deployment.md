@@ -12,6 +12,15 @@ id: script-deployment
 
 在部署过程中，系统会自动生成相关日志。如果部署时出现错误，用户可以通过查看终端输出或 KWDB 安装目录中 `log` 目录里的日志文件，获取详细的错误信息。
 
+裸机脚本部署完成后，系统会将 KWDB 封装成系统服务（名称为 `kaiwudb`），并生成以下文件：
+
+- `kaiwudb.service`：配置 KWDB 的 CPU 资源占用率。
+- `kaiwudb_env`：配置 KWDB 启动参数。
+
+容器脚本部署完成后，系统会生成 Docker Compose 配置文件 `docker-compose.yml`，用于配置 KWDB 的启动参数和 CPU 资源占用率。
+
+具体配置步骤，参见[集群参数配置](../../db-operation/cluster-settings-config.md)。
+
 ## 前提条件
 
 - 已获取 [KWDB 安装包](https://gitee.com/kwdb/kwdb/releases)。
@@ -72,11 +81,13 @@ id: script-deployment
         - `kaiwudb_port`：KWDB 服务端口，默认为 `26257`。
         - `brpc_port`：KWDB 时序引擎间的 brpc 通信端口，用于节点间通信，默认为 `27257`。
         - `data_root`：数据目录，默认为 `/var/lib/kaiwudb`。
-        - `cpu`：可选参数，用于指定 KWDB 服务占用当前节点服务器 CPU 资源的比例，默认无限制。取值范围为 `[0,1]`，最大精度为小数点后两位。KWDB 支持调整 CPU 资源占用率。更多信息，参见[配置裸机部署集群](../cluster-config/cluster-config-bare-metal.md)或[配置容器部署集群](../cluster-config/cluster-config-docker.md) 。**注意**：如果部署环境为 Ubuntu 18.04 版本，在裸机部署集群完成后，需要将 `kaiwudb.service` 文件中的 `CPUQuota` 修改为整型值，例如，将 `180.0%` 修改为 `180%`，以确保设置生效。具体操作步骤，参见[配置 CPU 资源占用率](../cluster-config/cluster-config-bare-metal.md#配置-cpu-资源占用率)。
+        - `cpu`：可选参数，用于指定 KWDB 服务占用当前节点服务器 CPU 资源的比例，默认无限制。取值范围为 `[0,1]`，最大精度为小数点后两位。KWDB 支持调整 CPU 资源占用率。**注意**：如果部署环境为 Ubuntu 18.04 版本，在裸机部
+署集群完成后，需要将 `kaiwudb.service` 文件中的 `CPUQuota` 修改为整型值，例如，将 `180.0%` 修改为 `180%`，以确保设置生效。具体操作步骤，参见[配置 CPU 资源占用率](../
+cluster-config/cluster-config-bare-metal.md#配置-cpu-资源占用率)。
     - `local`：本地节点配置
-        - `local_node_ip`：本地节点对外提供服务的 IP 地址，监听地址为 `0.0.0.0`，端口为 KWDB 服务端口。
+        - `node_addr`：本地节点对外提供服务的 IP 地址，监听地址为 `0.0.0.0`，端口为 KWDB 服务端口。
     - `cluster`：集群内其他节点的配置
-        - `cluster_node_ips`：远程节点对外提供服务的 IP 地址。各节点的 IP 地址使用逗号（`,`）分割，远程节点数应不少于 2 个。
+        - `node_addr`：远程节点对外提供服务的 IP 地址。各节点的 IP 地址使用逗号（`,`）分割，远程节点数应不少于 2 个。
         - `ssh_port`：远程节点的 SSH 服务端口。各节点的 SSH 服务端口必须相同。
         - `ssh_user`：远程节点的 SSH 登录用户。各节点的 SSH 登录用户必须相同。
     - `additional`：主备集群 IP 地址配置。KWDB 暂不支持该功能。
@@ -180,3 +191,19 @@ id: script-deployment
     ```shell
     systemctl enable kaiwudb
     ```
+
+7. （可选）执行 `add_user.sh` 脚本创建数据库用户。如果跳过该步骤，系统将默认使用部署数据库时使用的用户，且无需密码访问数据库。
+
+    ```shell
+    ./add_user.sh
+    Please enter the username: 
+    Please enter the password:
+    ```
+
+    执行成功后，控制台输出以下信息：
+
+    ```shell
+    [ADD USER COMPLETED]:User creation completed.
+    ```
+
+8. 通过 [kwbase CLI](../../quickstart/access/access-cli.md) 、[KWDB 支持的连接器](../../development/overview.md)或 [KaiwuDB 开发者中心](../../kaiwudb-tools/kaiwudb-developer-center/overview.md)连接并管理 KWDB。

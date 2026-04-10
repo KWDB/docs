@@ -11,7 +11,7 @@ This section describes how to deploy a KWDB cluster on a single machine using th
 
 ## Prerequisites
 
-- The hardware, operating system, software dependencies, and ports of the nodes to be deployed meet the [deployment requirements](../prepare/before-deploy-bare-metal.md#hardware).
+- The hardware, operating system, software dependencies, and ports of the nodes to be deployed meet the [deployment requirements](../cluster-prepare.md).
 - One of the following user permissions:
   - Root user access
   - Regular user with `sudo` privileges:
@@ -202,3 +202,23 @@ This section describes how to deploy a KWDB cluster on a single machine using th
         ```bash
         ./kwbase node status --certs-dir=<certs_dir> --host=<address_of_any_alive_node>
         ```
+
+6. (Optional) Create a database user and grant admin privileges. If this step is skipped, the system will default to using the user that deployed the database without requiring a password to access the database.
+
+    - Insecure mode (without password):
+
+        ```bash
+        ./kwbase sql --host=127.0.0.1:$local_port --insecure \
+        -e "create user $username; \
+            grant admin to $username with admin option;"
+        ```
+
+    - Secure mode (with password):
+
+        ```bash
+        ./kwbase sql --certs-dir=/usr/local/kaiwudb/certs --host=127.0.0.1:$local_port \
+        -e "create user $username with password \"$user_password\"; \
+            grant admin to $username with admin option;"
+        ```
+
+7. After deployment is complete, you can connect to and manage KWDB via [kwbase CLI](../../quickstart/access/access-cli.md), [KWDB Supported Connectors](../../development/overview.md), or [KaiwuDB Developer Center](../../kaiwudb-tools/kaiwudb-developer-center/overview.md).
