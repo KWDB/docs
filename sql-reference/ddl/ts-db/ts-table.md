@@ -72,7 +72,6 @@ id: ts-table
                   |     sensor_id INT4 NOT NULL,
                   |     sensor_type VARCHAR(30) NOT NULL ) PRIMARY TAGS(sensor_id)
                   |     retentions 864000s
-                  |     activetime 1d
     (1 row)
     ```
 
@@ -242,7 +241,6 @@ id: ts-table
                 | ) TAGS (
                 |     ptag INT4 NOT NULL ) PRIMARY TAGS(ptag)
                 |     retentions 0s
-                |     activetime 1d
     (1 row)
     ```
 
@@ -265,7 +263,6 @@ id: ts-table
                     | ) TAGS (
                     |     site INT4 NOT NULL ) PRIMARY TAGS(site)
                     |     retentions 0s
-                    |     activetime 1d
         (1 row)
     ```
 
