@@ -22,7 +22,6 @@ CREATE TABLE [IF NOT EXISTS] <table_name> (<column_list>)
 [TAGS|ATTRIBUTES] (<tag_list>) 
 PRIMARY [TAGS|ATTRIBUTES] (<primary_tag_list>) 
 [RETENTIONS <keep_duration>]
-[DICT ENCODING]
 [COMMENT [=] <'comment_text'>]
 [WITH HASH(<hash_value>)];
 ```
@@ -32,7 +31,7 @@ PRIMARY [TAGS|ATTRIBUTES] (<primary_tag_list>)
 :::warning Note
 
 - Currently, the table name, column name, and tag name do not support Chinese characters.
-- The optional parameters must be configured in an order of `[RETENTIONS <keep_duration>] [DICT ENCODING] [COMMENT [=] <'comment_text'>] [WITH HASH(<hash_value>)]`. Otherwise, the system returns an error.
+- The optional parameters must be configured in an order of `[RETENTIONS <keep_duration>] [COMMENT [=] <'comment_text'>] [WITH HASH(<hash_value>)]`. Otherwise, the system returns an error.
 - For KWDB 3.1.0, the partition interval configuration of a table is inherited from that of its parent database.
 
 :::
@@ -45,7 +44,6 @@ PRIMARY [TAGS|ATTRIBUTES] (<primary_tag_list>)
 | `tag_list`| A comma-separated list of tags. You can specify one or more tags. Each table supports up to 128 tags. Each tag requires a name and data type. The tag name supports up to 128 bytes. You can set the data type to NOT NULL. By default, the data type is set to NULL. KWDB does not support setting TIMESTAMP, TIMESTAMPTZ, NVARCHAR or GEOMETRY data types for time-series tables.  <br > Support adding comments to tag columns after the nullable condition.  |
 | `primary_tag_list`| A comma-separated list of primary tags. You can specify one or more primary tags. Each table supports up to 4 primary tags. Primary tags must be included in the list of tags and set to NOT NULL. Currently, primary tags does not support floating-point and variable-length data types, except for the VARCHAR data type. By default, a VARCHAR-typed data length is `64` bytes. The maximum of a VARCHAR-typed data length is `128` bytes. |
 | `keep_duration`| Optional. Define the data retention period for the database. Data older than this duration will be automatically purged.<br>Default: `0s` (retain indefinitely)<br>Time units:<br>- Seconds: `s` or `second`<br>- Minutes: `m` or `minute`<br>- Hours: `h` or `hour`<br>- Days: `d` or `day`<br>- Weeks: `w` or `week`<br>- Months: `mon` or `month`<br>- Years: `y` or `year`<br>Valid range: Positive integer up to 1000 years<br>Note:<br>- Table-level retention settings override database-level settings.<br>- Longer retention periods consume more storage. Configure based on your business needs.<br>- Data that already exceeds the retention period at write time will be rejected and not stored. |
-| `DICT ENCODING`| Optional. Enable dictionary encoding to improve the compression capability of STRING-typed data. The higher the repetition rate of the STRING-typed data is, the better the data is compressed. This function is only applied to CHAR- and VARCHAR-typed data whose length is less than or equal to `1023`. You can only enable it when creating a table. Once enabled, you cannot disable it. |
 | `comment_text` | Optional. Specify the comment to be associated to the table.|
 | `hash_value`| Optional. Define the HASH ring size in a distributed cluster, which determines the maximum number of data ranges. For example, `HASH(100)` allows up to 100 distinct ranges.<br><br>Default: 2000 (up to 2000 ranges)<br>Valid range: [1, 50000]<br><br>Performance considerations:<br>- Too small: Data from multiple devices concentrates in fewer ranges, causing write hotspots<br>- Too large: Excessive ranges increase management overhead<br><br>Recommended values based on device count:<br>- ≤ 1,000 devices: `hash_value` < 20<br>- ≤ 50,000 devices: `hash_value` < 2,000<br>- ≤ 1,000,000 devices: `hash_value` < 10,000|
 
@@ -99,12 +97,6 @@ PRIMARY [TAGS|ATTRIBUTES] (<primary_tag_list>)
     -------+------------+---------
       temp | 20d        | NULL
     (1 row)
-    ```
-
-- Create a table and enable dictionary encoding.
-
-    ```sql
-    CREATE TABLE water (ts TIMESTAMP NOT NULL, value FLOAT) TAGS (sensor_id INT NOT NULL) PRIMARY TAGS (sensor_id) DICT ENCODING;
     ```
 
 - Create a table and associate comments to the data columns, the tag columns and the table.
