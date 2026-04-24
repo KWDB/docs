@@ -22,7 +22,7 @@ id: ts-table
 :::warning 说明
 
 - 目前，时序表名、列名和标签名称不支持中文字符。
-- 配置可选参数时，必须严格按照 `[RETENTIONS <keep_duration>] [DICT ENCODING] [COMMENT [=] <'comment_text'>] [WITH HASH(<hash_value>)]` 的顺序，否则系统将会报错。
+- 配置可选参数时，必须严格按照 `[RETENTIONS <keep_duration>] [COMMENT [=] <'comment_text'>] [WITH HASH(<hash_value>)]` 的顺序，否则系统将会报错。
 - 对于 KWDB 3.1.0，表的分区间隔配置使用所属数据库的时间分区间隔配置。
 
 :::
@@ -35,7 +35,6 @@ id: ts-table
 | `tag_list`| 标签列表，支持添加一个或多个标签定义，最多可指定 `128` 个标签。标签定义包含标签名、数据类型和注释信息。<br>- 标签名的最大长度为 128 字节，支持指定 NOT NULL，默认为空值。不支持 TIMESTAMP、TIMESTAMPTZ、NVARCHAR 和 GEOMETRY 数据类型。<br >- 支持在 nullable 条件之后添加标签列的注释信息。 |
 | `primary_tag_list`| 主标签列表，支持添加一个或多个主标签名称，最多可指定 `4` 个。主标签必须包含在标签列表内且指定为 NOT NULL，不支持浮点类型和除 VARCHAR 之外的变长数据类型。VARCHAR 类型长度默认 `64` 字节，最大长度为 `128` 字节。|
 | `keep_duration` | 可选参数，设置表的数据生命周期。数据超过此时长后将被系统自动清除。<br>默认值： `0s`（永久保留）<br>时间单位：<br>- 秒：`s` 或 `second`<br>- 分钟：`m` 或 `minute`<br>- 小时：`h` 或 `hour`<br>- 天：`d` 或 `day`<br>- 周：`w` 或 `week`<br>- 月：`mon` 或 `month`<br>- 年：`y` 或 `year`<br>取值范围：正整数，上限为 1000 年<br>**说明：**<br>- 表级设置优先于库级设置。<br>- 保留时长越长，存储空间占用越大，请根据业务需求合理配置。<br>- 如果待写入的数据已超过生命周期限制，系统会直接丢弃该数据，不予写入。|
-| `DICT ENCODING`| 可选参数，启用字符串的字典编码功能，提升字符串数据的压缩能力。表中存储的字符串数据重复率越高，压缩优化效果越明显。该功能只适用于 CHAR 和 VARCHAR 长度小于等于 `1023` 的字符串，且只能在建表时开启。开启后不支持禁用。 |
 | `[COMMENT [=] <'comment_text'>` | 可选参数，定义表的注释信息。 |
 | `hash_value`| 可选参数，用于定义分布式集群中 HASH 环的大小，决定最大 Range 分片数量。例如 HASH(100) 表示最多可产生 100 个不同的 Range 分片。<br><br>默认值为 2000，表示最多可产生 2000 个 Range 分片。支持设置范围为 [1,50000]。<br><br>性能影响：HASH 值过小时将导致多个设备的数据集中在少数 Range 中，形成写入热点，HASH 值过大时则会导致 Range 数量过多，增加管理开销。<br><br>推荐配置：建议根据预期设备数量选择合适的 HASH 值：<br>- 设备数 ≤ 1,000：HASH 值 < 20<br>- 设备数 ≤ 50,000：HASH 值 < 2,000<br>- 设备数 ≤ 1,000,000：HASH 值 < 10,000 |
 
@@ -93,14 +92,6 @@ id: ts-table
     -------+------------+---------
       temp | 20d        | NULL
     (1 row)
-    ```
-
-- 创建时序表并开启字符串字典编码。
-
-    以下示例创建一个名为 `water` 的时序表并开启字符串字典编码。
-
-    ```sql
-    CREATE TABLE water (ts TIMESTAMP NOT NULL, value FLOAT) TAGS (sensor_id INT NOT NULL) PRIMARY TAGS (sensor_id) DICT ENCODING;
     ```
 
 - 创建时序表并为表及其数据列和标签列添加注释信息。
