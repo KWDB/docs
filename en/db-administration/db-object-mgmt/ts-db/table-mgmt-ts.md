@@ -80,7 +80,6 @@ PRIMARY [TAGS|ATTRIBUTES] (<primary_tag_list>)
                   |     sensor_id INT4 NOT NULL,
                   |     sensor_type VARCHAR(30) NOT NULL ) PRIMARY TAGS(sensor_id)
                   |     retentions 864000s
-                  |     activetime 1d
     (1 row)
     ```
 
@@ -228,9 +227,9 @@ SHOW CREATE [TABLE] [<database_name>.] <table_name>;
 - Show the `CREATE TABLE` statement for a table in the current database.
 
     ```sql
-    -- 1. Create a table named t3 and set a value for the activetime parameter. 
+    -- 1. Create a table named t3. 
 
-    CREATE TABLE t3(ts timestamp NOT NULL, a int) TAGS(ptag int NOT NULL) PRIMARY TAGS(ptag) ACTIVETIME 10s;
+    CREATE TABLE t3(ts timestamp NOT NULL, a int) TAGS(ptag int NOT NULL) PRIMARY TAGS(ptag);
 
     -- 2. Checkt the created t3 table.
 
@@ -243,7 +242,6 @@ SHOW CREATE [TABLE] [<database_name>.] <table_name>;
                 | ) TAGS (
                 |     ptag INT4 NOT NULL ) PRIMARY TAGS(ptag)
                 |     retentions 0s
-                |     activetime 1d
     (1 row)
     ```
 
@@ -264,7 +262,6 @@ SHOW CREATE [TABLE] [<database_name>.] <table_name>;
                     | ) TAGS (
                     |     site INT4 NOT NULL ) PRIMARY TAGS(site)
                     |     retentions 0s
-                    |     activetime 0s
     (1 row)
     ```
 
