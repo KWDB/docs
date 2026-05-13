@@ -275,6 +275,12 @@ id: functions-ts-db
 | substring(input: string, start_pos: int8, length: int8) → string      | 返回从 `substr_pos` 开始的 input 子字符串（从 1 开始计数）。**提示**：避免在函数中使用转义字符 `+`。                                                   |
 | upper(val: string) → string                                           | 将 val 中的所有字符转换为大写字母。                                                                            |
 
+### 集群管理函数
+
+| 函数 → 返回值                             | 描述                                                      |
+| ------------------------------------------ | --------------------------------------------------------- |
+| relocate_range(range_id: int, source_store_id: int, dst_store_id: int) → bool     | 将指定数据分区的某个数据副本从源节点迁移至目标节点，可用于手动调整数据分布或集群负载均衡。<br>**提示**：可通过以下语句查看表的数据分区分布，获取分区 ID 及各副本所在的节点 ID（store ID）：<br> `SELECT * FROM kwdb_internal.ranges WHERE table_name = '<table_name>'` |
+
 ## 聚合函数
 
 ::: warning 说明
