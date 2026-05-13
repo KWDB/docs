@@ -39,14 +39,14 @@ id: stream-sql
 | `table_name` | 目标表名称。<br> **说明** <br> 目标表的模式必须与 `stream_query` 参数的 `select_list` 参数兼容。 |
 | `stream_option` | 流计算参数。用户可以使用 `ALTER STREAM <stream_name> SET OPTIONS` 语句修改流计算的参数。支持以下参数：<br >- `ENABLE`: 是否启用流计算。支持 `on` 和 `off` 两个取值。`on` 表示启用流计算。`off` 表示未启用流计算。默认为 `on`。 <br >- `MAX_DELAY`：聚合窗口最大持续时间，默认为 `24h`。支持的时间单位包括毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）、周（w）等。 <br >- `SYNC_TIME`：最大允许的乱序数据窗口，默认为 `1m`。<br >- `PROCESS_HISTORY`：是否处理历史数据和断点数据。支持 `on` 和 `off` 两个取值。`on` 表示处理历史数据和断点数据。`off` 表示不处理历史数据和断点数据。默认为 `off`。<br >- `MAX_RETRIES`：流计算发生错误后的重试次数，默认为 `5`。 <br >- `CHECKPOINT_INTERVAL`：流计算的检查点周期，默认为 `10s`。 <br >- `HEARTBEAT_INTERVAL`：流计算的心跳周期，默认为 `2s`。 <br >- `BUFFER_SIZE`：用于流计算聚合计算的缓冲区大小，默认为 `2Gb`。如为普通流计算查询，则不启用。<br > **说明** <br >- 目前，KWDB 只支持在线修改 `ENABLE` 参数。如需修改其它参数，用户需要先停止流计算，然后再修改相关参数。  |
 | `value` | 流计算参数的取值。 |
-| `stream_query` | `SELECT` 普通查询语法的子集。<br> **说明** <br>- `select_list` 参数必须与目标表的模式兼容。<br>- `select_list` 参数中必须包含 `first(ts)` 和 `last(ts)`且作为最开始的两个输出列，用于记录窗口的开启和关闭时间。否则，历史数据、过期数据和断点数据的处理功能可能处于不可用状态。<br>- 支持窗口函数（会话窗口、状态窗口、时间窗口、事件窗口与计数窗口）和 `Timebucket` 函数。其中，分组窗口函数必须与 `GROUP BY` 子句搭配使用，且分组列须在窗口函数之前指定。<br>- 支持使用 `AS` 子句重命名全部输出列，使其符合目标表的模式定义。<br>- 使用 `TIME_WINDOW` 函数创建流计算时，必须使用 `first_row` 和 `last_row` 函数获取聚合窗口的起止时间。<br>- 使用带滑动窗口的 `TIME_WINDOW` 函数创建流计算时，必须使用 `first` 和 `last` 函数获取聚合窗口的起止时间，然后将其记录到目标表中且作为最开始的两个输出列。|
+| `stream_query` | `SELECT` 普通查询语法的子集。<br> **说明** <br>- `select_list` 参数必须与目标表的模式兼容。<br>- `select_list` 参数中必须包含 `first(ts)` 和 `last(ts)`且作为最开始的两个输出列，用于记录窗口的开启和关闭时间。否则，历史数据、过期数据和断点数据的处理功能可能处于不可用状态。<br>- 支持窗口函数（会话窗口、状态窗口、时间窗口、事件窗口与计数窗口）和 `Timebucket` 函数。其中，分组窗口函数必须与 `GROUP BY` 子句搭配使用，当 `GROUP BY` 子句中同时出现窗口函数与标签列或数据列时，窗口函数必须置于最后。<br>- 支持使用 `AS` 子句重命名全部输出列，使其符合目标表的模式定义。<br>- 使用 `TIME_WINDOW` 函数创建流计算时，必须使用 `first_row` 和 `last_row` 函数获取聚合窗口的起止时间。<br>- 使用带滑动窗口的 `TIME_WINDOW` 函数创建流计算时，必须使用 `first` 和 `last` 函数获取聚合窗口的起止时间，然后将其记录到目标表中且作为最开始的两个输出列。|
 
 ### 语法示例
 
 以下示例创建一个名为 `cpu_stream` 的流计算。系统使用默认参数启动流计算任务，并以 `1` 分钟为时间窗口、`30s` 为前向增量计算 `benchmark.cpu` 时序表中每个设备（`hostname`）在此时间范围内 `usage_user` 和 `usage_system` 的平均值，并将其结果结果写入目标表 `cpu_avg` 中，同时记录时间窗口的开始及结束时间（`first(ts_timestamp)` 和 `last(ts_timestamp)`）。
 
 ```sql
-CREATE STREAM cpu_stream INTO cpu_avg AS SELECT first(ts_timestamp), last(ts_timestamp), count(*), avg(usage_user), avg(usage_system), hostname FROM benchmark.cpu GROUP BY TIME_WINDOW(ts_timestamp, '1m', '30s'), hostname;
+CREATE STREAM cpu_stream INTO cpu_avg AS SELECT first(ts_timestamp), last(ts_timestamp), count(*), avg(usage_user), avg(usage_system), hostname FROM benchmark.cpu GROUP BY hostname, TIME_WINDOW(ts_timestamp, '1m', '30s');
 ```
 
 ## 查看流计算
