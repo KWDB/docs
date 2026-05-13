@@ -39,13 +39,13 @@ KWDB 支持同时导入表的用户数据和元数据，或者只导入表的用
 - 全量导入用户数据、元数据和权限信息，并根据指定的文件目录和表结构创建表
 
     ```sql
-    IMPORT TABLE CREATE USING "<meta.sql_path>" CSV DATA ("<file_path>") WITH [delimiter = '<char>' | enclosed = '<char>' | escaped = '<char>' | nullif = '<char>' | thread_concurrency = '<int>'| batch_rows = '<int>'| auto_shrink | comment | charset = '<coding>' | privileges];
+    IMPORT TABLE CREATE USING "<meta.sql_path>" CSV DATA ("<file_path>") WITH [delimiter = '<char>' | enclosed = '<char>' | escaped = '<char>' | nullif = '<char>' | thread_concurrency = '<int>'| batch_rows = '<int>'| limit_memory = '<size>'| auto_shrink | comment | charset = '<coding>' | privileges];
     ```
 
 - 只导入用户数据或者增量导入用户数据
 
     ```sql
-    IMPORT INTO <table_name> [<column_list>] CSV DATA ("<file_path>") WITH [delimiter = '<char>' | enclosed = '<char>' | escaped = '<char>' | nullif = '<char>' | thread_concurrency = '<int>'| batch_rows = '<int>'| auto_shrink | charset = '<coding>'];
+    IMPORT INTO <table_name> [<column_list>] CSV DATA ("<file_path>") WITH [delimiter = '<char>' | enclosed = '<char>' | escaped = '<char>' | nullif = '<char>' | thread_concurrency = '<int>'| batch_rows = '<int>'| limit_memory = '<size>'| auto_shrink | charset = '<coding>'];
     ```
 
 - 只导入元数据和权限信息
@@ -66,6 +66,7 @@ KWDB 支持同时导入表的用户数据和元数据，或者只导入表的用
 | `nullif`             | 可选参数，用于指定空值的表示形式。默认不显示内容，支持指定为 `NULL`、`null`、`Null` 或 `\N`。|
 | `thread_concurrency` | 可选参数，用于指定并发写入数据的数量。系统按照配置平均分割、并发读取和写入导入的文件。默认情况下，`thread_concurrency` 的取值是 `1`。`thread_concurrency` 的取值应该大于 `0`，小于等于系统核数的 2 倍。如果取值大于核数的 2 倍，系统按照核数的 2 倍并发读取、写入数据。`thread_concurrency` 参数支持与 `batch_rows`、`auto_shrink` 参数共同使用，中间使用逗号（`,`）隔开。<br> **注意**：<br>- 开启多线程导入操作后，如果导入的 `.csv` 文件中带有换行符，会导致导入失败。此时，用户应删除导入的数据库或者表，将 `thread_concurrency` 参数取值设置为 1， 然后再重新导入文件。<br>- 开启多线程导入操作后，如果导入的 `.csv` 文件中存在同一设备相同时间戳的数据，由于写入顺序不可控，在默认去重模式（`override`）下，后写入的数据将覆盖已写入的相同时间戳数据，最终导入结果可能与预期不符。|
 | `batch_rows`         | 并发导入数据时，每次读取的行数。默认情况下，`batch_rows` 的取值是 `500`。`batch_rows` 的取值应该大于 `0`，并且 batch_rows x 单行数据的大小 ≤ 4 GB。如果 batch_rows x 单行数据的大小 > 4 GB, 系统按照 4 GB 支持的最大行数读取数据。`batch_rows` 参数支持与 `thread_concurrency`、`auto_shrink` 共同使用，中间使用逗号（`,`）隔开。|
+| `limit_memory` | 可选参数，用于限制每次导入的数据量大小。默认不限制。支持纯数字（字节数）或数字加单位的格式，单位不区分大小写，例如 `100B`、`1024`、`1MB`。支持的最大单位为 PB。|
 | `auto_shrink`        | 可选参数，用于指定是否进行集群自适应衰减。默认情况下，系统不进行自适应衰减。设置了 `auto_shrink` 参数后，集群将自动每 10 秒进行一次衰减。`auto_shrink` 参数支持与 `batch_rows`、`thread_concurrency` 参数共同使用，中间使用逗号（`,`）隔开。|
 | `comment` | 可选参数，用于指定是否导入表的注释信息。默认不导入注释信息。<br > - 如果要导入的 SQL 文件带有注释信息，指定 `WITH comment` 参数后，系统导入注释信息。否则，系统不导入注释信息。<br > - 如果要导入的 SQL 文件没有注释信息，指定 `WITH comment` 参数后，系统报错，提示 `NO COMMENT statement in the SQL file`。|
 | `charset` | 可选参数，用于指定待导入数据的字符集编码。默认值为 `utf8`，支持指定为 `gbk`、`gb18030`或 `utf8`。<br>**注意**：指定的字符集编码必须与实际字符集编码一致，否则可能会导致数据导入失败或数据乱码问题。|
@@ -255,7 +256,7 @@ KWDB 支持同时导入数据库的表数据、元数据和权限信息，或者
 时序数据库和关系数据库的导入语法相同。
 
 ```sql
-IMPORT DATABASE CSV DATA ("<db_path>") WITH [ delimiter = '<char>' | enclosed = '<char>' | escaped = '<char>' | nullif = '<char>' | thread_concurrency = '<int>'| batch_rows = '<int>'| auto_shrink  | comment | charset = '<coding>' | privileges ];
+IMPORT DATABASE CSV DATA ("<db_path>") WITH [ delimiter = '<char>' | enclosed = '<char>' | escaped = '<char>' | nullif = '<char>' | thread_concurrency = '<int>'| batch_rows = '<int>'| limit_memory = '<size>'| auto_shrink  | comment | charset = '<coding>' | privileges ];
 ```
 
 ### 参数说明
@@ -269,6 +270,7 @@ IMPORT DATABASE CSV DATA ("<db_path>") WITH [ delimiter = '<char>' | enclosed = 
 | `nullif`             | 可选参数，用于指定空值的表示形式。默认不显示内容，支持指定为 `NULL`、`null`、`Null` 或 `\N`。                                                                                                                                                                                                                                                                                                                                                                                                              |
 | `thread_concurrency` | 可选参数，用于指定并发写入数据的数量。系统按照配置平均分割、并发读取和写入导入的文件。默认情况下，`thread_concurrency` 的取值是 `1`。`thread_concurrency` 的取值应该大于 `0`，小于等于系统核数的 2 倍。如果取值大于核数的 2 倍，系统按照核数的 2 倍并发读取、写入数据。`thread_concurrency` 参数支持与 `batch_rows`、`auto_shrink` 参数共同使用，中间使用逗号（`,`）隔开。<br> **注意**：<br>- 开启多线程导入操作后，如果导入的 `.csv` 文件中带有换行符，会导致导入失败。此时，用户应删除导入的数据库或者表，将 `thread_concurrency` 参数取值设置为 1， 然后再重新导入文件。<br>- 开启多线程导入操作后，如果导入的 `.csv` 文件中存在同一设备相同时间戳的数据，由于写入顺序不可控，在默认去重模式（`override`）下，后写入的数据将覆盖已写入的相同时间戳数据，最终导入结果可能与预期不符。|
 | `batch_rows`         | 并发导入数据时，每次读取的行数。默认情况下，`batch_rows` 的取值是 `500`。`batch_rows` 的取值应该大于 `0`，并且 batch_rows x 单行数据的大小 ≤ 4 GB。如果 batch_rows x 单行数据的大小 > 4 GB, 系统按照 4 GB 支持的最大行数读取数据。`batch_rows` 参数支持与 `thread_concurrency`、`auto_shrink` 共同使用，中间使用逗号（`,`）隔开。                                                                                                                                                                           |
+| `limit_memory` | 可选参数，用于限制每次导入的数据量大小。默认不限制。支持纯数字（字节数）或数字加单位的格式，单位不区分大小写，例如 `100B`、`1024`、`1MB`。支持的最大单位为 PB。|
 | `auto_shrink`        | 可选参数，用于指定是否进行集群自适应衰减。默认情况下，系统不进行自适应衰减。设置了 `auto_shrink` 参数后，集群将自动每 10 秒进行一次衰减。`auto_shrink` 参数支持与 `batch_rows`、`thread_concurrency` 参数共同使用，中间使用逗号（`,`）隔开。                                                                                                                                                                                                                                                                                     |
 | `comment` | 可选参数，用于指定是否导入数据库的注释信息。默认不导入注释信息。<br > - 如果要导入的 SQL 文件带有注释信息，指定 `WITH comment` 参数后，系统导入注释信息。否则，系统不导入注释信息。<br > - 如果要导入的 SQL 文件没有注释信息，指定 `WITH comment` 参数后，系统报错，提示 `NO COMMENT statement in the SQL file`。|
 | `charset` | 可选参数，用于指定待导入数据的字符集编码。默认值为 `utf8`，支持指定为 `gbk`、`gb18030` 或 `utf8`。<br>**注意**：指定的字符集编码必须与实际字符集编码一致，否则可能会导致数据导入失败或数据乱码问题。|
