@@ -54,7 +54,7 @@ KWDB 支持在以下操作系统进行安装部署：
 
 安装时，KWDB 会对依赖进行检查。如果缺少依赖会退出安装并提示依赖缺失。如果目标机器不能联网，用户需要在能联网的机器上根据目标机器的操作系统下载好所有依赖文件，然后将依赖文件复制到目标机器上进行安装。
 
-下表列出需要在目标机器安装的依赖。
+下表列出使用安装程序部署时需要在目标机器安装的依赖。
 
 | 平台 | 系统类型 | libc | libgcc | libstdc++ |
 |-----|---------|------|--------|-----------|
@@ -64,7 +64,7 @@ KWDB 支持在以下操作系统进行安装部署：
 
 ### 容器部署
 
-除上述依赖外，使用[安装程序](./cluster-deployment/installer-dialog.md)部署时，目标机器需已安装 Docker Compose（1.20.0 及以上版本）。
+除上述依赖外，使用安装程序部署时，目标机器需已安装 Docker Compose（1.20.0 及以上版本）。
 
 - 在线安装：参考 [Docker Compose 官方安装文档](https://docs.docker.com/compose/install/)
 - 离线安装：参考 [Docker Compose 离线安装指南](https://docs.docker.com/compose/install/standalone/)
