@@ -23,17 +23,17 @@ systemctl stop kaiwudb
 1. 登录安装部署 KWDB 的初始节点，执行以下命令以命令行模式启动安装程序：
 
     ```bash
-    ./KaiwuDB-*.run -c
+    ./KWDB-*.run -c
     # 或者
-    ./KaiwuDB-*.run --cli
+    ./KWDB-*.run --cli
     ```
 
 2. 在主功能菜单中，输入 `2` 选择卸载 KWDB：
 
     ```plain
-    1. 安装 KaiwuDB
-    2. 卸载 KaiwuDB
-    3. 安装 KaiwuDB 并加入集群
+    1. 安装 KWDB
+    2. 卸载 KWDB
+    3. 安装 KWDB 并加入集群
     4. 升级节点
     5. 退出
 
@@ -80,12 +80,12 @@ systemctl stop kaiwudb
 1. 登录安装部署 KWDB 的初始节点，执行以下命令以终端图形交互模式启动安装程序：
 
     ```bash
-    ./KaiwuDB-*.run -i
+    ./KWDB-*.run -i
     # 或者
-    ./KaiwuDB-*.run --interact
+    ./KWDB-*.run --interact
     ```
 
-2. 在主功能菜单中，使用方向键选中**卸载 KaiwuDB**，按回车确认。
+2. 在主功能菜单中，使用方向键选中**卸载 KWDB**，按回车确认。
 
 3. 进入参数设置菜单，根据需要依次选择各配置项进行设置：
     

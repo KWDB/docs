@@ -14,7 +14,6 @@ KWDB 支持集群的动态扩容和缩容操作，以满足不同业务场景下
 
 ::: warning 说明
 
-- **许可证限制**：集群节点数必须在许可证允许的范围内。超出限制时，扩容操作将被拒绝。
 - **DDL 操作**：扩缩容期间，时序索引相关的 DDL 操作（如 `CREATE INDEX`、`DROP INDEX`）可能返回超时错误，操作完成后重试即可。
 - **磁盘容量**：扩缩容期间，因数据迁移需要，集群磁盘使用量可能临时增加。操作完成后将恢复正常水平。
 - **操作建议**：建议在业务低峰期执行扩缩容操作，以降低对业务的影响。
@@ -41,13 +40,10 @@ SET CLUSTER SETTING kv.allocator.ts_consider_rebalance.enabled = false;
 
 - 待扩容节点未安装 KWDB。
 - 目标集群处于运行状态。
-- 当前节点数未达到许可证上限。
 - 安装程序扩容方式还需满足以下条件：
   - 已获取 KWDB 安装程序（`.run` 文件）。
   - 执行节点（集群内任一节点）可通过 SSH 登录至待扩容节点，并对待扩容节点的安装目录拥有写入权限。
-  - 不同模式对用户的要求不同：
-    - 命令行模式或终端图形交互模式：用户为 `root` 用户或已配置 `sudo` 免密的普通用户。
-    - 可视化 GUI 模式：用户为 `root` 用户或拥有 `sudo` 权限的普通用户。
+  - 用户为 `root` 用户或拥有 `sudo` 权限的普通用户。
   - （可选）如果集群采用安全模式，需已在待扩容节点上构建临时证书目录并授予读取权限：
 
     ```bash
@@ -71,23 +67,23 @@ SET CLUSTER SETTING kv.allocator.ts_consider_rebalance.enabled = false;
 1. 将 KWDB 安装程序复制至执行扩容操作的集群节点，并赋予执行权限：
 
     ```bash
-    chmod +x KaiwuDB-*.run
+    chmod +x KWDB-*.run
     ```
 
 2. 以命令行模式启动安装程序：
 
     ```bash
-    ./KaiwuDB-*.run -c
+    ./KWDB-*.run -c
     # 或者
-    ./KaiwuDB-*.run --cli
+    ./KWDB-*.run --cli
     ```
 
-3. 在主功能菜单中，输入 `3` 选择`安装 KaiwuDB 并加入集群`：
+3. 在主功能菜单中，输入 `3` 选择`安装 KWDB 并加入集群`：
 
     ```plain
-    1. 安装 KaiwuDB
-    2. 卸载 KaiwuDB
-    3. 安装 KaiwuDB 并加入集群
+    1. 安装 KWDB
+    2. 卸载 KWDB
+    3. 安装 KWDB 并加入集群
     4. 升级节点
     5. 退出
 
@@ -97,7 +93,7 @@ SET CLUSTER SETTING kv.allocator.ts_consider_rebalance.enabled = false;
 4. 根据现有集群类型，选择对应的加入模式：
 
     ```plain
-    加入 KaiwuDB 集群
+    加入 KWDB 集群
     1. 加入单副本集群
     2. 加入三副本集群
     3. 返回主菜单
@@ -110,7 +106,7 @@ SET CLUSTER SETTING kv.allocator.ts_consider_rebalance.enabled = false;
     ```plain
     配置集群地址
     请输入集群任一节点地址：
-    请输入对应节点 KaiwuDB 服务端口： 
+    请输入对应节点 KWDB 服务端口： 
     ```
 
 6. 配置 CA 证书及私钥路径（非安全模式可选择跳过该配置），选择是否为所有用户安装：
@@ -153,7 +149,7 @@ SET CLUSTER SETTING kv.allocator.ts_consider_rebalance.enabled = false;
     | 参数 | 说明 |
     |------|------|
     | `secure_mode` | 安全模式，需与目标集群保持一致。 |
-    | `rest_port` | Admin UI 端口，默认为 `8080`。 |
+    | `rest_port` | KWDB web 端口，默认为 `8080`。 |
     | `kaiwudb_port` | KWDB 服务端口，默认为 `26257`。 |
     | `brpc_port` | 数据传输端口，默认为 `27257`。 |
     | `data_root` | 数据目录，默认为 `/var/lib/kaiwudb`。 |
@@ -173,18 +169,18 @@ SET CLUSTER SETTING kv.allocator.ts_consider_rebalance.enabled = false;
 1. 将 KWDB 安装程序复制至执行扩容操作的集群节点，并赋予执行权限：
 
     ```bash
-    chmod +x KaiwuDB-*.run
+    chmod +x KWDB-*.run
     ```
 
 2. 以终端图形交互模式启动安装程序：
 
     ```bash
-    ./KaiwuDB-*.run -i
+    ./KWDB-*.run -i
     # 或者
-    ./KaiwuDB-*.run --interact
+    ./KWDB-*.run --interact
     ```
 
-3. 在主功能菜单中，使用方向键选中**安装 KaiwuDB 并加入集群**，按回车确认。
+3. 在主功能菜单中，使用方向键选中**安装 KWDB 并加入集群**，按回车确认。
 
 4. 进入安装参数设置菜单，根据需要依次设置以下配置项：
 
@@ -198,7 +194,7 @@ SET CLUSTER SETTING kv.allocator.ts_consider_rebalance.enabled = false;
     | 增加节点 | 填写待扩容节点的主机名、端口、用户名和密码。 |
     | 设置数据目录 | 数据目录，默认为 `/var/lib/kaiwudb`。 |
     | 设置目标集群地址 | 目标集群任一节点的 IP 地址。 |
-    | 设置目标集群 KaiwuDB 服务端口 | 目标集群的 KWDB 服务端口。 |
+    | 设置目标集群 KWDB 服务端口 | 目标集群的 KWDB 服务端口。 |
     | 设置 CA 证书路径 | 安全模式下需要上传目标集群的 CA 证书及私钥文件，通过文件选择器选择路径。 |
 
 5. 选择是否为所有用户安装。
@@ -206,56 +202,6 @@ SET CLUSTER SETTING kv.allocator.ts_consider_rebalance.enabled = false;
 6. 所有配置完成后，选中**开始安装**，按回车开始安装并加入集群。
 
 7. 安装完成后，检查新节点是否成功加入：
-
-    ```shell
-    kw-status
-    ```
-
-##### 可视化 GUI 模式
-
-1. 将 KWDB 安装程序复制至执行扩容操作的集群节点，并赋予执行权限：
-
-    ```bash
-    chmod +x KaiwuDB-*.run
-    ```
-
-2. 以可视化 GUI 模式启动安装程序：
-
-    ```bash
-    sudo ./KaiwuDB-*.run -g
-    # 或者
-    sudo ./KaiwuDB-*.run --gui
-    ```
-
-3. 在操作向导页面，选中**全新安装**，点击**下一步**。
-
-    ![](../static/quickstart/gui-welcome.png)
-
-4. 在用户许可页面，勾选同意许可协议，点击**下一步**。
-
-    ![](../static/quickstart/gui-agreement.png)
-
-5. 在参数配置页面，设置安全模式、各端口和数据目录，参数需与目标集群保持一致，完成后点击**下一步**。
-
-    ![](../static/quickstart/gui-config.png)
-
-6. 在节点管理页面，选择多副本集群模式，点击**增加节点**，填写待扩容节点的 IP、端口、用户名和密码，点击**保存**。然后勾选底部的**加入集群**选项。
-
-    ![](../static/quickstart/gui-scale.png)
-
-7. 在弹出的**目标集群参数**对话框中填写目标集群相关信息，点击**确定**，然后点击**下一步**。
-
-    ![](../static/quickstart/gui-target.png)
-
-    | 参数 | 说明 |
-    |------|------|
-    | 目标集群模式 | 目标集群的安全模式。 |
-    | 目标集群 IP | 目标集群任一节点的 IP 地址。 |
-    | 目标集群服务端口 | 目标集群的 KWDB 服务端口。 |
-
-8. 在开始安装页面，等待安装完成，然后点击**结束**。
-
-9. 检查新节点是否成功加入：
 
     ```shell
     kw-status
@@ -337,13 +283,10 @@ KWDB 单副本集群支持安装程序扩容和命令行扩容两种方式。
 
 - 待扩容节点未安装 KWDB。
 - 目标集群处于运行状态。
-- 当前节点数未达到许可证上限。
 - 安装程序扩容方式还需满足以下条件：
   - 已获取 KWDB 安装程序（`.run` 文件）。
   - 执行节点（集群内任一节点）可通过 SSH 登录至待扩容节点，并对待扩容节点的安装目录拥有写入权限。
-  - 不同模式对用户的要求不同：
-    - 命令行模式或终端图形交互模式：用户为 `root` 用户或已配置 `sudo` 免密的普通用户。
-    - 可视化 GUI 模式：用户为 `root` 用户或拥有 `sudo` 权限的普通用户。
+  - 用户为 `root` 用户或已配置 `sudo` 免密的普通用户。
   - （可选）如果集群采用安全模式，需已在待扩容节点上构建临时证书目录并授予读取权限：
 
     ```bash
@@ -367,23 +310,23 @@ KWDB 单副本集群支持安装程序扩容和命令行扩容两种方式。
 1. 将 KWDB 安装程序复制至执行扩容操作的集群节点，并赋予执行权限：
 
     ```bash
-    chmod +x KaiwuDB-*.run
+    chmod +x KWDB-*.run
     ```
 
 2. 以命令行模式启动安装程序：
 
     ```bash
-    ./KaiwuDB-*.run -c
+    ./KWDB-*.run -c
     # 或者
-    ./KaiwuDB-*.run --cli
+    ./KWDB-*.run --cli
     ```
 
-3. 在主功能菜单中，输入 `3` 选择`安装 KaiwuDB 并加入集群`：
+3. 在主功能菜单中，输入 `3` 选择`安装 KWDB 并加入集群`：
 
     ```plain
-    1. 安装 KaiwuDB
-    2. 卸载 KaiwuDB
-    3. 安装 KaiwuDB 并加入集群
+    1. 安装 KWDB
+    2. 卸载 KWDB
+    3. 安装 KWDB 并加入集群
     4. 升级节点
     5. 退出
 
@@ -393,7 +336,7 @@ KWDB 单副本集群支持安装程序扩容和命令行扩容两种方式。
 4. 根据现有集群类型，选择对应的加入模式：
 
     ```plain
-    加入 KaiwuDB 集群
+    加入 KWDB 集群
     1. 加入单副本集群
     2. 加入三副本集群
     3. 返回主菜单
@@ -406,7 +349,7 @@ KWDB 单副本集群支持安装程序扩容和命令行扩容两种方式。
     ```plain
     配置集群地址
     请输入集群任一节点地址：
-    请输入对应节点 KaiwuDB 服务端口： 
+    请输入对应节点 KWDB 服务端口： 
     ```
 
 6. 配置 CA 证书及私钥路径（非安全模式可选择跳过该配置），选择是否为所有用户安装：
@@ -449,7 +392,7 @@ KWDB 单副本集群支持安装程序扩容和命令行扩容两种方式。
     | 参数 | 说明 |
     |------|------|
     | `secure_mode` | 安全模式，需与目标集群保持一致。 |
-    | `rest_port` | Admin UI 端口，默认为 `8080`。 |
+    | `rest_port` |KWDB Web 服务端口，默认为 `8080`。 |
     | `kaiwudb_port` | KWDB 服务端口，默认为 `26257`。 |
     | `brpc_port` | 数据传输端口，默认为 `27257`。 |
     | `data_root` | 数据目录，默认为 `/var/lib/kaiwudb`。 |
@@ -469,18 +412,18 @@ KWDB 单副本集群支持安装程序扩容和命令行扩容两种方式。
 1. 将 KWDB 安装程序复制至执行扩容操作的集群节点，并赋予执行权限：
 
     ```bash
-    chmod +x KaiwuDB-*.run
+    chmod +x KWDB-*.run
     ```
 
 2. 以终端图形交互模式启动安装程序：
 
     ```bash
-    ./KaiwuDB-*.run -i
+    ./KWDB-*.run -i
     # 或者
-    ./KaiwuDB-*.run --interact
+    ./KWDB-*.run --interact
     ```
 
-3. 在主功能菜单中，使用方向键选中**安装 KaiwuDB 并加入集群**，按回车确认。
+3. 在主功能菜单中，使用方向键选中**安装 KWDB 并加入集群**，按回车确认。
 
 4. 进入安装参数设置菜单，根据需要依次设置以下配置项：
 
@@ -494,7 +437,7 @@ KWDB 单副本集群支持安装程序扩容和命令行扩容两种方式。
     | 增加节点 | 填写待扩容节点的主机名、端口、用户名和密码。 |
     | 设置数据目录 | 数据目录，默认为 `/var/lib/kaiwudb`。 |
     | 设置目标集群地址 | 目标集群任一节点的 IP 地址。 |
-    | 设置目标集群 KaiwuDB 服务端口 | 目标集群的 KWDB 服务端口。 |
+    | 设置目标集群 KWDB 服务端口 | 目标集群的 KWDB 服务端口。 |
     | 设置 CA 证书路径 | 安全模式下需要上传目标集群的 CA 证书及私钥文件，通过文件选择器选择路径。 |
 
 5. 选择是否为所有用户安装。
@@ -502,56 +445,6 @@ KWDB 单副本集群支持安装程序扩容和命令行扩容两种方式。
 6. 所有配置完成后，选中**开始安装**，按回车开始安装并加入集群。
 
 7. 安装完成后，检查新节点是否成功加入：
-
-    ```shell
-    kw-status
-    ```
-
-##### 可视化 GUI 模式
-
-1. 将 KWDB 安装程序复制至执行扩容操作的集群节点，并赋予执行权限：
-
-    ```bash
-    chmod +x KaiwuDB-*.run
-    ```
-
-2. 以可视化 GUI 模式启动安装程序：
-
-    ```bash
-    sudo ./KaiwuDB-*.run -g
-    # 或者
-    sudo ./KaiwuDB-*.run --gui
-    ```
-
-3. 在操作向导页面，选中**全新安装**，点击**下一步**。
-
-    ![](../static/quickstart/gui-welcome.png)
-
-4. 在用户许可页面，勾选同意许可协议，点击**下一步**。
-
-    ![](../static/quickstart/gui-agreement.png)
-
-5. 在参数配置页面，设置安全模式、各端口和数据目录，参数需与目标集群保持一致，完成后点击**下一步**。
-
-    ![](../static/quickstart/gui-config.png)
-
-6. 在节点管理页面，选择多副本集群模式，点击**增加节点**，填写待扩容节点的 IP、端口、用户名和密码，点击**保存**。然后勾选底部的**加入集群**选项。
-
-    ![](../static/quickstart/gui-scale.png)
-
-7. 在弹出的**目标集群参数**对话框中填写目标集群相关信息，点击**确定**，然后点击**下一步**。
-
-    ![](../static/quickstart/gui-target.png)
-
-    | 参数 | 说明 |
-    |------|------|
-    | 目标集群模式 | 目标集群的安全模式。 |
-    | 目标集群 IP | 目标集群任一节点的 IP 地址。 |
-    | 目标集群服务端口 | 目标集群的 KWDB 服务端口。 |
-
-8. 在开始安装页面，等待安装完成，然后点击**结束**。
-
-9. 检查新节点是否成功加入：
 
     ```shell
     kw-status
