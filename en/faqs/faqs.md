@@ -15,7 +15,7 @@ id: faqs
 
 - **Solution**
 
-  KWDB has not yet been comprehensively tested and verified on Loongson 3C5000L and Zhaoxin KH-30000 operating systems. If you need to deploy on these platforms, please [contact](https://www.kaiwudb.com/support/) KWDB technical support for assistance with compilation, adaptation, and testing.
+  KWDB has not yet been comprehensively tested and verified on Loongson 3C5000L and Zhaoxin KH-30000 operating systems. If you need to deploy on these platforms, please [contact](https://www.kaiwudb.com/about/support) KWDB technical support for assistance with compilation, adaptation, and testing.
 
 ### Missing Dependencies
 

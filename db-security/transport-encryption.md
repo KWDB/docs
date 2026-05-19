@@ -9,33 +9,11 @@ id: transport-encryption
 
 ## 启用安全模式
 
-默认情况下，KWDB 采用安全模式部署 KWDB 集群。用户可以编辑 KWDB 安装包目录下的 `deploy.cfg` 配置文件，选择启用或禁用安全模式。
+默认情况下，KWDB 采用安全模式部署 KWDB 集群。用户可以在安装部署时选择启用或禁用安全模式。
 
 启用安全模式后，部署 KWDB 时，将生成 TLS 安全证书，作为客户端或应用程序连接数据库的凭证，并将生成的相关证书存放在 `/etc/kaiwudb/certs` 目录。KWDB 还会在安装包目录生成 `kaiwudb_certs.tar.gz`，便于后续扩容集群时使用。
 
-`deploy.cfg` 配置文件示例：
-
-```yaml
-[global]
-# 是否开启安全模式
-secure_mode=tls
-# KWDB 的管理用户
-management_user=kaiwudb
-# KWDB Web 服务端口
-rest_port=8080
-# KWDB 服务端口
-kaiwudb_port=26257
-# KWDB 数据目录
-data_root=/var/lib/kaiwudb
-# CPU 使用率，取值范围 [0,1]
-# cpu=1
-
-[local]
-# 本地节点地址
-node_addr=your-host-ip
-```
-
-更多安装部署要求和配置参数信息，参见[集群部署](../deployment/cluster-deployment/script-deployment.md)。
+更多配置相关信息，参见[集群部署](../deployment/overview.md)。
 
 ## 管理和存放证书
 

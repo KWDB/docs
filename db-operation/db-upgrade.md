@@ -5,234 +5,246 @@ id: db-upgrade
 
 # 数据库升级
 
-本节介绍了 KWDB 数据库在不同部署方式下的升级方法，包括使用部署脚本、编译版本及容器镜像部署的升级流程。升级前请务必仔细阅读相关注意事项，并根据实际部署方式选择合适的升级方案。
+## 概述
 
-## 使用部署脚本升级
+本节介绍 KWDB 数据库的升级方法。请根据实际部署拓扑完成升级准备，再按安装时选择的部署方式执行对应的升级步骤。
 
-部署脚本升级是 KWDB 最常用的升级方式，适用于通过部署脚本安装的 KWDB 实例。根据部署拓扑的不同，可分为单机升级、多副本集群升级和单副本集群场景。
-不同部署方式支持的升级方式有所不同：
+### 升级路径
 
-- **单机部署**：使用升级脚本将 3.0.0 离线升级至 3.1.0，有关详细信息，参见[单机升级](#单机升级)。
-- **多副本集群**：使用升级脚本将 3.0.0 集群节点逐一升级至 3.1.0，有关详细信息，参见[多副本集群升级](#多副本集群升级)。**注意**：若需使用 3.1.0 新增的时序 raft log 存储引擎，请先部署全新的 3.1.0 集群，再导入历史数据。
-- **单副本集群**：使用升级脚本将 3.0.0 离线升级至 3.1.0，有关详细信息，参见[单副本集群升级](#单副本集群升级)。
+| 部署拓扑 | 当前版本 | 目标版本 | 升级方式 |
+|---------|---------|---------|---------|
+| 单机部署 | 3.0.0、3.1.0 | 3.2.0 | 脚本和命令行部署：升级程序<br>容器镜像部署：容器镜像升级 |
+|  | 1.x、2.x | 3.2.0 | 导入导出 |
+| 多副本集群 | 3.0.0、3.1.0 | 3.2.0 | 脚本和命令行部署：升级程序<br>容器镜像部署：容器镜像升级 |
+|  | 1.x、2.x | 3.2.0 | 导入导出 |
+| 单副本集群 | 3.0.0、3.1.0 | 3.2.0 | 脚本和命令行部署：升级程序<br>容器镜像部署：容器镜像升级 |
+|  | 1.x、2.x | 3.2.0 | 导入导出 |
 
-::: warning 说明
 
-- 升级后无法简单降级至之前版本。如果需要降级，必须先卸载当前版本，再使用原有版本安装 KWDB，然后使用卸载前创建的备份将数据还原到数据库。有关卸载数据库的详细信息，参见[卸载 KWDB](../deployment/uninstall-cluster.md)。
-- KWDB 支持通过导入导出方式将之前任一版本升级至最新版本。具体操作，参见[数据导出](../db-administration/import-export-data/export-data.md)和[数据导入](../db-administration/import-export-data/import-data.md)。**注意**：从 2.x 版本升级时，导出的 `meta.sql` 文件中包含时序表的 `PARTITION INTERVAL` 语法。由于 3.1.0 版本的时序表已废弃该语法（注：时序库仍然支持），导入前需手动删除文件中的相关语法，否则会导致导入失败；使用导入导出升级方式升级后，多副本集群的高可用性可能会受到影响。
+:::warning 说明
+从 3.0.0 升级至 3.2.0 时，如需使用 3.1.0 以后新增的时序 raft log 存储引擎，请先部署全新集群，再导入历史数据。
 :::
 
-### 单机升级
 
-升级过程中，如果出现节点未安装 KWDB、KWDB 仍在运行中、版本有误或部署方式有误等错误，系统将中止升级，并给与用户相应提示。
+**注意事项**
 
-升级过程中，如果因新版本导入失败导致升级失败，系统将保留数据目录、证书和配置文件，删除节点中的新版本安装文件，用户可以选择手动安装新版本或旧版本。
+- 升级后无法简单降级至之前版本。如果需要降级，必须先卸载当前版本，再使用原有版本安装 KWDB，然后使用卸载前创建的备份将数据还原到数据库。有关卸载数据库的详细信息，参见[卸载 KWDB](../deployment/uninstall-cluster.md)。
+- KWDB 支持通过导入导出方式将之前任一版本升级至最新版本。具体操作，参见[数据导出](../db-administration/import-export-data/export-data.md)和[数据导入](../db-administration/import-export-data/import-data.md)。**注意**：从 2.x 版本升级时，导出的 `meta.sql` 文件中包含时序表的 `PARTITION INTERVAL` 语法。由于 3.1.0 及以后版本的时序表已废弃该语法（注：时序库仍然支持），导入前需手动删除文件中的相关语法，否则会导致导入失败；使用导入导出升级方式升级后，多副本集群的高可用性可能会受到影响。
 
-#### 前提条件
+## 升级准备
 
-- 待升级节点已安装 KWDB。
-- 已备份待升级节点的用户数据目录。
-- 已获取新版本的 KWDB 安装包，且新版本高于已安装版本。
-- 用户为 root 用户或者拥有 `sudo` 权限的普通用户。
-  - root 用户和配置 `sudo` 免密的普通用户在执行命令时无需输入密码。
-  - 未配置 `sudo` 免密的普通用户在执行命令时，需要输入密码进行提权。
-  - 容器部署方式下，如果用户为非 root 用户，需要通过 `sudo usermod -aG docker $USER` 命令将用户添加到 `docker` 组。
+### 单机部署
 
-#### 步骤
+1. 确认新版本高于已安装版本。
 
-1. 将新版本安装包拷贝至待升级的节点，解压安装包。
+2. 停止 KWDB 服务：
 
-2. 检查 KWDB 服务是否已停止。如果 KWDB 服务仍在运行中，执行 `systemctl stop kaiwudb` 命令停止服务。
+    ```bash
+    systemctl stop kaiwudb
+    ```
 
-   ```shell
-   systemctl status kaiwudb
-   ```
+3. 备份用户数据目录。
 
-3. 切换至新版本的安装包目录。
+### 集群部署
 
-4. 执行本地升级命令。
+1. 确认新版本高于已安装版本。
 
-   ```shell
-   ./deploy.sh upgrade -l
-   ```
+2. 检查集群状态：
 
-   或者
-
-   ```shell
-   ./deploy.sh upgrade --local
-   ```
-
-   执行成功后，控制台输出以下信息：
-
-   ```shell
-   UPGRADE COMPLETED: KaiwuDB has been upgraded successfully! 
-   ```
-
-5. 启动 KWDB。
-
-   ```shell
-   systemctl start kaiwudb
-   ```
-
-6. 启动成功后，检查数据库是否已正常运行。
-
-   ```shell
-   systemctl status kaiwudb
-   ```
-
-### 多副本集群升级
-
-在升级过程中，升级节点上的压缩与生命周期可能会执行失败，在升级完成后恢复正常。如果升级过程中出现错误，例如节点未安装 KWDB、节点状态异常或部署方式有误，系统将中止升级，并给与相应提示。
-
-#### 准备升级
-
-**步骤**：
-
-1. 确保客户端与多个节点通信，避免单节点升级时客户端通信中断。
-
-2. 查看集群状态。
-
-   1. 检查集群节点状态。
-
-         - 脚本部署
-
-            ```shell
-            kw-status
-            ```
-
-         - kwbase 命令
-
-            ```shell
-            <kwbase_path>/kwbase node status [--host=<ip:port>] [--insecure | --certs-dir=<path>]
-            ```
-
-   2. 查看副本状态。
-
-         ```sql
+   - 查看集群状态：
+      ```bash
+      kw-status
+      ```
+   - 查看副本状态：
+      ```sql
       SELECT sum((metrics->>'ranges.unavailable')::DECIMAL)::INT AS ranges_unavailable,
-         sum((metrics->>'ranges.underreplicated')::DECIMAL)::INT As ranges_underreplicated
+            sum((metrics->>'ranges.underreplicated')::DECIMAL)::INT As ranges_underreplicated
       FROM kwdb_internal.kv_store_status;
-         ```
+      ```
 
-3. 使用 `SHOW JOBS` SQL 命令检查是否存在正在执行的模式更改或批量导入操作。
+4. 通过 `SHOW JOBS` SQL 命令检查是否存在正在执行的模式更改或批量导入操作。
 
-4. 使用 `SELECT * from kwdb_internal.ranges` SQL 命令检查集群内表的 leaseholder（租约持有者）和副本的分布是否均匀。
+5. 检查集群内表的 leaseholder 和副本的分布是否均匀：
 
-5. 备份集群。如果升级失败，可以使用备份将集群还原到之前的状态。
+    ```sql
+    SELECT * from kwdb_internal.ranges
+    ```
 
-#### 执行升级
+6. 备份集群。如果升级失败，可以使用备份将集群还原到之前的状态。
 
-为集群中的每个节点，执行以下升级操作。确保每次只升级一个节点。该节点重新加入集群后，确认节点版本、状态无误后，再升级下一个节点。
+## 执行升级
 
-**前提条件**：
+### 安装程序升级
 
-- 待升级节点已安装 KWDB，且节点状态为存活状态（ `is_available` 和 `is_live` 均为 `true`）。
-- 已备份待升级节点的用户数据目录。
-- 已获取新版本的 KWDB 安装包，且新版本高于已安装版本。
-- 用户为 root 用户或者拥有 `sudo` 权限的普通用户。
-  - root 用户和配置 `sudo` 免密的普通用户在执行命令时无需输入密码。
-  - 未配置 `sudo` 免密的普通用户在执行命令时，需要输入密码进行提权。
-  - 容器部署方式下，如果用户为非 root 用户，需要通过 `sudo usermod -aG docker $USER` 命令将用户添加到 `docker` 组。
-
-**步骤**：
-
-1. 将新版本的安装包拷贝到待升级的节点，解压安装包。
-
-2. 检查 KWDB 服务是否已停止。如果 KWDB 服务仍在运行中，执行 `systemctl stop kaiwudb` 命令停止服务。
-
-   ```shell
-   systemctl status kaiwudb
-   ```
-
-3. 切换至新版本的安装包目录。
-
-4. 执行本地升级命令。
-
-   ```shell
-   ./deploy.sh upgrade -l
-   ```
-
-   或者
-
-   ```shell
-   ./deploy.sh upgrade --local
-   ```
-
-   执行成功后，控制台输出以下信息：
-
-   ```shell
-   UPGRADE COMPLETED: KaiwuDB has been upgraded successfully! ...
-   ```
-
-5. 启动 KWDB。
-
-   ```shell
-   systemctl start kaiwudb
-   ```
-
-6. 启动成功后，检查数据库是否已正常运行。
-
-   ```shell
-   systemctl status kaiwudb
-   ```
-
-### 单副本集群升级
-
-升级过程中，如果出现节点未安装 KWDB、KWDB 仍在运行中、版本有误或部署方式有误等错误，系统将中止升级，并给与用户相应提示。
-
-升级过程中，如果因新版本导入失败导致升级失败，系统将保留数据目录、证书和配置文件，删除节点中的新版本安装文件，用户可以选择手动安装新版本或旧版本。
+使用安装程序升级过程中，如果出现节点未安装 KWDB、KWDB 仍在运行中、版本有误或部署方式有误等错误，系统将中止升级并给予相应提示。
 
 #### 前提条件
 
+- 已获取新版本的 KWDB 安装程序（`.run` 文件）。
 - 待升级节点已安装 KWDB。
-- 已备份所有节点的用户数据目录。
-- 已获取新版本的 KWDB 安装包，且新版本高于已安装版本。
-- 用户为 root 用户或者拥有 `sudo` 权限的普通用户。
-  - root 用户和配置 `sudo` 免密的普通用户在执行命令时无需输入密码。
-  - 未配置 `sudo` 免密的普通用户在执行命令时，需要输入密码进行提权。
-  - 容器部署方式下，如果用户为非 root 用户，需要通过 `sudo usermod -aG docker $USER` 命令将用户添加到 `docker` 组。
+- 已备份待升级节点的用户数据目录。
+- 执行节点（集群内任一节点）可通过 SSH 登录至待升级节点，并对待升级节点的安装目录拥有写入权限。
+- 用户为 `root` 用户或已配置 `sudo` 免密的普通用户。
+- 容器部署方式下，如果用户为非 `root` 用户，需要通过 `sudo usermod -aG docker $USER` 命令将用户添加到 `docker` 组。
 
-#### 步骤
+#### 命令行模式
 
-1. 在集群所有节点执行停止数据库命令。
+1. 将新版本安装程序复制至执行升级操作的集群节点，并赋予执行权限：
 
-   ```shell
-   systemctl stop kaiwudb
-   ```
+    ```bash
+    chmod +x KaiwuDB-*.run
+    ```
 
-2. 在每个节点执行以下升级操作：
-   1. 将新版本安装包拷贝至待升级的节点，解压安装包。
-   2. 切换至新版本的安装包目录。
-   3. 执行本地升级命令。
+2. 在待升级节点，停止 KWDB 服务：
 
-      ```shell
-      ./deploy.sh upgrade -l
-      ```
+    ```bash
+    sudo systemctl stop kaiwudb
+    ```
 
-      或者
+3. 在执行节点，以命令行模式启动安装程序：
 
-      ```shell
-      ./deploy.sh upgrade --local
-      ```
+    ```bash
+    ./KaiwuDB-*.run -c
+    # 或者
+    ./KaiwuDB-*.run --cli
+    ```
 
-      执行成功后，控制台输出以下信息：
+4. 在主功能菜单中，输入 `4` 选择升级节点：
 
-      ```shell
-      UPGRADE COMPLETED: KaiwuDB has been upgraded successfully! 
-      ```
+    ```plain
+    1. 安装 KaiwuDB
+    2. 卸载 KaiwuDB
+    3. 安装 KaiwuDB 并加入集群
+    4. 升级节点
+    5. 退出
 
-3. 所有节点完成升级后，在每个节点执行以下命令启动数据库。
-   1. 启动数据库。
+    请输入操作 [1-5]:
+    ```
 
-      ```shell
-      systemctl start kaiwudb
-      ```
+5. 将待升级的节点数量设置为 `1`。
 
-   2. 启动成功后，检查数据库是否已正常运行。
+6. 安装程序自动生成升级配置文件并打开编辑器，将 `host` 地址修改为待升级节点的 IP 地址，确认其余配置无误后保存退出，系统自动开始升级。
 
-      ```shell
-      systemctl status kaiwudb
-      ```
+    ```ini
+    [node1]
+    host=192.168.122.224
+    port=22
+    user=admin
+    passwd=*******
+    ```
+
+7. 在待升级节点，根据部署方式修改相关配置文件：
+
+    - 裸机部署：修改以下配置文件，将 IP 地址替换为实际节点 IP：
+
+        ```bash
+        sudo vim /etc/systemd/system/kaiwudb.service
+        sudo vim /usr/local/kaiwudb/bin/kw-status.sh
+        sudo vim /usr/local/kaiwudb/bin/kw-sql.sh
+        ```
+
+    - 容器部署：
+        1. 修改 `/etc/kaiwudb/script/docker-compose.yml`：
+            1. 删除 `ports` 配置块和 `deploy.resources` 配置块。
+            2. 将 `networks` 改为 host 模式：
+                ```yaml
+                network_mode: host
+                ```
+            3. 将 `command` 中的 IP 改为实际节点 IP。
+
+        2. 修改以下脚本中的节点 IP：
+
+            ```bash
+            sudo vim /etc/kaiwudb/script/kw-status.sh
+            sudo vim /etc/kaiwudb/script/kw-sql.sh
+            ```
+
+8. 在待升级节点，重新加载系统服务配置并启动 KWDB：
+
+    ```bash
+    sudo systemctl daemon-reload
+    sudo systemctl start kaiwudb
+    ```
+
+9. 在待升级节点，检查节点状态：
+
+    ```bash
+    kw-status
+    ```
+
+10. 对集群中的其余节点重复步骤 2–9，逐一完成升级。
+
+11. 完成所有节点升级后，验证数据是否完整。
+
+#### 终端图形交互模式
+
+1. 将新版本安装程序复制至执行升级操作的集群节点，并赋予执行权限：
+
+    ```bash
+    chmod +x KaiwuDB-*.run
+    ```
+
+2. 在待升级节点，停止 KWDB 服务：
+
+    ```bash
+    sudo systemctl stop kaiwudb
+    ```
+
+3. 在执行节点，以终端图形交互模式启动安装程序：
+
+    ```bash
+    ./KaiwuDB-*.run -i
+    # 或者
+    ./KaiwuDB-*.run --interact
+    ```
+
+4. 在主功能菜单中，使用方向键选中**升级节点**，按回车确认。
+
+5. 进入升级参数设置菜单，点击**设置升级节点**，依次填写待升级节点的 IP、端口、用户名和密码，点击**保存**。选中**开始升级**，按回车开始升级。
+
+6. 在待升级节点，根据部署方式修改相关配置文件：
+
+    - 裸机部署：修改以下配置文件，将 IP 地址替换为实际节点 IP：
+
+        ```bash
+        sudo vim /etc/systemd/system/kaiwudb.service
+        sudo vim /usr/local/kaiwudb/bin/kw-status.sh
+        sudo vim /usr/local/kaiwudb/bin/kw-sql.sh
+        ```
+
+    - 容器部署：
+        1. 修改 `/etc/kaiwudb/script/docker-compose.yml`：
+            1. 删除 `ports` 配置块和 `deploy.resources` 配置块。
+            2. 将 `networks` 改为 host 模式：
+                ```yaml
+                network_mode: host
+                ```
+            3. 将 `command` 中的 IP 改为实际节点 IP。
+
+        2. 修改以下脚本中的节点 IP：
+
+            ```bash
+            sudo vim /etc/kaiwudb/script/kw-status.sh
+            sudo vim /etc/kaiwudb/script/kw-sql.sh
+            ```
+
+7. 在待升级节点，重新加载系统服务配置并启动 KWDB：
+
+    ```bash
+    sudo systemctl daemon-reload
+    sudo systemctl start kaiwudb
+    ```
+
+8. 在待升级节点，检查节点状态：
+
+    ```bash
+    kw-status
+    ```
+
+9. 对集群中的其余节点重复步骤 2–8，逐一完成升级。
+
+10. 完成所有节点升级后，验证集群数据是否完整。
+
 
 ## 编译版本升级
 

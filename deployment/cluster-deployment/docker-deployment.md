@@ -12,8 +12,8 @@ id: docker-deployment
 - 已获取 [KWDB 容器镜像](../cluster-prepare.md#容器镜像)。
 - 待部署节点的硬件、操作系统、软件依赖和端口满足[安装部署要求](../cluster-prepare.md#硬件)。
 - 安装用户为 root 用户或者拥有 `sudo` 权限的普通用户。
-  - root 用户和配置 `sudo` 免密的普通用户在执行部署脚本时无需输入密码。
-  - 未配置 `sudo` 免密的普通用户在执行部署脚本时，需要输入密码进行提权。
+  - root 用户和配置 `sudo` 免密的普通用户在执行部署时无需输入密码。
+  - 未配置 `sudo` 免密的普通用户在执行部署时，需要输入密码进行提权。
 - 安装用户为非 root 用户时，需要通过 `sudo usermod -aG docker $USER` 命令将用户添加到 `docker` 组。
 
 ## 步骤

@@ -395,7 +395,7 @@ int main() {
 
 - libgcc
 
-    [联系](https://www.kaiwudb.com/support/) KWDB 技术支持人员。
+    [联系](https://www.kaiwudb.com/about/support) KWDB 技术支持人员。
 
 - postgresql-devel
 

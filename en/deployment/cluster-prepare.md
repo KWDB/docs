@@ -45,7 +45,7 @@ KWDB can be deployed on the following operating systems:
 
 - Container deployment requires Docker installed on the target machine. For new Docker installations, follow [Install Docker Engine](https://docs.docker.com/engine/install/). For offline Docker installations, see [Install Docker Engine from Binaries](https://docs.docker.com/engine/install/binaries/) and [Linux Post-Installation Steps for Docker Engine](https://docs.docker.com/engine/install/linux-postinstall/).
 - Operating systems or versions not listed above **may** work with KWDB but are not officially supported.
-- For installation packages not available on the [download page](https://gitee.com/kwdb/kwdb/releases/), contact [KWDB Technical Support](https://www.kaiwudb.com/support/).
+- For installation packages not available on the [download page](https://www.kaiwudb.com/download?tab=2), contact [KWDB Technical Support](https://www.kaiwudb.com/about/support).
 :::
 
 ## Software Dependencies
@@ -93,7 +93,7 @@ Obtain installation packages, container images, or source code compilation versi
 
 ### Installation Packages
 
-The KWDB repository currently provides [DEB or RPM installation packages](https://gitee.com/kwdb/kwdb/releases/) for the following systems and architectures. For packages for other systems or architectures, please contact [KWDB Technical Support](https://www.kaiwudb.com/support/).
+The KWDB repository currently provides [DEB or RPM installation packages](https://www.kaiwudb.com/download?tab=2) for the following systems and architectures. For packages for other systems or architectures, please contact [KWDB Technical Support](https://www.kaiwudb.com/about/support).
 
 - Ubuntu V20.04 x86_64
 - Ubuntu V20.04 ARM64

@@ -391,7 +391,7 @@ KAT 支持 Webhook 配置，包括 Webhook URL 地址、触发事件等。Webhoo
 ### 预测分析引擎配置
 
 :::warning 说明
-预测分析引擎为企业版功能，开源版暂不支持。如需试用，请联系[技术支持](https://www.kaiwudb.com/support/)。预测分析引擎相关详细信息，参见[企业版文档](https://www.kaiwudb.com/kaiwudb_docs/#/ml-services/ml-service-overview.html)。
+预测分析引擎为企业版功能，开源版暂不支持。如需试用，请联系[技术支持](https://www.kaiwudb.com/about/support)。预测分析引擎相关详细信息，参见[企业版文档](https://www.kaiwudb.com/kaiwudb_docs/#/ml-services/ml-service-overview.html)。
 :::
 
 KaiwuDB 在多模数据库基础上开发了预测分析引擎，用于提供从模型导入、模型训练、模型预测、模型评估到模型更新的全生命周期管理能力。任何具备数据库应用开发背景的应用开发人员都可以轻松地导入、训练、预测、评估、更新模型。KAT 支持添加、修改和删除预测分析引擎配置。

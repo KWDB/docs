@@ -5,48 +5,102 @@ id: uninstall-cluster
 
 # 卸载 KWDB
 
-本节介绍了 KWDB 数据库在不同部署方式下的卸载方法，包括使用部署脚本、编译版本及容器镜像部署的数据库卸载流程。请根据实际部署方式选择合适的卸载方案。
+本节介绍了 KWDB 数据库在不同部署方式下的卸载方法，包括安装程序部署、kwbase CLI 部署及容器镜像部署。请根据实际部署方式选择合适的卸载方案。
 
-## 脚本部署
 
-对于通过脚本部署的 KWDB，在待卸载节点上执行以下操作：
+## 安装程序部署卸载
 
-1. 登录安装部署 KWDB 的初始节点。
-2. 如果是集群部署，将 `kwdb_install` 目录传输到集群的所有其他节点。
-    1. 登录远程节点。
+对于通过安装程序部署的 KWDB，根据安装时选择的交互模式，选择对应的卸载方式。
 
-        ```shell
-        ssh <username>@<node2_address> "mkdir -p ~/kwdb_install"
-        ssh <username>@<node3_address> "mkdir -p ~/kwdb_install"
-        ...
-        ```
+### 命令行模式
 
-    2. 传输 `kwdb_install` 目录到目标节点。
+**前提条件**：已停止 KWDB 服务。
 
-        ```shell
-        scp -r kwdb_install <username>@<node2_address>:~/kwdb_install/
-        scp -r kwdb_install <username>@<node3_address>:~/kwdb_install/
-        ...    
-        ```
+```bash
+systemctl stop kaiwudb
+```
+**步骤**：
+1. 登录安装部署 KWDB 的初始节点，执行以下命令以命令行模式启动安装程序：
 
-3. 在部署 KWDB 的每个节点执行以下操作：
-    1. 停止 KWDB 服务。
+    ```bash
+    ./KaiwuDB-*.run -c
+    # 或者
+    ./KaiwuDB-*.run --cli
+    ```
 
-        ```shell
-        systemctl stop kaiwudb
-        ```
+2. 在主功能菜单中，输入 `2` 选择卸载 KWDB：
 
-    2. 在 `kwdb_install` 目录下执行数据库卸载命令。
+    ```plain
+    1. 安装 KaiwuDB
+    2. 卸载 KaiwuDB
+    3. 安装 KaiwuDB 并加入集群
+    4. 升级节点
+    5. 退出
 
-        ```shell
-        ./deploy.sh uninstall 
-        ```
+    请输入操作 [1-5]:
+    ```
 
-    3. 确认是否删除数据、安装证书、日志等信息。输入 `y` 删除。输入 `n` 保留。
+3. 根据提示输入要删除的节点数量：
 
-        ```shell
-        When uninstalling KaiwuDB, you can either delete or keep all user data. Please confirm your choice: Do you want to delete the data? (y/n): 
-        ```
+    ```plain
+    请输入节点数量(1-100):
+    ```
+
+4. 安装程序自动打开配置文件，确认节点信息无误后保存退出。配置文件格式如下：
+
+    ```ini
+    [global]
+    # 数据目录
+    data_root=/var/lib/kaiwudb
+
+    [node1]
+    host=127.0.0.1
+    port=22
+    user=admin
+    passwd=*******
+    ```
+
+5. 根据提示确认是否删除数据及配置文件。输入 `y` 删除，输入 `N` 保留：
+
+    ```plain
+    是否删除数据及配置文件(y/N):
+    ```
+
+    卸载完成后，控制台提示已成功卸载所有节点，并安全退出脚本。
+
+### 终端图形交互模式
+
+**前提条件**：已停止 KWDB 服务。
+
+```bash
+systemctl stop kaiwudb
+```
+
+**步骤**：
+1. 登录安装部署 KWDB 的初始节点，执行以下命令以终端图形交互模式启动安装程序：
+
+    ```bash
+    ./KaiwuDB-*.run -i
+    # 或者
+    ./KaiwuDB-*.run --interact
+    ```
+
+2. 在主功能菜单中，使用方向键选中**卸载 KaiwuDB**，按回车确认。
+
+3. 进入参数设置菜单，根据需要依次选择各配置项进行设置：
+    
+    配置项说明：
+
+    | 配置项 | 说明 |
+    |--------|------|
+    | 设置卸载节点 | 添加待卸载节点信息，需填写主机名、端口号、用户名和密码。 |
+    | 管理卸载节点列表 | 查看已添加的节点信息。 |
+    | 设置数据目录 | 输入待删除的数据目录，默认为 `/var/lib/kaiwudb`。 |
+
+3. 所有配置完成后，选中**开始卸载**，按回车开始卸载。
+
+4. 根据提示确认是否删除所有配置及数据。卸载完成后，界面提示卸载完成。
+
 
 ## 源码编译部署
 

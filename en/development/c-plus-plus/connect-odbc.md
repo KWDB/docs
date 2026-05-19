@@ -399,7 +399,7 @@ int main() {
 
 - libgcc
 
-    Contact [KWDB Technical Support](https://www.kaiwudb.com/support/).
+    Contact [KWDB Technical Support](https://www.kaiwudb.com/about/support).
 
 - postgresql-devel
 
