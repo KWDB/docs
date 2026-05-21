@@ -91,7 +91,7 @@ SET CLUSTER SETTING server.host_based_authentication.configuration = 'host all <
 | --- | --- |
 | `user_name` | 用户名称。支持设置为 `all`，表示匹配所有用户。|
 | `address` | 设置允许或拒绝访问的 IP 地址范围。支持以下三种表现形式：<br > - 单个主机名 <br >- IP 地址范围：支持 IP 地址 + CIDR 子网掩码长度的形式（`iP-address/mask-length`）或者 IP 地址 + 实际子网掩码的形式（`ip-address/ip-mask`）。 <br > 支持设置为 `all`，表示允许或拒绝所有 IP 地址。|
-|  `method` | 认证规则，用户可以根据需求定制认证规则，具体包括：<br >- `cert`：基于证书的身份验证（需要 SSL 连接）。<br >- `cert-password`：基于证书或密码的身份验证（需要 SSL 连接）。<br >- `password`：基于密码的身份验证（需要 SSL 连接）。<br >- `trust`：无条件允许匹配的连接。<br >- `reject`：无条件拒绝匹配的连接。|
+|  `method` | 认证规则，用户可以根据需求定制认证规则，具体包括：<br >- `cert`：基于证书的身份验证（需要 SSL 连接）。<br >- `cert-password`：基于证书或密码的身份验证（需要 SSL 连接）。<br >- `password`：基于密码的身份验证（需要 SSL 连接）。<br >- `trust`：允许匹配的连接。<br >- `reject`：拒绝匹配的连接。与 `address` 字段配合使用，可实现 IP 白名单访问控制：在规则列表末尾追加 reject 兜底规则，使仅白名单范围内的客户端可以访问数据库，其余连接请求一律拒绝|
 
 ### 语法示例
 
@@ -109,4 +109,19 @@ SET CLUSTER SETTING server.host_based_authentication.configuration = 'host all <
 
     ```sql
     SET CLUSTER SETTING server.host_based_authentication.configuration = 'host all testuser 0.0.0.0/0 cert';
+    ```
+
+- 基于白名单的访问控制
+
+    以下示例仅允许 192.168.1.0/24 网段的客户端使用密码方式连接数据库，拒绝所有其他来源的连接请求。
+
+    ::: warning 说明 
+    HBA 规则按从上至下的顺序依次匹配，务必确保 reject 规则位于规则列表末尾，否则可能导致合法连接被意外拦截。 
+    :::
+
+    ```sql
+    SET CLUSTER SETTING server.host_based_authentication.configuration = '
+    host all all 192.168.1.0/24 password
+    host all all all reject
+    ';
     ```
