@@ -161,12 +161,37 @@ ALTER TABLE <table_name> ALTER [COLUMN] <column_name> [SET DATA] TYPE <new_type>
 | `column_name` | 待修改列的名称。 |
 | `COLUMN` | 可选关键字，是否使用不影响修改列的数据类型和宽度。 |
 | `SET DATA` | 可选关键字，是否使用不影响修改列的数据类型和宽度。 |
-| `new_type` | 拟修改的数据类型和宽度。<br > **说明** <br >- 转换后的数据类型宽度必须大于原数据类型的宽度。例如，INT4 可以转成 INT8，但不能转成 INT2，CHAR(200) 可以转为 VARCHAR (254), 但不能转为 VARCHAR (100)。<br >- CHAR、VARCHAR、NCHAR、NVARCHAR 字符类型支持同数据类型的宽度转换，但只能增加宽度不能降低宽度。例如，CHAR(100) 可以转转为 CHAR(200)，不能转为 CHAR(50)。有关 KWDB 支持修改的数据类型、默认宽度、最大宽度、可转换的数据类型等详细信息，参见[时序数据类型](../../../sql-reference/data-type/data-type-ts-db.md)。 |
+| `new_type` | 拟修改的数据类型和宽度。转换规则详见[支持修改的数据类型](#支持修改的数据类型)。 |
 | `SET DEFAULT <default_expr>` | 必选关键字。系统写入表数据时写入指定的默认值，从而不需要显式定义该列的值。对于非时间类型的数据列，默认值只能是常量。对于时间类型的列（TIMESTAMPTZ 或 TIMESTAMP），默认值可以是常量，也可以是 `now()` 函数。如果默认值类型与列类型不匹配，设置默认值时，系统报错。支持默认值设置为 NULL。|
 | `DROP DEFAULT` | 必选关键字。删除已定义的列的默认值，删除后将不再写入默认值。|
 | `encode_algo` | 可选，设置列的编码算法，大小写不敏感。不同数据类型支持的编码算法不同，详见数据压缩中[编码说明](../../../db-operation/storage-mgmt.md#编码算法)。设置为 `disabled` 表示关闭该列的编码。如未指定，使用该数据类型的默认编码算法。同时指定 `ENCODE` 和 `COMPRESS` 时，必须严格按照 `ENCODE ... COMPRESS ... LEVEL ...` 顺序。|
 | `compress_algo` | 可选，设置列的压缩算法，大小写不敏感，支持 `lz4`、`zstd`、`zlib`、`snappy`。设置为 `disabled` 表示关闭该列的压缩。如未指定，默认使用 `lz4`。 |
 | `level` | 可选，设置压缩算法的压缩级别，大小写不敏感，必须紧跟在 `COMPRESS` 之后指定。支持 `low`（简写 `l`）、`medium`（简写 `m`）、`high`（简写 `h`），默认 `medium`。如果 `compress_algo` 设置为 `disabled`，则指定该参数会报错。 |
+
+### 支持修改的数据类型
+
+下表列出了 KWDB 支持修改的时序数据类型、默认宽度、最大宽度、可转换的数据类型和特殊要求。
+
+::: warning 说明
+
+- 转换后的数据类型宽度必须大于原数据类型的宽度。例如，INT4 可以转成 INT8，但不能转成 INT2，CHAR(200) 可以转为 VARCHAR(254)，但不能转为 VARCHAR(100)。
+- CHAR、VARCHAR、NCHAR、NVARCHAR 字符类型支持同数据类型的宽度转换，但只能增加宽度不能降低宽度。例如，CHAR(100) 可以转为 CHAR(200)，不能转为 CHAR(50)。
+
+:::
+
+| 原数据类型  | 默认宽度 | 最大宽度   | 支持转换的数据类型                                   | 说明                                                                                            |
+| ----------- | -------- | ---------- | ---------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| TIMESTAMP   | -        | -          | TIMESTAMPTZ、INT8、FLOAT4、FLOAT8                     | 标签不支持该类型。TIMESTAMP 转 INT8 时，输出结果固定为毫秒精度的数字，即 13 位数字。TIMESTAMP 转 FLOAT4 时，输出结果只能保证约前 7 位有效数字的精度。TIMESTAMP 转 FLOAT8 时，输出结果只能保证约前 15-17 位有效数字的精度。    |
+| TIMESTAMPTZ | -        | -          | TIMESTAMP、INT8、FLOAT4、FLOAT8                      | 标签不支持该类型。TIMESTAMPTZ 转 INT8 时，输出结果固定为毫秒精度的数字，即 13 位数字。TIMESTAMPTZ 转 FLOAT4 时，输出结果只能保证约前 7 位有效数字的精度。TIMESTAMPTZ 转 FLOAT8 时，输出结果只能保证约前 15-17 位有效数字的精度。 |
+| INT2        | 2 字节   | -          | INT4、INT8、VARCHAR                                  | INT2 转 VARCHAR 时，VARCHAR 的最小宽度为 6。                                                    |
+| INT4        | 4 字节   | -          | INT8、VARCHAR                                        | INT4 转 VARCHAR 时，VARCHAR 的最小宽度为 11。                                                   |
+| INT8        | 8 字节   | -          | VARCHAR                                              | INT8 转 VARCHAR 时，VARCHAR 的最小宽度为 20。                                                   |
+| FLOAT4      | 4 字节   | -          | FLOAT、VARCHAR                                       | REAL 转 VARCHAR 时，VARCHAR 的最小宽度为 30。                                                   |
+| FLOAT8      | 8 字节   | -          | VARCHAR                                              | FLOAT 转 VARCHAR 时，VARCHAR 的最小宽度为 30。                                                  |
+| CHAR        | 1 字节   | 1023       | NCHAR、VARCHAR、NVARCHAR                             | CHAR 转 NCHAR 或 NVARCHAR 时，NCHAR 或 NVARCHAR 的宽度不得小于原宽度的 ¼。                     |
+| VARCHAR     | 254 字节 | 65534 字节 | CHAR、NCHAR、NVARCHAR、INT2、INT4、INT8、REAL、FLOAT | VARCHAR 转 NCHAR 或 NVARCHAR 时，NCHAR 和 NVARCHAR 的宽度不得小于原宽度的 ¼。                  |
+| NCHAR       | 1 字符   | 254 字符   | CHAR、VARCHAR、NVARCHAR                              | NCHAR 转 CHAR 或 VARCHAR 时，CHAR 和 VARCHAR 的宽度不得小于原宽度的 4 倍。                      |
+| NVARCHAR    | 63 字符  | 16383 字符 | CHAR、VARCHAR、NCHAR                                 | NVARCHAR 转 CHAR 或 VARCHAR 时，CHAR 和 VARCHAR 的宽度不得小于原宽度的 4 倍。标签不支持该类型。 |
 
 ### 语法示例
 

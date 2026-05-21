@@ -403,8 +403,7 @@ ALTER TABLE <table_name>
 | `level` | 可选，设置压缩算法的压缩级别，大小写不敏感。必须紧跟在 `COMPRESS` 之后指定。支持 `low`（简写 `l`）、`medium`（简写 `m`）、`high`（简写 `h`），默认 `medium`。如果 `compress_algo` 设置为 `disabled`，则指定该参数会报错。 |
 | `tag_name` | 标签名，不支持数据库级别的自定义标签。标签名的最大长度为 128 字节。 |
 | `tag_type` | 标签类型，支持所有数值类型、布尔类型以及除 NVARCHAR 之外的字符类型。 |
-| `new_type` | 拟修改的数据类型和宽度。<br > **说明** <br >- 转换后的数据类型宽度必须大于原数据类型的宽度。例如，INT4 可以转成 INT8，但不能转成 INT2，CHAR(200) 可以转为 VARCHAR (254), 但不能转为 VARCHAR (100)。<br >- CHAR、VARCHAR、NCHAR、NVARCHAR 字符类型支持同数据类型的宽度转换，但只能增加宽度不能降低宽度。例如，CHAR(100) 可以转转为 CHAR(200)，不能转为 CHAR(50)。有关 KWDB 支持修改的数据类型、默认宽度、最大宽度、可转换的数据类型等详细信息，参见[时序数据类型](../../../sql-reference/data-type/data-type-ts-db.md)。 |
-| `new_table_name` | 拟修改的表名。 |
+| `new_type` | 拟修改的数据类型和宽度。转换规则详见[支持修改的数据类型](./column-mgmt-ts.md#支持修改的数据类型)。 |
 | `old_name` | 当前列名或标签名，不支持修改主标签名称。|
 | `new_name` | 拟修改的列名或标签名。列名或标签名的最大长度为 128 字节。 |
 | `keep_duration` | 可选参数，设置表的数据生命周期。数据超过此时长后将被系统自动清除。<br>默认值： `0s`（永久保留）<br>时间单位：<br>- 秒：`s` 或 `second`<br>- 分钟：`m` 或 `minute`<br>- 小时：`h` 或 `hour`<br>- 天：`d` 或 `day`<br>- 周：`w` 或 `week`<br>- 月：`mon` 或 `month`<br>- 年：`y` 或 `year`<br>取值范围：正整数，上限为 1000 年<br>**说明：**<br>- 表级设置优先于库级设置。<br>- 保留时长越长，存储空间占用越大，请根据业务需求合理配置。<br>- 如果待写入的数据已超过生命周期限制，系统会直接丢弃该数据，不予写入。|
