@@ -47,7 +47,7 @@ The user must be a member of the `admin` role. By default, the `root` user belon
   - Export user data in CSV format
 
     ```sql
-    EXPORT INTO CSV "<expt_path>" FROM TABLE <table_name> WITH [ column_name | meta_only | data_only | delimiter = '<char>' | chunk_rows = '<number>' | enclosed = '<char>' | escaped = '<char>' | nullas = '<char>' | comment | charset = '<coding>' | privileges ];
+    EXPORT INTO CSV "<expt_path>" FROM TABLE <table_name> WITH [ column_name | meta_only | data_only | delimiter = '<char>' | chunk_rows = '<number>' | thread_concurrency = '<int>' | limit_memory = '<size>' | enclosed = '<char>' | escaped = '<char>' | nullas = '<char>' | comment | charset = '<coding>' | privileges ];
     ```
 
   - Export user data in SQL format
@@ -79,6 +79,8 @@ The user must be a member of the `admin` role. By default, the `root` user belon
 | `data_only` | Optional. Exports only the user data. This parameter is mutually exclusive with the `meta_only` parameter.|
 | `delimiter` | Optional. The character that delimits columns within each row. The delimiter can be a single character or an empty character but not a double quotation mark (`"`). <br>- The delimiter should not be identical to any character in the user data. If the delimiter appears in the user data, KWDB will use the enclosed character to enclose the delimiter to prevent export failures. <br>- If you specify a delimiter when exporting data, you must use the same delimiter when importing the data. Inconsistent delimiters for export and import will cause an import failure. |
 | `chunk_rows` | Optional. The number of rows to be converted and written to a single `.csv` file. If the number of rows in the specified table exceeds this configured limit, KWDB will produce multiple files based on the configured limit. The produced files are named in the format `<node_id>.<file_id>.csv`. Both the default value and the maximum value are set to `100000`. When set to `0`, there is no limit on the number of rows. |
+| `thread_concurrency` | Optional. The number of threads used to export data. The default value is the number of CPU cores of the operating system. |
+| `limit_memory` | Optional. Limits the amount of data written to the file each time. By default, there is no limit. Supports pure numbers (bytes) or numbers with units. Units are case-insensitive, for example `100B`, `1024`, `1MB`. The maximum supported unit is PB. |
 | `enclosed` | Optional. The character that encloses columns within each row. By default, it is set to the double quotation mark (`"`). KWDB also supports using the single quotation mark (`'`). <br>- When using the single quotation mark (`'`), the format is `"'"`. <br>- When using the double quotation mark (`"`), the format is `'"'`. <br> The enclosed character cannot be identical to the delimiter. |
 | `escaped` | Optional. The character that causes one or more following characters to be interpreted differently. By default, it is set to the double quotation mark (`"`). KWDB also supports using the backslash (`\`). <br> The escape character cannot be identical to the delimiter.|
 | `nullas` | Optional. The string used to represent `NULL` values. By default, no content is displayed. KWDB supports setting it to `NULL`, `null`, `Null`, or `\N`.|
@@ -252,7 +254,7 @@ The export syntax is the same for time-series and relational databases:
 - Export database data in CSV format
 
   ```sql
-  EXPORT INTO CSV "<expt_path>" FROM DATABASE <db_name> WITH [ column_name | meta_only | data_only | delimiter = '<char>' | chunk_rows = '<number>' | enclosed = '<char>' | escaped = '<char>' | nullas = '<char>' | comment | charset = '<coding>' | privileges ];
+  EXPORT INTO CSV "<expt_path>" FROM DATABASE <db_name> WITH [ column_name | meta_only | data_only | delimiter = '<char>' | chunk_rows = '<number>' | thread_concurrency = '<int>' | limit_memory = '<size>' | enclosed = '<char>' | escaped = '<char>' | nullas = '<char>' | comment | charset = '<coding>' | privileges ];
   ```
 
 - Export database data in SQL format
@@ -272,6 +274,8 @@ The export syntax is the same for time-series and relational databases:
 | `data_only` | Optional. Exports only the user data. This parameter is mutually exclusive with the `meta_only` parameter.|
 | `delimiter` | Optional. The character that delimits columns within each row. The delimiter can be a single character or an empty character but not a double quotation mark (`"`). <br>- The delimiter should not be identical to any character in the user data. If the delimiter appears in the user data, KWDB will use the enclosed character to enclose the delimiter to prevent export failures. <br>- If you specify a delimiter when exporting data, you must use the same delimiter when importing the data. Inconsistent delimiters for export and import will cause an import failure. |
 | `chunk_rows` | Optional. The number of rows to be converted and written to a single `.csv` file. If the number of rows in the specified table exceeds this configured limit, KWDB will produce multiple files based on the configured limit. The produced files are named in the format `<node_id>.<file_id>.csv`. Both the default value and the maximum value are set to `100000`. When set to `0`, there is no limit on the number of rows. |
+| `thread_concurrency` | Optional. The number of threads used to export data. The default value is the number of CPU cores of the operating system. |
+| `limit_memory` | Optional. Limits the amount of data written to the file each time. By default, there is no limit. Supports pure numbers (bytes) or numbers with units. Units are case-insensitive, for example `100B`, `1024`, `1MB`. The maximum supported unit is PB. |
 | `enclosed` | Optional. The character that encloses columns within each row. By default, it is set to the double quotation mark (`"`). KWDB also supports using the single quotation mark (`'`). <br>- When using the single quotation mark (`'`), the format is `"'"`. <br>- When using the double quotation mark (`"`), the format is `'"'`. <br> The enclosed character cannot be identical to the delimiter. |
 | `escaped` | Optional. The character that causes one or more following characters to be interpreted differently. By default, it is set to the double quotation mark (`"`). KWDB also supports using the backslash (`\`). <br> The escape character cannot be identical to the delimiter.|
 | `nullas` | Optional. The string used to represent `NULL` values. By default, no content is displayed. KWDB supports setting it to `NULL`, `null`, `Null`, or `\N`.|
