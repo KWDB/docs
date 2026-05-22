@@ -329,6 +329,7 @@ The table below lists all cluster parameters supported by KWDB along with their 
 | `sql.metrics.statement_details.threshold`               | Minimum execution time required to trigger statistics collection. | `0s`        | duration     |
 | `sql.metrics.transaction_details.enabled`               | Collect transaction statistics for each application. | `TRUE`      | bool     |
 | `sql.notices.enabled`                                   | Allow sending notices in the server/client protocol. | `TRUE`      | bool     |
+| `sql.pg_encode_short_circuit.enabled`                   | Controls whether PG protocol encoding is offloaded to the time-series engine. When enabled, query result encoding is performed by the time-series engine to reduce encoding serialization overhead on the main engine for large result sets and improve query performance. Supported values: <br>- `true`: enable the short-circuit path, with PG protocol encoding performed by the time-series engine. <br>- `false`: disable the short-circuit path and fall back to standard encoding by the main engine. | `true` | bool |
 | `sql.stats.automatic_collection.enabled`                | Automatic statistics collection mode. | `FALSE`     | bool     |
 | `sql.stats.automatic_collection.fraction_stale_rows`    | Percentage of stale rows per table that triggers statistics refresh. | `0.2`       | float    |
 | `sql.stats.automatic_collection.min_stale_rows`         | Minimum number of stale rows per table that triggers statistics refresh. | `500`       | int      |
