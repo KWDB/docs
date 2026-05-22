@@ -13,7 +13,7 @@ id: storage-mgmt
 
 | <div style="width:80px">文件</div>       | 默认路径               | 大小               | 文件系统                                                   | 配置参数    |
 | ---------- | ---------------------- | ------------------ | ---------------------------------------------------------- | ----------- |
-| 数据文件   | `/var/lib/kaiwudb`       | 取决于存储数据的大小 | - 建议使用 ext4 文件系统。<br>- 如果存储大于 16 TB 的数据，建议使用 XFS 系统。 | - 部署配置文件中的 `data_root` 参数<br>- `--store` 启动参数     |
+| 数据文件   | `/var/lib/kaiwudb`       | 取决于存储数据的大小 | - 建议使用 ext4 文件系统。<br>- 如果存储大于 16 TB 的数据，建议使用 XFS 系统。 | - 部署时配置的 `data_root` 参数<br>- `--store` 启动参数     |
 | 日志       | `/var/lib/kaiwudb/logs`  | 默认 1G，可配置    | 建议使用 ext4 文件系统。                                       | `--log-dir` 启动参数  |
 | 证书       | `/etc/kaiwudb/certs`     | N/A                | 建议使用 ext4 文件系统。                                       | `--certs-dir` 启动参数 |
 | 二进制文件 | `/usr/local/kaiwudb/bin` | > 200 M              | 建议使用 ext4 文件系统。                                       | N/A            |
@@ -27,7 +27,7 @@ id: storage-mgmt
 
 KWDB 支持以下存储路径设置方式：
 
-- 安装时通过修改 `deploy.cfg` 文件中的 `data_root` 参数自定义数据路径。
+- 安装时通过修改 `data_root` 参数自定义数据路径。
 - 部署完成后，用户也可以通过修改部署生成的 `kaiwudb_env` 文件、 `docker-compose.yml` 文件或 `kwbase start` 命令修改存储路径。
 
 ## 数据压缩

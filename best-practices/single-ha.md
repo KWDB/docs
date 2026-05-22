@@ -30,7 +30,7 @@ KWDB 单机部署采用基于 DRBD 块设备复制的开源软件方案，以实
 方案技术重点如下：
 
 - 在主备节点各使用一个容量相等的块设备，用于 DRBD 主备复制。
-- 主备节点的安装部署应保持完全一致，包括用户数据目录（即安装部署配置文件 `deploy.cfg` 中指定的 `data_root`目录）。
+- 主备节点的安装部署应保持完全一致，包括用户数据目录（即安装部署时指定的 `data_root` 目录）。
 - 将 DRBD 设备挂载到用户数据目录，通过 DRBD 复制软件进行数据同步复制。
 - CA 证书等文件由于未存放在用户数据目录中，需要从主节点手工同步至备节点（非安全部署方式无需执行本步骤）。
 - 使用 `systemd` 服务来管理 KWDB 的启动和停止操作。
@@ -585,10 +585,10 @@ DRBD 镜像数据具有以下特点：
          pcs node unstandby <primary_node>
          ```
 
-   2. 安装部署 KWDB，具体安装步骤见[单节点脚本部署](../quickstart/deploy/deploy-script.md)。
+   2. 安装部署 KWDB，具体安装步骤见[单节点部署](../quickstart/overview.md)。
 
       ::: warning 注意
-      - 确保在`deploy.cfg`配置文件中，将 `data_root` 配置为文件系统资源，示例中KaiwuFS 指定的目录。
+      - 确保在部署时，将 `data_root` 配置为文件系统资源，示例中 KaiwuFS 指定的目录。
       - 备节点安装完成后，删除 `data_root` 所指定目录中的所有文件，之后将通过 DRBD 复制将从主节点该目录中的数据复制到备节点中。
       :::
 
@@ -596,7 +596,7 @@ DRBD 镜像数据具有以下特点：
 
    1. 确保 DRBD 和 Filesystem 资源的活跃节点为主节点。
 
-   2. 安装部署 KWDB，具体安装步骤见[单节点脚本部署](../quickstart/deploy/deploy-script.md)。
+   2. 安装部署 KWDB，具体安装步骤见[单节点部署](../quickstart/overview.md)。
 
    3. 配置主节点证书允许通过备节点 IP 和 VIP 访问。
 

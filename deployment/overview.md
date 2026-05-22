@@ -29,11 +29,13 @@ KWDB 支持以下集群部署类型：
 
 KWDB 集群部署提供多种方式，满足不同用户和场景的需求：
 
-| 部署方式 | 特点 | 适用用户/场景 | 技术要求 | 支持环境 |
+| 部署方式 | 特点 | 适用场景 | 技术要求 | 支持环境 |
 |---------|------|---------|------|---------|
-| **[脚本部署（推荐）](./cluster-deployment/script-deployment.md)** | 最简便的集群部署方式，内置故障检测和节点恢复机制 | 需要快速搭建测试或生产环境的用户 | 基本 Linux 操作经验 | 裸机、容器化 |
-| **[Docker Run](./cluster-deployment/docker-deployment.md)** | 容器化技术部署 | 偏好容器化技术的用户 | 熟悉 Docker 命令行操作 | 容器化 |
-| **[kwbase CLI](./cluster-deployment/kwbase-cli-deployment.md)** | 支持深度定制部署过程 | 有技术背景、希望深度定制的用户 | 熟悉数据库部署流程和命令行操作 | 裸机 |
+| **[安装程序 — 命令行模式](./cluster-deployment/installer-cli.md)** | 无需额外依赖，数字输入即可操作，内置参数校验，菜单逐步引导完成安装 | 需要稳定快速上线的用户 | 熟悉基本 Linux 操作 | 裸机、容器化 |
+| **[安装程序 — 终端图形交互模式](./cluster-deployment/installer-dialog.md)** | 字符界面下的图形化交互体验，提供复选框、输入框、进度条等操作组件 | 偏好字符界面交互的用户 | 熟悉基本 Linux 操作 | 裸机、容器化 |
+| **[Docker Run](./cluster-deployment/docker-deployment.md)** | 使用 `docker run` 命令直接运行容器 | 快速搭建测试或验证环境的场景 | 熟悉 Docker 命令行 | 容器化 |
+| **[kwbase CLI](./cluster-deployment/kwbase-cli-deployment.md)** | 支持精细化控制和深度定制 | 有定制化需求的场景 | 熟悉数据库部署与命令行操作 | 裸机 |
+
 
 
 ### 集群管理

@@ -8,7 +8,7 @@ id: kat-overview
 KaiwuDB 智能体工具 （英文名称 KaiwuDB Agent Tools, 简称 KAT）是一款基于 [MCP](https://modelcontextprotocol.io/introduction)（Model Context Protocol，模型上下文协议）协议的智能助手，专为 KWDB 用户打造。KAT 将自然语言处理与数据库深度结合，让用户通过简单的对话即可完成产品使用智能问答、自动化安装部署、自然语言查询分析、故障诊断和性能调优。通过借助 LLM（Large Language Model，大语言模型）智能提示能力、结合知识库和向量搜索技术，KAT 有效降低 KWDB 的学习、使用和运维成本，提升数据交互效率，轻松驾驭数据洞察。
 
 :::warning 说明
-KAT 目前仅提供试用，如需获取安装镜像，请联系[技术支持](https://www.kaiwudb.com/support/)。
+KAT 目前仅提供试用，如需获取安装镜像，请联系[技术支持](https://www.kaiwudb.com/about/support)。
 :::
 
 KAT 包括以下核心组件：

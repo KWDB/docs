@@ -40,30 +40,26 @@ KWDB 支持在以下操作系统进行安装部署：
 
 - 容器部署需要目标机器已安装 Docker。如未安装，请参考 [Docker 官方安装文档](https://docs.docker.com/desktop/install/linux-install/) 进行安装。对于无法联网的环境，可下载 Docker 二进制包进行离线安装，详见 [Docker 离线安装指南](https://docs.docker.com/engine/install/binaries/)。
 - 未提及的操作系统版本**也许可以**运行 KWDB，但尚未得到 KWDB 官方支持。
-- 如需获取[下载页面](https://gitee.com/kwdb/kwdb/releases/)未提供的对应版本安装包，请联系 [KWDB 技术支持](https://www.kaiwudb.com/support/)。
+- 如需获取[下载页面](https://www.kaiwudb.com/download?tab=2)未提供的对应版本安装包，请联系 [KWDB 技术支持](https://www.kaiwudb.com/about/support)。
 :::
 
 ## 软件依赖
 
 ### 裸机部署
 
-下表列出需要在目标机器安装的依赖：
+下表列出使用安装程序部署时，需要在目标机器安装的依赖：
 
-| 依赖 | 版本 | 说明 |
-| --- | --- | --- |
-| OpenSSL | v1.1.1+ | N/A |
-| libprotobuf | v3.6.1 ~ v21.x | Ubuntu 18.04 版本默认的 libprotobuf 版本低于所需版本，用户需要在部署前提前安装高版本的 libprotobuf。|
-| GEOS | v3.3.8+ | 可选依赖 |
-| xz-libs | v5.2.0+ | N/A |
-| libgcc | v7.3.0+ | N/A |
-| libgflags | 系统默认 | N/A |
-| libkrb5 | 系统默认 | N/A |
+| 平台 | 系统类型 | libc | libgcc | libstdc++ |
+|-----|---------|------|--------|-----------|
+| x86_64、aarch64 | Debian 系列 | libc6 >= 2.28 | libgcc1/libgcc-s1 >= 7.3.0 | libstdc++6 >= 7.3.0 |
+| | RedHat 系列 | glibc >= 2.28 | libgcc >= 8.3.0 | libstdc++ >= 8.3.0 |
+
 
 安装时，KWDB 会对依赖进行检查。如果缺少依赖会退出安装并提示依赖缺失。如果目标机器不能联网，用户需要在能联网的机器上根据目标机器的操作系统下载好所有依赖文件，然后将依赖文件复制到目标机器上进行安装。
 
 ### 容器部署
 
-使用[脚本](./deploy/deploy-script.md)部署时，目标机器需已安装 Docker Compose（1.20.0 及以上版本）。
+除上述依赖外，使用安装程序部署时，目标机器需已安装 Docker Compose（1.20.0 及以上版本）。
 
 - 在线安装：参考 [Docker Compose 官方安装文档](https://docs.docker.com/compose/install/)
 - 离线安装：参考 [Docker Compose 离线安装指南](https://docs.docker.com/compose/install/standalone/)
@@ -82,34 +78,20 @@ KWDB 支持在以下操作系统进行安装部署：
 | `8080` | 数据库 Web 服务端口 |
 | `26257` | 数据库服务端口和对外连接端口 |
 
-## 安装包、容器镜像和编译版本
+## 安装程序、容器镜像和编译版本
 
-根据不同的使用场景，获取安装包、容器镜像或源码编译版本：
+根据不同的使用场景，获取安装程序、容器镜像或源码编译版本：
 
-### 安装包
+### 安装程序
 
-目前 KWDB 开源仓库提供了以下系统与架构的 [DEB 或 RPM 安装包](https://gitee.com/kwdb/kwdb/releases/)，如需其它系统或架构的安装包，请联系 [KWDB 技术支持](https://www.kaiwudb.com/support/)：
+KWDB 安装程序封装为 `.run` 自解压可执行包，内置所有部署所需资源，支持命令行模式和终端图形交互模式。
+
+目前 KWDB [下载页面](https://www.kaiwudb.com/download?tab=2)提供了以下系统与架构的安装程序，如需其它系统或架构的安装程序，请联系 [KWDB 技术支持](https://www.kaiwudb.com/about/support)：
 
 - Ubuntu V20.04 x86_64
 - Ubuntu V20.04 ARM64
 - Ubuntu V22.04 x86_64
 - Ubuntu V22.04 ARM64
-
-获取系统环境对应的 DEB 或 RPM 安装包后，将安装包复制到待安装 KWDB 的目标机器上，然后解压缩安装包：
-
-```shell
-tar -zxvf <package_name>
-```
-
-解压后生成的目录包含以下文件：
-
-| 文件              | 说明                                                        |
-|-------------------|-----------------------------------------------------------|
-| `add_user.sh`     | 安装、启动 KWDB 后，为 KWDB 数据库创建用户。             |
-| `deploy.cfg`      | 安装部署配置文件，用于配置部署节点的 IP 地址、端口等配置信息。 |
-| `deploy.sh`       | 安装部署脚本，用于安装、卸载、启动、状态获取、关停和重启等操作。  |
-| `packages` 目录   | 存放 DEB 或 RPM 包。<br>**说明**：具体包含的文件因安装包类型而异。                                      |
-| `utils` 目录      | 存放工具类脚本。                                             |
 
 ### 容器镜像
 
