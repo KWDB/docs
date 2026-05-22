@@ -17,10 +17,10 @@ id: kat-install
   - `8123`：KWDB Agent Server Copilot 服务的端口。
   - `3000`：KWDB Agent UI 的端口。
   - `3100`：KWDB Agent VIS 的端口。
-- 安装用户为 root 用户。root 用户在进行部署时无需输入密码。
-- [联系](https://www.kaiwudb.com/about/support) KaiwuDB 技术支持人员，获取 KWDB Agent Server 镜像。
-- [联系](https://www.kaiwudb.com/about/support) KaiwuDB 技术支持人员，获取 KWDB Agent UI 镜像。
-- [联系](https://www.kaiwudb.com/about/support) KaiwuDB 技术支持人员，获取 KWDB Agent VIS 镜像。
+- 安装用户为 `root` 用户。`root` 用户在进行部署时无需输入密码。
+- [联系](https://www.kaiwudb.com/support/) KaiwuDB 技术支持人员，获取 KWDB Agent Server 镜像。
+- [联系](https://www.kaiwudb.com/support/) KaiwuDB 技术支持人员，获取 KWDB Agent UI 镜像。
+- [联系](https://www.kaiwudb.com/support/) KaiwuDB 技术支持人员，获取 KWDB Agent VIS 镜像。
 - （可选）如需以安全模式连接 KWDB 数据库，用户需要生成 CA 证书和密钥、客户端证书和密钥、节点证书和密钥。有关详细信息，参见 [`kwdb cert` 命令参考](../kwbase-cli-tool.md#kwbase-cert)。
 
 ### 步骤
@@ -46,6 +46,8 @@ id: kat-install
           LANGSMITH_ENDPOINT: "your_langchain_project_endpoint_url"
           LANGSMITH_API_KEY: "your_langchain_api_key"
           KNOWLEDGE_API_URL: "your_knowledge_api_url"
+          TRUSTED_HOSTS: "your_trusted_hosts"
+          FRONTEND_ORIGIN: "your_frontend_origin_url"          
         network_mode: host
         volumes:
           - /your/local/path/data/:/app/data/
@@ -86,6 +88,8 @@ id: kat-install
         - `LANGSMITH_ENDPOINT`：LangSmith 收集过程数据的 API 地址。默认设置为 `https://api.smith.langchain.com`。
         - `LANGSMITH_API_KEY`：LangSmith API 密钥。
         - `KNOWLEDGE_API_URL`：KWDB 知识库的 API 地址，默认设置为 `http://117.73.9.174:8001/proxy/knowledge`。
+        - `TRUSTED_HOSTS`：可信主机列表，多个主机用英文逗号分隔。生产环境建议配置为实际域名，例如 `your-domain.com,www.your-domain.com`。如果服务器没有域名，填写 IP 地址和 localhost，例如 `localhost,127.0.0.1,<主机IP>`。
+        - `FRONTEND_ORIGIN`：前端页面的访问地址。生产环境建议配置为实际域名，例如 `http://your-domain.com:3000`。如果服务器没有域名，填写实际 IP 地址，例如 `http://<主机IP>:3000`。        
       - `kat-server.network_mode`: 配置 KWDB Agent Server 的网络访问模式。支持设置为 `host`，表示 KWDB Agent Server 容器直接使用宿主机的网络配置，而无需创建独立的虚拟网络环境。
       - `kat-server.volumns`：数据库的映射目录。
       - `kat-server.command`：容器启动后，默认执行的命令。

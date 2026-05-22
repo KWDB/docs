@@ -30,6 +30,111 @@ KWDB 支持以下存储路径设置方式：
 - 安装时通过修改 `data_root` 参数自定义数据路径。
 - 部署完成后，用户也可以通过修改部署生成的 `kaiwudb_env` 文件、 `docker-compose.yml` 文件或 `kwbase start` 命令修改存储路径。
 
+## 数据压缩
+
+KWDB 支持在创建或修改时序表时，为每个数据列单独指定编码算法、压缩算法及压缩级别，针对不同数据特征选择最优压缩策略，在存储空间和系统资源之间灵活权衡。配置修改后仅对新写入数据生效，已有数据不受影响。
+
+### 编码算法、压缩算法及压缩级别
+
+#### 编码算法
+
+不同数据类型支持的编码算法及默认值如下：
+
+| 数据类型 | 可选编码算法 | 默认值 |
+| --- | --- | --- |
+| INT2 / INT4 / INT8 | `simple8b` / `disabled` | `simple8b` |
+| TIMESTAMP / TIMESTAMPTZ | `simple8b` / `disabled` | `simple8b` |
+| FLOAT / DOUBLE | `chimp` / `disabled` | `chimp` |
+| BOOL | `bitpacking` / `disabled` | `bitpacking` |
+| 字符类型 | `disabled` | `disabled` |
+#### 压缩算法
+
+所有数据类型均支持以下压缩算法，默认使用 `lz4`：
+
+| 算法 | 压缩率 | 压缩速度 | 解压速度 | CPU 占用 | 内存占用 | 适用场景 |
+| --- | --- | --- | --- | --- | --- | --- |
+| `lz4` | 低到中（2x-3x） | 极快 | 最快 | 很低 | 很低 | 高频写入、对延迟敏感的场景（默认） |
+| `zstd` | 中到高（2.5x-5x+） | 很快 | 极快（与 lz4 同级） | 低到中（取决于等级） | 中等（可调） | 存储空间敏感、兼顾读写性能的场景 |
+| `zlib` | 中（2.5x-4x） | 中等 | 快 | 中等 | 中等 | 存储空间敏感、对写入性能要求较低的场景 |
+| `snappy` | 低（1.5x-2x） | 极快 | 极快 | 很低 | 很低 | 速度优先、不需要调节压缩级别的场景 |
+| `disabled` | — | — | — | — | — | 关闭压缩 |
+
+::: warning 说明
+- `zstd` 压缩速度接近 `lz4`，但压缩率更高，解压速度同样极快，是需要兼顾空间与性能时的优先选择。
+- `zlib` 压缩率与 `zstd` 相近，但压缩和解压速度均较慢，CPU 和内存消耗更高，在高频大批量写入场景下影响尤为明显，请谨慎评估后使用。
+:::
+
+#### 压缩级别
+
+支持 `low`、`medium`（默认）、`high`，可简写为 `l`、`m`、`h`。压缩级别越高，压缩率越高，CPU 和内存占用也越多，请根据业务负载合理配置。
+
+::: warning 说明
+`snappy` 和 `lz4` 不支持压缩级别设置，对其指定压缩级别不会有实际效果。
+:::
+
+### 压缩配置
+
+各级压缩配置的优先级规则如下：
+
+- **不修改 cluster setting 时**：列级自定义配置 > 数据类型默认值 > cluster setting 全局配置
+- **已设置 cluster setting 时**：列级自定义配置 > 数据类型默认值 = cluster setting 全局配置
+
+建议优先通过 cluster setting 设置全局基准，仅对有特殊需求的列单独指定配置。
+
+#### 全局压缩配置
+
+通过 cluster setting 统一配置全局默认压缩行为，无需逐列指定：
+
+```sql
+-- 设置压缩模式（0-3）
+SET CLUSTER SETTING ts.compress.stage = 3;
+
+-- 设置全局默认压缩算法
+SET CLUSTER SETTING ts.compress.algorithm = 'lz4';
+
+-- 设置全局默认压缩级别
+SET CLUSTER SETTING ts.compress.level = 'medium';
+```
+
+参数说明：
+
+| 参数 | 说明 | 默认值 | 类型 |
+| --- | --- | --- | --- |
+| `ts.compress.stage` | 控制时序数据的压缩模式：<br>- `0`：关闭编码，关闭压缩<br>- `1`：开启编码，关闭压缩<br>- `2`：关闭编码，开启压缩<br>- `3`：开启编码，开启压缩 | `3` | int |
+| `ts.compress.algorithm` | 全局默认压缩算法，支持 `lz4`、`zstd`、`zlib`、`snappy`、`disabled`。优先级低于列级配置。 | `lz4` | string |
+| `ts.compress.level` | 全局默认压缩级别，支持 `low`、`medium`、`high`。优先级低于列级配置。 | `medium` | string |
+
+#### 列级压缩配置
+
+- 建表时为各列指定编码和压缩配置：
+
+  ```sql
+  CREATE TABLE test_compress.t1 (
+      k_timestamp TIMESTAMPTZ ENCODE 'Simple8B' COMPRESS 'lz4' LEVEL 'high' NOT NULL,
+      c1 INT ENCODE 'Simple8B' COMPRESS 'zlib' LEVEL 'high',
+      c2 FLOAT COMPRESS 'zlib' LEVEL 'medium',
+      c3 INT ENCODE 'Simple8B',           -- 仅指定编码，压缩使用默认值
+      c4 BLOB COMPRESS 'disabled',
+      c5 BOOL ENCODE 'disabled',
+      c7 VARCHAR ENCODE 'disabled' COMPRESS 'disabled'
+  ) TAGS (
+      code1 INT2 NOT NULL
+  ) PRIMARY TAGS (code1);
+  ```
+
+- 修改已有列的压缩配置：
+
+  ```sql
+  -- 修改压缩算法和压缩级别
+  ALTER TABLE t1 ALTER COLUMN c2 COMPRESS 'zstd' LEVEL 'high';
+
+  -- 同时修改编码和压缩算法（ENCODE 必须在 COMPRESS 之前）
+  ALTER TABLE t1 ALTER COLUMN c1 ENCODE 'Simple8B' COMPRESS 'zstd' LEVEL 'medium';
+
+  -- 关闭列的压缩
+  ALTER TABLE t1 ALTER COLUMN c4 COMPRESS 'disabled';
+  ```
+
 ## 数据重组
 
 数据重组是指按照特定规则对原始时序数据进行清理和整理的过程，主要应用于以下场景:

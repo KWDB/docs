@@ -24,25 +24,47 @@ PRIMARY [TAGS|ATTRIBUTES] (<primary_tag_list>)
 [WITH HASH(<hash_value>)];
 ```
 
+其中，`column_list` 中每列的定义语法如下：
+
+```sql
+<column_name> <data_type> 
+[NOT NULL] 
+[COMMENT '<comment_text>']
+[DEFAULT <expr> | NULL] 
+[ENCODE '<encode_algo>'] 
+[COMPRESS '<compress_algo>' [LEVEL '<level>']] 
+```
+
 ### 参数说明
 
 :::warning 说明
 
 - 目前，时序表名、列名和标签名称不支持中文字符。
+- `ENCODE` 与 `COMPRESS` 在列定义中无顺序要求，但 `LEVEL` 必须紧跟在 `COMPRESS` 之后。如果关闭压缩（`COMPRESS 'disabled'`），则不允许指定 `LEVEL`，否则报错。
 - 配置可选参数时，必须严格按照 `[RETENTIONS <keep_duration>] [COMMENT [=] <'comment_text'>] [WITH HASH(<hash_value>)]` 的顺序，否则系统将会报错。
-- 对于 KWDB 3.1.0，表的分区间隔配置使用所属数据库的时间分区间隔配置。
+- 表的分区间隔配置使用所属数据库的时间分区间隔配置。
 :::
 
 | 参数 | 说明 |
 | --- | --- |
 | `IF NOT EXISTS` | 可选关键字。当使用 `IF NOT EXISTS` 关键字时，如果目标数表不存在，系统创建目标表。如果目标表存在，系统不会创建表，但不会报错。当未使用 `IF NOT EXISTS` 关键字时，如果目标表不存在，系统创建目标表。如果目标表存在，系统报错，提示目标表已存在。|
 | `table_name`| 待创建的时序表的名称，表名的最大长度为 128 字节。在指定数据库中，时序表名称必须唯一，并且遵循[数据库标识符规则](../../../sql-reference/sql-identifiers.md)。 |
-| `column_list`| 待创建的数据列列表，支持添加两个以上的列定义，最多可指定 4096 列。列定义包括列名、数据类型、注释信息和默认值。<br>- 列名的最大长度为 128 字节，支持指定 NOT NULL，默认为空值。支持自定义第一列的列名，但数据类型必须是 TIMESTAMPTZ 或 TIMESTAMP 且非空。默认时区为 UTC。<br >- 对于非时间类型的数据列，默认值只能是常量。对于时间类型的列（TIMESTAMPTZ 或 TIMESTAMP），默认值可以是常量，也可以是 `now()` 函数。如果默认值类型与列类型不匹配，设置默认值时，系统报错。支持默认值设置为 NULL。<br >- KWDB 支持毫秒、微秒和纳秒的时间精度。默认情况下，KWDB 采用毫秒时间精度。<br >- 支持在数据类型之后添加数据列的注释信息。|
-| `tag_list`| 标签列表，支持添加一个或多个标签定义，最多可指定 `128` 个标签。标签定义包含标签名、数据类型和注释信息。<br>- 标签名的最大长度为 128 字节，支持指定 NOT NULL，默认为空值。不支持 TIMESTAMP、TIMESTAMPTZ、NVARCHAR 和 GEOMETRY 数据类型。<br >- 支持在 nullable 条件之后添加标签列的注释信息。 |
+| `column_list`| 待创建的数据列列表，支持添加两个以上的列定义，最多可指定 4096 列。列定义包括列名、数据类型、注释信息、默认值等信息。<br>- 列名的最大长度为 128 字节，支持指定 NOT NULL，默认为空值。<br>- 第一列支持自定义列名，但数据类型必须是 TIMESTAMPTZ 或 TIMESTAMP 且非空。默认时区为 UTC。<br>- 支持在数据类型之后添加数据列的注释信息。<br>- 对于非时间类型的数据列，默认值只能是常量。对于时间类型的列（TIMESTAMPTZ 或 TIMESTAMP），默认值可以是常量，也可以是 `now()` 函数。如果默认值类型与列类型不匹配，设置默认值时，系统报错。支持默认值设置为 NULL。<br>- 时间戳列支持设置时间精度。目前，KWDB 支持毫秒、微秒和纳秒的时间精度。默认情况下，KWDB 采用毫秒时间精度。<br>- 支持为每列单独指定编码算法（`ENCODE`）、压缩算法（`COMPRESS`）及压缩级别（`LEVEL`）：<br>&nbsp;&nbsp;- `encode_algo`：设置列的编码算法，大小写不敏感。不同数据类型支持的编码算法不同，详见下方说明。设置为 `disabled` 表示关闭该列的编码。如未指定，使用该数据类型的默认编码算法。<br>&nbsp;&nbsp;- `compress_algo`：设置列的压缩算法，支持 `lz4`、`zstd`、`zlib`、`snappy`，大小写不敏感。设置为 `disabled` 表示关闭该列的压缩。如未指定，默认使用 `lz4`。<br>&nbsp;&nbsp;- `level`：设置压缩算法的压缩级别，必须紧跟在 `COMPRESS` 之后指定，大小写不敏感。支持 `low`（简写 `l`）、`medium`（简写 `m`）、`high`（简写 `h`），默认 `medium`。压缩级别越高，压缩率越高，但所需系统资源与耗时也会增加。除 `snappy` 和 `lz4` 外，其他压缩算法均可设置压缩级别；对 `snappy` 和 `lz4` 设置 `level` 不会有实际效果。如果 `compress_algo` 设置为 `disabled`，则指定该参数会报错。|
+| `tag_list`| 标签列表，支持添加一个或多个标签定义，最多可指定 `128` 个标签。标签定义包含标签名、数据类型和注释信息。<br>- 标签名的最大长度为 128 字节，支持指定 NOT NULL，默认为空值。不支持 TIMESTAMP、TIMESTAMPTZ、NVARCHAR 和 GEOMETRY 数据类型。<br>- 支持在 nullable 条件之后添加标签列的注释信息。 |
 | `primary_tag_list`| 主标签列表，支持添加一个或多个主标签名称，最多可指定 `4` 个。主标签必须包含在标签列表内且指定为 NOT NULL，不支持浮点类型和除 VARCHAR 之外的变长数据类型。VARCHAR 类型长度默认 `64` 字节，最大长度为 `128` 字节。|
 | `keep_duration` | 可选参数，设置表的数据生命周期。数据超过此时长后将被系统自动清除。<br>默认值： `0s`（永久保留）<br>时间单位：<br>- 秒：`s` 或 `second`<br>- 分钟：`m` 或 `minute`<br>- 小时：`h` 或 `hour`<br>- 天：`d` 或 `day`<br>- 周：`w` 或 `week`<br>- 月：`mon` 或 `month`<br>- 年：`y` 或 `year`<br>取值范围：正整数，上限为 1000 年<br>**说明：**<br>- 表级设置优先于库级设置。<br>- 保留时长越长，存储空间占用越大，请根据业务需求合理配置。<br>- 如果待写入的数据已超过生命周期限制，系统会直接丢弃该数据，不予写入。|
 | `[COMMENT [=] <'comment_text'>` | 可选项，定义表的注释信息。 |
 | `hash_value`| 可选参数，用于定义分布式集群中 HASH 环的大小，决定最大 Range 分片数量。例如 HASH(100) 表示最多可产生 100 个不同的 Range 分片。<br><br>默认值为 2000，表示最多可产生 2000 个 Range 分片。支持设置范围为 [1,50000]。<br><br>性能影响：HASH 值过小时将导致多个设备的数据集中在少数 Range 中，形成写入热点，HASH 值过大时则会导致 Range 数量过多，增加管理开销。<br><br>推荐配置：建议根据预期设备数量选择合适的 HASH 值：<br>- 设备数 ≤ 1,000：HASH 值 < 20<br>- 设备数 ≤ 50,000：HASH 值 < 2,000<br>- 设备数 ≤ 1,000,000：HASH 值 < 10,000|
+
+不同数据类型支持的编码与压缩配置
+
+| 数据类型 | 可选编码算法 | 编码算法默认值 | 可选压缩算法 | 压缩算法默认值 | 压缩级别默认值 |
+| --- | --- | --- | --- | --- | --- |
+| INT2 / INT4 / INT8 | `simple8b` / `disabled` | `simple8b` | `lz4` / `zstd` / `zlib` / `snappy` / `disabled` | `lz4` | `medium` |
+| TIMESTAMP / TIMESTAMPTZ | `simple8b` / `disabled` | `simple8b` | `lz4` / `zstd` / `zlib` / `snappy` / `disabled` | `lz4` | `medium` |
+| FLOAT / DOUBLE | `chimp` / `disabled` | `chimp` | `lz4` / `zstd` / `zlib` / `snappy` / `disabled` | `lz4` | `medium` |
+| BOOL | `bitpacking` / `disabled` | `bitpacking` | `lz4` / `zstd` / `zlib` / `snappy` / `disabled` | `lz4` | `medium` |
+| 字符类型 | `disabled` | `disabled` | `lz4` / `zstd` / `zlib` / `snappy` / `disabled` | `lz4` | `medium` |
 
 ### 语法示例
 
@@ -115,6 +137,34 @@ PRIMARY [TAGS|ATTRIBUTES] (<primary_tag_list>)
     CREATE TABLE sensors (ts TIMESTAMP NOT NULL, value FLOAT) TAGS (sensor_id INT NOT NULL) PRIMARY TAGS (sensor_id) WITH HASH(20);
     ```
 
+- 创建时序表并为数据列指定编码和压缩算法。
+
+    以下示例创建一个名为 `t1` 的时序表，并为各数据列分别指定编码算法、压缩算法和压缩级别。
+
+    ```sql
+    CREATE TABLE test_compress.t1 (
+        k_timestamp TIMESTAMPTZ ENCODE 'Simple8B' COMPRESS 'lz4' LEVEL 'high' NOT NULL,
+        -- 编码算法：Simple8B；压缩算法：lz4；压缩级别：high
+        c1 INT ENCODE 'Simple8B' COMPRESS 'zlib' LEVEL 'high',
+        -- 编码算法：Simple8B；压缩算法：zlib；压缩级别：high
+        c2 FLOAT COMPRESS 'zlib' LEVEL 'medium',
+        -- 使用默认编码算法；压缩算法：zlib；压缩级别：medium
+        c3 INT ENCODE 'Simple8B',
+        -- 编码算法：Simple8B；使用默认压缩算法和压缩级别
+        c4 BLOB COMPRESS 'disabled',
+        -- 使用默认编码算法；关闭通用压缩
+        c5 BOOL ENCODE 'disabled',
+        -- 关闭编码压缩；使用默认压缩算法和压缩级别
+        c6 DOUBLE,
+        -- 使用默认编码算法和压缩算法及级别
+        c7 VARCHAR ENCODE 'disabled' COMPRESS 'disabled'
+        -- 关闭编码压缩，关闭通用压缩，即：不压缩
+    ) TAGS (
+        code1 INT2 NOT NULL,
+        ...
+    ) PRIMARY TAGS (code1);
+    ```
+  
 ## 查看表
 
 ### 前提条件
@@ -295,12 +345,12 @@ SHOW CREATE [TABLE] [<database_name>.] <table_name>;
 
 ```sql
 ALTER TABLE <table_name> 
-[ADD [COLUMN] [IF NOT EXISTS] <colunm_name> <data_type> [DEFAULT <expr> | NULL ] 
+[ADD [COLUMN] [IF NOT EXISTS] <column_name> <data_type> [DEFAULT <expr> | NULL] [ENCODE '<encode_algo>'] [COMPRESS '<compress_algo>' [LEVEL '<level>']]
 |ADD [TAG | ATTRIBUTE] <tag_name> <tag_type>
-|ALTER [COLUMN] <colunm_name> [SET DATA] TYPE <new_type> [SET DEFAULT <default_expr> | DROP DEFAULT ]
+|ALTER [COLUMN] <column_name> [SET DATA] TYPE <new_type> [SET DEFAULT <default_expr> | DROP DEFAULT] [ENCODE '<encode_algo>'] [COMPRESS '<compress_algo>' [LEVEL '<level>']]
 |ALTER [TAG | ATTRIBUTE] <tag_name> [SET DATA] TYPE <new_type>
 | CONFIGURE ZONE [USING <variable> = [COPY FROM PARENT | <value>], <variable> = [COPY FROM PARENT | <value>] ... | DISCARD]
-|DROP [COLUMN] [IF EXISTS] <colunm_name>
+|DROP [COLUMN] [IF EXISTS] <column_name>
 |DROP [TAG | ATTRIBUTE] <tag_name>
 |<partition_by_clause>
 |RENAME TO <new_table_name> 
@@ -317,12 +367,16 @@ ALTER TABLE <table_name>
     - `IF NOT EXISTS`：可选关键字。当使用 `IF NOT EXISTS` 关键字时，如果列名不存在，系统创建列。如果列名存在，系统创建列失败，但不会报错。当未使用 `IF NOT EXISTS` 关键字时，如果列名不存在，系统创建列。如果列名存在，系统报错，提示列名已存在。
     - `DEFAULT <default_Expr>`：可选关键字。设置数据列的默认值。对于非时间类型的数据列，默认值只能是常量。对于时间类型的列（TIMESTAMPTZ 或 TIMESTAMP），默认值可以是常量，也可以是 `now()` 函数。如果默认值类型与列类型不匹配，设置默认值时，系统报错。支持默认值设置为 NULL。
     - `NULL`：可选关键字，默认为 `NULL`，且只支持 `NULL`。
+    - `ENCODE '<encode_algo>'`：可选关键字，为新增列指定编码算法。
+    - `COMPRESS '<compress_algo>' [LEVEL '<level>']`：可选关键字，为新增列指定压缩算法和压缩级别。`LEVEL` 必须紧跟在 `COMPRESS` 之后。如果关闭压缩（`COMPRESS 'disabled'`），则不允许指定 `LEVEL`，否则报错。
   - `ADD TAG/ATTRITBUTE`：添加标签，需指定标签的名称和数据类型，不支持添加主标签。
 - ALTER
   - `ALTER COLUMN`: 修改列的数据类型或宽度，设置或删除列的默认值。
     - `SET DATA`：可选关键字，是否使用不影响修改列的数据类型和宽度。
     - `SET DEFAULT <default_expr>`：必选关键字。系统写入表数据时写入指定的默认值，从而不需要显式定义该列的值。对于非时间类型的数据列，默认值只能是常量。对于时间类型的列（TIMESTAMPTZ 或 TIMESTAMP），默认值可以是常量，也可以是 `now()` 函数。如果默认值类型与列类型不匹配，设置默认值时，系统报错。支持默认值设置为 NULL。
     - `DROP DEFAULT`：必选关键字。删除已定义的列的默认值，删除后将不再写入默认值。
+    - `ENCODE '<encode_algo>'`：修改列的编码算法。可单独使用，也可与 `COMPRESS` 同时使用。同时使用时，必须严格按照 `ENCODE ... COMPRESS ... LEVEL ...` 顺序指定。
+    - `COMPRESS '<compress_algo>' [LEVEL '<level>']`：修改列的压缩算法和压缩级别。可单独使用，也可与 `ENCODE` 同时使用，同时使用时，必须严格按照 `ENCODE ... COMPRESS ... LEVEL ...` 顺序指定。修改压缩方式后，已写入的旧版本数据保持原有压缩配置不变，新写入的数据按修改后的配置处理。
   - `ALTER TAG/ATTRITBUTE`：修改标签的数据类型或宽度，其中 `SET DATA` 为可选关键字，是否使用不影响修改标签的数据类型和宽度，不支持修改主标签的数据类型和宽度。**注意**：如果待修改的标签列已创建索引，必须先删除该索引，再进行修改。
 - `CONFIGURE ZONE`：修改表的区域配置，更多详细信息，参见[区域配置](./zone-mgmt-ts.md)。
 - DROP
@@ -344,9 +398,12 @@ ALTER TABLE <table_name>
 | `table_name` | 表名，支持通过 `<database_name>.<table_name>` 指定其他数据库中的表。如未指定，则默认使用当前数据库。 |
 | `column_name` | 列名，新增列名不得与待修改表的当前列名和标签名重复。列名的最大长度为 128 字节。 |
 | `data_type` | 数据类型。有关时序表支持的数据类型，参见[时序数据类型](../../../sql-reference/data-type/data-type-ts-db.md)。|
+| `encode_algo` | 可选，设置列的编码算法，大小写不敏感。不同数据类型支持的编码算法不同，详见数据压缩中[编码说明](../../../db-operation/storage-mgmt.md#编码算法)。设置为 `disabled` 表示关闭该列的编码。如未指定，使用该数据类型的默认编码算法。 |
+| `compress_algo` | 可选，设置列的压缩算法，大小写不敏感，支持 `lz4`、`zstd`、`zlib`、`snappy`。设置为 `disabled` 表示关闭该列的压缩。如未指定，默认使用 `lz4`。 |
+| `level` | 可选，设置压缩算法的压缩级别，大小写不敏感。必须紧跟在 `COMPRESS` 之后指定。支持 `low`（简写 `l`）、`medium`（简写 `m`）、`high`（简写 `h`），默认 `medium`。如果 `compress_algo` 设置为 `disabled`，则指定该参数会报错。 |
 | `tag_name` | 标签名，不支持数据库级别的自定义标签。标签名的最大长度为 128 字节。 |
 | `tag_type` | 标签类型，支持所有数值类型、布尔类型以及除 NVARCHAR 之外的字符类型。 |
-| `new_type` | 拟修改的数据类型和宽度。<br > **说明** <br >- 转换后的数据类型宽度必须大于原数据类型的宽度。例如，INT4 可以转成 INT8，但不能转成 INT2，CHAR(200) 可以转为 VARCHAR (254), 但不能转为 VARCHAR (100)。<br >- CHAR、VARCHAR、NCHAR、NVARCHAR 字符类型支持同数据类型的宽度转换，但只能增加宽度不能降低宽度。例如，CHAR(100) 可以转转为 CHAR(200)，不能转为 CHAR(50)。有关 KWDB 支持修改的数据类型、默认宽度、最大宽度、可转换的数据类型等详细信息，参见[时序数据类型](../../../sql-reference/data-type/data-type-ts-db.md)。 |
+| `new_type` | 拟修改的数据类型和宽度。转换规则详见[支持修改的数据类型](./column-mgmt-ts.md#支持修改的数据类型)。 |
 | `new_table_name` | 拟修改的表名。 |
 | `old_name` | 当前列名或标签名，不支持修改主标签名称。|
 | `new_name` | 拟修改的列名或标签名。列名或标签名的最大长度为 128 字节。 |
@@ -360,6 +417,7 @@ ALTER TABLE <table_name>
 - 修改表的生命周期
 - 增加、删除列、修改列的名称、数据类型
 - 增加、删除标签、修改标签的名称、宽度
+- 修改列的编码和压缩方式
 
 ```sql
 -- 修改表的名称。
@@ -397,6 +455,22 @@ ALTER TABLE ts_table ALTER COLUMN c4 SET DEFAULT '789';
 -- 删除列的默认值。
 
 ALTER TABLE ts_table ALTER COLUMN c4 DROP DEFAULT;
+
+-- 修改列的编码算法。
+
+ALTER TABLE ts_table ALTER COLUMN c3 ENCODE 'Simple8B';
+
+-- 修改列的压缩算法和压缩级别。
+
+ALTER TABLE ts_table ALTER COLUMN c3 COMPRESS 'zstd' LEVEL 'high';
+
+-- 同时修改列的编码和压缩算法（必须严格按照 `ENCODE ... COMPRESS ... LEVEL ...` 顺序）。
+
+ALTER TABLE ts_table ALTER COLUMN c3 ENCODE 'Simple8B' COMPRESS 'zstd' LEVEL 'medium';
+
+-- 关闭列的压缩。
+
+ALTER TABLE ts_table ALTER COLUMN c3 COMPRESS 'disabled';
 
 -- 新增标签。
 

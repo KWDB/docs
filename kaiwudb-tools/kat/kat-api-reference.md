@@ -5,4 +5,4 @@ id: kat-api-reference
 
 # API 参考
 
-默认情况下，部署启动 KAT 后，用户可以直接访问 `http://localhost:8000/docs#/`，查看 KAT 支持的 API 接口。
+部署启动 KAT 后，用户可以通过 `http://<主机IP>:8000/docs` 访问 KAT API 文档，查看所有支持的 API 接口。

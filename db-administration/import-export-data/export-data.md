@@ -22,7 +22,7 @@ KWDB 支持使用 SQL 语句导出以下表数据：
 - 时序表或关系表指定范围的用户数据，保存为 `.csv` 格式。
 - 权限信息表：保存为 `.csv` 格式。
 
-导出数据的过程中，如果目标位置不可达，系统报错。如果由于其他原因导致数据导出中断，系统保留已成功导出的文件。
+导出数据的过程中，如果目标位置不可达，系统报错。如果目标路径非空，系统报错，提示 `export path %s is not empty (contains %d files), please use an empty directory to prevent data loss`，导出操作不会执行。如果由于其他原因导致数据导出中断，系统保留已成功导出的文件。
 
 ### 前提条件
 
@@ -48,13 +48,13 @@ KWDB 支持使用 SQL 语句导出以下表数据：
   - 以 CSV 格式导出用户数据
 
     ```sql
-    EXPORT INTO CSV "<expt_path>" FROM TABLE <table_name> WITH [ column_name | meta_only | data_only | delimiter = '<char>' | chunk_rows = '<number>' | enclosed = '<char>' | escaped = '<char>' | nullas = '<char>' | comment | charset = '<coding>' | privileges ];
+    EXPORT INTO CSV "<expt_path>" FROM TABLE <table_name> WITH [ column_name | meta_only | data_only | delimiter = '<char>' | chunk_rows = '<number>' | thread_concurrency = '<int>' | limit_memory = '<size>' | enclosed = '<char>' | escaped = '<char>' | nullas = '<char>' | comment | charset = '<coding>' | privileges ];
     ```
 
   - 以 SQL 格式导出用户数据
 
     ```sql
-    EXPORT INTO SQL "<expt_path>" FROM TABLE <table_name> WITH [ meta_only | data_only | delimiter = '<char>' | comment | charset = '<coding>' | privileges ];
+    EXPORT INTO SQL "<expt_path>" FROM TABLE <table_name> WITH [ meta_only | data_only | delimiter = '<char>' | thread_concurrency = '<int>' | limit_memory = '<size>' | comment | charset = '<coding>' | privileges ];
     ```
 
 - 导出指定范围的用户数据
@@ -73,13 +73,15 @@ KWDB 支持使用 SQL 语句导出以下表数据：
 
 | 参数 | 说明 |
 |---| --- |
-| `expt_path` | 导出文件的存放路径，支持 `nodelocal://<node_id>/<dir>` 和 `<server_ip>/<dir>` 两种格式。<br> `nodelocal://<node_id>/<dir>`：将文件导出至本地节点。	<br> - `node_id`：节点 ID。当本地只有一个节点时，`node_id` 取值是 `1`。<br> - `dir`：存放导出数据的文件夹名称。如果目标文件夹不存在，系统会在安装 KWDB 时定义的 KWDB 数据存放路径下创建相应的文件夹。默认情况下，KWDB 数据存放路径是 `/var/lib/kaiwudb/extern/<folder_name>`。<br> `<server_ip>/<dir>`：将文件导出至指定服务器。	<br> - `server_ip`：服务器的 IP 地址和端口号，例如 `http://172.18.0.1:8090`。	<br> - `dir`：存放导出数据的文件夹名称。如果目标文件夹不存在，系统会创建相应的文件夹。|
+| `expt_path` | 导出文件的存放路径，支持 `nodelocal://<node_id>/<dir>` 和 `<server_ip>/<dir>` 两种格式。<br> `nodelocal://<node_id>/<dir>`：将文件导出至本地节点。<br> - `node_id`：节点 ID。当本地只有一个节点时，`node_id` 取值是 `1`。<br> - `dir`：存放导出数据的文件夹名称。如果目标文件夹不存在，系统会在安装 KWDB 时定义的 KWDB 数据存放路径下创建相应的文件夹。默认情况下，KWDB 数据存放路径是 `/var/lib/kaiwudb/extern/<folder_name>`。如果目标文件夹非空，系统报错，提示 `export path %s is not empty (contains %d files), please use an empty directory to prevent data loss`。<br> `<server_ip>/<dir>`：将文件导出至指定服务器。<br> - `server_ip`：服务器的 IP 地址和端口号，例如 `http://172.18.0.1:8090`。<br> - `dir`：存放导出数据的文件夹名称。如果目标文件夹不存在，系统会创建相应的文件夹。如果目标文件夹非空，系统报错，提示 `export path %s is not empty (contains %d files), please use an empty directory to prevent data loss`。|
 | `table_name` | 待导出数据的表名。|
 | `column_name` | 可选参数，表示导出数据时添加列名。默认情况下，导出数据时，系统不导出列名。|
 | `meta_only` | 可选参数，表示只导出元数据。该参数与 `data_only` 参数互斥。|
 | `data_only` | 可选参数，表示只导出用户数据。该参数与 `meta_only` 参数互斥。|
 | `delimiter` | 可选参数，用于指定分隔符。分隔符支持单个字符或空字符，不支持双引号（`"`）。<br> - 分隔符应尽量避免与现有数据中的字符相同。如果数据中包含指定的分隔符，系统默认添加包围符来避免导出错误。<br> - 如果导出数据时指定了分隔符，导入数据时需要使用相同的分隔符。如果导出、导入数据时指定的分隔符不一致，可能会导致数据导入失败。|
 | `chunk_rows` | 可选参数，用于指定单个 `CSV` 文件的行数。如果待导出数据的行数大于设定值，系统根据设定的值将待导出的表拆分成多个 `CSV` 文件，生成的文件按照 `<node_id>.<file_id>.csv` 的形式进行命名。默认值和上限值均为 `100000`。当取值为 `0` 时，表示无行数限制。 |
+| `thread_concurrency` | 可选参数，用于指定导出数据的线程数。默认为操作系统的 CPU 核心数。|
+| `limit_memory` | 可选参数，用于限制每次写入文件的数据量大小。默认不限制。支持纯数字（字节数）或数字加单位的格式，单位不区分大小写，例如 `100B`、`1024`、`1MB`。支持的最大单位为 PB。|
 | `enclosed` | 可选参数，用于指定包围符。默认为双引号（`"`），支持单引号（`'`）。使用单引号（`'`）作为包围符时，格式为 `"'"`。使用双引号（`"`）作为包围符时，格式为 `'"'`。包围符不能与分隔符相同。|
 | `escaped` | 可选参数，用于指定转义符。默认为双引号（`"`），支持反斜杠（`\`）。转义符不能与分隔符相同。|
 | `nullas` | 可选参数，用于指定空值的表示形式。默认不显示内容，支持指定为 `NULL`、`null`、`Null` 或 `\N`。|
@@ -254,26 +256,28 @@ KWDB 支持一次性导出指定数据库中所有表的元数据、用户数据
 - 以 CSV 格式导出数据库数据
 
   ```sql
-  EXPORT INTO CSV "<expt_path>" FROM DATABASE <db_name> WITH [ column_name | meta_only | data_only | delimiter = '<char>' | chunk_rows = '<number>' | enclosed = '<char>' | escaped = '<char>' | nullas = '<char>' | comment | charset = '<coding>' | privileges ];
+  EXPORT INTO CSV "<expt_path>" FROM DATABASE <db_name> WITH [ column_name | meta_only | data_only | delimiter = '<char>' | chunk_rows = '<number>' | thread_concurrency = '<int>' | limit_memory = '<size>' | enclosed = '<char>' | escaped = '<char>' | nullas = '<char>' | comment | charset = '<coding>' | privileges ];
   ```
 
 - 以 SQL 格式导出数据库数据
 
   ```sql
-  EXPORT INTO SQL "<expt_path>" FROM DATABASE <db_name> WITH [ meta_only | data_only | delimiter = '<char>' | comment | charset = '<coding>' | privileges ];
+  EXPORT INTO SQL "<expt_path>" FROM DATABASE <db_name> WITH [ meta_only | data_only | delimiter = '<char>' | thread_concurrency = '<int>' | limit_memory = '<size>' | comment | charset = '<coding>' | privileges ];
   ```
 
 ### 参数说明
 
 | 参数          | 说明                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 |---------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `expt_path`   | 导出文件的存放路径，支持 `nodelocal://<node_id>/<dir>` 和 `<server_ip>/<dir>` 两种格式。<br> `nodelocal://<node_id>/<dir>`：将文件导出至本地节点。	<br> - `node_id`：节点 ID。当本地只有一个节点时，`node_id` 取值是 `1`。<br> - `dir`：存放导出数据的文件夹名称。如果目标文件夹不存在，系统会在安装 KWDB 时定义的 KWDB 数据存放路径下创建相应的文件夹。默认情况下，KWDB 数据存放路径是 `/var/lib/kaiwudb/extern/<folder_name>`。<br> `<server_ip>/<dir>`：将文件导出至指定服务器。	<br> - `server_ip`：服务器的 IP 地址和端口号，例如 `http://172.18.0.1:8090`。	<br> - `dir`：存放导出数据的文件夹名称。如果目标文件夹不存在，系统会创建相应的文件夹。 |
+| `expt_path` | 导出文件的存放路径，支持 `nodelocal://<node_id>/<dir>` 和 `<server_ip>/<dir>` 两种格式。<br> `nodelocal://<node_id>/<dir>`：将文件导出至本地节点。<br> - `node_id`：节点 ID。当本地只有一个节点时，`node_id` 取值是 `1`。<br> - `dir`：存放导出数据的文件夹名称。如果目标文件夹不存在，系统会在安装 KWDB 时定义的 KWDB 数据存放路径下创建相应的文件夹，默认情况下，KWDB 数据存放路径是 `/var/lib/kaiwudb/extern/<folder_name>`。如果目标文件夹非空，系统报错，提示 `export path %s is not empty (contains %d files), please use an empty directory to prevent data loss`。<br> `<server_ip>/<dir>`：将文件导出至指定服务器。<br> - `server_ip`：服务器的 IP 地址和端口号，例如 `http://172.18.0.1:8090`。<br> - `dir`：存放导出数据的文件夹名称。如果目标文件夹不存在，系统会创建相应的文件夹。如果目标文件夹非空，系统报错，提示 `export path %s is not empty (contains %d files), please use an empty directory to prevent data loss`。|
 | `db_name`     | 待导出数据的数据库名。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 | `column_name` | 可选参数，表示导出数据时添加列名。默认情况下，导出数据时，系统不导出列名。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 | `meta_only`   | 可选参数，表示只导出元数据。该参数与 `data_only` 参数互斥。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | `data_only`   | 可选参数，表示只导出用户数据。该参数与 `meta_only` 参数互斥。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | `delimiter`   | 可选参数，用于指定分隔符。分隔符支持单个字符或空字符，不支持双引号（`"`）。<br> - 分隔符应尽量避免与现有数据中的字符相同。如果数据中包含指定的分隔符，系统默认添加包围符来避免导出错误。<br> - 如果导出数据时指定了分隔符，导入数据时需要使用相同的分隔符。如果导出、导入数据时指定的分隔符不一致，可能会导致数据导入失败。                                                                                                                                                                                                                                                      |
 | `chunk_rows`  | 可选参数，用于指定单个 `CSV` 文件的行数。如果待导出数据的行数大于设定值，系统根据设定的值将待导出的表拆分成多个 `CSV` 文件，生成的文件按照 `<node_id>.<file_id>.csv` 的形式进行命名。默认值和上限值均为 `100000`。当取值为 `0` 时，表示无行数限制。                                                                                                                                                                                                                                                                                                                                                                                          |
+| `thread_concurrency` | 可选参数，用于指定导出数据的线程数。默认为操作系统的 CPU 核心数。|
+| `limit_memory` | 可选参数，用于限制每次写入文件的数据量大小。默认不限制。支持纯数字（字节数）或数字加单位的格式，单位不区分大小写，例如 `100B`、`1024`、`1MB`。支持的最大单位为 PB。|
 | `enclosed`    | 可选参数，用于指定包围符。默认为双引号（`"`），支持单引号（`'`）。使用单引号（`'`）作为包围符时，格式为 `"'"`。使用双引号（`"`）作为包围符时，格式为 `'"'`。包围符不能与分隔符相同。                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | `escaped`     | 可选参数，用于指定转义符。默认为双引号（`"`），支持反斜杠（`\`）。转义符不能与分隔符相同。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | `nullas`      | 可选参数，用于指定空值的表示形式。默认不显示内容，支持指定为 `NULL`、`null`、`Null` 或 `\N`。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
