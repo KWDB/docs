@@ -53,7 +53,7 @@ The user must be a member of the `admin` role. By default, the `root` user belon
   - Export user data in SQL format
 
     ```sql
-    EXPORT INTO SQL "<expt_path>" FROM TABLE <table_name> WITH [ meta_only | data_only | delimiter = '<char>' | comment | charset = '<coding>' | privileges ];
+    EXPORT INTO SQL "<expt_path>" FROM TABLE <table_name> WITH [ meta_only | data_only | delimiter = '<char>' | thread_concurrency = '<int>' | limit_memory = '<size>' | comment | charset = '<coding>' | privileges ];
     ```
 
 - Export user data using the `SELECT` statement
@@ -260,7 +260,7 @@ The export syntax is the same for time-series and relational databases:
 - Export database data in SQL format
 
   ```sql
-  EXPORT INTO SQL "<expt_path>" FROM DATABASE <db_name> WITH [ meta_only | data_only | delimiter = '<char>' | comment | charset = '<coding>' | privileges ];
+  EXPORT INTO SQL "<expt_path>" FROM DATABASE <db_name> WITH [ meta_only | data_only | delimiter = '<char>' | thread_concurrency = '<int>' | limit_memory = '<size>' | comment | charset = '<coding>' | privileges ];
   ```
 
 ### Parameters
