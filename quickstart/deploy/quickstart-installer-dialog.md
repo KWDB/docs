@@ -49,7 +49,6 @@ id: quickstart-installer-dialog
 
     ![](../../static/quickstart/gui-dialog-config.png)
 
-    
     各配置项说明：
 
     | 配置项 | 说明 |
@@ -65,14 +64,11 @@ id: quickstart-installer-dialog
 
 5. 所有配置完成后，选中**开始安装**，按回车开始安装 KWDB。
 
-
 6. 根据需要选择是否为所有用户安装 KWDB。
-
 
 7. 安装过程中终端会实时显示安装进度。出现错误时，可以通过查看安装目录 `log` 目录下的日志文件获取详细信息。
 
-
-8. 安装成功后，终端输出安装成功提示，选择是否启动 KWDB。
+8. 安装成功后，终端输出安装成功提示，选择是否启动数据库。
     - 选择是：系统自动启动 KWDB。
     - 选择否：后续需要手动启动 KWDB。
 
