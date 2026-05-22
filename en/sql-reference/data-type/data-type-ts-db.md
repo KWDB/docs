@@ -12,29 +12,6 @@ KWDB time-series databases support the following data types:
 - BOOL types
 - String types
 
-This table lists the original data types, default width, maximum width, and converted data types for time-series data.
-
-| Original Data Type | Default Width | Max Width        | Converted Data Type                                  | Description                                                                                                                                                                                                               |
-|--------------------|---------------|------------------|------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| TIMESTAMP   | -        | -          | TIMESTAMPTZ, INT8, FLOAT4, FLOAT8                     | It is unavailable for TAG columns. <br>- When converting TIMESTAMP-typed values to INT8-typed values, the INT8-typed value is fixed with the microseconds precision level that has 13 digits. <br>- When converting TIMESTAMP-typed values to FLOAT4-typed values, the FLOAT4-typed value is fixed with a precision level that has about 7 valid digits. <br>- When converting TIMESTAMP-typed values to FLOAT8-typed values, the FLOAT8-typed value is fixed with a precision level that has about 15-17 valid digits.     |
-| TIMESTAMPTZ | -        | -          | TIMESTAMP, INT8, FLOAT4, FLOAT8                                              | It is unavailable for TAG columns. <br>- When converting TIMESTAMPTZ-typed values to INT8-typed values, the INT8-typed value is fixed with the microseconds precision level that has 13 digits. <br>- When converting TIMESTAMPTZ-typed values to FLOAT4-typed values, the FLOAT4-typed value is fixed with a precision level that has about 7 valid digits. <br>- When converting TIMESTAMPTZ-typed values to FLOAT8-typed values, the FLOAT8-typed value is fixed with a precision level that has about 15-17 valid digits.                                                                              |
-| INT2               | 2 bytes       | -                | INT4, INT8, VARCHAR                                  | When converting INT2-typed values to VARCHAR-typed values, the minimum VARCHAR-typed data width is 6.                                                                                                                      |
-| INT4               | 4 bytes       | -                | INT8, VARCHAR                                        | When converting INT4-typed values to VARCHAR-typed values, the minimum VARCHAR-typed data width is 11.                                                                                                                     |
-| INT8               | 8 bytes       | -                | VARCHAR                                              | When converting INT8-typed values to VARCHAR-typed values, the minimum VARCHAR-typed data width is 20.                                                                                                                     |
-| FLOAT4             | 4 bytes       | -                | FLOAT, VARCHAR                                       | When converting FLOAT4-typed values to VARCHAR-typed values, the minimum VARCHAR-typed data width is 30.                                                                                                                     |
-| FLOAT8             | 8 bytes       | -                | VARCHAR                                              | When converting FLOAT8-typed values to VARCHAR-typed values, the minimum VARCHAR-typed data width is 30.                                                                                                                    |
-| CHAR               | 1 byte        | 1023             | NCHAR, VARCHAR, NVARCHAR                             | When converting CHAR-typed values to NCHAR-typed or NVARCHAR-typed values, the NCHAR-typed or NVARCHAR-typed data width should not be shorter than a quarter of the original data width.                                  |
-| VARCHAR            | 254 bytes     | 65534 bytes      | CHAR, NCHAR, NVARCHAR, INT2, INT4, INT8, REAL, FLOAT | When converting VARCHAR-typed values to NCHAR-typed or NVARCHAR-typed values, the NCHAR-typed or NVARCHAR-typed data width should not be shorter than a quarter of the original data width.                               |
-| NCHAR              | 1 character   | 254 characters   | CHAR, VARCHAR, NVARCHAR                              | When converting NCHAR-typed values to CHAR-typed or VARCHAR-typed values, the CHAR-typed or VARCHAR-typed data width should not be shorter than 4 times of the original data width.                                       |
-| NVARCHAR           | 63 characters | 16383 characters | CHAR, VARCHAR, NCHAR                                 | When converting NVARCHAR-typed values to CHAR-typed or VARCHAR-typed values, the CHAR-typed or VARCHAR-typed data width should not be shorter than 4 times of the original data width. It is unavailable for TAG columns. |
-
-::: warning Note
-
-- The converted data width must be greater than the original data width. For example, INT4 can be converted to INT8 but not to INT2. CHAR(200) can be converted to VARCHAR (254) but not to VARCHAR (100).
-- CHAR-typed, VARCHAR-typed, NCHAR-typed, and NVARCHAR-typed values can be converted to values of the same data types. But the width cannot be shorter. For example, CHAR(100) can be converted to VARCHAR (200) but not to VARCHAR (50).
-
-:::
-
 ## Time Types
 
 KWDB time-series databases support TIMESTAMP and TIMESTAMPTZ time types.
