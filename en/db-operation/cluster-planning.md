@@ -23,7 +23,7 @@ The following table outlines the minimum and recommended hardware requirements f
 | Item  | Requirements  |
 | ---------- | ------------------------------------------------------------------------------------------------------------------------------------ |
 | CPU and Memory | - Minimum: 4 CPU cores and 8 GB RAM per node <br> - For high-volume data, complex workloads, high concurrency, or performance-critical applications, allocate additional resources accordingly |
-| Disk       | - Recommended: SSD or NVMe devices<br>- Minimum performance: 500 IOPS and 30 MB/s throughput<br>- Storage: <1GB for KWDB system, additional space needed based on data volume and enabled features like compression that reduce disk usage. For production environments, plan hardware resources according to your business scale and performance requirements.<br>- Avoid using shared storage (NFS, CIFS, CEPH). <br> - When deploying the standalone version on HDDs, avoid excessive device count and high write loads, as concurrent writes can significantly degrade performance. Additionally, HDDs are not recommended for distributed cluster deployments.|
+| Disk       | - Recommended: SSD or NVMe devices<br>- Minimum performance: 500 IOPS and 30 MB/s throughput<br>- Storage: <1GB for KWDB system, additional space needed based on data volume and enabled features like compression that reduce disk usage. For production environments, plan hardware resources according to your business scale and performance requirements.<br>- Avoid using shared storage (NFS, CIFS, CEPH). |
 | File System | ext4 recommended for optimal performance |
 
 
