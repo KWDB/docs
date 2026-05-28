@@ -138,7 +138,9 @@ The user must be a member of the `admin` role or have been granted the `CREATE` 
 
 ### Syntax
 
-![](../../../../static/sql-reference/alter_column_ts.png)
+```sql
+ALTER TABLE <table_name> ALTER [COLUMN] <column_name> [SET DATA] TYPE <new_type> [SET DEFAULT <default_expr> | DROP DEFAULT] [ENCODE '<encode_algo>' [COMPRESS '<compress_algo>' [LEVEL '<level>']]] [COMPRESS '<compress_algo>' [LEVEL '<level>']];
+```
 
 ### Parameters
 
@@ -149,6 +151,9 @@ The user must be a member of the `admin` role or have been granted the `CREATE` 
 | `new_type` | The data type and data width of the column to modify. For details about the data type, default width, maximum width, and convertible data types, see [Data Type Conversion Rules](#data-type-conversion-rules). |
 | `SET DEFAULT <default_expr>` | Required. KWDB writes the default value when inserting a row of data. Therefore, there is no need to explicitly specify a value for the column. For non-TIMESTAMP data columns, the default value must be a constant. For TIMESTAMP-typed columns, the default value can either be a constant or the `now()` function. If the data type of the default value is not matched with that of the column, the system returns an error. KWDB supports setting NULL as the default value.|
 | `DROP DEFAULT` | Required. Remove the defined default value. No default value is inserted after the defined default value is removed.|
+| `encode_algo` | Optional. Sets the encoding algorithm for the column, case-insensitively. Different data types support different algorithms. For details, see [Data Compression](../../../db-operation/storage-mgmt.md#data-compression). |
+| `compress_algo` | Optional. Sets the compression algorithm for the column. Supported values are `lz4`, `zstd`, `zlib`, and `snappy`. |
+| `level` | Optional. Sets the compression level and must immediately follow `COMPRESS`. Supported values are `low`, `medium`, and `high`. |
 
 ### Data Type Conversion Rules
 
