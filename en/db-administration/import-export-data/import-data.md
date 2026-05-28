@@ -21,7 +21,13 @@ The `IMPORT` statement imports the following data:
 
 ## Import Table Data
 
-The `IMPORT` statement imports data from one KWDB database into another KWDB database, including the metadata, privilege information, and user data for the time-series or relational tables. The metadata and privilege information are stored in the `meta.sql` file while the user data is stored in `.csv` file.
+KWDB supports importing data from time-series tables or relational tables of one KWDB database into another via SQL statements. The import includes metadata and permission information (stored in the `meta.sql` file) as well as user data (stored in `.csv` files).
+
+In addition, KWDB supports directly importing CSV files exported from TDengine. During import, the system automatically removes padding spaces in the files, eliminating the need for manual processing. Note the following before importing:
+
+- **Remove the header row**: CSV files exported from TDengine include a header row containing column names, which must be deleted manually before importing.
+- **Data type mapping**: TDengine and KWDB data types do not fully correspond. Type substitutions are required when creating tables. For example, the TDengine `BINARY` type can be replaced with the KWDB `VARCHAR` type.
+- **Null value handling**: Specify `NULLIF='NULL'` in the `IMPORT` statement.
 
 KWDB supports importing data in any of the following ways:
 
