@@ -147,9 +147,7 @@ The user must be a member of the `admin` role or have been granted the `CREATE` 
 
 ### Syntax
 
-```sql
-ALTER TABLE <table_name> ALTER [COLUMN] <column_name> [SET DATA] TYPE <new_type> [SET DEFAULT <default_expr> | DROP DEFAULT] [ENCODE '<encode_algo>' [COMPRESS '<compress_algo>' [LEVEL '<level>']]] [COMPRESS '<compress_algo>' [LEVEL '<level>']];
-```
+![](../../../../static/sql-reference/alter_column_ts.png)
 
 ### Parameters
 

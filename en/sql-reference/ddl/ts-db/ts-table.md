@@ -17,25 +17,19 @@ The user must be a member of the `admin` role or have been granted the `CREATE` 
 
 ### Syntax
 
-```sql
-CREATE TABLE [IF NOT EXISTS] <table_name> (<column_list>)
-[TAGS|ATTRIBUTES] (<tag_list>)
-PRIMARY [TAGS|ATTRIBUTES] (<primary_tag_list>)
-[RETENTIONS <keep_duration>]
-[COMMENT [=] <'comment_text'>]
-[WITH HASH(<hash_value>)];
-```
+CreateTable：
 
-The definition of each column in `column_list` is:
+![](../../../../static/sql-reference/createtable.png)
 
-```sql
-<column_name> <data_type>
-[NOT NULL]
-[COMMENT '<comment_text>']
-[DEFAULT <expr> | NULL]
-[ENCODE '<encode_algo>']
-[COMPRESS '<compress_algo>' [LEVEL '<level>']]
-```
+column_list:
+
+![](../../../../static/sql-reference/column_list.png)
+
+column_def:
+
+![](../../../../static/sql-reference/column_def.png)
+
+
 
 ### Parameters
 
