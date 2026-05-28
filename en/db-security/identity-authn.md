@@ -90,7 +90,7 @@ SET CLUSTER SETTING server.host_based_authentication.configuration = 'host all <
 | --- | --- |
 | `user_name` | Specify the username to connect to the KWDB. When it is set to `all`, it means allowing all users to connect. |
 | `address` | Specify the allowed or rejected IP address range. Available options: <br>- `all`: all IP addresses. <br>- A signle IP address: such as `192.168.1.100`<br>- An IP address with a CIDR mask length, such as `192.168.1.0/24`<br>- An IP address with a subnet mask, such as `192.168.1.0 255.255.255.0`|
-| `method` | Authentication methods to specify how to authenticate the clients. Available options: <br >- `cert`: Certificate-based authentication (SSL connection required)<br >- `cert-password`: Certificate-based and password-based authentication (SSL connection required) <br >- `password`: Password-based authentication (SSL connection required) <br >- `trust`: Allow all matched connections. <br >- `reject`: Reject all matched connections.|
+| `method` | The authentication rule. Users can customize authentication rules based on their requirements. Supported values:<br>- `cert`: Certificate-based authentication (requires an SSL connection).<br>- `cert-password`: Certificate- or password-based authentication (requires an SSL connection).<br>- `password`: Password-based authentication (requires an SSL connection).<br>- `trust`: Allows matching connections.<br>- `reject`: Rejects matching connections. When used together with the `address` field, this enables IP allowlist access control: append a `reject` catch-all rule at the end of the rule list so that only clients within the allowlist can access the database, while all other connection requests are denied. |
 
 ### Examples
 
@@ -108,4 +108,19 @@ SET CLUSTER SETTING server.host_based_authentication.configuration = 'host all <
 
     ```sql
     SET CLUSTER SETTING server.host_based_authentication.configuration = 'host all testuser 0.0.0.0/0 cert';
+    ```
+
+- **Allowlist-based access control**
+
+    The following example allows only clients in the `192.168.1.0/24` subnet to connect to the database using password authentication, while rejecting all other connection requests.
+
+    :::warning Note
+    HBA rules are matched in order from top to bottom. Make sure the `reject` rule is placed at the end of the rule list; otherwise, legitimate connections may be unexpectedly blocked.
+    :::
+
+    ```sql
+    SET CLUSTER SETTING server.host_based_authentication.configuration = '
+    host all all 192.168.1.0/24 password
+    host all all all reject
+    ';
     ```
