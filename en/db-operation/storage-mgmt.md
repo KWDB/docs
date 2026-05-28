@@ -30,6 +30,102 @@ KWDB supports the following storage path configuration methods:
 - During deployment, customize the data path by modifying the `data_root` parameter in the `deploy.cfg` file.
 - After deployment, modify storage paths by editing the generated `kaiwudb_env` file, the `docker-compose.yml` file, or using the `kwbase start` command.
 
+## Data Compression
+
+KWDB supports setting an encoding algorithm, a compression algorithm, and a compression level for each data column when you create or modify a time-series table. This lets you balance storage space and system resources according to different data characteristics. The configuration only affects newly written data; existing data is not changed.
+
+### Encoding Algorithms, Compression Algorithms, and Compression Levels
+
+#### Encoding Algorithms
+
+The following table lists the supported encoding algorithms and defaults for different data types.
+
+| Data Type | Supported Encoding Algorithms | Default |
+| --- | --- | --- |
+| INT2 / INT4 / INT8 | `simple8b` / `disabled` | `simple8b` |
+| TIMESTAMP / TIMESTAMPTZ | `simple8b` / `disabled` | `simple8b` |
+| FLOAT / DOUBLE | `chimp` / `disabled` | `chimp` |
+| BOOL | `bitpacking` / `disabled` | `bitpacking` |
+| Character types | `disabled` | `disabled` |
+
+#### Compression Algorithms
+
+All data types support the following compression algorithms. The default is `lz4`.
+
+| Algorithm | Compression Ratio | Compression Speed | Decompression Speed | CPU Usage | Memory Usage | Suitable Scenarios |
+| --- | --- | --- | --- | --- | --- | --- |
+| `lz4` | Low to medium (2x-3x) | Extremely fast | Fastest | Very low | Very low | High-frequency writes and latency-sensitive scenarios (default) |
+| `zstd` | Medium to high (2.5x-5x+) | Very fast | Extremely fast (similar to `lz4`) | Low to medium (depends on level) | Medium (tunable) | Storage-sensitive scenarios that still need good read/write performance |
+| `zlib` | Medium (2.5x-4x) | Medium | Fast | Medium | Medium | Storage-sensitive scenarios with lower write-performance requirements |
+| `snappy` | Low (1.5x-2x) | Extremely fast | Extremely fast | Very low | Very low | Scenarios that prioritize speed and do not need tunable compression levels |
+| `disabled` | — | — | — | — | — | Disable compression |
+
+::: warning Note
+- `zstd` is usually close to `lz4` in speed but provides higher compression ratio and similarly fast decompression. It is often the best choice when you need a balance between space and performance.
+- `zlib` has compression ratios similar to `zstd`, but compression and decompression are slower and use more CPU and memory. Use it carefully in high-frequency and large-volume write scenarios.
+:::
+
+#### Compression Levels
+
+Supported values are `low`, `medium` (default), and `high`, which can also be abbreviated as `l`, `m`, and `h`. Higher levels improve compression ratio but also increase CPU and memory usage. Configure them based on your workload.
+
+::: warning Note
+`snappy` and `lz4` do not support compression-level settings. Setting a level for them has no actual effect.
+:::
+
+### Compression Configuration
+
+The priority rules for compression configuration are:
+
+- When no cluster setting is changed: column-level custom configuration > data type default > global cluster setting
+- When a cluster setting is already set: column-level custom configuration > data type default = global cluster setting
+
+It is recommended to define a global baseline with cluster settings and only override specific columns when necessary.
+
+#### Global Compression Configuration
+
+Use cluster settings to set the global default compression behavior without configuring every column individually:
+
+```sql
+SET CLUSTER SETTING ts.compress.stage = 3;
+SET CLUSTER SETTING ts.compress.algorithm = 'lz4';
+SET CLUSTER SETTING ts.compress.level = 'medium';
+```
+
+Parameter description:
+
+| Parameter | Description | Default | Type |
+| --- | --- | --- | --- |
+| `ts.compress.stage` | Controls the time-series compression mode: <br>- `0`: disable encoding and compression <br>- `1`: enable encoding and disable compression <br>- `2`: disable encoding and enable compression <br>- `3`: enable encoding and compression | `3` | int |
+| `ts.compress.algorithm` | Global default compression algorithm. Supports `lz4`, `zstd`, `zlib`, `snappy`, and `disabled`. This has lower priority than column-level configuration. | `lz4` | string |
+| `ts.compress.level` | Global default compression level. Supports `low`, `medium`, and `high`. This has lower priority than column-level configuration. | `medium` | string |
+
+#### Column-Level Compression Configuration
+
+- Specify encoding and compression for columns during table creation:
+
+  ```sql
+  CREATE TABLE test_compress.t1 (
+      k_timestamp TIMESTAMPTZ ENCODE 'Simple8B' COMPRESS 'lz4' LEVEL 'high' NOT NULL,
+      c1 INT ENCODE 'Simple8B' COMPRESS 'zlib' LEVEL 'high',
+      c2 FLOAT COMPRESS 'zlib' LEVEL 'medium',
+      c3 INT ENCODE 'Simple8B',
+      c4 BLOB COMPRESS 'disabled',
+      c5 BOOL ENCODE 'disabled',
+      c7 VARCHAR ENCODE 'disabled' COMPRESS 'disabled'
+  ) TAGS (
+      code1 INT2 NOT NULL
+  ) PRIMARY TAGS (code1);
+  ```
+
+- Modify compression settings for an existing column:
+
+  ```sql
+  ALTER TABLE t1 ALTER COLUMN c2 COMPRESS 'zstd' LEVEL 'high';
+  ALTER TABLE t1 ALTER COLUMN c1 ENCODE 'Simple8B' COMPRESS 'zstd' LEVEL 'medium';
+  ALTER TABLE t1 ALTER COLUMN c4 COMPRESS 'disabled';
+  ```
+
 ## Data Reorganization
 
 Time-series data reorganization is the process of cleaning and organizing raw data according to specific rules. It is primarily used in the following scenarios:
