@@ -704,6 +704,12 @@ This table lists the operators that look like built-in functions but have specia
 |---------------------------------|----------------------------------|
 | row_to_JSON(row: tuple) → jsonb | Return the row as a JSON object. |
 
+### Cluster Management Functions
+
+| Function → Returns | Description |
+|---|---|
+| relocate_range(range_id: int, source_store_id: int, dst_store_id: int) → bool | Migrates a data replica of the specified range from the source node to the destination node. Use this function to manually adjust data distribution or rebalance cluster load.<br>**Tip**: To view the range distribution of a table and obtain the range ID and store IDs of each replica, run:<br>`SELECT * FROM kwdb_internal.ranges WHERE table_name = '<table_name>'` |
+
 ### Compatibility Functions
 
 | Function → Returns                                                                               | Description                                                                                                          |
