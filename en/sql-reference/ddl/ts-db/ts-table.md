@@ -52,12 +52,22 @@ The definition of each column in `column_list` is:
 | --- | --- |
 | `IF NOT EXISTS` | Optional. <br>- When the `IF NOT EXISTS` keyword is used, the system creates a new table only if a table of the same name does not already exist. Otherwise, the system fails to create a new table without returning an error. <br>- When the `IF NOT EXISTS` keyword is not used, the system creates a new table only if a table of the same name does not already exist. Otherwise, the system fails to create a new table and returns an error.<br > **Note** <br > `IF NOT EXISTS` checks the table name only. It does not check if an existing table has the same columns, indexes, constraints, etc., of the new table.|
 | `table_name`| The name of the table to create, which must be unique within its database and follow these [Identifier Rules](../../sql-identifiers.md). The table name supports up to 128 bytes. |
-| `column_list`| A comma-separated list of columns. You can specify two or more columns. Each column requires a name, data type, and default value. Each table supports up to 4096 columns. <br>- The column name supports up to 128 bytes. You can set the data type to NOT NULL. By default, the data type is set to NULL. <br>- The first column can use a custom name, but its data type must be `TIMESTAMPTZ` or `TIMESTAMP` and it must be non-nullable. The default time zone is UTC. <br>- You can add comments to data columns after the data type. <br>- You can specify the encoding algorithm (`ENCODE`), compression algorithm (`COMPRESS`), and compression level (`LEVEL`) for each column. |
+| `column_list`| A comma-separated list of columns. You can specify two or more columns. Each column requires a name, data type, and default value. Each table supports up to 4096 columns. <br>- The column name supports up to 128 bytes. You can set the data type to NOT NULL. By default, the data type is set to NULL. <br>- The first column can use a custom name, but its data type must be `TIMESTAMPTZ` or `TIMESTAMP` and it must be non-nullable. The default time zone is UTC. <br>- You can add comments to data columns after the data type. <br>- You can specify the encoding algorithm (`ENCODE`), compression algorithm (`COMPRESS`), and compression level (`LEVEL`) for each column: <br>&nbsp;&nbsp;- `encode_algo`: Sets the encoding algorithm, case-insensitively. Different data types support different encoding algorithms. See the table below for details. Set to `disabled` to disable encoding for the column. If not specified, the default encoding for the data type is used. <br>&nbsp;&nbsp;- `compress_algo`: Sets the compression algorithm. Supported values are `lz4`, `zstd`, `zlib`, and `snappy`, case-insensitively. Set to `disabled` to disable compression. If not specified, `lz4` is used by default. <br>&nbsp;&nbsp;- `level`: Sets the compression level, which must immediately follow `COMPRESS`. Supported values are `low`, `medium`, and `high` (abbreviated `l`, `m`, `h`). The default is `medium`. Higher levels improve compression ratio but increase CPU and memory usage. `snappy` and `lz4` do not actually use the `level` setting. If `compress_algo` is `disabled`, specifying `level` causes an error. |
 | `tag_list`| A comma-separated list of tags. You can specify one or more tags. Each table supports up to 128 tags. Each tag requires a name and data type. The tag name supports up to 128 bytes. You can set the data type to NOT NULL. By default, the data type is set to NULL. KWDB does not support setting TIMESTAMP, TIMESTAMPTZ, NVARCHAR or GEOMETRY data types for time-series tables.  <br > Support adding comments to tag columns after the nullable condition.  |
 | `primary_tag_list`| A comma-separated list of primary tags. You can specify one or more primary tags. Each table supports up to 4 primary tags. Primary tags must be included in the list of tags and set to NOT NULL. Currently, primary tags does not support floating-point and variable-length data types, except for the VARCHAR data type. By default, a VARCHAR-typed data length is `64` bytes. The maximum of a VARCHAR-typed data length is `128` bytes. |
 | `keep_duration`| Optional. Define the data retention period for the database. Data older than this duration will be automatically purged.<br>Default: `0s` (retain indefinitely)<br>Time units:<br>- Seconds: `s` or `second`<br>- Minutes: `m` or `minute`<br>- Hours: `h` or `hour`<br>- Days: `d` or `day`<br>- Weeks: `w` or `week`<br>- Months: `mon` or `month`<br>- Years: `y` or `year`<br>Valid range: Positive integer up to 1000 years<br>Note:<br>- Table-level retention settings override database-level settings.<br>- Longer retention periods consume more storage. Configure based on your business needs.<br>- Data that already exceeds the retention period at write time will be rejected and not stored. |
 | `comment_text` | Optional. Specify the comment to be associated to the table.|
 | `hash_value`| Optional. Define the HASH ring size in a distributed cluster, which determines the maximum number of data ranges. For example, `HASH(100)` allows up to 100 distinct ranges.<br><br>Default: 2000 (up to 2000 ranges)<br>Valid range: [1, 50000]<br><br>Performance considerations:<br>- Too small: Data from multiple devices concentrates in fewer ranges, causing write hotspots<br>- Too large: Excessive ranges increase management overhead<br><br>Recommended values based on device count:<br>- ≤ 1,000 devices: `hash_value` < 20<br>- ≤ 50,000 devices: `hash_value` < 2,000<br>- ≤ 1,000,000 devices: `hash_value` < 10,000|
+
+The following table lists the encoding and compression options supported by different data types.
+
+| Data Type | Supported Encoding Algorithms | Default Encoding | Supported Compression Algorithms | Default Compression | Default Compression Level |
+| --- | --- | --- | --- | --- | --- |
+| INT2 / INT4 / INT8 | `simple8b` / `disabled` | `simple8b` | `lz4` / `zstd` / `zlib` / `snappy` / `disabled` | `lz4` | `medium` |
+| TIMESTAMP / TIMESTAMPTZ | `simple8b` / `disabled` | `simple8b` | `lz4` / `zstd` / `zlib` / `snappy` / `disabled` | `lz4` | `medium` |
+| FLOAT / DOUBLE | `chimp` / `disabled` | `chimp` | `lz4` / `zstd` / `zlib` / `snappy` / `disabled` | `lz4` | `medium` |
+| BOOL | `bitpacking` / `disabled` | `bitpacking` | `lz4` / `zstd` / `zlib` / `snappy` / `disabled` | `lz4` | `medium` |
+| Character types | `disabled` | `disabled` | `lz4` / `zstd` / `zlib` / `snappy` / `disabled` | `lz4` | `medium` |
 
 ### Examples
 
@@ -91,6 +101,22 @@ The definition of each column in `column_list` is:
                   |     sensor_type VARCHAR(30) NOT NULL ) PRIMARY TAGS(sensor_id)
                   |     retentions 864000s
     (1 row)
+    ```
+
+- Create a table and specify encoding and compression for each column.
+
+    ```sql
+    CREATE TABLE test_compress.t1 (
+        k_timestamp TIMESTAMPTZ ENCODE 'Simple8B' COMPRESS 'lz4' LEVEL 'high' NOT NULL,
+        c1 INT ENCODE 'Simple8B' COMPRESS 'zlib' LEVEL 'high',
+        c2 FLOAT COMPRESS 'zlib' LEVEL 'medium',
+        c3 INT ENCODE 'Simple8B',
+        c4 BLOB COMPRESS 'disabled',
+        c5 BOOL ENCODE 'disabled',
+        c7 VARCHAR ENCODE 'disabled' COMPRESS 'disabled'
+    ) TAGS (
+        code1 INT2 NOT NULL
+    ) PRIMARY TAGS (code1);
     ```
 
 - Create a table and set the retention for the table.

@@ -35,6 +35,9 @@ The user must be a member of the `admin` role or have been granted the `CREATE` 
 | `data_type` | The data type of the new column. For details about the data types supported by a time-series table, see [Time-Series Data Types](../../data-type/data-type-ts-db.md).|
 | `DEFAULT <default expr>` | Optional. Set a default value for a data column. For non-TIMESTAMP data columns, the default value must be a constant. For TIMESTAMP-typed columns, the default value can either be a constant or the `now()` function. If the data type of the default value is not matched with that of the column, the system returns an error. KWDB supports setting NULL as the default value. |
 | `NULL` | Optional. It can be only set to `NULL`. |
+| `encode_algo` | Optional. Sets the encoding algorithm for the column, case-insensitively. Different data types support different encoding algorithms. For details, see [Data Compression](../../../db-operation/storage-mgmt.md#data-compression). Set to `disabled` to disable encoding for the column. If not specified, the default encoding for the data type is used. |
+| `compress_algo` | Optional. Sets the compression algorithm for the column. Supported values are `lz4`, `zstd`, `zlib`, and `snappy`, case-insensitively. Set to `disabled` to disable compression. If not specified, `lz4` is used by default. |
+| `level` | Optional. Sets the compression level for the compression algorithm. The value is case-insensitive and must immediately follow `COMPRESS`. Supported values are `low` (`l`), `medium` (`m`), and `high` (`h`); the default is `medium`. If `compress_algo` is set to `disabled`, specifying this parameter causes an error. |
 
 ### Examples
 
@@ -48,6 +51,12 @@ The user must be a member of the `admin` role or have been granted the `CREATE` 
 
     ```sql
     ALTER TABLE ts_table ADD COLUMN c4 VARCHAR(50) DEFAULT 'aaa';
+    ```
+
+- Add a column and specify its encoding and compression settings.
+
+    ```sql
+    ALTER TABLE ts_table ADD COLUMN c5 INT ENCODE 'Simple8B' COMPRESS 'lz4' LEVEL 'high';
     ```
 
 ## SHOW COLUMNS
@@ -151,9 +160,9 @@ ALTER TABLE <table_name> ALTER [COLUMN] <column_name> [SET DATA] TYPE <new_type>
 | `new_type` | The data type and data width of the column to modify. For details about the data type, default width, maximum width, and convertible data types, see [Data Type Conversion Rules](#data-type-conversion-rules). |
 | `SET DEFAULT <default_expr>` | Required. KWDB writes the default value when inserting a row of data. Therefore, there is no need to explicitly specify a value for the column. For non-TIMESTAMP data columns, the default value must be a constant. For TIMESTAMP-typed columns, the default value can either be a constant or the `now()` function. If the data type of the default value is not matched with that of the column, the system returns an error. KWDB supports setting NULL as the default value.|
 | `DROP DEFAULT` | Required. Remove the defined default value. No default value is inserted after the defined default value is removed.|
-| `encode_algo` | Optional. Sets the encoding algorithm for the column, case-insensitively. Different data types support different algorithms. For details, see [Data Compression](../../../db-operation/storage-mgmt.md#data-compression). |
-| `compress_algo` | Optional. Sets the compression algorithm for the column. Supported values are `lz4`, `zstd`, `zlib`, and `snappy`. |
-| `level` | Optional. Sets the compression level and must immediately follow `COMPRESS`. Supported values are `low`, `medium`, and `high`. |
+| `encode_algo` | Optional. Sets the column encoding algorithm, case-insensitively. Different data types support different encoding algorithms. For details, see [Data Compression](../../../db-operation/storage-mgmt.md#data-compression). Set to `disabled` to disable encoding for the column. If not specified, the data type default encoding is used. When both `ENCODE` and `COMPRESS` are specified, the order must be `ENCODE ... COMPRESS ... LEVEL ...`. |
+| `compress_algo` | Optional. Sets the compression algorithm for the column. Supported values are `lz4`, `zstd`, `zlib`, and `snappy`, case-insensitively. Set to `disabled` to disable compression. If not specified, `lz4` is used by default. |
+| `level` | Optional. Sets the compression level for the compression algorithm. The value is case-insensitive and must immediately follow `COMPRESS`. Supported values are `low` (`l`), `medium` (`m`), and `high` (`h`); the default is `medium`. If `compress_algo` is set to `disabled`, specifying this parameter causes an error. |
 
 ### Data Type Conversion Rules
 
@@ -199,6 +208,24 @@ This table lists the original data types, default width, maximum width, and conv
 
     ```sql
     ALTER TABLE ts_table ALTER COLUMN c4 DROP DEFAULT;
+    ```
+
+- Change a column's compression algorithm and level.
+
+    ```sql
+    ALTER TABLE ts_table ALTER COLUMN c3 COMPRESS 'zstd' LEVEL 'high';
+    ```
+
+- Change a column's encoding and compression algorithm together.
+
+    ```sql
+    ALTER TABLE ts_table ALTER COLUMN c3 ENCODE 'Simple8B' COMPRESS 'zstd' LEVEL 'medium';
+    ```
+
+- Disable a column's compression.
+
+    ```sql
+    ALTER TABLE ts_table ALTER COLUMN c3 COMPRESS 'disabled';
     ```
 
 ## RENAME COLUMN
