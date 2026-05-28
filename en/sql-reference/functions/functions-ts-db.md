@@ -273,6 +273,13 @@ For all date and time functions supported by the time-series engine, their outpu
 | substring(input: string, start_pos: int8, length: int8) → string      | Return a substring of `input` starting at `substart_pos` (count starts at 1). <br >**Tip**: Avoid using the escape character (`+`) in the function.  |
 | upper(val: string) → string                                           | Convert all characters in `val` to their upper-case equivalents.                                                                             |
 
+
+### Cluster Management Functions
+
+| Function → Returns | Description |
+|---|---|
+| relocate_range(range_id: int, source_store_id: int, dst_store_id: int) → bool | Migrates a data replica of the specified range from the source node to the destination node. Use this function to manually adjust data distribution or rebalance cluster load.<br>**Tip**: To view the range distribution of a table and obtain the range ID and store IDs of each replica, run:<br>`SELECT * FROM kwdb_internal.ranges WHERE table_name = '<table_name>'` |
+
 ## Aggregate Functions
 
 ::: warning Note
