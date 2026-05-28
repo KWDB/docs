@@ -133,6 +133,7 @@ KWDB 默认支持用户使用证书或密码登录数据库。以下示例说明
 #### 创建数据库和数据表
 
 1. 创建和使用关系数据库：
+
     ```sql
     -- 创建关系数据库
     CREATE DATABASE device_info;
@@ -141,6 +142,7 @@ KWDB 默认支持用户使用证书或密码登录数据库。以下示例说明
     ```
 
 2. 创建设备表：
+
     ```sql
     CREATE TABLE devices (
         device_id INT PRIMARY KEY,        -- 设备ID
@@ -186,6 +188,7 @@ device_id | device_name | location | status
 #### 创建时序库和时序表
 
 1. 创建时序数据库：
+
     ```sql
     -- 创建时序数据库
     CREATE TS DATABASE monitoring;
@@ -194,6 +197,7 @@ device_id | device_name | location | status
     ```
 
 2. 创建监控数据表：
+
     ```sql
     CREATE TABLE sensor_data (
         ts TIMESTAMP NOT NULL,            -- 时间戳（必须为第一列）
