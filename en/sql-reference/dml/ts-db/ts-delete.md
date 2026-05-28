@@ -29,7 +29,7 @@ The user must be a member of the `admin` role or have been granted the `SELECT` 
 | --- | --- |
 | `database_name` | Optional. The name of the database from which to delete data. If not specified, use the current database.|
 | `table_name` | The name of the table from which to delete data. |
-| `where_clause` | Optional. Specify the ​time range​ for deleting values from data columns and whether to delete the tag values. If not specified, the system deletes all data from data columns but keeping tag values by default. The `WHERE` clause supports the following two forms: <br>- Specify the time range of values to be deleted but keeping tag values. The timestamp-typed column ​must be the first column​ in the table, and the corresponding value ​only supports timestamp constants​ (e.g., `'2023-12-01 08:00:00'`). KWDB allows specifying ​one or multiple time ranges​ using `<`, `>`, `=`, `!=`, `>=`, `<=`, `and`, `or`, `in`, and `not in` operators. <br>- `where <primary_tag> = <value>`: delete values from data columns and tag columns, where `value` ​only supports constant values. If the time-series table has ​multiple Primary tags, all Primary tags and their values must be listed and connected with `and` (e.g., `ptag1 = 1 and ptag2 = 2`). |
+| `where_clause` | Optional. A filter condition for the delete operation. If omitted, all data column data in the table is deleted by default, while tag data is retained. The `WHERE` clause supports the following formats:<br>- `where <timestamp_column> = <value>`: Deletes data column data within the specified time range only, while retaining tag data. The timestamp column must be the first column of the table, and the corresponding value must be a timestamp literal, such as `'2023-12-01 08:00:00'`. KWDB supports specifying one or more time ranges using the `<`, `>`, `=`, `!=`, `>=`, `<=`, `and`, `or`, `in`, and `not in` operators.<br>- `where <primary_tag> = <value>`: Deletes both data column data and tag data. The `value` must be a constant. To delete all data column data and tag data from a time-series table with multiple primary tags, all primary tags and their values must be listed, joined with `and` — for example, `ptag1 = 1 and ptag2 = 2`. The `or` operator is also supported, but each operand must be a complete set of primary tag conditions — for example, `(ptag1 = value1 and ptag2 = value2) or (ptag1 = value3 and ptag2 = value4)`. To delete data column data and tag data for a subset of rows, you may specify only some primary tags and their values, joined with `and` — for example, `ptag1 = 1 and ptag2 = 2`. When specifying a partial set of primary tags, using `and` to combine different values for the same primary tag is not supported (e.g., `ptag1 = 1 and ptag1 = 2`), nor is using `or` (e.g., `ptag1 = 1 or ptag2 = 2` or `ptag1 = 1 or ptag1 = 2`). Currently, tag columns do not support the `<`, `>`, `!=`, `>=`, `<=`, `in`, or `not in` operators.<br>- `where <timestamp_column> = <value> and <primary_tag> = <value>`: Deletes data column data within the specified time range only, while retaining tag data. |
 
 ## Examples
 
@@ -168,3 +168,11 @@ SELECT * FROM table2;
         3 |    1 | false
     (2 rows)
     ```
+
+- Delete data column data and tag data for specific rows.
+
+  The following example deletes the specified data column data and tag data from `table2`.
+  
+  ```sql
+  DELETE FROM table2 WHERE time > '2023-05-01 10:00:00' and tag1 = 1;
+  ```
