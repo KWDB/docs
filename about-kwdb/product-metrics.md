@@ -3,7 +3,7 @@ title: 环境要求
 id: product-metrics
 ---
 
-# 软硬件环境要求
+# 环境要求
 
 ## 操作系统及架构
 
