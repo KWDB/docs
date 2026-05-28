@@ -18,9 +18,9 @@ id: kat-install
   - `3000`：KWDB Agent UI 的端口。
   - `3100`：KWDB Agent VIS 的端口。
 - 安装用户为 `root` 用户。`root` 用户在进行部署时无需输入密码。
-- [联系](https://www.kaiwudb.com/support/) KaiwuDB 技术支持人员，获取 KWDB Agent Server 镜像。
-- [联系](https://www.kaiwudb.com/support/) KaiwuDB 技术支持人员，获取 KWDB Agent UI 镜像。
-- [联系](https://www.kaiwudb.com/support/) KaiwuDB 技术支持人员，获取 KWDB Agent VIS 镜像。
+- [联系]((https://www.kaiwudb.com/about/support) KaiwuDB 技术支持人员，获取 KWDB Agent Server 镜像。
+- [联系]((https://www.kaiwudb.com/about/support) KaiwuDB 技术支持人员，获取 KWDB Agent UI 镜像。
+- [联系]((https://www.kaiwudb.com/about/support) KaiwuDB 技术支持人员，获取 KWDB Agent VIS 镜像。
 - （可选）如需以安全模式连接 KWDB 数据库，用户需要生成 CA 证书和密钥、客户端证书和密钥、节点证书和密钥。有关详细信息，参见 [`kwdb cert` 命令参考](../kwbase-cli-tool.md#kwbase-cert)。
 
 ### 步骤
