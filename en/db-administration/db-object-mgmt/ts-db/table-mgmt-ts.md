@@ -314,18 +314,18 @@ The `ALTER TABLE` statement performs the following operations:
 
 ```sql
 ALTER TABLE <table_name> 
-[ADD [COLUMN] [IF NOT EXISTS] <colunm_name> <data_type> [DEFAULT <expr> | NULL ] 
+[ADD [COLUMN] [IF NOT EXISTS] <column_name> <data_type> [DEFAULT <expr> | NULL] [ENCODE '<encode_algo>'] [COMPRESS '<compress_algo>' [LEVEL '<level>']]
 |ADD [TAG | ATTRIBUTE] <tag_name> <tag_type>
-|ALTER [COLUMN] <colunm_name> [SET DATA] TYPE <new_type> [SET DEFAULT <default_expr> | DROP DEFAULT ]
+|ALTER [COLUMN] <column_name> [SET DATA] TYPE <new_type> [SET DEFAULT <default_expr> | DROP DEFAULT] [ENCODE '<encode_algo>'] [COMPRESS '<compress_algo>' [LEVEL '<level>']]
 |ALTER [TAG | ATTRIBUTE] <tag_name> [SET DATA] TYPE <new_type>
 |CONFIGURE ZONE [USING <variable> = [COPY FROM PARENT | <value>], <variable> = [COPY FROM PARENT | <value>] ... | DISCARD]
-|DROP [COLUMN] [IF EXISTS] <colunm_name>
+|DROP [COLUMN] [IF EXISTS] <column_name>
 |DROP [TAG | ATTRIBUTE] <tag_name>
 |<partition_by_clause>
 |RENAME TO <new_table_name> 
 |RENAME COLUMN <old_name> TO <new_name>
 |RENAME [TAG | ATTRIBUTE] <old_name> TO <new_name>
-|SET RETENTIONS = <keep_duration> ];
+|SET RETENTIONS = <keep_duration>];
 ```
 
 ### Supported Operations
@@ -336,12 +336,16 @@ ALTER TABLE <table_name>
     - `IF NOT EXISTS`: Optional. When the `IF NOT EXISTS` keyword is used, the system creates a new column only if a column of the same name does not already exist. Otherwise, the system fails to create a new column without returning an error. When the `IF NOT EXISTS` keyword is not used, the system creates a new column only if a column of the same name does not already exist. Otherwise, the system fails to create a new column and returns an error.
     - `DEFAULT <default_expr>`: Optional. Set a default value for a data column. For non-TIMESTAMP data columns, the default value must be a constant. For TIMESTAMP-typed columns, the default value can either be a constant or the `now()` function. If the data type of the default value is not matched with that of the column, the system returns an error. KWDB supports setting NULL as the default value.
     - `NULL`: Optional. It can be only set to `NULL`.
+    - `ENCODE '<encode_algo>'`: Optional. Set the encoding algorithm for the new column. The value is case-insensitive. Different data types support different encoding algorithms. Set to `disabled` to disable encoding. If not specified, the default encoding for the data type is used.
+    - `COMPRESS '<compress_algo>' [LEVEL '<level>']`: Optional. Set the compression algorithm and compression level for the new column. `LEVEL` must immediately follow `COMPRESS`. If `COMPRESS 'disabled'` is used, `LEVEL` cannot be specified.
   - `ADD TAG/ATTRITBUTE`: Add tags. You need to specify the tag name and data type. Currently, KWDB does not support adding primary tags.
 - ALTER
   - `ALTER COLUMN`: Change the data type or width of columns, as well as set or remove default values of columns.
     - `SET DATA`: Optional. Whether or not using the keyword does not affect modifying the data type and width of the column.
     - `SET DEFAULT <default_expr>`: Required. Set a default value for a data column. For non-TIMESTAMP data columns, the default value must be a constant. For TIMESTAMP-typed columns, the default value can either be a constant or the `now()` function. If the data type of the default value is not matched with that of the column, the system returns an error. KWDB supports setting NULL as the default value.
     - `DROP DEFAULT`: Required. Remove default values of columns. No default value is inserted after they are removed.
+    - `ENCODE '<encode_algo>'`: Optional. Change the encoding algorithm for the column. It can be used alone or together with `COMPRESS`. When used together, the order must be exactly `ENCODE ... COMPRESS ... LEVEL ...`.
+    - `COMPRESS '<compress_algo>' [LEVEL '<level>']`: Optional. Change the compression algorithm and compression level for the column. It can be used alone or together with `ENCODE`. If the compression algorithm is changed, previously written data keeps its original compression configuration, while newly written data uses the updated configuration.
   - `ALTER TAG/ATTRITBUTE`: Change the data type or width of tags, where the `SET DATA` keyword is optional. Whether or not using the keyword does not affect modifying the data type and width of the tag. Currently, KWDB does not support modifying the data type or width of primary tags. **Note**: If an index exists for the tag to be changed, you must delete the index first.
 - `CONFIGURE ZONE`: Change zone configurations of tables. For details, see [Zones](./zone-mgmt-ts.md).
 - DROP
@@ -363,6 +367,9 @@ ALTER TABLE <table_name>
 | `table_name` | The name of the table. You can use `<database_name>.<table_name>` to specify a table in another database. If not specified, use the table in the current database. |
 | `column_name` | The name of the column. The column name must be unique within the table and supports up to 128 bytes. |
 | `data_type` | The data type of the column. For details about the data types supported by a time-series table, see [Time-Series Data Types](../../../../en/sql-reference/data-type/data-type-ts-db.md).|
+| `encode_algo` | Optional. Set the encoding algorithm for the column, case-insensitively. Different data types support different encoding algorithms. See [Data Compression](../../../../en/db-operation/storage-mgmt.md#data-compression). Set to `disabled` to disable encoding for the column. If not specified, the default encoding for the data type is used. |
+| `compress_algo` | Optional. Set the compression algorithm for the column, case-insensitively. Supported values are `lz4`, `zstd`, `zlib`, and `snappy`. Set to `disabled` to disable compression. If not specified, `lz4` is used by default. |
+| `level` | Optional. Set the compression level, case-insensitively. It must immediately follow `COMPRESS`. Supported values are `low` (`l`), `medium` (`m`), and `high` (`h`); the default is `medium`. If `compress_algo` is set to `disabled`, specifying this parameter causes an error. |
 | `tag_name` | The name of the tag. The tag name supports up to 128 bytes. KWDB does not support defining database-level tags. |
 | `tag_type` | The data type of the tag. It supports all numeric-typed, BOOL-typed, and STRING-typed data, except for NVARCHAR-typed data. |
 | `new_type` | The data type and data width of the column to modify. For details about the data type, default width, maximum width, and convertible data types, see [Data Type Conversion Rules](./column-mgmt-ts.md#data-type-conversion-rules). |
@@ -415,6 +422,22 @@ ALTER TABLE ts_table ALTER COLUMN c4 SET DEFAULT '789';
 -- Remove the default value of a column.
 
 ALTER TABLE ts_table ALTER COLUMN c4 DROP DEFAULT;
+
+-- Change the encoding algorithm of a column.
+
+ALTER TABLE ts_table ALTER COLUMN c3 ENCODE 'Simple8B';
+
+-- Change the compression algorithm and compression level of a column.
+
+ALTER TABLE ts_table ALTER COLUMN c3 COMPRESS 'zstd' LEVEL 'high';
+
+-- Change the encoding and compression algorithm together.
+
+ALTER TABLE ts_table ALTER COLUMN c3 ENCODE 'Simple8B' COMPRESS 'zstd' LEVEL 'medium';
+
+-- Disable compression for a column.
+
+ALTER TABLE ts_table ALTER COLUMN c3 COMPRESS 'disabled';
 
 -- Add a tag to the table. 
 
