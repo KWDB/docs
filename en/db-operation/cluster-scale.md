@@ -13,7 +13,6 @@ KWDB supports dynamic scale-out and scale-in operations to meet varying capacity
 
 ::: warning Note
 
-- **Data Queries**: During scaling operations, data queries may be temporarily incomplete. After the operation completes, the system automatically synchronizes to ensure data completeness and accuracy.
 - **DDL Operations**: During scaling operations, DDL operations related to time-series indexes (such as `CREATE INDEX`, `DROP INDEX`) may return timeout errors. Retry these operations after the scaling operation completes.
 - **Disk Capacity**: During scaling operations, disk usage may temporarily increase due to data migration. Disk usage returns to normal levels after the operation completes.
 - **Operational Recommendations**: Perform scaling operations during off-peak hours to minimize impact on business operations.
