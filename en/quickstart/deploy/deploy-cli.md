@@ -7,7 +7,7 @@ id: quickstart-cli
 
 ## Prerequisites
 
-- KWDB source code is compiled and installed according to [KWDB Compilation and Installation Instructions](https://gitee.com/kwdb/kwdb/blob/master/README.en.md#compilation-and-installation)..
+- KaiwuDB source code is compiled and installed according to the [KaiwuDB Compilation and Installation Instructions](https://gitee.com/kwdb/kwdb/blob/master/README.en.md#compilation-and-installation).
 - The hardware configuration, operating system, software dependencies, and ports of the node to be deployed meet the [installation deployment requirements](../prepare.md).
 - Installation user is `root` or a regular user with `sudo` privileges.
 

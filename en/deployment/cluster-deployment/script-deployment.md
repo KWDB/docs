@@ -9,12 +9,12 @@ During deployment, the system verifies configuration files, runtime environment,
 
 All deployment activities are logged in the `log` directory within `kwdb_install`. If an error occurs during deployment, you can find error prompts in the terminal output and detailed information in the log files.
 
-After bare-metal script deployment, the system packages KWDB as a system service (named `kaiwudb`) and generates the following files:
+After bare-metal script deployment, the system packages KaiwuDB as a system service (named `kaiwudb`) and generates the following files:
 
 - `kaiwudb.service`: Configures KWDB CPU resource usage.
 - `kaiwudb_env`: Configures KWDB startup flags.
 
-After container script deployment, the system generates a Docker Compose configuration file `docker-compose.yml` for configuring KWDB startup flags and CPU resource usage.
+After container script deployment, the system generates a Docker Compose configuration file `docker-compose.yml` to configure KaiwuDB startup flags and CPU resource usage.
 
 For specific configuration instructions, see [Cluster Configuration](../../db-operation/cluster-settings-config.md).
 

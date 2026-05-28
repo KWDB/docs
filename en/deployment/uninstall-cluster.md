@@ -1,11 +1,11 @@
 ---
-title: Uninstall KWDB
+title: Uninstall KaiwuDB
 id: uninstall-cluster
 ---
 
-# Uninstall KWDB
+# Uninstall KaiwuDB
 
-This section describes the uninstallation methods for KWDB database under different deployment scenarios, including script deployment, source compilation deployment, and container image deployment. Choose the appropriate uninstallation solution according to your actual deployment method.
+This section describes the uninstallation methods for the KaiwuDB database under different deployment scenarios, including script deployment, source compilation deployment, and container image deployment. Choose the appropriate uninstallation solution according to your actual deployment method.
 
 ## Uninstall Script Deployment
 

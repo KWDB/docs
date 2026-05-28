@@ -31,9 +31,10 @@ KWDB provides multiple cluster deployment methods to meet different user needs a
 
 | Deployment Method | Characteristics | Target Users/Scenarios | Technical Requirements | Supported Environments |
 |---------|------|---------|------|---------|
-| **[Script Deployment (Recommended)](./cluster-deployment/script-deployment.md)** | Simplest cluster deployment method with built-in fault detection and node recovery mechanisms | Users who need to quickly set up test or production environments | Basic Linux operation experience | Bare metal, Containerized |
-| **[Docker Run](./cluster-deployment/docker-deployment.md)** | Containerized technology deployment | Users who prefer containerized technology | Familiar with Docker command-line operations | Containerized |
-| **[kwbase CLI](./cluster-deployment/kwbase-cli-deployment.md)** | Supports deep customization of the deployment process | Users with technical background who want deep customization | Familiar with database deployment process and command-line operations | Bare metal |
+| **[Installer CLI](./cluster-deployment/installer-cli.md)** | No extra dependencies are required; the installer guides the deployment step by step through text menus and validates parameters in real time. | Users who need a simple, command-line deployment flow on basic Linux systems | Basic Linux command-line experience | Bare metal, Containerized |
+| **[Installer Dialog](./cluster-deployment/installer-dialog.md)** | Provides a graphical dialog-based deployment flow with guided prompts and configuration screens. | Users who prefer a visual deployment interface | Basic Linux operation experience | Bare metal, Containerized |
+| **[Docker Run](./cluster-deployment/docker-deployment.md)** | Containerized deployment using `docker run` directly | Users who are familiar with Docker command-line operations | Docker command-line experience | Containerized |
+| **[kwbase CLI](./cluster-deployment/kwbase-cli-deployment.md)** | Supports deep customization of the deployment process | Users with a technical background who want fine-grained control | Familiarity with database deployment and command-line operations | Bare metal |
 
 ### Cluster Management
 

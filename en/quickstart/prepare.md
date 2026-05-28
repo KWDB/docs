@@ -47,23 +47,18 @@ KWDB can be deployed on the following operating systems:
 
 ### Bare-Metal Deployment
 
-The following table lists the dependencies that need to be installed on the target machine.
+The following table lists the required system libraries for the target machine.
 
-| Dependency | Version | Description |
-| --- | --- | --- |
-| OpenSSL | v1.1.1+ | N/A |
-| libprotobuf | v3.6.1 ~ v21.x | **Note**: The default libprotobuf version in Ubuntu 18.04 does not meet the requirements. Users need to install the required version in advance (3.6.1 and 3.12.4 are recommended).|
-| GEOS | v3.3.8+ | Optional dependency |
-| xz-libs | v5.2.0+ | N/A |
-| libgcc | v7.3.0+ | N/A |
-| libgflags | System default | N/A |
-| libkrb5 | System default | N/A |
+| Platform | OS Type | libc | libgcc | libstdc++ |
+| --- | --- | --- | --- | --- |
+| x86_64 / arm64 | Debian series | libc6 >= 2.28 | libgcc1/libgcc-s1 >= 7.3.0 | libstdc++6 >= 7.3.0 |
+| x86_64 / arm64 | Red Hat series | glibc >= 2.28 | libgcc >= 8.3.0 | libstdc++ >= 8.3.0 |
 
 During installation, KWDB verifies the necessary dependencies. If any are missing, the installation process will halt and prompt you to install them. If the target machine is offline, you will need to download the required dependencies from an internet-connected device and then transfer the files to the target machine.
 
 ### Container Deployment
 
-For deployment using scripts, Docker Compose (version 1.20.0 or higher) is required.
+For deployment using scripts, Docker Compose (version 1.20.0 or higher) is required. If you use the graphical installer deployment method, Docker Compose is also required on the target machine.
 
 - For online installation instructions, see [Install Docker Compose](https://docs.docker.com/compose/install/).
 - For offline installation instructions, see [Install Docker Compose Standalone](https://docs.docker.com/compose/install/standalone/).
@@ -82,13 +77,13 @@ Ensure these default ports are available and not blocked by firewalls. Port sett
 | `8080`      | Port for HTTP requests and web services |
 | `26257`     | Port for connections of clients, applications, and other nodes |
 
-## Installation Packages, Container Images, and Compilation Versions
+## Installation Methods, Container Images, and Compilation Versions
 
-Obtain installation packages, container images, or source code compilation versions based on your scenarios:
+Choose the installation method, container image, or source code compilation version based on your deployment scenario:
 
 ### Installation Packages
 
-The KWDB repository currently provides [DEB or RPM installation packages](https://www.kaiwudb.com/download?tab=2) for the following systems and architectures. For packages for other systems or architectures, please contact [KWDB Technical Support](https://www.kaiwudb.com/about/support).
+The latest KaiwuDB download page provides installer packages and container images for the following systems and architectures. If you need packages for other systems or architectures, contact [KaiwuDB Technical Support](https://www.kaiwudb.com/about/support).
 
 - Ubuntu V20.04 x86_64
 - Ubuntu V20.04 ARM64

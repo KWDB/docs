@@ -5,7 +5,7 @@ id: docker-deployment
 
 # Deploy Using Docker
 
-This section describes how to deploy a KWDB cluster on a single machine using the Docker Run commands.
+This section describes how to deploy a KaiwuDB cluster on a single machine by using Docker Run commands.
 
 **Note**: For production environments, it is recommended to deploy only one node per machine to improve availability and reduce the risk of data loss.
 
@@ -18,7 +18,7 @@ This section describes how to deploy a KWDB cluster on a single machine using th
     - Users with passwordless `sudo` won't need to enter passwords during installation.
     - Users without passwordless `sudo` will be prompted for passwords when needed.
     - Regular users must be in the docker group (add with `sudo usermod -aG docker $USER`).
-- The [KWDB image](../cluster-prepare.md#container-images) is obtained.
+- The [KaiwuDB container image](../cluster-prepare.md#container-images) is obtained.
 
 ## Steps
 

@@ -7,7 +7,7 @@ id: quickstart-docker
 
 ## Prerequisites
 
-- Obtained KWDB [docker image](../prepare.md#installation-packages-container-images-and-compilation-versions).
+- Obtained the KaiwuDB [container image](../prepare.md#installation-packages-container-images-and-compilation-versions).
 - The hardware, operating system, software dependencies, and ports of the node to be deployed meet the [installation deployment requirements](../prepare.md).
 - Installation user is root or a regular user with `sudo` privileges.
   - Root users and regular users configured with `sudo` passwordless access do not need to enter a password when executing deployment scripts.
