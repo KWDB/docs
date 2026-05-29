@@ -37,7 +37,7 @@ Leveraging in-place computation techniques, KWDB efficiently locates and retriev
 
 KWDB provides specialized capabilities for time-series data analysis. It supports user-defined functions and includes a comprehensive set of built-in functions: time/date operations, mathematical calculations, aggregations (`MIN`, `MAX`, `AVG`, etc.), and window functions.
 
-For time-series-specific scenarios, KWDB offers dedicated query features such as LAST value retrieval, value filters, condition-based queries, and interpolation functions.
+For time-series-specific scenarios, KWDB offers dedicated query features such as LAST value retrieval, value filters, condition-based queries, interpolation functions, and value fill queries.
 
 ### Stream Computing
 
@@ -52,7 +52,7 @@ Stream computing supports two key use cases:
 
 ### Online Data Compression
 
-KWDB supports real-time online data compression. The system automatically selects the optimal compression algorithm based on data types, achieving compression ratios of 5-30x to reduce storage costs.
+KWDB supports real-time online data compression. The system automatically selects the optimal compression algorithm based on data types, achieving compression ratios of 5-30x to reduce storage costs. Users can also independently set the encoding method, compression algorithm, and compression level per column when creating time-series tables, adjust these settings after table creation as needed, or configure a default compression strategy globally through cluster parameters—providing flexible control to balance compression efficiency and query performance.
 
 ### Lifecycle Management
 
@@ -86,7 +86,7 @@ The tool supports CPU monitoring and IoT scenarios with 26 query types to meet d
 
 KWDB supports multiple popular programming languages including C/C++, Java, C#, and Python, enabling developers to use their preferred language and reduce development costs. For more details, see [Development](../development/overview.md).
 
-KWDB runs on major operating systems including Ubuntu, CentOS, and UOS. For a complete list of supported operating systems and CPU architectures, see [Supported Operating Systems and CPU Architectures](./product-metrics.md#operating-systems-and-cpu-architectures).
+KWDB runs on major operating systems including Ubuntu, CentOS, Kylin, and UOS. For a complete list of supported operating systems and CPU architectures, see [Supported Operating Systems and CPU Architectures](./product-metrics.md#operating-systems-and-cpu-architectures).
 
 #### Third-Party Ecosystem Tools
 
