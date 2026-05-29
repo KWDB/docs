@@ -11,14 +11,14 @@ The quick deployment script is intended for users who are evaluating KWDB for th
 
 Two usage modes are supported:
 
-- [**Interactive Mode**](#interactive-mode): Run `./quick_deploy.sh` and follow the prompts to complete the configuration step by step.
+- [**Interactive Mode**](#interactive-mode) (recommended): Run `./quick_deploy.sh` and follow the prompts to complete the configuration step by step.
 - [**Parameter Mode**](#parameter-mode): Run `./quick_deploy.sh -i <ip_address> -s <service_port> ...`. This mode is suitable for users familiar with command-line operations.
 
 ## Supported Systems
 
 The script automatically detects the operating system and selects an appropriate deployment method:
 
-- **Bare-metal deployment**: Ubuntu 20.04/22.04 
+- **Bare-metal deployment**: Ubuntu 20.04/22.04
 - **Container deployment**: Other Linux distributions
 
 ## Prerequisites
@@ -28,7 +28,7 @@ The script automatically detects the operating system and selects an appropriate
 - **Network**: Access to the installation package download address
 - **Quick deployment script**: Downloaded from [Gitee](https://gitee.com/kwdb/kwdb/releases), [GitHub](https://github.com/KWDB/KWDB/releases), or [AtomGit](https://atomgit.com/kwdb/kwdb)
 
-## Steps
+## Deployment Steps
 
 ### Interactive Mode
 
@@ -55,7 +55,7 @@ The script automatically detects the operating system and selects an appropriate
     数据路径（默认 /var/lib/kaiwudb）: 
     ```
 
-3. When prompted with “Please confirm the above information (y/n):”, review the configuration and enter `y` to proceed:
+3. When prompted with "请确认以上信息是否正确? (y/n):", review the configuration and enter `y` to proceed:
 
     ```bash
     ========== 用户输入 ==========
@@ -70,7 +70,7 @@ The script automatically detects the operating system and selects an appropriate
 4. Wait for the deployment process to complete. Upon successful deployment, the following message is displayed:
 
     ```shell
-    [INSTALL COMPLETED]: KaiwuDB has been installed successfully! To start KaiwuDB, please execute the command 'systemctl daemon-reload'.
+    [INSTALL COMPLETED]:KaiwuDB has been installed successfully! To start KaiwuDB, please execute the command 'systemctl daemon-reload'.
     ```
 
 5. Start KWDB:
@@ -110,7 +110,7 @@ The script automatically detects the operating system and selects an appropriate
 
 ### Parameter Mode
 
-Parameter mode is designed for users who prefer or require non-interactive, command-line-based deployment:
+Parameter mode is suitable for users familiar with command-line operations:
 
 ```shell
 ./quick_deploy.sh -i <ip_address> -s <service_port> -h <http_port> -m <security_mode> -p <data_path>
@@ -118,17 +118,17 @@ Parameter mode is designed for users who prefer or require non-interactive, comm
 
 Parameters:
 
-| Parameter | Description                  | Default          |
-| --------- | ---------------------------- | ---------------- |
-| `-i`      | Listen address (IP)          | 127.0.0.1        |
-| `-s`      | Service port                 | 26257            |
-| `-h`      | HTTP port                    | 8080             |
-| `-m`      | Security mode (insecure/tls) | insecure         |
-| `-p`      | Data storage path            | /var/lib/kaiwudb |
+| Parameter | Description | Default |
+| --------- | ----------- | ------- |
+| `-i` | Listen address (IP) | 127.0.0.1 |
+| `-s` | Service port | 26257 |
+| `-h` | HTTP port | 8080 |
+| `-m` | Security mode (insecure/tls) | insecure |
+| `-p` | Data storage path | /var/lib/kaiwudb |
 
-Example:
+**Example:**
 
-```shell
+```bash
 ./quick_deploy.sh -i 192.168.1.100 -s 26257 -h 8080 -m tls -p /data/kaiwudb
 ```
 

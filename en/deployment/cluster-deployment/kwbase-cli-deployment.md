@@ -5,174 +5,183 @@ id: kwbase-cli-deployment
 
 # Deploy Using kwbase CLI
 
-This section describes how to deploy a KWDB cluster on a single machine using the `kwbase` CLI.
-
-**Note:** In production environments, deploy only one node per machine to enhance availability and reduce the risk of data loss.
+This section describes how to deploy a KWDB cluster on a single machine using the kwbase CLI, including the complete process of starting multiple nodes and initializing the cluster. Note: In production environments, deploy only one node per machine to enhance availability and reduce the risk of data loss.
 
 ## Prerequisites
 
-- The hardware, operating system, software dependencies, and ports of the nodes to be deployed meet the [deployment requirements](../cluster-prepare.md).
-- One of the following user permissions:
-  - Root user access
-  - Regular user with `sudo` privileges:
-    - Users with passwordless `sudo` won't need to enter passwords during installation.
-    - Users without passwordless `sudo` will be prompted for passwords when needed.
-- The source code is compiled following [KWDB Compilation and Installation Instructions](https://gitee.com/kwdb/kwdb/blob/master/README.en.md#compilation-and-installation).
+- The hardware, operating system, software dependencies, and ports of the nodes to be deployed meet the [deployment requirements](../cluster-prepare.md#hardware).
+- The installation user must be `root` or a regular user with `sudo` privileges.
+- The source code is compiled following [KWDB Compilation and Installation Instructions](https://gitee.com/kwdb/kwdb#%E7%BC%96%E8%AF%91%E5%92%8C%E5%AE%89%E8%A3%85).
 
 ## Steps
 
-1. Navigate to the program directory:
+1. Navigate to the directory where the `kwbase` binary is located:
 
    ```bash
    cd /home/go/src/gitee.com/kwbasedb/install/bin
    ```
 
-2. (Optional) For secure deployment, create certificates by following these steps:
+2. (Optional) If you need to deploy in secure mode, follow these steps to create the certificates:
 
-   1. Create a directory to store the certificates:
+    1. Create a directory to store the certificates:
 
-      ```bash
-      mkdir -p <certs_dir>
-      ```
+        ```bash
+        mkdir -p <certs_dir>
+        ```
 
-   2. Generate certificates and keys:
+    2. Generate certificates and keys:
 
         ```bash
         # Create database certificate authority and key
-        ./kwbase cert create-ca --certs-dir=<certs_dir> --ca-key=<certs_dir>/ca.key && \
+        ./kwbase cert create-ca --certs-dir=<certs_dir> --ca-key=<certs_dir>/ca.key
 
-        # Create client certificate and key for database installation user (replace username with actual username)
-        ./kwbase cert create-client <username> --certs-dir=<certs_dir> --ca-key=<certs_dir>/ca.key && \
+        # Create client certificate and key for the database installation user
+        ./kwbase cert create-client <username> --certs-dir=<certs_dir> --ca-key=<certs_dir>/ca.key
 
-        # Create node certificate and key
+        # Create node server certificate and key
         ./kwbase cert create-node 127.0.0.1 localhost 0.0.0.0 --certs-dir=<certs_dir> --ca-key=<certs_dir>/ca.key
         ```
 
-      ::: warning Note
+        ::: warning Note
 
-      When deploying in cross-machine mode, use the `./kwbase cert create-node <node_ip>` command to create certificates and keys for all nodes, then transfer all certificates and keys to every node in the cluster.
+        When deploying in cross-machine mode, use the `./kwbase cert create-node <node_ip>` command to create certificates and keys for all nodes, and transfer all certificates and keys to every node in the cluster.
 
-      :::
+        :::
 
-3. Start the cluster by starting all the nodes in the cluster:
+3. Start the cluster nodes.
 
-   - **For single-replica clusters:**
+    - Single-replica cluster:
 
         - Insecure mode:
 
             ```bash
+            # Start the first node
             ./kwbase start-single-replica --insecure \
-                --listen-addr=0.0.0.0:26257 \
-                --advertise-addr=<host1>:26257 \
-                --brpc-addr=:27257 \
-                --http-addr=0.0.0.0:8080 \
-                --store=/var/lib/kaiwudb \
-                --join=<host1>:26257
+            --listen-addr=0.0.0.0:26257 \
+            --advertise-addr=<host1>:26257 \
+            --brpc-addr=:27257 \
+            --http-addr=0.0.0.0:8080 \
+            --store=/var/lib/kaiwudb \
+            --join=<host1>:26257
 
+            # Start the second node
             ./kwbase start-single-replica --insecure \
-                --listen-addr=0.0.0.0:26257 \
-                --advertise-addr=<host2>:26258 \
-                --brpc-addr=:27258 \
-                --http-addr=0.0.0.0:8080 \
-                --store=/var/lib/kaiwudb \
-                --join=<host1>:26257
+            --listen-addr=0.0.0.0:26257 \
+            --advertise-addr=<host2>:26258 \
+            --brpc-addr=:27258 \
+            --http-addr=0.0.0.0:8080 \
+            --store=/var/lib/kaiwudb \
+            --join=<host1>:26257
 
+            # Start the third node
             ./kwbase start-single-replica --insecure \
-                --listen-addr=0.0.0.0:26257 \
-                --advertise-addr=<host3>:26259 \
-                --brpc-addr=:27259 \
-                --http-addr=0.0.0.0:8080 \
-                --store=/var/lib/kaiwudb \
-                --join=<host1>:26257
+            --listen-addr=0.0.0.0:26257 \
+            --advertise-addr=<host3>:26259 \
+            --brpc-addr=:27259 \
+            --http-addr=0.0.0.0:8080 \
+            --store=/var/lib/kaiwudb \
+            --join=<host1>:26257
             ```
 
         - Secure mode:
 
             ```bash
+            # Start the first node
             ./kwbase start-single-replica \
-                --certs-dir=<certs_dir> \
-                --listen-addr=0.0.0.0:26257 \
-                --advertise-addr=<host1>:26257 \
-                --brpc-addr=:27257 \
-                --http-addr=0.0.0.0:8080 \
-                --store=/var/lib/kaiwudb \
-                --join=<host1>:26257
+            --certs-dir=<certs_dir> \
+            --listen-addr=0.0.0.0:26257 \
+            --advertise-addr=<host1>:26257 \
+            --brpc-addr=:27257 \
+            --http-addr=0.0.0.0:8080 \
+            --store=/var/lib/kaiwudb \
+            --join=<host1>:26257
 
+            # Start the second node
             ./kwbase start-single-replica \
-                --certs-dir=<certs_dir> \
-                --listen-addr=0.0.0.0:26257 \
-                --advertise-addr=<host2>:26258 \
-                --brpc-addr=:27258 \
-                --http-addr=0.0.0.0:8080 \
-                --store=/var/lib/kaiwudb \
-                --join=<host1>:26257
+            --certs-dir=<certs_dir> \
+            --listen-addr=0.0.0.0:26257 \
+            --advertise-addr=<host2>:26258 \
+            --brpc-addr=:27258 \
+            --http-addr=0.0.0.0:8080 \
+            --store=/var/lib/kaiwudb \
+            --join=<host1>:26257
 
+            # Start the third node
             ./kwbase start-single-replica \
-                --certs-dir=<certs_dir> \
-                --listen-addr=0.0.0.0:26257 \
-                --advertise-addr=<host3>:26259 \
-                --brpc-addr=:27259 \
-                --http-addr=0.0.0.0:8080 \
-                --store=/var/lib/kaiwudb \
-                --join=<host1>:26257
+            --certs-dir=<certs_dir> \
+            --listen-addr=0.0.0.0:26257 \
+            --advertise-addr=<host3>:26259 \
+            --brpc-addr=:27259 \
+            --http-addr=0.0.0.0:8080 \
+            --store=/var/lib/kaiwudb \
+            --join=<host1>:26257
             ```
 
-   - **For multi-replica clusters:**
+    - Multi-replica cluster:
 
         - Insecure mode:
 
             ```bash
+            # Start the first node
             ./kwbase start --insecure \
-                --listen-addr=0.0.0.0:26257 \
-                --advertise-addr=<host1>:26257 \
-                --brpc-addr=:27257 \
-                --http-addr=0.0.0.0:8080 \
-                --store=/var/lib/kaiwudb \
-                --join=<host1>:26257
+            --listen-addr=0.0.0.0:26257 \
+            --advertise-addr=<host1>:26257 \
+            --brpc-addr=:27257 \
+            --http-addr=0.0.0.0:8080 \
+            --store=/var/lib/kaiwudb \
+            --join=<host1>:26257
 
+            # Start the second node
             ./kwbase start --insecure \
-                --listen-addr=0.0.0.0:26257 \
-                --advertise-addr=<host2>:26258 \
-                --brpc-addr=:27258 \
-                --http-addr=0.0.0.0:8080 \
-                --store=/var/lib/kaiwudb \
-                --join=<host1>:26257
+            --listen-addr=0.0.0.0:26257 \
+            --advertise-addr=<host2>:26258 \
+            --brpc-addr=:27258 \
+            --http-addr=0.0.0.0:8080 \
+            --store=/var/lib/kaiwudb \
+            --join=<host1>:26257
 
+            # Start the third node
             ./kwbase start --insecure \
-                --listen-addr=0.0.0.0:26257 \
-                --advertise-addr=<host3>:26259 \
-                --brpc-addr=:27259 \
-                --http-addr=0.0.0.0:8080 \
-                --store=/var/lib/kaiwudb \
-                --join=<host1>:26257
+            --listen-addr=0.0.0.0:26257 \
+            --advertise-addr=<host3>:26259 \
+            --brpc-addr=:27259 \
+            --http-addr=0.0.0.0:8080 \
+            --store=/var/lib/kaiwudb \
+            --join=<host1>:26257
             ```
 
         - Secure mode:
 
             ```bash
-            ./kwbase start --certs-dir=<certs_dir> \
-                --listen-addr=0.0.0.0:26257 \
-                --advertise-addr=<host1>:26257 \
-                --brpc-addr=:27257 \
-                --http-addr=0.0.0.0:8080 \
-                --store=/var/lib/kaiwudb \
-                --join=<host1>:26257
+            # Start the first node
+            ./kwbase start \
+            --certs-dir=<certs_dir> \
+            --listen-addr=0.0.0.0:26257 \
+            --advertise-addr=<host1>:26257 \
+            --brpc-addr=:27257 \
+            --http-addr=0.0.0.0:8080 \
+            --store=/var/lib/kaiwudb \
+            --join=<host1>:26257
 
-            ./kwbase start --certs-dir=<certs_dir> \
-                --listen-addr=0.0.0.0:26257 \
-                --advertise-addr=<host2>:26258 \
-                --brpc-addr=:27258 \
-                --http-addr=0.0.0.0:8080 \
-                --store=/var/lib/kaiwudb \
-                --join=<host1>:26257
+            # Start the second node
+            ./kwbase start \
+            --certs-dir=<certs_dir> \
+            --listen-addr=0.0.0.0:26257 \
+            --advertise-addr=<host2>:26258 \
+            --brpc-addr=:27258 \
+            --http-addr=0.0.0.0:8080 \
+            --store=/var/lib/kaiwudb \
+            --join=<host1>:26257
 
-            ./kwbase start --certs-dir=<certs_dir> \
-                --listen-addr=0.0.0.0:26257 \
-                --advertise-addr=<host3>:26259 \
-                --brpc-addr=:27259 \
-                --http-addr=0.0.0.0:8080 \
-                --store=/var/lib/kaiwudb \
-                --join=<host1>:26257
+            # Start the third node
+            ./kwbase start \
+            --certs-dir=<certs_dir> \
+            --listen-addr=0.0.0.0:26257 \
+            --advertise-addr=<host3>:26259 \
+            --brpc-addr=:27259 \
+            --http-addr=0.0.0.0:8080 \
+            --store=/var/lib/kaiwudb \
+            --join=<host1>:26257
             ```
 
 4. Initialize the cluster.
@@ -189,7 +198,7 @@ This section describes how to deploy a KWDB cluster on a single machine using th
         ./kwbase init --certs-dir=<certs_dir> --host=<address_of_any_node>
         ```
 
-5. View database status.
+5. View cluster status.
 
     - Insecure mode:
 

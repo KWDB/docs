@@ -22,7 +22,7 @@ This section describes how to upgrade KWDB. Prepare the upgrade according to you
 
 :::warning Note
 - When upgrading from 3.0.0 to 3.2.0, if you want to use the time-series raft log storage engine added in 3.1.0 and later, deploy a new cluster first and then import historical data.
-- In 3.2.0, the default value of `ts.raft_log.sync_period` changed from `10s` to `0s` (flush to disk immediately). Before upgrading a multi-replica cluster from 3.0.0 or 3.1.0 to 3.2.0, switch this parameter to `0s` on the old version nodes and wait for it to take effect. Otherwise, the upgrade may fail. For details, see the preparation steps in [Cluster Deployment](#cluster-deployment).
+- In 3.2.0, the default value of `ts.raft_log.sync_period` changed from `10s` to `0s` (flush to disk immediately). Before upgrading a **multi-replica cluster** from 3.0.0 or 3.1.0 to 3.2.0, switch this parameter to `0s` on the old version nodes and wait for it to take effect. Otherwise, the upgrade may fail. For details, see the preparation steps in [Cluster Deployment](#cluster-deployment).
 :::
 
 **Notes**
@@ -35,52 +35,58 @@ This section describes how to upgrade KWDB. Prepare the upgrade according to you
 ### Standalone Deployment
 
 1. Confirm that the new version is higher than the installed version.
+
 2. Stop the KWDB service:
 
-   ```bash
-   systemctl stop kaiwudb
-   ```
+    ```bash
+    systemctl stop kaiwudb
+    ```
 
 3. Back up the user data directory.
 
 ### Cluster Deployment
 
 1. Confirm that the new version is higher than the installed version.
+
 2. If the cluster is multi-replica, complete the following before upgrade:
-   1. Switch `ts.raft_log.sync_period` to `0s`:
 
-      ```sql
-      SET CLUSTER SETTING ts.raft_log.sync_period = '0s';
-      ```
+    1. Switch `ts.raft_log.sync_period` to `0s`:
 
-   2. Wait for at least 5 minutes for the cluster to finish the parameter change.
-   3. Query the shard status and confirm that the cluster is healthy. If not, repeat the above steps.
+        ```sql
+        SET CLUSTER SETTING ts.raft_log.sync_period = '0s';
+        ```
 
-      ```sql
-      SELECT * FROM kwdb_internal.ranges;
-      ```
+    2. Wait for at least **5 minutes** for the cluster to finish the parameter change.
+
+    3. Query the shard status and confirm that the cluster is healthy. If not, repeat the above steps.
+
+        ```sql
+        SELECT * FROM kwdb_internal.ranges;
+        ```
 
 3. Check cluster status:
+
    - View cluster status:
 
-     ```bash
-     kw-status
-     ```
+      ```bash
+      kw-status
+      ```
 
    - View replica status:
 
-     ```sql
-     SELECT sum((metrics->>'ranges.unavailable')::DECIMAL)::INT AS ranges_unavailable,
-            sum((metrics->>'ranges.underreplicated')::DECIMAL)::INT AS ranges_underreplicated
-     FROM kwdb_internal.kv_store_status;
-     ```
+      ```sql
+      SELECT sum((metrics->>'ranges.unavailable')::DECIMAL)::INT AS ranges_unavailable,
+            sum((metrics->>'ranges.underreplicated')::DECIMAL)::INT As ranges_underreplicated
+      FROM kwdb_internal.kv_store_status;
+      ```
 
 4. Use `SHOW JOBS` to check whether any schema changes or bulk import jobs are running.
-5. Check whether leaseholders and replicas are evenly distributed across the cluster using:
 
-   ```sql
-   SELECT * FROM kwdb_internal.ranges;
-   ```
+5. Check whether leaseholders and replicas are evenly distributed across the cluster:
+
+    ```sql
+    SELECT * from kwdb_internal.ranges
+    ```
 
 6. Back up the cluster. If the upgrade fails, restore the cluster from the backup.
 
@@ -103,71 +109,171 @@ During installer-based upgrades, if the node is not installed with KWDB, KWDB is
 
 1. Copy the new installer to the cluster node that performs the upgrade and grant it execute permission:
 
-   ```bash
-   chmod +x KaiwuDB-*.run
-   ```
+    ```bash
+    chmod +x KaiwuDB-*.run
+    ```
 
-2. On the target node, stop KWDB:
+2. On the target node, stop the KWDB service:
 
-   ```bash
-   sudo systemctl stop kaiwudb
-   ```
+    ```bash
+    sudo systemctl stop kaiwudb
+    ```
 
 3. On the execution node, start the installer in CLI mode:
 
-   ```bash
-   ./KaiwuDB-*.run -c
-   # or
-   ./KaiwuDB-*.run --cli
-   ```
+    ```bash
+    ./KaiwuDB-*.run -c
+    # or
+    ./KaiwuDB-*.run --cli
+    ```
 
-4. In the main menu, enter `4` to select **Upgrade Nodes**.
+4. In the main menu, enter `4` to select **Upgrade Node**:
+
+    ```plain
+    1. Install KaiwuDB
+    2. Uninstall KaiwuDB
+    3. Install KaiwuDB and Join a Cluster
+    4. Upgrade Node
+    5. Exit
+
+    Please enter an option [1-5]:
+    ```
 
 5. Set the number of nodes to upgrade to `1`.
 
-6. The installer generates an upgrade configuration file and opens an editor. Change `host` to the IP address of the target node, verify the rest of the settings, and save to start the upgrade automatically.
+6. The installer generates an upgrade configuration file and opens an editor. Change `host` to the IP address of the target node, verify the rest of the settings, save and exit. The upgrade starts automatically.
 
-   ```ini
-   [node1]
-   host=192.168.122.224
-   port=22
-   user=admin
-   passwd=*******
-   ```
+    ```ini
+    [node1]
+    host=192.168.122.224
+    port=22
+    user=admin
+    passwd=*******
+    ```
 
-7. On the target node, modify the relevant configuration files according to the deployment mode.
+7. On the target node, modify the relevant configuration files according to the deployment mode:
 
-8. Reload system service settings and start KWDB:
+    - Bare-metal deployment: Modify the following configuration files and replace the IP address with the actual node IP:
 
-   ```bash
-   sudo systemctl daemon-reload
-   sudo systemctl start kaiwudb
-   ```
+        ```bash
+        sudo vim /etc/systemd/system/kaiwudb.service
+        sudo vim /usr/local/kaiwudb/bin/kw-status.sh
+        sudo vim /usr/local/kaiwudb/bin/kw-sql.sh
+        ```
 
-9. Verify the node status:
+    - Container deployment:
+        1. Modify `/etc/kaiwudb/script/docker-compose.yml`:
+            1. Remove the `ports` block and the `deploy.resources` block.
+            2. Change `networks` to host mode:
 
-   ```bash
-   kw-status
-   ```
+                ```yaml
+                network_mode: host
+                ```
 
-10. Repeat steps 2 to 9 for the remaining nodes in the cluster.
+            3. Replace the IP in the `command` section with the actual node IP.
+
+        2. Update the node IP in the following scripts:
+
+            ```bash
+            sudo vim /etc/kaiwudb/script/kw-status.sh
+            sudo vim /etc/kaiwudb/script/kw-sql.sh
+            ```
+
+8. On the target node, reload system service configuration and start KWDB:
+
+    ```bash
+    sudo systemctl daemon-reload
+    sudo systemctl start kaiwudb
+    ```
+
+9. On the target node, check the node status:
+
+    ```bash
+    kw-status
+    ```
+
+10. Repeat steps 2–9 for the remaining nodes in the cluster.
 
 11. After all nodes are upgraded, verify that the data is intact. For multi-replica clusters, also query the shard status to confirm normal cluster operation.
 
-   ```sql
-   SELECT * FROM kwdb_internal.ranges;
-   ```
+    ```sql
+    SELECT * FROM kwdb_internal.ranges;
+    ```
 
 #### Terminal Graphical Interaction Mode
 
-1. Copy the new installer to the cluster node that performs the upgrade and grant it execute permission.
-2. On the target node, stop KWDB.
-3. On the execution node, start the installer in terminal graphical interaction mode.
-4. In the main menu, select **Upgrade Nodes** and press Enter.
-5. In the upgrade settings menu, click **Set Upgrade Nodes**, enter the target node IP, port, username, and password, then click **Save**. Select **Start Upgrade** and press Enter.
-6. On the target node, modify the relevant configuration files according to the deployment mode.
-7. Reload system service settings and start KWDB.
-8. Verify the node status.
+1. Copy the new installer to the cluster node that performs the upgrade and grant it execute permission:
+
+    ```bash
+    chmod +x KaiwuDB-*.run
+    ```
+
+2. On the target node, stop the KWDB service:
+
+    ```bash
+    sudo systemctl stop kaiwudb
+    ```
+
+3. On the execution node, start the installer in terminal graphical interaction mode:
+
+    ```bash
+    ./KaiwuDB-*.run -i
+    # or
+    ./KaiwuDB-*.run --interact
+    ```
+
+4. In the main menu, use the arrow keys to select **Upgrade Node**, then press Enter to confirm.
+
+5. In the upgrade settings menu, click **Set Upgrade Nodes**, enter the target node IP, port, username, and password, then click **Save**. Select **Start Upgrade** and press Enter to begin.
+
+6. On the target node, modify the relevant configuration files according to the deployment mode:
+
+    - Bare-metal deployment: Modify the following configuration files and replace the IP address with the actual node IP:
+
+        ```bash
+        sudo vim /etc/systemd/system/kaiwudb.service
+        sudo vim /usr/local/kaiwudb/bin/kw-status.sh
+        sudo vim /usr/local/kaiwudb/bin/kw-sql.sh
+        ```
+
+    - Container deployment:
+        1. Modify `/etc/kaiwudb/script/docker-compose.yml`:
+            1. Remove the `ports` block and the `deploy.resources` block.
+            2. Change `networks` to host mode:
+
+                ```yaml
+                network_mode: host
+                ```
+
+            3. Replace the IP in the `command` section with the actual node IP.
+
+        2. Update the node IP in the following scripts:
+
+            ```bash
+            sudo vim /etc/kaiwudb/script/kw-status.sh
+            sudo vim /etc/kaiwudb/script/kw-sql.sh
+            ```
+
+7. On the target node, reload system service configuration and start KWDB:
+
+    ```bash
+    sudo systemctl daemon-reload
+    sudo systemctl start kaiwudb
+    ```
+
+8. On the target node, check the node status:
+
+    ```bash
+    kw-status
+    ```
+
+9. Repeat steps 2–8 for the remaining nodes in the cluster.
+
+10. After all nodes are upgraded, verify that the cluster data is intact. For multi-replica clusters, also query the shard status to confirm normal cluster operation.
+
+    ```sql
+    SELECT * FROM kwdb_internal.ranges;
+    ```
 
 ## Upgrade from Source Code Compilation
 
@@ -193,8 +299,8 @@ For KWDB instances deployed using Docker container images, you can upgrade by up
 
 #### Prerequisites
 
-- Back up data and configuration files.
-- Obtain the new container image.
+- Backup of data and configuration files
+- Obtained the new container image
 
 #### Steps
 
@@ -228,8 +334,8 @@ For KWDB instances deployed using Docker container images, you can upgrade by up
 
 #### Prerequisites
 
-- Back up data and configuration files.
-- Obtain the new container image.
+- Backup of data and configuration files
+- Obtained the new container image
 
 #### Steps
 
@@ -250,7 +356,7 @@ For KWDB instances deployed using Docker container images, you can upgrade by up
    - Pull from the image repository:
 
      ```bash
-     docker pull kwdb/kwdb:<new-version>
+     docker pull kwdb/kwdb:<新版本号>
      ```
 
    - Import from a local file:
@@ -261,7 +367,7 @@ For KWDB instances deployed using Docker container images, you can upgrade by up
 
 4. Start the new container. Except for the image name, all parameters should remain the same as the original container.
 
-   - In insecure mode:
+   - Insecure mode:
 
      ```bash
      docker run -d --privileged --name kwdb \
@@ -280,7 +386,7 @@ For KWDB instances deployed using Docker container images, you can upgrade by up
          --store=/kaiwudb/deploy/kwdb-container
      ```
 
-   - In secure mode:
+   - Secure mode:
 
      ```bash
      docker run -d --privileged --name kwdb \
@@ -291,7 +397,7 @@ For KWDB instances deployed using Docker container images, you can upgrade by up
          -v /etc/kaiwudb/certs:<certs_dir> \
          -v /var/lib/kaiwudb:/kaiwudb/deploy/kwdb-container \
          --ipc shareable \
-         -w /kaiwudb/bin <kwdb_image> \
+         -w /kaiwudb/bin \<kwdb_image> \
          ./kwbase start-single-node \
          --certs-dir=<certs_dir> \
          --listen-addr=0.0.0.0:26257 \

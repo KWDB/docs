@@ -96,7 +96,7 @@ During installation, the program performs real-time parameter validation. If a c
     | Parameter | Description |
     |-----------|-------------|
     | `secure_mode` | Secure mode. Supported values are:<br>- `insecure`: insecure mode.<br>- `tls`: (default) TLS secure mode. When secure mode is enabled, KWDB automatically generates certificates and stores them in `/etc/kaiwudb/certs`. |
-    | `rest_port` | Admin UI port; default is `8080`. |
+    | `rest_port` | KWDB Web service port; default is `8080`. |
     | `kaiwudb_port` | KWDB service port; default is `26257`. |
     | `brpc_port` | Data transfer port between time-series engines. For single-node deployment, the system ignores this setting automatically; default is `27257`. |
     | `data_root` | Data directory; default is `/var/lib/kaiwudb`. |
@@ -150,7 +150,7 @@ During installation, the program performs real-time parameter validation. If a c
     | `updated_at` | Node status update time. When the node is healthy, a new status record is written about every 10 seconds. If the node is abnormal, the update may lag. |
     | `locality` | Node ID. |
     | `start_mode` | Node startup mode. |
-    | `is_available` / `is_live` | `true` means the node is healthy; `false` means the node is abnormal. |
+    | `is_available` / `is_live` | Both `true` means the node is healthy; both `false` means the node is abnormal. |
 
 11. (Optional) Configure KWDB to start automatically at system startup:
 

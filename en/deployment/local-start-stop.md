@@ -1,51 +1,49 @@
 ---
-title: Start and Stop KWDB Service
+title: Service Management
 id: local-start-stop
 ---
 
-# Start and Stop KWDB Service
+# Service Management
 
-This section explains how to manage individual KWDB nodes within your cluster. All commands require `root` or `sudo` privileges.
+This section explains how to start, stop, and restart individual KWDB nodes within your cluster. All commands require `root` or `sudo` privileges.
 
-## Start KWDB
+## Start KWDB Service
 
-1. To start a stopped node:
+1. Start the KWDB service:
 
     ```shell
     systemctl start kaiwudb
     ```
 
-2. To verify the service started successfully:
+2. Verify that the KWDB service has started:
 
     ```shell
     systemctl status kaiwudb
     ```
 
-## Stop KWDB
+## Stop KWDB Service
 
-1. To gracefully stop a running node:
+1. To stop a running KWDB service:
 
     ```shell
     systemctl stop kaiwudb
     ```
 
-## Restart KWDB
+## Restart KWDB Service
 
-1. To restart a running node:
+1. To restart a running KWDB service:
+
+    :::warning Note
+    If the KWDB service is stopped, you must start the service first before restarting it.
+    :::
 
     ```shell
     systemctl restart kaiwudb
     ```
 
-    ::: warning Note
+## Check KWDB Service Status
 
-    The restart command only works on running nodes. If the service is stopped, you must use `systemctl start kaiwudb` first.
-
-    :::
-
-## Check Service Status
-
-1. To check the current status of your KWDB service:
+1. To check the current KWDB service status on this node:
 
     ```shell
     systemctl status kaiwudb

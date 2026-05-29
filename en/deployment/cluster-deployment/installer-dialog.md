@@ -53,13 +53,13 @@ Terminal graphical interaction mode does not support deploying multiple nodes on
     ./KWDB-*.run --interact
     ```
 
-3. After the installer starts, go to the main menu and use the arrow keys to select **Install KWDB**, then press Enter.
+3. After the installer starts, go to the main menu, use the arrow keys to select **Install KWDB**, and press Enter to confirm.
 
-    ![](../../static/quickstart/gui-dialog-welcome.png)
+    ![](../../../static/quickstart/gui-dialog-welcome.png)
 
 4. Enter the installation parameter settings menu and configure each item as needed:
 
-    ![](../../static/quickstart/gui-dialog-config.png)
+    ![](../../../static/quickstart/gui-dialog-config.png)
 
     Parameter descriptions:
 
@@ -81,7 +81,7 @@ Terminal graphical interaction mode does not support deploying multiple nodes on
 7. During installation, the terminal displays the progress in real time. If an error occurs, you can review the log files in the `log` directory under the installation directory for detailed information.
 
 8. After installation succeeds, the terminal displays a success message and asks whether to start the database.
-    - Select Yes: the system starts the service and then displays a success dialog.
+    - Select Yes: the system completes startup and displays a startup success dialog.
     - Select No: start KWDB manually later.
 
         ```bash
@@ -114,7 +114,7 @@ Terminal graphical interaction mode does not support deploying multiple nodes on
     | `updated_at` | Node status update time. When the node is healthy, a new status record is written about every 10 seconds. If the node is abnormal, the update may lag. |
     | `locality` | Node ID. |
     | `start_mode` | Node startup mode. |
-    | `is_available` / `is_live` | `true` means the node is healthy; `false` means the node is abnormal. |
+    | `is_available` / `is_live` | Both `true` means the node is healthy; both `false` means the node is abnormal. |
 
 10. (Optional) Configure KWDB to start automatically at system startup:
 

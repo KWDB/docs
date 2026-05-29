@@ -26,7 +26,7 @@ KWDB supports dynamic scale-out and scale-in operations to meet different capaci
 
 KWDB multi-replica clusters support scale-out using either the installer or the command line. After the scale-out completes, the cluster automatically performs data redistribution to ensure load balancing.
 
-#### Data Redistribution
+**Data Redistribution**
 
 After scale-out finishes, the system automatically distributes existing data evenly across all nodes by default. To disable automatic redistribution, set the following parameter:
 
@@ -36,7 +36,7 @@ SET CLUSTER SETTING kv.allocator.ts_consider_rebalance.enabled = false;
 
 Avoid frequent `ALTER` statements during redistribution, because they may prolong the process.
 
-#### Multi-Replica Prerequisites
+#### Prerequisites
 
 - The nodes to be added have not installed KWDB yet.
 - The target cluster is running.
@@ -78,16 +78,16 @@ Avoid frequent `ALTER` statements during redistribution, because they may prolon
    ./KWDB-*.run --cli
    ```
 
-3. In the main menu, enter `3` to select **Install KWDB and Join the Cluster**:
+3. In the main menu, enter `3` to select **Install KWDB and Join a Cluster**:
 
    ```plain
    1. Install KWDB
    2. Uninstall KWDB
-   3. Install KWDB and Join the Cluster
-   4. Upgrade Nodes
+   3. Install KWDB and Join a Cluster
+   4. Upgrade Node
    5. Exit
 
-   Please enter the operation [1-5]:
+   Please enter an option [1-5]:
    ```
 
 4. Select the appropriate join mode based on the current cluster type:
@@ -96,7 +96,7 @@ Avoid frequent `ALTER` statements during redistribution, because they may prolon
    Join KWDB Cluster
    1. Join a Single-Replica Cluster
    2. Join a Three-Replica Cluster
-   3. Return to the Main Menu
+   3. Return to Main Menu
 
    Please select [1-3]:
    ```
@@ -144,7 +144,7 @@ Avoid frequent `ALTER` statements during redistribution, because they may prolon
    passwd=******
    ```
 
-   Parameter description:
+   Parameter descriptions:
 
    | Parameter | Description |
    |-----------|-------------|
@@ -164,7 +164,7 @@ Avoid frequent `ALTER` statements during redistribution, because they may prolon
    kw-status
    ```
 
-##### Terminal Graphical Interaction Mode
+##### Terminal Graphical Interaction Mode (Multi-Replica)
 
 1. Copy the KWDB installer to the cluster node where you will perform the scale-out and grant it execute permission:
 
@@ -180,9 +180,9 @@ Avoid frequent `ALTER` statements during redistribution, because they may prolon
    ./KWDB-*.run --interact
    ```
 
-3. In the main menu, use the arrow keys to select **Install KWDB and Join the Cluster**, then press Enter.
+3. In the main menu, use the arrow keys to select **Install KWDB and Join a Cluster**, then press Enter to confirm.
 
-4. Enter the installation settings menu and configure the following items in order:
+4. Enter the installation parameter settings menu and configure the following items as needed:
 
    | Option | Description |
    |--------|-------------|
@@ -245,7 +245,7 @@ Avoid frequent `ALTER` statements during redistribution, because they may prolon
      --background
      ```
 
-   Parameter description:
+   Parameter descriptions:
 
    - `<kwbase_path>`: Directory of the kwbase binary. The default path is `/usr/local/kaiwudb/bin` for bare-metal deployment and `/kaiwudb/bin` for container deployment.
    - `<cert_path>`: Directory that stores certificates and keys. The default location is `/etc/kaiwudb/certs`.
@@ -269,7 +269,7 @@ Avoid frequent `ALTER` statements during redistribution, because they may prolon
      <kwbase_path>/kwbase node status --insecure [--host=<address_of_any_alive_node>]
      ```
 
-   Parameter description:
+   Parameter descriptions:
 
    - `<kwbase_path>`: Directory of the kwbase binary. The default path is `/usr/local/kaiwudb/bin` for bare-metal deployment and `/kaiwudb/bin` for container deployment.
    - `<cert_path>`: Certificate directory. The default location is `/etc/kaiwudb/certs`.
@@ -279,7 +279,7 @@ Avoid frequent `ALTER` statements during redistribution, because they may prolon
 
 KWDB single-replica clusters support both installer scale-out and command-line scale-out.
 
-#### Single-Replica Prerequisites
+#### Prerequisites
 
 - The nodes to be added have not installed KWDB yet.
 - The target cluster is running.
@@ -321,16 +321,16 @@ KWDB single-replica clusters support both installer scale-out and command-line s
    ./KWDB-*.run --cli
    ```
 
-3. In the main menu, enter `3` to select **Install KWDB and Join the Cluster**:
+3. In the main menu, enter `3` to select **Install KWDB and Join a Cluster**:
 
    ```plain
    1. Install KWDB
    2. Uninstall KWDB
-   3. Install KWDB and Join the Cluster
-   4. Upgrade Nodes
+   3. Install KWDB and Join a Cluster
+   4. Upgrade Node
    5. Exit
 
-   Please enter the operation [1-5]:
+   Please enter an option [1-5]:
    ```
 
 4. Select the appropriate join mode based on the current cluster type:
@@ -339,7 +339,7 @@ KWDB single-replica clusters support both installer scale-out and command-line s
    Join KWDB Cluster
    1. Join a Single-Replica Cluster
    2. Join a Three-Replica Cluster
-   3. Return to the Main Menu
+   3. Return to Main Menu
 
    Please select [1-3]:
    ```
@@ -387,12 +387,12 @@ KWDB single-replica clusters support both installer scale-out and command-line s
    passwd=******
    ```
 
-   Parameter description:
+   Parameter descriptions:
 
    | Parameter | Description |
    |-----------|-------------|
    | `secure_mode` | Secure mode; it must match the target cluster. |
-   | `rest_port` | KWDB Web port, default `8080`. |
+   | `rest_port` | KWDB Web service port, default `8080`. |
    | `kaiwudb_port` | KWDB service port, default `26257`. |
    | `brpc_port` | Data transfer port, default `27257`. |
    | `data_root` | Data directory, default `/var/lib/kaiwudb`. |
@@ -407,7 +407,7 @@ KWDB single-replica clusters support both installer scale-out and command-line s
    kw-status
    ```
 
-##### Terminal Graphical Interaction Mode
+##### Terminal Graphical Interaction Mode (Single-Replica)
 
 1. Copy the KWDB installer to the cluster node where you will perform the scale-out and grant it execute permission:
 
@@ -423,9 +423,9 @@ KWDB single-replica clusters support both installer scale-out and command-line s
    ./KWDB-*.run --interact
    ```
 
-3. In the main menu, use the arrow keys to select **Install KWDB and Join the Cluster**, then press Enter.
+3. In the main menu, use the arrow keys to select **Install KWDB and Join a Cluster**, then press Enter to confirm.
 
-4. Configure the following settings in the installation parameter menu:
+4. Enter the installation parameter settings menu and configure the following items as needed:
 
    | Option | Description |
    |--------|-------------|
@@ -508,7 +508,7 @@ KWDB single-replica clusters support both installer scale-out and command-line s
 
 ## Scale-In
 
-Single-replica clusters do not currently support scale-in operations.
+Single-replica clusters do not support scale-in operations.
 
 KWDB multi-replica clusters support command-line scale-in. When a node is removed, KWDB allows the node to finish in-flight requests, rejects new requests, and migrates its range replicas and range leases to other nodes to ensure smooth data migration. The removed node can be permanently decommissioned according to your needs to maximize system availability and data integrity.
 
@@ -522,7 +522,7 @@ KWDB multi-replica clusters support command-line scale-in. When a node is remove
 
 After a node is decommissioned, if you need to add it back to the cluster, clear its data directory first and then rejoin it as a new node.
 
-### Scale-In Prerequisites
+### Prerequisites
 
 - All cluster nodes are alive (`is_available` and `is_live` are both `true`):
 
@@ -544,7 +544,7 @@ After a node is decommissioned, if you need to add it back to the cluster, clear
 
   ```sql
   SELECT sum((metrics->>'ranges.unavailable')::DECIMAL)::INT AS ranges_unavailable,
-         sum((metrics->>'ranges.underreplicated')::DECIMAL)::INT AS ranges_underreplicated
+     sum((metrics->>'ranges.underreplicated')::DECIMAL)::INT As ranges_underreplicated
   FROM kwdb_internal.kv_store_status;
   ```
 

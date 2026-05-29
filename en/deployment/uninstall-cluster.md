@@ -1,58 +1,113 @@
 ---
-title: Uninstall KaiwuDB
+title: Uninstall KWDB
 id: uninstall-cluster
 ---
 
-# Uninstall KaiwuDB
+# Uninstall KWDB
 
-This section describes the uninstallation methods for the KaiwuDB database under different deployment scenarios, including script deployment, source compilation deployment, and container image deployment. Choose the appropriate uninstallation solution according to your actual deployment method.
+This section describes the uninstallation methods for KWDB under different deployment scenarios, including installer deployment, kwbase CLI deployment, and container image deployment. Choose the appropriate uninstallation method based on your actual deployment method.
 
-## Uninstall Script Deployment
+## Uninstall Installer Deployment
 
-For KWDB deployed using the installation script, perform the following steps:
+For KWDB deployed using the installer, choose the uninstallation method corresponding to the interaction mode used during installation.
 
-1. Log in to the initial deployment node.
-2. Transfer the `kwdb_install` directory to all other cluster nodes.
-    1. Log in to remote nodes and create the required directory:
+### Command-Line Mode
 
-        ```shell
-        ssh <username>@<node2_address> "mkdir -p ~/kwdb_install"
-        ssh <username>@<node3_address> "mkdir -p ~/kwdb_install"
-        ...
-        ```
+**Prerequisite**: The KWDB service has been stopped.
 
-    2. Transfer the `kwdb_install` directory to the target nodes:
+```bash
+systemctl stop kaiwudb
+```
 
-        ```shell
-        scp -r kwdb_install <username>@<node2_address>:~/kwdb_install/
-        scp -r kwdb_install <username>@<node3_address>:~/kwdb_install/
-        ...  
-        ```
+**Steps**:
 
-3. Execute the following operations on each node in the cluster:
-    1. Stop the KWDB service:
+1. Log in to the initial node where KWDB was deployed, and start the installer in command-line mode:
 
-        ```shell
-        systemctl stop kaiwudb
-        ```
+    ```bash
+    ./KWDB-*.run -c
+    # or
+    ./KWDB-*.run --cli
+    ```
 
-    2. Run the uninstallation command in the `kwdb_install` directory:
+2. In the main menu, enter `2` to select Uninstall KWDB:
 
-        ```shell
-        ./deploy.sh uninstall 
-        ```
+    ```plain
+    1. Install KWDB
+    2. Uninstall KWDB
+    3. Install KWDB and Join a Cluster
+    4. Upgrade Node
+    5. Exit
 
-    3. When prompted, choose whether to delete the data, certificates and logs:
+    Please enter an option [1-5]:
+    ```
 
-        ```shell
-        When uninstalling KaiwuDB, you can either delete or keep all user data. Please confirm your choice: Do you want to delete the data? (y/n): 
-        ```
+3. Enter the number of nodes to remove when prompted:
 
-## Source Compilation Deployment
+    ```plain
+    Please enter the number of nodes (1-100):
+    ```
+
+4. The installer automatically opens the configuration file. Verify the node information, then save and exit. The configuration file format is as follows:
+
+    ```ini
+    [global]
+    # Data directory
+    data_root=/var/lib/kaiwudb
+
+    [node1]
+    host=127.0.0.1
+    port=22
+    user=admin
+    passwd=*******
+    ```
+
+5. Confirm whether to delete data and configuration files when prompted. Enter `y` to delete or `N` to keep:
+
+    ```plain
+    Delete data and configuration files? (y/N):
+    ```
+
+    After uninstallation is complete, the console displays a message confirming that all nodes have been successfully uninstalled and the script exits safely.
+
+### Terminal Graphical Interaction Mode
+
+**Prerequisite**: The KWDB service has been stopped.
+
+```bash
+systemctl stop kaiwudb
+```
+
+**Steps**:
+
+1. Log in to the initial node where KWDB was deployed, and start the installer in terminal graphical interaction mode:
+
+    ```bash
+    ./KWDB-*.run -i
+    # or
+    ./KWDB-*.run --interact
+    ```
+
+2. In the main menu, use the arrow keys to select **Uninstall KWDB**, then press Enter to confirm.
+
+3. Enter the parameter settings menu and configure each item as needed:
+
+    Parameter descriptions:
+
+    | Parameter | Description |
+    |--------|------|
+    | Set uninstall nodes | Add information for the nodes to be uninstalled, including host name, port, username, and password. |
+    | Manage uninstall node list | View the added node information. |
+    | Set data directory | Enter the data directory to be deleted; default is `/var/lib/kaiwudb`. |
+
+4. After all settings are complete, select **Start Uninstallation** and press Enter to begin.
+
+5. Confirm whether to delete all configurations and data when prompted. After uninstallation is complete, the interface displays a completion message.
+
+## Uninstall kwbase CLI Deployment
 
 For KWDB deployed through source code compilation, perform the following operations on each node:
 
-::: warning
+::: warning Note
 
 Before performing deletion operations, ensure all important data has been backed up. The following operations will permanently delete all KWDB data and configurations.
 
@@ -76,20 +131,19 @@ Before performing deletion operations, ensure all important data has been backed
 
 ## Uninstall Container Image Deployment
 
-For KWDB deployed using a container image, perform the following steps on each node to be uninstalled:
+For KWDB deployed using a container image, perform the following operations on each node:
 
-::: warning
+::: warning Note
 
-Before proceeding, ensure all important data has been backed up. These operations will permanently delete all KWDB data and configurations.
+Before performing deletion operations, ensure all important data has been backed up. The following operations will permanently delete all KWDB data and configurations.
 
 :::
 
-1. Stop the KWDB container:
+1. Stop the KWDB container.
 
-   ::: tip
+   ::: warning Note
 
    The container name is the name specified in the `--name` parameter when running the container.
-
    :::
 
    ```bash
@@ -106,19 +160,19 @@ Before proceeding, ensure all important data has been backed up. These operation
 
    ```bash
    # Get the image name
-   docker ps -a --filter name=kwdb-container --format "{{.Image}}"
+   docker ps -a --filter name=kwdb-container --format {{.Image}}
    
    # Remove the image
    docker rmi ${image_name}
    ```
 
-4. Remove custom certificate directory:
+4. Remove the custom certificate directory:
 
    ```bash
    sudo rm -rf <cert_path>
    ```
 
-5. Delete the data directory (default location: `/var/lib/kaiwudb`):
+5. Delete the data directory (default: `/var/lib/kaiwudb`):
 
    ```bash
    sudo rm -rf <data_path>

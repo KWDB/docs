@@ -41,13 +41,13 @@ During installation, the program performs real-time parameter validation. If a c
     ./KWDB-*.run --interact
     ```
 
-3. After the installer starts, go to the main menu and use the arrow keys to select **Install KWDB**, then press Enter.
+3. After the installer starts, go to the main menu and use the arrow keys to select **Install KWDB**, then press Enter to confirm.
 
-    ![](../../static/quickstart/gui-dialog-welcome.png)
+    ![](../../../static/quickstart/gui-dialog-welcome.png)
 
 4. Enter the installation parameter settings menu and configure each item as needed:
 
-    ![](../../static/quickstart/gui-dialog-config.png)
+    ![](../../../static/quickstart/gui-dialog-config.png)
 
     Parameter descriptions:
 
@@ -100,7 +100,7 @@ During installation, the program performs real-time parameter validation. If a c
     | `updated_at` | Node status update time. When the node is healthy, a new status record is written about every 10 seconds. If the node is abnormal, the update may lag. |
     | `locality` | Node ID. |
     | `start_mode` | Node startup mode. |
-    | `is_available` / `is_live` | `true` means the node is healthy; `false` means the node is abnormal. |
+    | `is_available` / `is_live` | Both `true` means the node is healthy; both `false` means the node is abnormal. |
 
 10. (Optional) Configure KWDB to start automatically at system startup:
 
