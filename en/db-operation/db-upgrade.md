@@ -5,246 +5,177 @@ id: db-upgrade
 
 # Database Upgrade
 
-This section covers upgrade procedures for KWDB database across different deployment scenarios, including upgrades using deployment scripts and container images.
+## Overview
 
-Before upgrading, carefully review all precautions and select the appropriate upgrade method based on your deployment approach.
+This section describes how to upgrade KWDB. Prepare the upgrade according to your actual deployment topology, and then follow the corresponding upgrade steps based on the deployment method you used during installation.
 
-## Upgrade Using Deployment Scripts
+### Upgrade Paths
 
-## Upgrading with Deployment Scripts
+| Deployment Topology | Current Version | Target Version | Upgrade Method |
+|--------------------|----------------|----------------|----------------|
+| Standalone deployment | 3.0.0, 3.1.0 | 3.2.0 | Script or CLI deployment: installer<br>Container image deployment: container image upgrade |
+|                      | 1.x, 2.x | 3.2.0 | Import/export |
+| Multi-replica cluster | 3.0.0, 3.1.0 | 3.2.0 | Script or CLI deployment: installer<br>Container image deployment: container image upgrade |
+|                      | 1.x, 2.x | 3.2.0 | Import/export |
+| Single-replica cluster | 3.0.0, 3.1.0 | 3.2.0 | Script or CLI deployment: installer<br>Container image deployment: container image upgrade |
+|                       | 1.x, 2.x | 3.2.0 | Import/export |
 
-Script-based upgrades are the most common method for KWDB instances installed through deployment scripts. Upgrade procedures vary based on your deployment topology: standalone instances, multi-replica clusters, and single-replica clusters each require different approaches. The available upgrade methods depend on your specific deployment type:
-
-- **Standalone Instances**：[3.0.0 to 3.1.0 offline upgrade](#upgrading-standalone-instances).
-- **Multi-Replica Clusters**：[3.0.0 to 3.1.0 node-by-node online upgrade](#upgrading-multi-replica-clusters). **Note**: To use the new time-series raft log storage engine, deploy a fresh 3.1.0 cluster and import historical data.
-- **Single-Replica Clusters**：[3.0.0 to 3.1.0 offline upgrade](#upgrading-single-replica-clusters).
-
-::: warning Note
-
-- Direct downgrades to the previous version are not supported after an upgrade. To perform a downgrade, you must first uninstall the current version, then install the original version of KWDB. Afterward, restore the data from the backup created before uninstallation. For instructions, see [Uninstall KWDB](../deployment/uninstall-cluster.md).
-- KWDB supports upgrading from any previous version to the latest version through import-export method. For specific operations, see [Data Export](../db-administration/import-export-data/export-data.md) and [Data Import](../db-administration/import-export-data/import-data.md). **Note**: When upgrading from version 2.x, the exported `meta.sql` file contains `PARTITION INTERVAL` syntax for time-series tables. This syntax has been deprecated in version 3.1.0 (it remains supported for time-series databases). You must manually remove this syntax from the file before importing; failure to do so will cause the import to fail. Additionally, upgrading via the import-export method may impact high availability in multi-replica clusters.
+:::warning Note
+- When upgrading from 3.0.0 to 3.2.0, if you want to use the time-series raft log storage engine added in 3.1.0 and later, deploy a new cluster first and then import historical data.
+- In 3.2.0, the default value of `ts.raft_log.sync_period` changed from `10s` to `0s` (flush to disk immediately). Before upgrading a multi-replica cluster from 3.0.0 or 3.1.0 to 3.2.0, switch this parameter to `0s` on the old version nodes and wait for it to take effect. Otherwise, the upgrade may fail. For details, see the preparation steps in [Cluster Deployment](#cluster-deployment).
 :::
 
-### Upgrading Standalone Instances
+**Notes**
 
-If any upgrade errors occur—such as KWDB not being installed, KWDB still running, incorrect version, or incorrect deployment method—the system aborts the upgrade and displays the relevant error messages.
+- After upgrade, you cannot simply downgrade to the previous version. If you need to downgrade, uninstall the current version first, reinstall the old version of KWDB, and then restore data from the backup created before uninstallation. For uninstall instructions, see [Uninstall KWDB](../deployment/uninstall-cluster.md).
+- KWDB supports upgrading from any prior version to the latest version using import/export. See [Data Export](../db-administration/import-export-data/export-data.md) and [Data Import](../db-administration/import-export-data/import-data.md). **Note**: When upgrading from 2.x, the exported `meta.sql` file contains `PARTITION INTERVAL` syntax for time-series tables. Since 3.1.0 and later versions have deprecated this syntax (although time-series databases still support it), remove the related syntax from the file before importing; otherwise the import will fail. After upgrading via import/export, high availability in multi-replica clusters may be affected.
 
-If the upgrade fails during new version installation, the system retains the data directory, certificates, and configuration files while removing the new version files from the node. You can then choose to manually install either the new or the old version.
+## Upgrade Preparation
 
-#### Prerequisites
+### Standalone Deployment
 
-- KWDB is installed on the target node.
-- The data directory is backed up.
-- You have obtained the new version package.
-- You have one of the following user permissions:
-  - Root user access
-  - Regular user with `sudo` privileges (users with passwordless `sudo` won't need to enter passwords during upgrade; others will be prompted when needed)
-  - For container deployment: Regular user in the `docker` group (add with `sudo usermod -aG docker $USER`)
+1. Confirm that the new version is higher than the installed version.
+2. Stop the KWDB service:
 
-#### Steps
-
-1. Copy the new version package to the target node and extract the contents.
-
-2. Check if KWDB is stopped. If the service is still running, stop it using `systemctl stop kaiwudb`.
-
-   ```shell
-   systemctl status kaiwudb
-   ```
-
-3. Navigate to the directory of the new version package.
-
-4. Run the local upgrade command:
-
-   ```shell
-   ./deploy.sh upgrade -l
-   ```
-
-   or
-
-   ```shell
-   ./deploy.sh upgrade --local
-   ```
-
-   If the upgrade succeeds, the console displays:
-
-   ```shell
-   UPGRADE COMPLETED: KaiwuDB has been upgraded successfully! 
-   ```
-
-5. Start KWDB:
-
-   ```shell
-   systemctl start kaiwudb
-   ```
-
-6. Verify that the service is running:
-
-   ```shell
-   systemctl status kaiwudb
-   ```
-
-### Upgrading Multi-Replica Clusters
-
-During the upgrade process, compression and lifecycle operations on the upgraded nodes may fail temporarily but resume once the upgrade completes. If upgrade errors occur—such as KWDB not being installed, unhealthy or unavailable nodes, incorrect version, or incorrect deployment method—the system aborts the upgrade and displays the relevant error messages.
-
-#### Preparing for Upgrade
-
-**Steps**
-
-1. Ensure that the client communicates with multiple nodes to avoid communication interruption when upgrading a single node.
-
-2. Check the cluster status:
-
-   1. Check node status:
-
-      - Deployment script:
-
-         ```shell
-         kw-status
-         ```
-
-      - kwbase command:
-
-         ```shell
-         <kwbase_path>/kwbase node status [--host=<ip:port>] [--insecure | --certs-dir=<path>]
-         ```
-
-   2. Check replica status:
-
-         ```sql
-      SELECT sum((metrics->>'ranges.unavailable')::DECIMAL)::INT AS ranges_unavailable,
-         sum((metrics->>'ranges.underreplicated')::DECIMAL)::INT As ranges_underreplicated
-      FROM kwdb_internal.kv_store_status;
-         ```
-
-3. Check for ongoing schema changes or bulk import jobs using the `SHOW JOBS` SQL command.
-
-4. Use the `SELECT * FROM kwdb_internal.ranges` SQL command to check if leaseholders and replicas are evenly distributed across the nodes in the cluster.
-
-5. Back up the cluster. If the upgrade fails, you can restore the cluster from the backup.
-
-#### Executing Upgrade
-
-Perform the upgrade on each node in the cluster, one at a time. After each node rejoins the cluster and its version and status are verified, proceed to upgrade the next node.
-
-**Prerequisites**
-
-- KWDB is installed on the target node.
-- The node is available (both `is_available` and `is_live` are `true`).
-- The user data directory is backed up.
-- You have obtained the new version package.
-- You have one of the following user permissions:
-  - Root user access
-  - Regular user with `sudo` privileges (users with passwordless `sudo` won't need to enter passwords during upgrade; others will be prompted when needed)
-  - For container deployment: Regular user in the `docker` group (add with `sudo usermod -aG docker $USER`)
-
-**Steps**
-
-1. Copy the new version installation package to the target node and extract the contents.
-
-2. Check if KWDB is stopped. If the service is still running, stop it using `systemctl stop kaiwudb`.
-
-   ```shell
-   systemctl status kaiwudb
-   ```
-
-3. Navigate to the directory of the new version installation package.
-
-4. Run the local upgrade command:
-
-   ```shell
-   ./deploy.sh upgrade -l
-   ```
-
-   or
-
-   ```shell
-   ./deploy.sh upgrade --local
-   ```
-
-   If the upgrade succeeds, the console displays:
-
-   ```shell
-   UPGRADE COMPLETED: KaiwuDB has been upgraded successfully!
-   ```
-
-5. Start KWDB:
-
-   ```shell
-   systemctl start kaiwudb
-   ```
-
-6. Verify that the service is running:
-
-   ```shell
-   systemctl status kaiwudb
-   ```
-
-### Upgrading Single-Replica Clusters
-
-If upgrade errors occur—such as KWDB not being installed, KWDB still running, incorrect version, or incorrect deployment method—the system aborts the upgrade and displays the relevant error messages.
-
-If the upgrade fails during new version installation, the system retains the data directory, certificates, and configuration files while removing the new version installation files from the node. You can then choose to manually install either the new or the old version.
-
-#### Prerequisites
-
-- KWDB is installed on all target nodes.
-- The data directory is backed up on all nodes.
-- You have obtained the new version package.
-- You have one of the following user permissions:
-  - Root user access
-  - Regular user with `sudo` privileges (users with passwordless `sudo` won't need to enter passwords during upgrade; others will be prompted when needed)
-  - For container deployment: Regular user in the `docker` group (add with `sudo usermod -aG docker $USER`)
-
-#### Steps
-
-1. Stop KWDB on all nodes in the cluster:
-
-   ```shell
+   ```bash
    systemctl stop kaiwudb
    ```
 
-2. Perform the following upgrade operations on each node:
-   1. Copy the new version package to the node and extract the contents.
-   2. Navigate to the directory of the new version package.
-   3. Run the local upgrade command:
+3. Back up the user data directory.
 
-      ```shell
-      ./deploy.sh upgrade -l
+### Cluster Deployment
+
+1. Confirm that the new version is higher than the installed version.
+2. If the cluster is multi-replica, complete the following before upgrade:
+   1. Switch `ts.raft_log.sync_period` to `0s`:
+
+      ```sql
+      SET CLUSTER SETTING ts.raft_log.sync_period = '0s';
       ```
 
-      or
+   2. Wait for at least 5 minutes for the cluster to finish the parameter change.
+   3. Query the shard status and confirm that the cluster is healthy. If not, repeat the above steps.
 
-      ```shell
-      ./deploy.sh upgrade --local
+      ```sql
+      SELECT * FROM kwdb_internal.ranges;
       ```
 
-      If the upgrade succeeds, the console displays:
+3. Check cluster status:
+   - View cluster status:
 
-      ```shell
-      UPGRADE COMPLETED: KaiwuDB has been upgraded successfully! 
-      ```
+     ```bash
+     kw-status
+     ```
 
-3. After all nodes are upgraded, execute the following commands on each node to start the database:
-   1. Start KWDB:
+   - View replica status:
 
-      ```shell
-      systemctl start kaiwudb
-      ```
+     ```sql
+     SELECT sum((metrics->>'ranges.unavailable')::DECIMAL)::INT AS ranges_unavailable,
+            sum((metrics->>'ranges.underreplicated')::DECIMAL)::INT AS ranges_underreplicated
+     FROM kwdb_internal.kv_store_status;
+     ```
 
-   2. Verify that the service is running:
+4. Use `SHOW JOBS` to check whether any schema changes or bulk import jobs are running.
+5. Check whether leaseholders and replicas are evenly distributed across the cluster using:
 
-      ```shell
-      systemctl status kaiwudb
-      ```
+   ```sql
+   SELECT * FROM kwdb_internal.ranges;
+   ```
 
-## Upgrade for Source Code Compilation
+6. Back up the cluster. If the upgrade fails, restore the cluster from the backup.
 
-For KWDB instances installed by compiling from source code, you can upgrade by compiling the new version. This upgrade method is suitable for users with specific customization requirements who have compilation and deployment experience.
+## Performing the Upgrade
+
+### Upgrade Using the Installer
+
+During installer-based upgrades, if the node is not installed with KWDB, KWDB is still running, the version is wrong, or the deployment mode is incorrect, the upgrade is aborted and an error message is shown.
+
+#### Prerequisites
+
+- The new version of the installer (`.run`) has been obtained.
+- The target node already has KWDB installed.
+- The user data directory of the target node has been backed up.
+- The execution node (any node in the cluster) can SSH into the target node and has write permission in the target node's installation directory.
+- The user is `root` or a normal user with passwordless `sudo` configured.
+- For container deployment, if the user is not `root`, use `sudo usermod -aG docker $USER` to add the user to the `docker` group.
+
+#### CLI Mode
+
+1. Copy the new installer to the cluster node that performs the upgrade and grant it execute permission:
+
+   ```bash
+   chmod +x KaiwuDB-*.run
+   ```
+
+2. On the target node, stop KWDB:
+
+   ```bash
+   sudo systemctl stop kaiwudb
+   ```
+
+3. On the execution node, start the installer in CLI mode:
+
+   ```bash
+   ./KaiwuDB-*.run -c
+   # or
+   ./KaiwuDB-*.run --cli
+   ```
+
+4. In the main menu, enter `4` to select **Upgrade Nodes**.
+
+5. Set the number of nodes to upgrade to `1`.
+
+6. The installer generates an upgrade configuration file and opens an editor. Change `host` to the IP address of the target node, verify the rest of the settings, and save to start the upgrade automatically.
+
+   ```ini
+   [node1]
+   host=192.168.122.224
+   port=22
+   user=admin
+   passwd=*******
+   ```
+
+7. On the target node, modify the relevant configuration files according to the deployment mode.
+
+8. Reload system service settings and start KWDB:
+
+   ```bash
+   sudo systemctl daemon-reload
+   sudo systemctl start kaiwudb
+   ```
+
+9. Verify the node status:
+
+   ```bash
+   kw-status
+   ```
+
+10. Repeat steps 2 to 9 for the remaining nodes in the cluster.
+
+11. After all nodes are upgraded, verify that the data is intact. For multi-replica clusters, also query the shard status to confirm normal cluster operation.
+
+   ```sql
+   SELECT * FROM kwdb_internal.ranges;
+   ```
+
+#### Terminal Graphical Interaction Mode
+
+1. Copy the new installer to the cluster node that performs the upgrade and grant it execute permission.
+2. On the target node, stop KWDB.
+3. On the execution node, start the installer in terminal graphical interaction mode.
+4. In the main menu, select **Upgrade Nodes** and press Enter.
+5. In the upgrade settings menu, click **Set Upgrade Nodes**, enter the target node IP, port, username, and password, then click **Save**. Select **Start Upgrade** and press Enter.
+6. On the target node, modify the relevant configuration files according to the deployment mode.
+7. Reload system service settings and start KWDB.
+8. Verify the node status.
+
+## Upgrade from Source Code Compilation
+
+For KWDB instances installed by compiling from source code, you can upgrade by compiling the new version. This method is suitable for users with specific customization requirements and compilation/deployment experience.
 
 ### Prerequisites
 
-- Completed data and configuration backup
+- Backup of data and configuration files
 - Downloaded new version [source code](https://gitee.com/kwdb/kwdb)
 - [Compilation environment and dependencies](https://gitee.com/kwdb/kwdb#%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%92%8C%E8%BD%AF%E4%BB%B6%E4%BE%9D%E8%B5%96) meet KWDB requirements
 
@@ -256,118 +187,4 @@ For KWDB instances installed by compiling from source code, you can upgrade by c
 
 ## Upgrade for Container Image Deployment
 
-For KWDB deployed using Docker container images, upgrades are performed by updating the container image.
-
-This section covers two upgrade methods:
-
-- Upgrade using Docker Compose
-- Upgrade using Docker commands
-
-### Upgrade Using Docker Compose
-
-#### Prerequisites
-
-- Data and configuration files have been backed up.
-- The new version container image has been obtained.
-
-#### Steps
-
-1. Load the new container image:
-
-   ```bash
-   docker load < KaiwuDB.tar
-   ```
-
-2. Stop and remove existing containers:
-
-   ```bash
-   docker-compose down
-   ```
-
-3. Remove the old version image:
-
-   ```bash
-   docker rmi ${image_name}
-   ```
-
-4. Update the image version in `docker-compose.yml`.
-
-5. Start KWDB with the new version:
-
-   ```bash
-   docker-compose up -d
-   ```
-
-### Upgrade Using Docker Commands
-
-#### Prerequisites
-
-- Data and configuration files have been backed up.
-
-#### Steps
-
-1. Stop the KWDB container. The container name is the one specified by the `--name` parameter when running the container.
-
-   ```bash
-      docker stop <kwdb-container>
-   ```
-
-2. Remove the container:
-
-   ```bash
-      docker rm <kwdb-container>
-   ```
-
-3. Obtain the new version image:
-
-   - Pull from image repository:
-
-      ```bash
-         docker pull kwdb/kwdb:<new_version_number>
-      ```
-
-   - Import from local file:
-
-      ```bash
-         docker load < KaiwuDB.tar
-      ```
-
-4. Start the new version container. All parameters should remain consistent with the original container except for the image name.
-   - Insecure mode:
-
-      ```bash
-      docker run -d --privileged --name kwdb \
-            --ulimit memlock=-1 \
-            --ulimit nofile=$max_files \
-            -p $db_port:26257 \
-            -p $http_port:8080 \
-            -v /var/lib/kaiwudb:/kaiwudb/deploy/kwdb-container \
-            --ipc shareable \
-            -w /kaiwudb/bin \
-            <kwdb_image> \
-            ./kwbase start-single-node \
-            --insecure \
-            --listen-addr=0.0.0.0:26257 \
-            --http-addr=0.0.0.0:8080 \
-            --store=/kaiwudb/deploy/kwdb-container
-      ```
-
-   - Secure mode:
-
-     ```bash
-     docker run -d --privileged --name kwdb \
-         --ulimit memlock=-1 \
-         --ulimit nofile=$max_files \
-         -p $db_port:26257 \
-         -p $http_port:8080 \
-         -v /etc/kaiwudb/certs:<certs_dir> \
-         -v /var/lib/kaiwudb:/kaiwudb/deploy/kwdb-container \
-         --ipc shareable \
-         -w /kaiwudb/bin \
-         <kwdb_image> \
-         ./kwbase start-single-node \
-         --certs-dir=<certs_dir> \
-         --listen-addr=0.0.0.0:26257 \
-         --http-addr=0.0.0.0:8080 \
-         --store=/kaiwudb/deploy/kwdb-container
-     ```
+For KWDB deployed using Docker container images, upgrade by updating the container image.

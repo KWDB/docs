@@ -60,9 +60,9 @@ Avoid frequent `ALTER` statements during redistribution, because they may prolon
   - The master node can SSH into the target node to transfer the certificates.
   - The target node has write permission in the installation directory.
 
-#### Installer Scale-Out (Single-Replica) (Multi-Replica)
+#### Installer Scale-Out (Multi-Replica)
 
-##### CLI Mode (Single-Replica) (Multi-Replica)
+##### CLI Mode (Multi-Replica)
 
 1. Copy the KWDB installer to the cluster node where you will perform the scale-out and grant it execute permission:
 
@@ -207,7 +207,7 @@ Avoid frequent `ALTER` statements during redistribution, because they may prolon
    kw-status
    ```
 
-#### Command-Line Scale-Out (Single-Replica) (Multi-Replica)
+#### Command-Line Scale-Out (Multi-Replica)
 
 1. Log in to the node to be added.
 
@@ -303,9 +303,9 @@ KWDB single-replica clusters support both installer scale-out and command-line s
   - The master node can SSH into the target node to transfer the certificates.
   - The target node has write permission in the installation directory.
 
-#### Installer Scale-Out
+#### Installer Scale-Out (Single-Replica)
 
-##### CLI Mode
+##### CLI Mode (Single-Replica)
 
 1. Copy the KWDB installer to the cluster node where you will perform the scale-out and grant it execute permission:
 
@@ -450,7 +450,7 @@ KWDB single-replica clusters support both installer scale-out and command-line s
    kw-status
    ```
 
-#### Command-Line Scale-Out
+#### Command-Line Scale-Out (Single-Replica)
 
 1. Log in to the node to be added.
 
