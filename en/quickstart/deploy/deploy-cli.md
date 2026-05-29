@@ -7,7 +7,7 @@ id: quickstart-cli
 
 ## Prerequisites
 
-- KWDB source code is compiled and installed according to [KWDB Compilation and Installation Instructions](https://gitee.com/kwdb/kwdb/blob/master/README.en.md#compilation-and-installation)..
+- KaiwuDB source code is compiled and installed according to the [KaiwuDB Compilation and Installation Instructions](https://gitee.com/kwdb/kwdb#%E7%BC%96%E8%AF%91%E5%92%8C%E5%AE%89%E8%A3%85).
 - The hardware configuration, operating system, software dependencies, and ports of the node to be deployed meet the [installation deployment requirements](../prepare.md).
 - Installation user is `root` or a regular user with `sudo` privileges.
 
@@ -37,12 +37,12 @@ The kwbase CLI deployment method described in this section **only applies to bar
 
         ```bash
         # Create database certificate authority and key
-        ./kwbase cert create-ca --certs-dir=<certs_dir> --ca-key=<certs_dir>/ca.key && \
+        ./kwbase cert create-ca --certs-dir=<certs_dir> --ca-key=<certs_dir>/ca.key
 
-        # Create client certificate and key for database installation user (replace username with actual username)
-        ./kwbase cert create-client <username> --certs-dir=<certs_dir> --ca-key=<certs_dir>/ca.key && \
+        # Create client certificate and key for the root user or database installation user
+        ./kwbase cert create-client <username> --certs-dir=<certs_dir> --ca-key=<certs_dir>/ca.key
 
-        # Create node certificate and key
+        # Create node server certificate and key
         ./kwbase cert create-node 127.0.0.1 localhost 0.0.0.0 --certs-dir=<certs_dir> --ca-key=<certs_dir>/ca.key
         ```
 
@@ -81,7 +81,7 @@ The kwbase CLI deployment method described in this section **only applies to bar
         ./kwbase node status --certs-dir=<certs_dir> --host=<address_of_any_alive_node>
         ```
 
-5. (Optional) Create a database user and grant administrator privileges to the user. If this step is skipped, the system will use database deployment user by default, and no password is required to access the database.
+5. (Optional) Create a database user and grant administrator privileges to the user. If this step is skipped, the system will default to using the user from the source code compilation installation, and no password is required to access the database.
 
     - Insecure mode (without password):
 

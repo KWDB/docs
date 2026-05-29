@@ -1,106 +1,57 @@
 ---
-title: 3.1.0 Release Notes
-id: 3.1.0-release-notes
+title: 3.2.0 Release Notes
+id: 3.2.0-release-notes
 ---
 
-# KWDB 3.1.0 Release Notes
+# KWDB 3.2.0 Release Notes
 
-KWDB is a distributed, multi-model database, designed for AIoT scenarios. It seamlessly integrates time-series and relational databases within the same instance, enabling efficient multi-model data processing. With high-performance time-series capabilities, it supports connections for tens of millions of devices, real-time insertion of millions of records within seconds, and query responses in just a few seconds for hundreds of millions of records. Built for stability, security, high availability, and easy maintenance, KWDB is ideal for industrial IoT, digital energy, connected vehicles, and smart industries, providing a unified platform for data storage, management, and analysis.
+KWDB is a distributed, multi-model database designed for AIoT scenarios. It supports creating both time-series and relational databases within the same instance and enables unified multi-model data processing. With high-performance time-series capabilities, it supports connections for tens of millions of devices, real-time insertion of millions of records within seconds, and query responses in just a few seconds for hundreds of millions of records. Built for stability, security, high availability, and easy maintenance, KWDB is ideal for industrial IoT, digital energy, connected vehicles, and smart industries, providing a unified platform for data storage, management, and analysis.
 
-KWDB 3.1.0 retains all existing features while delivering comprehensive optimizations and enhancements across database object management, data ingestion and querying, operations, stability, and performance.
+KWDB 3.2.0 builds on existing features by introducing several new capabilities in data management and querying and operations monitoring, along with important changes to installation, deployment, and development tools.
 
 ## Version Details
 
 | Version | Release Date |
-|:--------|:-------------|
-| 3.1.0   | 2026.02.03   |
+|---------|------|
+| 3.2.0   | 2026.05.28 |
 
 ## New Features
 
-### Database Object Management
+### Data Management and Querying
 
-#### Time-Series Database and Table Creation Enhancements
+#### Data Ingestion and Deletion
 
-- Supports `IF NOT EXISTS` clause when creating time-series databases and tables to prevent duplicate creation errors
-- Supports custom time partition intervals when creating time-series databases (default: 10 days), with tables automatically inheriting the configuration from their parent database
+- The DELETE statement now supports filtering by partial primary tags: you can specify partial primary tags alone or in combination with a timestamp as filter conditions for deletion.
 
-#### Stored Procedure Optimization
+#### Data Storage and Compression
 
-- Supports setting custom variables within stored procedures
-- Supports `PREPARE`, `EXECUTE`, and `DEALLOCATE` statements within stored procedures
+- **Custom compression**:
+  - Supports setting the encoding method, compression algorithm, and compression level per column when creating time-series tables.
+  - Supports modifying the encoding method, compression algorithm, and compression level of existing columns.
+  - Supports configuring a global default compression algorithm and level through cluster parameters.
 
-### Data Ingestion and Processing
+#### Query Enhancements
 
-#### Data Deduplication Strategy
+- Time-series grouped window functions now support grouping and aggregation by any column or combination of columns in a table.
+- **Value fill queries**: Time-series data supports returning fill values when no data exists at a specified time point, using one of six strategies: exact, previous value, next value, nearest value, constant, or linear interpolation.
+- **Extended last/first aggregate functions**: The time-series and relational `last()`, `lastts()`, `last_row()`, `last_row_ts()`, `first()`, `firstts()`, `first_row()`, and `first_row_ts()` functions now support a two-argument form for explicitly specifying the sort timestamp column.
 
-- Supports configuring data deduplication strategy to `merge`, which deduplicates and consolidates data with identical timestamps for the same device—ideal for scenarios with duplicate writes from data sources or multi-path data collection
+#### Data Import and Export
 
-#### Time-Series Data Performance Optimization
-
-- Introduces a dedicated storage engine for Raft log, improving read/write performance on mechanical hard drives
-
-#### Time-Series Data Compression Management
-
-- New `ts.compress.last_segment.enabled` cluster parameter controls whether compression is enabled for the last segment (most recent data segment)
-- New `ts.compress.stage` cluster parameter controls time-series data compression levels, supporting no compression, single-level compression, and dual-level compression
-- New `SHOW DISTRIBUTION` statement views storage space usage and compression ratios for specified time-series databases or tables
-
-### Data Querying and Analysis
-
-#### Query Performance Optimization
-
-- New `ts.last_cache_size.max_limit` cluster parameter sets memory limit for time-series `last_row()` cache, improving response speed for `last()` and `last_row()` queries
-
-#### Enhanced Connection Capacity
-
-- Maximum concurrent connections increases to 50,000
-
-#### SQL Function Enhancements
-
-- New `to_timestamp()` function converts timestamp formats to standard time formats
-
-### Operations and Management
-
-#### Cluster Operations
-
-- Supports multi-replica cluster scaling operations via deployment scripts
-- Supports manually triggering reorganization operations via the `VACUUM TS DATABASES` SQL statement to immediately free storage space or optimize query performance
-
-#### Job Management
-
-- `SHOW JOBS` statement now displays information related to stream computing jobs
+- **Export logic optimization**: Before exporting, the system checks whether the target folder is empty. If it is not empty, an error is returned to prevent overwriting existing data.
+- **New control parameters**: New `thread_concurrency` and `limit_memory` parameters for configuring the number of concurrent export threads and limiting the amount of data imported or exported.
 
 ## Important Changes
 
 ### Installation and Deployment
 
-#### Deployment Script Optimization
-
-- **Deployment configuration confirmation mechanism**: Configuration information from `deploy.cfg` is summarized and displayed in the terminal; installation proceeds only after user confirmation, otherwise installation is canceled
-- **New convenient operation scripts**: `kw-status.sh` and `kw-sql.sh` scripts are automatically generated during installation for viewing cluster status and connecting to the database
-- **Uninstallation optimization**: Database uninstallation now supports certificate retention
-
-#### Quick Deployment Script
-
-- Added `quick_deploy.sh` script that automates the complete deployment process, including system detection, parameter configuration, installation package download, and deployment
-
-### Development Tools
-
-#### KaiwuDB Developer Center
-
-- Supports BLOB and CLOB large object data types
-
-### Ecosystem Compatibility
-
-#### KaiwuDB JDBC Driver
-
-- Upgraded to secure version, eliminating known security vulnerabilities; supports additional data types
+- **Installer redesign**: The installer is now packaged as a `.run` file and offers both a command-line interactive menu and a dialog interactive menu installation mode. Different startup options launch the corresponding installation workflow.
 
 ## Upgrade Notes
 
-- **Multi-replica clusters**: offline upgrade from 3.0.0 to 3.1.0
-- **Single-replica clusters**: offline upgrade from 3.0.0 to 3.1.0
-- **Standalone deployments**: offline upgrade from 3.0.0 to 3.1.0
-- **KWDB 2.x**: data export and import
+- **Multi-replica clusters**: Supports offline upgrade from KWDB 3.0.0 and 3.1.0 to 3.2.0.
+- **Single-replica clusters**: Supports offline upgrade from KWDB 3.0.0 and 3.1.0 to 3.2.0.
+- **Standalone deployments**: Supports offline upgrade from KWDB 3.0.0 and 3.1.0 to 3.2.0.
+- **KWDB 2.x**: Supports upgrade to 3.2.0 via data export and import.
 
 For instructions, see [Database Upgrade](../db-operation/db-upgrade.md), [Data Export](../db-administration/import-export-data/export-data.md), and [Data Import](../db-administration/import-export-data/import-data.md).

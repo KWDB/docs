@@ -1,21 +1,24 @@
-# Cluster Configuration
+---
+title: Cluster Configuration
+id: cluster-settings-config
+---
 
 # Cluster Configuration
 
-After deploying KWDB, you can customize its behavior by modifying **startup flags**, **CPU resource usage** or **cluster parameters**:
+After deploying KWDB, you can customize its behavior by modifying **startup flags**, **CPU resource usage**, or **real-time cluster parameters**:
 
-| **Parameter Type**       | **Scope**                          | **When Changes Take Effect**                           | **How to Configure**                                          |
-| :---------------------- | :--------------------------------- | :------------------------------------------ | :---------------------------------------------------------------- |
-| **Startup flags**  | Individual node | At node startup only (requires service restart)| • Bare-metal script deployment: Edit `/etc/kaiwudb/script/kaiwudb_env`<br>• Container script deployment: Edit `/etc/kaiwudb/script/docker-compose.yml`<br>• Other deployment methods: Pass flags with `kwbase start` command |
-| **CPU resource usage** | Individual node | Immediately (no restart required)| • Bare-metal script deployment: Modify the `CPUQuota` parameter in `/etc/systemd/system/kaiwudb.service`<br>• Container script deployment: Use the `docker update` command or modify the `cpus` parameter in `docker-compose.yml` |
-| **Cluster parameters** | Entire cluster (all nodes)| Immediately (no restart required), automatically synchronized to all nodes| Execute SQL statements (stored in system tables) |
+|<div style="width: 70px;">**Parameter Type**</div> | **Scope** | **When Changes Take Effect** | **How to Configure** |
+| :--------------- | :---------------------------------------------- | :------------------------------------------ | :----------------------------------------------------------- |
+| **Startup flags** | Individual node; affects the database service on that node. | At node startup only (requires service restart). | - Installer deployment: Modify the `kaiwudb_env` file (bare metal) or `docker-compose.yml` file (container); both files are located in `/etc/kaiwudb/script/`<br>- Other deployment methods: Pass flags using the `kwbase start` command |
+| **CPU resource usage** | Individual node; affects the CPU resource usage limit for that node. | Immediately (no restart required). | - Bare-metal installer deployment: Modify the `CPUQuota` parameter in `/etc/systemd/system/kaiwudb.service`<br>- Container installer deployment: Use the `docker update` command or modify the `cpus` parameter in `docker-compose.yml` |
+| **Real-time cluster parameters** | Entire cluster (all nodes). | Immediately (no restart required); automatically synchronized to all nodes. | Modify through SQL statements; changes are persisted to system tables. |
 
 
 ## Startup Flags
 
-### Startup Flag Overview
+### Parameter Descriptions
 
-Startup flags control how individual KWDB nodes operate. These include settings for general operation, networking, security, logging, and more.
+Cluster startup flags include general, networking, security, logging, and other parameters.
 
 ::: warning Note
 
@@ -36,8 +39,8 @@ Startup flags control how individual KWDB nodes operate. These include settings 
 
 #### Networking Flags
 
-| Flag            | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Flag            | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `--advertise-addr`     | The IP address/hostname and port used by the node for communication with other nodes. If a hostname is used, it must resolve correctly. If an IP address is used, it must be accessible. For IPv6, use formats like `[::1]` or `[fe80::f6f2:::]`. <br>This flag's effect depends on the combination with the `--listen-addr` flag. For example, if the port differs from `--listen-addr`, port forwarding is required. <br>**Default:** Value of `--listen-addr`. If `--listen-addr` is not specified, defaults to canonical hostname (second column in `/etc/hosts`) with port `26257`.|
 | `--brpc-addr`            | The brpc communication address between time-series engines. Format: `<host>:<port>` or `:<port>`: <br>- Must include a port number; otherwise, the system will report an error: `failed to start server: --brpc-addr's port not specified`. <br>- The IP address can be omitted. If not specified, the system will use the IP from `--advertise-addr` or `--listen-addr` in that order. <br>**Note**<br>Both `--advertise-addr` and `--brpc-addr` are inter-node communication addresses, so network connectivity between nodes must be ensured. It is recommended to use the format `--brpc-addr=:<port>`, allowing the system to automatically obtain the IP address.|
 | `--listen-addr`        | The IP address/hostname and port for receiving connections from nodes and clients. For IPv6, use formats like `[::1]` or `[fe80::f6f2:::]`. <br> This flag's effect depends on the combination with `--advertise-addr`. <br> **Default**: Listens on all IPs on port `26257`. If `--advertise-addr` is not specified, the canonical hostname is used for communication with other nodes.                                                                                                                                                                                                                                            |
@@ -86,9 +89,8 @@ By default, the system writes all information to log files and does not output a
 
 Startup flags support the following configuration methods:
 
-- Bare-metal script deployment: Modify the `kaiwudb_env` file
-- Container script deployment: Modify the `docker-compose.yml` file
-- Other deployment methods: Adjust using the `kwbase start` command
+- Installer deployment: Modify the `kaiwudb_env` file (bare metal) or `docker-compose.yml` file (container).
+- Other deployment methods: Adjust using the `kwbase start` command.
 
 If startup flags are not configured, KWDB starts with default values. Configured startup flags take precedence at startup.
 
@@ -98,9 +100,9 @@ This section describes how to modify startup flag configurations through the `ka
 Startup flags are node-level configurations. To apply changes cluster-wide, you must configure each node separately.
 :::
 
-#### Bare-metal Script Deployment
+#### Bare-Metal Installer Deployment
 
-1. Log in to the target node and stop the KWDB service:
+1. Stop the KWDB service.
 
     ```shell
     systemctl stop kaiwudb
@@ -128,7 +130,7 @@ Startup flags are node-level configurations. To apply changes cluster-wide, you 
     systemctl restart kaiwudb
     ```
 
-#### Container Script Deployment
+#### Container Installer Deployment
 
 ::: warning Note
 
@@ -162,11 +164,11 @@ Do not remove the default startup command flags, otherwise the modified cluster 
     systemctl start kaiwudb
     ```
 
-## CPU Resource Usage Configuration
+## CPU Resource Usage
 
 KWDB supports real-time modification of CPU resource usage. CPU resource usage is a node-level configuration. To modify the configuration for the entire cluster, you need to log in to each node and complete the corresponding configuration.
 
-### Bare-metal Script Deployment
+### Bare-Metal Installer Deployment
 
 For bare-metal deployments, calculate CPU usage as: CPU usage rate × number of CPU cores × 100%. For example, if the server where the node is located has 6 CPU cores and you plan to adjust the CPU usage rate to 0.3, then the corresponding `CPUQuota` value should be `0.3 x 6 x 100% = 180%`.
 
@@ -193,19 +195,19 @@ For bare-metal deployments, calculate CPU usage as: CPU usage rate × number of 
 4. Verify whether the new CPU resource usage has taken effect.
 
     ```shell
-    systemctl show kaiwudb | grep CPUQuota
+    systemctl show KWDB | grep CPUQuota
     ```
 
-### Container Script Deployment
+### Container Installer Deployment
 
-After deploying KWDB using the container script method, you can use the `docker update` command or modify the `docker-compose.yml` file to configure KWDB's CPU resource usage (`cpus`).
+After deploying KWDB using the container installer method, you can use the `docker update` command or modify the `docker-compose.yml` file to configure KWDB's CPU resource usage (`cpus`).
 
 The formula is: CPU usage rate × number of CPU cores. For example, if the server where the node is located has 6 CPU cores and you plan to adjust the CPU usage rate to 0.3, then the corresponding `cpus` value should be `0.3 x 6 = 1.8`.
 
 - Use the `docker update` command:
 
     ```shell
-    docker update --cpus <value> kaiwudb-container
+    docker update --cpus <value> kwdb-container
     ```
 
 - Modify the `docker-compose.yml` file:
@@ -239,7 +241,7 @@ The formula is: CPU usage rate × number of CPU cores. For example, if the serve
         systemctl start kaiwudb
         ```
 
-## Cluster Parameters
+## Real-Time Parameters
 
 KWDB supports modifying cluster settings through the `SET CLUSTER SETTING` statement. Changes take effect immediately and are automatically synchronized to all nodes in the cluster.
 
@@ -252,14 +254,14 @@ KWDB supports modifying cluster settings through the `SET CLUSTER SETTING` state
 
 The table below lists all cluster parameters supported by KWDB along with their default values. You can inspect current cluster configurations using the `SHOW CLUSTER SETTINGS` or `SHOW ALL CLUSTER SETTINGS` statements.
 
-| Parameter                          | Description                                                                                                                                                                                                                                                                                                                                                                                                             | Default  | Type     |
-| ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | -------- |
+| Parameter                          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | Default  | Type     |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | -------- |
 | `audit.enabled`                     | Audit switch. | `FALSE`  | bool     |
-| `audit.log.enabled`                 | Audit log switch. | `TRUE`   | bool     |
-| `capacity.stats.period` | Period for KWDB to collect storage capacity statistics. The default value is 60, meaning storage capacity data is collected every 60 seconds. The supported range is [1, 1000]. Setting a higher value helps reduce system overhead, while a lower value helps obtain more real-time data. | `60` | int |
-| `cloudstorage.gs.default.key`                           |  JSON key for Google Cloud Storage operations.                                                                                                                                                                                                                                                                                                                                                             | -         | string   |
-| `cloudstorage.http.custom_ca`                           | Custom root CA to verify certificates when interacting with HTTPS storage, appended to the system's default CAs.                                                                                                                                                                                                                                                                                                                                                          | -         | string   |
-| `cloudstorage.timeout`                                  | Timeout for import/export storage operations.                                                                                                                                                                                                                                                                                                 | `10m0s`     | duration |
+| `audit.log.enabled`                 | Audit log file recording switch. | `TRUE`   | bool     |
+| `capacity.stats.period` | Period for KWDB to collect storage capacity statistics. The default value is `12`, meaning storage capacity data is collected every 120 seconds. The supported range is [1, 1000]. Setting a higher value helps reduce system overhead, while a lower value helps obtain more real-time data. | `12` | int |
+| `cloudstorage.gs.default.key`                           |  JSON key for Google Cloud Storage operations.                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | -         | string   |
+| `cloudstorage.http.custom_ca`                           | Custom root CA to verify certificates when interacting with HTTPS storage, appended to the system's default CAs.                                                                                                                                                                                                                                                                                                                                                                          | -         | string   |
+| `cloudstorage.timeout`                                  | Timeout for import/export storage operations.                                                                                                                                                                                                                                                                                                                                                 | `10m0s`     | duration |
 | `cluster.organization`                                  | Organization name.                                                                                                                                                                                                                                                                                                                                                          | -         | string   |
 | `cluster.preserve_downgrade_option`                     | Before reset, the system prohibits automatic or manual cluster upgrades from the specified version.                                                                                                                                                                                                                                                                                                                 | -         | string   |
 | `default_transaction_read_only.enabled`                 | Read-only mode:<br>- `false`: Allow read and write operations, including DDL, DCL, and other cluster settings. <br>- `true`: Read-only mode; no write operations allowed, including DDL, DCL, and other cluster settings. | `FALSE`     | bool     |
@@ -296,7 +298,7 @@ The table below lists all cluster parameters supported by KWDB along with their 
 | `server.auth_log.sql_sessions.enabled`                  | When set to `TRUE`, the system logs SQL session login and disconnection events, which may affect performance on heavily loaded nodes. | `FALSE`     | bool     |
 | `server.clock.forward_jump_check_enabled`               | When set to `TRUE`, clock jumps greater than `max_offset/2` will cause an emergency. | `FALSE`     | bool     |
 | `server.clock.persist_upper_bound_interval`             | Interval for persisting the clock wall upper bound. The clock will not generate wall times greater than the persisted timestamp during this period. If the system sees a wall time greater than this value, it will trigger an emergency. KWDB waits for the wall time to catch up to the persisted timestamp on startup. This ensures monotonic wall time on server restart. Not setting this value or setting it to `0` disables this feature. | `0s`        | duration |
-| `server.consistency_check.max_rate`                     | Rate limit for consistency checks (in bytes per second). Used together with `server.consistency_check.interval` to control the frequency of consistency checks. This may affect performance. | `8.0MiB`    | byte size |
+| `server.consistency_check.max_rate`                     | Rate limit for consistency checks (in bytes per second). Used together with `server.consistency_check.interval` to control the frequency of consistency checks. This may affect performance. | `8.0MiB`    | byte size      |
 | `server.eventlog.ttl`                                   | If nonzero, event log entries older than this duration are deleted every 10 minutes. The value should not be set below 24 hours. | `2160h0m0s` | duration |
 | `server.host_based_authentication.configuration`        | Host-based authentication configuration. | -         | string   |
 | `server.rangelog.ttl`                                   | If nonzero, range log entries older than this duration are deleted every 10 minutes. The value should not be set below 24 hours. | `720h0m0s`  | duration |
@@ -318,7 +320,7 @@ The table below lists all cluster parameters supported by KWDB along with their 
 | `sql.defaults.results_buffer.size`                      | Server-side buffer size for accumulating statement results or batch results before sending to the client. Can be overridden by specifying the `results_buffer_size` parameter for a connection. Auto-retries only occur if results have not yet been delivered to the client. Reducing the buffer size may cause clients to receive more retriable errors. Increasing the buffer size may increase client wait time before receiving the first result row. Updates only affect new connections. Setting to `0` disables any buffering. | `16 KiB`     | byte size     |
 | `sql.defaults.multimodel.enabled` | Configure multi-model query optimization. When enabled, the system recognizes multi-model queries and generates corresponding query plans. | `true` | bool |
 | `sql.defaults.serial_normalization`                     | Default handling of SERIAL data types in table definitions `[rowid = 0,virtual_sequence = 1,sql_sequence = 2]`. | `rowid`     | enum      |
-| `sql.distsql.max_running_flows`                         | Maximum number of concurrent flows that can run on a node. | `500`       | int     |
+| `sql.distsql.max_running_flows`                         | Maximum number of concurrent flows that can run on a node. | `500`       | bool     |
 | `sql.distsql.temp_storage.joins`                        | When set to `TRUE`, disk will be used in distributed SQL sorts. <br> **Note** <br> Disabling this setting may affect memory usage and performance. | `TRUE`      | bool     |
 | `sql.distsql.temp_storage.sorts`                        | When set to `TRUE`, disk will be used in distributed SQL sorts. <br> **Note** <br> Disabling this setting may affect memory usage and performance. | `TRUE`      | bool     |
 | `sql.log.slow_query.latency_threshold`                  | If nonzero, when SQL statement latency exceeds the specified threshold, the system will log the statement in each node's secondary logger. | `0s`        | duration      |
@@ -326,7 +328,7 @@ The table below lists all cluster parameters supported by KWDB along with their 
 | `sql.metrics.statement_details.enabled`                 | Collect query statistics for each statement. | `TRUE`      | bool     |
 | `sql.metrics.statement_details.plan_collection.enabled` | Periodically save the logical plan for each fingerprint. | `TRUE`      | bool |
 | `sql.metrics.statement_details.plan_collection.period`  | Time interval between collecting new logical execution plans. | `5m0s`      | duration |
-| `sql.metrics.statement_details.threshold`               | Minimum execution time required to trigger statistics collection. | `0s`        | duration     |
+| `sql.metrics.statement_details.threshold`               | Minimum execution time required to trigger statistics collection. | `0s`        | bool     |
 | `sql.metrics.transaction_details.enabled`               | Collect transaction statistics for each application. | `TRUE`      | bool     |
 | `sql.notices.enabled`                                   | Allow sending notices in the server/client protocol. | `TRUE`      | bool     |
 | `sql.pg_encode_short_circuit.enabled`                   | Controls whether PG protocol encoding is offloaded to the time-series engine. When enabled, query result encoding is performed by the time-series engine to reduce encoding serialization overhead on the main engine for large result sets and improve query performance. Supported values: <br>- `true`: enable the short-circuit path, with PG protocol encoding performed by the time-series engine. <br>- `false`: disable the short-circuit path and fall back to standard encoding by the main engine. | `true` | bool |
@@ -335,8 +337,8 @@ The table below lists all cluster parameters supported by KWDB along with their 
 | `sql.stats.automatic_collection.min_stale_rows`         | Minimum number of stale rows per table that triggers statistics refresh. | `500`       | int      |
 | `sql.stats.histogram_collection.enabled`                | Histogram collection mode. | `TRUE`      | bool     |
 | `sql.stats.post_events.enabled`                         | When enabled, an event record is generated each time a statistics job is created. | `FALSE`     | bool     |
-| `sql.stats.ts_automatic_collection.enabled`             | Automatic time-series data statistics collection mode. | `false`     | bool     |
-| `sql.temp_object_cleaner.cleanup_interval`              | Frequency for cleaning up orphaned temporary objects. | `30m0s`      | duration     |
+| `sql.stats.ts_automatic_collection.enabled`             | Automatic time-series data statistics collection mode. | `TRUE`     | bool     |
+| `sql.temp_object_cleaner.cleanup_interval`              | Frequency for cleaning up orphaned temporary objects. | `30m0s`      | bool     |
 | `sql.trace.log_statement_execute`                       | When set to `TRUE`, enable logging of statement execution. | `FALSE`     | bool      |
 | `sql.trace.session_eventlog.enabled`                    | When set to `TRUE`, enable session tracing. This may significantly affect performance. | `FALSE`     | bool     |
 | `sql.trace.txn.enable_threshold`                        | When a transaction's execution time exceeds the specified duration, the system will trace the transaction. Setting to `0` disables this feature. | `0s`        | duration     |
