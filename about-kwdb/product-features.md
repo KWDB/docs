@@ -73,7 +73,7 @@ kwdb-tsbs 是 KWDB 基于 Timescale TSBS 开发的专业时序数据库性能基
 
 KWDB 支持使用多种主流编程语言连接数据库，如 C/C++、JAVA、C#、Python 等，便于开发者根据项目需求选择合适的编程语言，降低开发成本并提高开发效率。有关详细信息，参见[应用开发](../development/overview.md)。
 
-KWDB 兼容多种主流操作系统，包括 Ubuntu、CentOS、麒麟、统信等，确保在不同环境下稳定运行 KWDB，满足不同用户的部署需求。有关支持的操作系统，参见[操作系统及架构](./product-metrics.md#操作系统及架构)。
+KWDB 兼容多种主流操作系统，包括 Ubuntu、CentOS、统信等，确保在不同环境下稳定运行 KWDB，满足不同用户的部署需求。有关支持的操作系统，参见[操作系统及架构](./product-metrics.md#操作系统及架构)。
 
 #### 第三方生态工具兼容
 
