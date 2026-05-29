@@ -1,7 +1,5 @@
 # Cluster Configuration
 
-# Cluster Configuration
-
 After deploying KWDB, you can customize its behavior by modifying **startup flags**, **CPU resource usage** or **cluster parameters**:
 
 | **Parameter Type**       | **Scope**                          | **When Changes Take Effect**                           | **How to Configure**                                          |

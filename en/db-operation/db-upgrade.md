@@ -187,4 +187,114 @@ For KWDB instances installed by compiling from source code, you can upgrade by c
 
 ## Upgrade for Container Image Deployment
 
-For KWDB deployed using Docker container images, upgrade by updating the container image.
+For KWDB instances deployed using Docker container images, you can upgrade by updating the container image. This includes both Docker Compose upgrade and Docker Run upgrade.
+
+### Docker Compose Upgrade
+
+#### Prerequisites
+
+- Back up data and configuration files.
+- Obtain the new container image.
+
+#### Steps
+
+1. Load the new container image:
+
+   ```bash
+   docker load < KaiwuDB.tar
+   ```
+
+2. Stop and remove the existing container:
+
+   ```bash
+   docker-compose down
+   ```
+
+3. Delete the old image:
+
+   ```bash
+   docker rmi ${image_name}
+   ```
+
+4. Update `docker-compose.yml` and change the image version.
+
+5. Start the new KWDB version:
+
+   ```bash
+   docker-compose up -d
+   ```
+
+### Docker Run Upgrade
+
+#### Prerequisites
+
+- Back up data and configuration files.
+- Obtain the new container image.
+
+#### Steps
+
+1. Stop the KWDB container. The container name is the one specified with the `--name` parameter when the container was started.
+
+   ```bash
+   docker stop <kwdb-container>
+   ```
+
+2. Remove the container:
+
+   ```bash
+   docker rm <kwdb-container>
+   ```
+
+3. Obtain the new image.
+
+   - Pull from the image repository:
+
+     ```bash
+     docker pull kwdb/kwdb:<new-version>
+     ```
+
+   - Import from a local file:
+
+     ```bash
+     docker load < KaiwuDB.tar
+     ```
+
+4. Start the new container. Except for the image name, all parameters should remain the same as the original container.
+
+   - In insecure mode:
+
+     ```bash
+     docker run -d --privileged --name kwdb \
+         --ulimit memlock=-1 \
+         --ulimit nofile=$max_files \
+         -p $db_port:26257 \
+         -p $http_port:8080 \
+         -v /var/lib/kaiwudb:/kaiwudb/deploy/kwdb-container \
+         --ipc shareable \
+         -w /kaiwudb/bin \
+         <kwdb_image> \
+         ./kwbase start-single-node \
+         --insecure \
+         --listen-addr=0.0.0.0:26257 \
+         --http-addr=0.0.0.0:8080 \
+         --store=/kaiwudb/deploy/kwdb-container
+     ```
+
+   - In secure mode:
+
+     ```bash
+     docker run -d --privileged --name kwdb \
+         --ulimit memlock=-1 \
+         --ulimit nofile=$max_files \
+         -p $db_port:26257 \
+         -p $http_port:8080 \
+         -v /etc/kaiwudb/certs:<certs_dir> \
+         -v /var/lib/kaiwudb:/kaiwudb/deploy/kwdb-container \
+         --ipc shareable \
+         -w /kaiwudb/bin <kwdb_image> \
+         ./kwbase start-single-node \
+         --certs-dir=<certs_dir> \
+         --listen-addr=0.0.0.0:26257 \
+         --http-addr=0.0.0.0:8080 \
+         --store=/kaiwudb/deploy/kwdb-container
+     ```
