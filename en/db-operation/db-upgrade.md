@@ -13,12 +13,12 @@ This section describes how to upgrade KWDB. Prepare the upgrade according to you
 
 | Deployment Topology | Current Version | Target Version | Upgrade Method |
 |--------------------|----------------|----------------|----------------|
-| Standalone deployment | 3.0.0, 3.1.0 | 3.2.0 | Script or CLI deployment: installer<br>Container image deployment: container image upgrade |
-|                      | 1.x, 2.x | 3.2.0 | Import/export |
-| Multi-replica cluster | 3.0.0, 3.1.0 | 3.2.0 | Script or CLI deployment: installer<br>Container image deployment: container image upgrade |
-|                      | 1.x, 2.x | 3.2.0 | Import/export |
-| Single-replica cluster | 3.0.0, 3.1.0 | 3.2.0 | Script or CLI deployment: installer<br>Container image deployment: container image upgrade |
-|                       | 1.x, 2.x | 3.2.0 | Import/export |
+| Standalone deployment | 3.0.0,  3.1.0, 3.2.0 | 3.2.1 | Script or CLI deployment: installer<br>Container image deployment: container image upgrade |
+|                      |  2.x | 3.2.1 | Import/export |
+| Multi-replica cluster | 3.0.0, 3.1.0, 3.2.0 | 3.2.1 | Script or CLI deployment: installer<br>Container image deployment: container image upgrade |
+|                      |  2.x | 3.2.1 | Import/export |
+| Single-replica cluster | 3.0.0, 3.1.0, 3.2.0 | 3.2.1 | Script or CLI deployment: installer<br>Container image deployment: container image upgrade |
+|                       |  2.x | 3.2.1 | Import/export |
 
 :::warning Note
 - When upgrading from 3.0.0 to 3.2.0, if you want to use the time-series raft log storage engine added in 3.1.0 and later, deploy a new cluster first and then import historical data.
