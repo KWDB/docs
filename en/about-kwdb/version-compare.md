@@ -29,11 +29,11 @@ KaiwuDB is available in two editions: the Enterprise Edition (KaiwuDB) and the O
     <tr><td colspan="2">Relational Engine</td><td>✅</td><td>✅</td></tr>
     <tr><td colspan="2">AI Predictive Analytics Engine</td><td>✅</td><td>—</td></tr>
     <tr>
-      <td rowspan="6">Flexible Deployment</td>
+      <td rowspan="7">Flexible Deployment</td>
       <td colspan="2"><a href="../quickstart/overview.md">Standalone Deployment</a></td><td>✅</td><td>✅</td>
     </tr>
     <tr><td colspan="2"><a href="../quickstart/overview.md">Container Deployment</a></td><td>✅</td><td>✅</td></tr>
-    <tr><td rowspan="2"><a href="../deployment/overview.md">Cluster Deployment</a></td><td>Single Replica</td><td>✅</td><td>✅</td></tr>
+    <tr><td rowspan="3"><a href="../deployment/overview.md">Cluster Deployment</a></td><td>Single Replica</td><td>✅</td><td>✅</td></tr></a></td><td>Dual Replica</td><td>✅</td><td>—</td></tr>
     <tr><td>Three or More Replicas</td><td>✅</td><td>✅</td></tr>
     <tr><td rowspan="2">Primary-Standby Deployment</td><td>Standalone Primary-Standby</td><td>✅</td><td>—</td></tr>
     <tr><td>Cluster Primary-Standby</td><td>✅</td><td>—</td></tr>
