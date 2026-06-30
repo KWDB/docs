@@ -76,7 +76,7 @@ During installation, the program performs real-time parameter validation. If a c
         systemctl start kaiwudb
         ```
 
-    ![](../../static/quickstart/gui-dialog-start.png)
+    ![](../../static/quickstart//gui-dialog-start.png)
 
 9. View the service or node status:
 
