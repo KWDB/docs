@@ -195,7 +195,13 @@ id: installer-cli
     系统重启后，如果当前节点与其他节点时钟相差大于 500 ms，可能导致 KWDB 自启动失败。需先完成时钟同步，再手动启动 KWDB。
     :::
 
-13. 执行 `kw-sql` 使用数据库部署用户登录数据库或者通过以下任一方式连接和管理 KWDB:
+13. 具备快速部署脚本 `quick-deploy.sh kaiwudb` ，当安装版本在3.2.0及以上时，自动下载`.run`类型安装包并执行单机模式快速部署。 
+
+    :::warning 说明
+    快速部署脚本仅支持**tar.gz**类型安装包。
+    :::
+
+14. 执行 `kw-sql` 使用数据库部署用户登录数据库或者通过以下任一方式连接和管理 KWDB:
     - [kwbase CLI](../../quickstart/access/access-cli.md)
     - [KWDB 支持的连接器](../../development/overview.md)
     - [KaiwuDB 开发者中心](../../kaiwudb-tools/kaiwudb-developer-center/overview.md)

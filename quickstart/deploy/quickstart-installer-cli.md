@@ -158,7 +158,13 @@ id: quickstart-installer-cli
     systemctl enable kaiwudb
     ```
 
-12. 执行 `kw-sql` 使用数据库部署用户登录数据库或者通过以下任一方式连接和管理 KWDB:
+12. 具备快速部署脚本 `quick-deploy.sh kaiwudb` ，当安装版本在3.2.0及以上时，自动下载`.run`类型安装包并执行单机模式快速部署。 
+
+    :::warning 说明
+    快速部署脚本仅支持**tar.gz**类型安装包。
+    :::
+
+13. 执行 `kw-sql` 使用数据库部署用户登录数据库或者通过以下任一方式连接和管理 KWDB:
     - [kwbase CLI](../access/access-cli.md)
     - [KaiwuDB JDBC](../access/access-jdbc.md)
     - [KaiwuDB 开发者中心](../access/access-kdc.md)
