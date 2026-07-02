@@ -12,6 +12,7 @@ id: overview
   - [关系数据库管理](./db-mgmt/db-mgmt-relational.md)
 - 时序数据库对象管理
   - [时序表管理](./db-object-mgmt/ts-db/table-mgmt-ts.md)
+  - [稀疏表管理](./db-object-mgmt/ts-db/sparse-table-mgmt-ts.md)
   - [列管理](./db-object-mgmt/ts-db/column-mgmt-ts.md)
   - [标签管理](./db-object-mgmt/ts-db/label-mgmt-ts.md)
   - [索引管理](./db-object-mgmt/ts-db/index-mgmt-ts.md)
