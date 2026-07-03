@@ -7,7 +7,7 @@ id: import-data
 
 The `IMPORT` statement imports the following data:
 
-- **​Table data**: import the metadata, privilege information, and user data for the specified time-series or relational tables.
+- **​Table data**: import the metadata, privilege information, and user data for the specified time-series or relational tables, as well as sparse tables.
 - **​Database data**: import the metadata, privilege information, and user data for the specified time-series or relational databases.
 - **​User configuration**: import the SQL statements used for creating non-system users.
 - **​Cluster parameters**: import the SQL statements used for setting cluster parameters.
@@ -16,6 +16,7 @@ The `IMPORT` statement imports the following data:
 
 - Currently, KWDB does not support importing the data for system tables.
 - When importing table data, you can use the `sort -t <separator> -k <primary_key_column> <file_name>` command to sort files to be imported. This helps improve the import efficiency.
+- When importing a sparse table, it is necessary to process the `""` in the CSV file and only retain the non-empty columns
 
 :::
 
