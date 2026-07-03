@@ -12,6 +12,7 @@ This section describes how to manage databases and their objects, query data, ma
   - [Relational Databases](./db-mgmt/db-mgmt-relational.md)
 - Time-Series Database Object Management
   - [Time-Series Tables](./db-object-mgmt/ts-db/table-mgmt-ts.md)
+  - [Sparse Tables](./db-object-mgmt/ts-db/sparse-table-mgmt-ts.md)
   - [Columns](./db-object-mgmt/ts-db/column-mgmt-ts.md)
   - [Tags](./db-object-mgmt/ts-db/label-mgmt-ts.md)
   - [Indexes](./db-object-mgmt/ts-db/index-mgmt-ts.md)  
