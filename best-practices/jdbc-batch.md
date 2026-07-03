@@ -5,7 +5,7 @@ id: jdbc-batch
 
 # 使用 KaiwuDB JDBC 扩展接口优化批量数据写入
 
-KaiwuDB JDBC 是 KaiwuDB 的官方 Java 语言连接器，基于 PgJDBC 扩展实现，符合 JDBC 4.0、JDBC 4.1 和 JDBC 4.2 规范。支持PG扩展协议‘M’类消息支持，支持列式批量数据传输及Snappy/LZ4压缩功能。Java 开发人员可以使用 KaiwuDB JDBC 驱动程序连接 KaiwuDB 的服务进程，进行数据增删改查操作。
+KaiwuDB JDBC 是 KEDB 的官方 Java 语言连接器，基于 PgJDBC 扩展实现，符合 JDBC 4.0、JDBC 4.1 和 JDBC 4.2 规范。支持PG扩展协议‘M’类消息支持，支持列式批量数据传输及Snappy/LZ4压缩功能。Java 开发人员可以使用 KaiwuDB JDBC 驱动程序连接 KWDB 的服务进程，进行数据增删改查操作。
 
 KaiwuDB JDBC 提供了传统的批量执行 SQL 接口，用户可以通过手动拼接 SQL 实现批量数据写入，同时提供了
  `addBatchInsert`、`executeBatchInsert` 和 `clearBatchInsert` 接口，能够将同一张时序表的多次数据写入合并到一条 SQL 语句，降低 CPU 占用，提升写入性能。
@@ -27,7 +27,7 @@ KaiwuDB JDBC 提供了传统的批量执行 SQL 接口，用户可以通过手�
 - [安装 openJDK](https://openjdk.org/install/)（1.8 及以上版本）。
 - [安装 Maven](https://maven.apache.org/install.html)（3.6 及以上版本）。
 - [安装 Gradle](https://docs.gradle.org/current/userguide/installation.html)。
-- 安装 KaiwuDB 3.2.2 或以上版本数据库、配置数据库认证方式、创建数据库。
+- 安装 KWDB 3.2.2 或以上版本数据库、配置数据库认证方式、创建数据库。
 - 创建具有表级别及以上操作权限的用户。
 - 获取 KaiwuDB JDBC 驱动包（3.2.0版本）。
 

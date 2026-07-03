@@ -9,7 +9,7 @@ Java 数据库连接（Java Database Connectivity，JDBC）是 Java 应用程序
 
 KaiwuDB JDBC 驱动程序是 KWDB 官方提供的 Java 连接器，支持执行查询、插入、更新和删除等数据库操作。驱动程序在将 Java 数据类型发送到数据库之前，会将其转换为相应的 JDBC 类型。有关数据类型对比转换的详细信息，参见[支持的数据类型](#支持的数据类型)。
 
-KaiwuDB JDBC 基于 PgJDBC 扩展实现，符合 JDBC 4.0、JDBC 4.1 和 JDBC 4.2 规范。支持PG扩展协议‘M’类消息支持，支持列式批量数据传输及Snappy/LZ4压缩功能。Java 开发人员可以使用 KaiwuDB JDBC 驱动程序向 KaiwuDB 的服务进程发送消息，访问任何形式的表格数据，操作流程如下：
+KaiwuDB JDBC 基于 PgJDBC 扩展实现，符合 JDBC 4.0、JDBC 4.1 和 JDBC 4.2 规范。支持PG扩展协议‘M’类消息支持，支持列式批量数据传输及Snappy/LZ4压缩功能。Java 开发人员可以使用 KaiwuDB JDBC 驱动程序向 KWDB 的服务进程发送消息，访问任何形式的表格数据，操作流程如下：
 
 1. 连接数据源并创建到数据库的连接。
 2. 创建查询或更新指令。
@@ -275,8 +275,8 @@ while(resultSet.next()){
 ### 扩展协议验证
 
 ::: warning 说明
-KaiwuDB 支持通过SQL会话变量动态控制扩展协议开关，但需同时满足以下条件。
-- KaiwuDB数据库服务端版本需支持`pg_extend_compress` 会话参数配置。
+KWDB 支持通过SQL会话变量动态控制扩展协议开关，但需同时满足以下条件。
+- KWDB数据库服务端版本需支持`pg_extend_compress` 会话参数配置。
 - JDBC驱动版本不低于3.2.0。
 
 :::
