@@ -20,7 +20,8 @@ Built on the PgJDBC extension, KaiwuDB JDBC driver complies with JDBC 4.0, 4.1, 
 
 - [OpenJDK 1.8 or higher]((https://openjdk.org/install/)) installed
 - [Maven 3.6 or higher](https://maven.apache.org/install.html) installed
-- KaiwuDB JDBC driver package obtained
+- [Gradle](https://docs.gradle.org/current/userguide/installation.html) installed
+- KaiwuDB JDBC driver package obtained (3.2.0)
 - KWDB installed and running with:
   - Properly configured database authentication
   - A database created for your connection
@@ -34,14 +35,22 @@ Built on the PgJDBC extension, KaiwuDB JDBC driver complies with JDBC 4.0, 4.1, 
    <dependency>
      <groupId>com.kaiwudb</groupId>
      <artifactId>kaiwudb-jdbc</artifactId>
-     <version>3.1.0</version>
+     <version>3.2.0</version>
    </dependency>
    ```
 
 2. If the KaiwuDB JDBC dependency cannot be loaded, install the driver into your local Maven repository with the following command:
 
-   ```shell
-   mvn install:install-file "-Dfile=../kaiwudb-jdbc-3.1.0.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=3.1.0" "-Dpackaging=jar"
+    ```xml
+   mvn install:install-file "-Dfile=../kaiwudb-jdbc-3.2.0.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=3.2.0" "-Dpackaging=jar"
+   ```
+
+3. Enable the PG extension protocol compression function, controlled by the session variable `pg_extend_compress` ：
+
+   ```sql
+   SET pg_extend_compress = off --Disable extension protocol (default, use standard PG protocol)
+   SET pg_extend_compress = lz4_compress --Enable the extension protocol with LZ4 compression
+   SET pg_extend_compress = snappy_compress --Enable the extension protocol with Snappy compression
    ```
 
 ## Connecting to the Database
@@ -262,6 +271,69 @@ while(resultSet.next()){
   temperature = resultSet.getFloat(2);
   humidity = resultSet.getFloat(3);
   System.out.printf("%s, %s, %s\n", ts, temperature, humidity);
+}
+```
+### Extended Protocol Verification
+
+::: warning note:
+KWDB supports dynamic control of the extension protocol switch through SQL session variables, but the following conditions must be met simultaneously.
+- The KWDB database server version needs to support the `pg_extend_compress` session parameter configuration.
+- The JDBC driver version should be no lower than 3.2.0。
+
+:::
+
+```java
+public void testPgExtendProtocol() {
+    Connection connection = null;
+    try {
+        Class.forName("com.kaiwudb.Driver");
+        String url = "jdbc :kaiwudb://127.0.0.1:26257/tsdb?
+user=test&password=Password@2024";
+        connection = DriverManager.getConnection(url);  
+        Statement stmt = connection.createStatement();
+        String querySql = "SELECT device, avg(value) as avg_value FROM tsdb.meters"
+        + "WHERE device = 'dev1' GROUP BY device LIMIT 50000";
+
+        // Scenario 1: Default to off, follow standard PG protocol
+        System.out.println("=== Standard PG Protocol (off) ===");
+        try (ResultSet rs = stmt.executeQuery(querySql)) {
+            processResultSet(rs);
+        }
+ 
+       // Scenario 2: Enabling LZ4 compression extension protocol
+       System.out.println("=== Extended Protocol (LZ4) ===");
+       stmt.execute("SET pg_extend_compress = lz4_compress");
+       try (ResultSet rs = stmt.executeQuery(querySql)) {
+           processResultSet(rs);
+        }
+
+       // Scenario 3: Switching to the Snappy Compression Extension Protocol
+       System.out.println("=== Extended Protocol (Snappy) ===");
+       stmt.execute("SET pg_extend_compress = snappy_compress");
+       try (ResultSet rs = stmt.executeQuery(querySql)) {
+           processResultSet(rs);
+        }
+
+        // Scenario 4: Close the extended protocol and revert to the standard PG protocol
+        System.out.println("=== Back to Standard PG Protocol ===");
+        stmt.execute("SET pg_extend_compress = off");
+        try (ResultSet rs = stmt.executeQuery(querySql)) {
+            processResultSet(rs);
+        }
+    } catch (ClassNotFoundException | SQLException ex) {
+        System.err.println("Exception:" + ex.getMessage());
+    }
+}
+
+private void processResultSet(Resultset rs) throws SQLException{
+    ResultSetMetaData metaData = rs.getMetaData();
+    int columncount = metaData.getcolumncount();
+    int rowCount = 0;
+    while (rs.next()) {
+        rowCount++;
+        // Process results row by row
+    }
+    System.out.println("Processed " + rowCount + "rows," + columnCount +" columns");
 }
 ```
 
