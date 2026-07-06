@@ -23,7 +23,7 @@ The user must be a member of the `admin` role or have been granted the `SELECT` 
 
 - `stream_option`
 
-    ![](../../../static/sql-reference/stream_option.png)
+    ![](../../../static/sql-reference/stream_option3.2.2.png)
 
 - `stream_query`
 
@@ -35,7 +35,7 @@ The user must be a member of the `admin` role or have been granted the `SELECT` 
 | --- | --- |
 | `stream_name` | The name of the stream to create. |
 | `table_name` | The name of the target table.<br> **Note** <br> The schema of the target table must be compatible with the `select_list` option of the `stream_query` parameter. |
-| `stream_option` | The stream parameters. Available options: <br >- `ENABLE`: Configure whether to enable the stream. Available options are `on` and `off`. `on` indicates enabling a stream while `off` indicates disabling a stream. By default, it is set to `on`. <br >- `MAX_DELAY`: The maximum duration for the aggregate window. By default, it is set to `24h`. The supported units for the `MAX_DELAY` parameter include millisecond (ms), second (s), minute (m), hour (h), day (d), and week (w).  <br >- `SYNC_TIME`: The maximum allowed out-of-order data window. By default, it is set to `1m`. The value of the `SYNC_TIME` parameter must be smaller than the value of the `MAX_DELAY` parameter. <br >- `PROCESS_HISTORY`: Configure whether to deal with historical data and pending data. Available options are `on` and `off`. `on` indicates dealing with historical data and pending data while `off` indicates not dealing with historical data and pending data. By default, it is set to `off`. <br >- `MAX_RETRIES`: The maximum retry times after a stream encounters an error. By default, it is set to `5`. <br >- `CHECKPOINT_INTERVAL`: The checkpoint period of the stream. By default, it is set to `10s`. The value of the `CHECKPOINT_INTERVAL` parameter must be smaller than the value of the `SYNC_TIME` parameter. <br >- `HEARTBEAT_INTERVAL`: The heartbeat period of the stream. By default, it is set to `2s`. <br >- `BUFFER_SIZE`: The buffer size for the stream to perform aggregate computing. By default, it is set to `2Gb`. This parameter is not available for a common stream query. <br > **Note** <br > Currently, KWDB only supports modifying the `ENABLE` parameter online. To modify other stream parameters, you need to stop the stream first and then make changes. |
+| `stream_option` | The stream parameters. Available options: <br >- `ENABLE`: Configure whether to enable the stream. Available options are `on` and `off`. `on` indicates enabling a stream while `off` indicates disabling a stream. By default, it is set to `on`. <br >- `MAX_DELAY`: The maximum duration for the aggregate window. By default, it is set to `24h`. The supported units for the `MAX_DELAY` parameter include millisecond (ms), second (s), minute (m), hour (h), day (d), and week (w).  <br >- `SYNC_TIME`: The maximum allowed out-of-order data window. By default, it is set to `1m`. The value of the `SYNC_TIME` parameter must be smaller than the value of the `MAX_DELAY` parameter.The support setting is set to `0`, in which case sorting is skipped. If it is not `0`, it must be greater than the parameter `CHECKPOINT_INTERVAL` <br >- `PROCESS_HISTORY`: Configure whether to deal with historical data and pending data. Available options are `on` and `off`. `on` indicates dealing with historical data and pending data while `off` indicates not dealing with historical data and pending data. By default, it is set to `off`. <br >- `MAX_RETRIES`: The maximum retry times after a stream encounters an error. By default, it is set to `5`. <br >- `CHECKPOINT_INTERVAL`: The checkpoint period of the stream. By default, it is set to `10s`. The value of the `CHECKPOINT_INTERVAL` parameter must be smaller than the value of the `SYNC_TIME` parameter.`CHECKPOINT_INTERVAL`。 <br >- `HEARTBEAT_INTERVAL`: The heartbeat period of the stream. By default, it is set to `2s`. <br >- `BUFFER_SIZE`: The buffer size for the stream to perform aggregate computing. By default, it is set to `2Gb`. This parameter is not available for a common stream query.  <br >- `LOW_LATENCY`： Used for real-time computation in stream computing. The default is `OFF`. When set to `ON`, the stream computing results are written in real-time instead of being written periodically based on the checkpoint interval.<br > **Note** <br > Currently, KWDB only supports modifying the `ENABLE` parameter online. To modify other stream parameters, you need to stop the stream first and then make changes. |
 | `value` | The values of stream parameters. |
 | `stream_query` | The `SELECT` query statement. <br> **Note** <br>- The `select_list` parameter must be compatible with the schema of the target table. <br>- The `select_list` parameter must contain the `first(ts)` and `last(ts)` and take them as the first two output columns, which are used to record the begin time and end time of the window. Otherwise, the system cannot deal with historical data, expired data, and pending data. <br>- Support window functions (`SESSION_WINDOW`, `STATE_WINDOW`, `TIME_WINDOW`, `EVENT_WINDOW`, and `COUNT_WINDOW`) and the `Timebucket` function. The window functions must be used with the `GROUP BY` clause. If the `GROUP BY` clause contains both window functions and tag or data columns, the window function must come last. <br>- Support renaming all output columns using the `AS` clause. <br>- When creating a stream using the `TIME_WINDOW` function, you must use the `first_row` and `last_row` functions to get the begin time and end time of the aggregate window.  <br>- When creating a stream using the `TIME_WINDOW` with a sliding window, you must use the `first` and `last` functions to get the begin time and end time of the aggregate window and record them as the first output columns of the target table.|
 
@@ -45,6 +45,38 @@ This example creates a stream named `cpu_stream`.
 
 ```sql
 CREATE STREAM cpu_stream INTO cpu_avg AS SELECT first(ts_timestamp), last(ts_timestamp), count(*), avg(usage_user), avg(usage_system), hostname FROM benchmark.cpu GROUP BY hostname, TIME_WINDOW(ts_timestamp, '1m', '30s');
+```
+
+The following example creates an instant stream computing task named `stock_ticks_stream`, which calculates the time-series table `stock_ticks`. It uses the `TIME_WINDOW` function to set the window duration to `3m`, and performs statistics separately by device. It also outputs the aggregated window timestamps, and writes the stream computing results to the time-series table `three_min_stock_ticks`.
+
+```sql
+create ts database souassmanag;
+use souassmanag;
+
+CREATE TABLE stock_ticks (
+    ts TIMESTAMPTZ NOT NULL,
+    PreClosePx FLOAT,
+    OpenPx FLOAT,
+    HighPx FLOAT,
+    LOwPx FLOAT,
+    LastPx FLOAT,
+    Volume INT,
+    Amount FLOAT,
+    BidPrice FLOAT,
+    BidOrderQty int,
+    OfferPrice FLOAT,
+    OfferQty int,
+    Market varchar (20)) TAGS (SecurityID int not null) PRIMARY TAGS (SecurityID) ;
+
+CREATE TABLE souassmanag.three_min_stock_ticks (
+  window_start TIMESTAMPTZ NOT NULL,
+  Window_end TIMESTAMPTZ NOT NULL,
+  three_min_Price_Change FLOAT
+) tags (
+       SecurityID int NOT NULL
+)  PRIMARY TAGS (SecurityID);
+
+CREATE STREAM stock_ticks_stream INTO  souassmanag.three_min_stock_ticks with options （LOW_LATENCY= 'on',SYNC_TIME='0'） AS SELECT first_row (ts) AS window_start, last_row (ts) AS window_end, (last (LastPx)/first (LastPx)) -1 AS three_min_Price_Change,SecurityID AS SecurityID FROM souassmanag.stock_ticks GROUP BY securityid, TIME_WINDOW(ts,'3m');
 ```
 
 ## SHOW STREAMS
@@ -123,7 +155,7 @@ If the user who created a stream is removed, only the `admin` role can modify th
 | Parameter | Description |
 | --- | --- |
 | `stream_name` | The name of the stream to modify. |
-| `stream_option` | The stream parameters to modify. Available options: <br >- `ENABLE`: Configure whether to enable the stream. Available options are `on` and `off`. `on` indicates enabling a stream while `off` indicates disabling a stream. By default, it is set to `on`. <br >- `MAX_DELAY`: The maximum duration for the aggregate window. By default, it is set to `24h`. The supported units for the `MAX_DELAY` parameter include millisecond (ms), second (s), minute (m), hour (h), day (d), and week (w).  <br >- `SYNC_TIME`: The maximum allowed out-of-order data window. By default, it is set to `1m`. The value of the `SYNC_TIME` parameter must be smaller than the value of the `MAX_DELAY` parameter. <br >- `PROCESS_HISTORY`: Configure whether to deal with historical data and pending data. Available options are `on` and `off`. `on` indicates dealing with historical data and pending data while `off` indicates not dealing with historical data and pending data. By default, it is set to `off`. <br >- `MAX_RETRIES`: The maximum retry times after a stream encounters an error. By default, it is set to `5`. <br >- `CHECKPOINT_INTERVAL`: The checkpoint period of the stream. By default, it is set to `10s`. The value of the `CHECKPOINT_INTERVAL` parameter must be smaller than the value of the `SYNC_TIME` parameter. <br >- `HEARTBEAT_INTERVAL`: The heartbeat period of the stream. By default, it is set to `2s`. <br >- `BUFFER_SIZE`: The buffer size for the stream to perform aggregate computing. By default, it is set to `2Gb`. This parameter is not available for a common stream query. <br > **Note** <br >- Currently, KWDB only supports modifying the `ENABLE` parameter online. To modify other stream parameters, you need to stop the stream first and then make changes. <br >- When you resume a stopped stream, the system checks whether there is any pending data and uses the ​minimum data feed watermark to compute the volume of pending data. If there is any pending data, the system gets and deals with historical data synchronously and then deals with real-time data. If there is any window function, when receiving data sent in the first window function, the system asynchronously deals with historical data and the data that are not dealt before the first real-time data window. |
+| `stream_option` | The stream parameters to modify. Available options: <br >- `ENABLE`: Configure whether to enable the stream. Available options are `on` and `off`. `on` indicates enabling a stream while `off` indicates disabling a stream. By default, it is set to `on`. <br >- `MAX_DELAY`: The maximum duration for the aggregate window. By default, it is set to `24h`. The supported units for the `MAX_DELAY` parameter include millisecond (ms), second (s), minute (m), hour (h), day (d), and week (w).  <br >- `SYNC_TIME`: The maximum allowed out-of-order data window. By default, it is set to `1m`. The value of the `SYNC_TIME` parameter must be smaller than the value of the `MAX_DELAY` parameter.The support setting is set to `0`, in which case sorting is skipped. If it is not `0`, it must be greater than the parameter `CHECKPOINT_INTERVAL` <br >- `PROCESS_HISTORY`: Configure whether to deal with historical data and pending data. Available options are `on` and `off`. `on` indicates dealing with historical data and pending data while `off` indicates not dealing with historical data and pending data. By default, it is set to `off`. <br >- `MAX_RETRIES`: The maximum retry times after a stream encounters an error. By default, it is set to `5`. <br >- `CHECKPOINT_INTERVAL`: The checkpoint period of the stream. By default, it is set to `10s`. The value of the `CHECKPOINT_INTERVAL` parameter must be smaller than the value of the `SYNC_TIME` parameter. <br >- `HEARTBEAT_INTERVAL`: The heartbeat period of the stream. By default, it is set to `2s`. <br >- `BUFFER_SIZE`: The buffer size for the stream to perform aggregate computing. By default, it is set to `2Gb`. This parameter is not available for a common stream query.<br >- `LOW_LATENCY`： Used for real-time computation in stream computing. The default is `OFF`. When set to `ON`, the stream computing results are written in real-time instead of being written periodically based on the checkpoint interval. <br > **Note** <br >- Currently, KWDB only supports modifying the `ENABLE` parameter online. To modify other stream parameters, you need to stop the stream first and then make changes. <br >- When you resume a stopped stream, the system checks whether there is any pending data and uses the ​minimum data feed watermark to compute the volume of pending data. If there is any pending data, the system gets and deals with historical data synchronously and then deals with real-time data. If there is any window function, when receiving data sent in the first window function, the system asynchronously deals with historical data and the data that are not dealt before the first real-time data window. |
 | `value` | The values of stream parameters. |
 
 ### Examples
