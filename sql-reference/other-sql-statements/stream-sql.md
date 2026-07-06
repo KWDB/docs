@@ -25,7 +25,7 @@ id: stream-sql
 
 - `stream_option`
 
-    ![](../../static/sql-reference/stream_option.png)
+    ![](../../static/sql-reference/stream_option3.2.2.png)
 
 - `stream_query`
 
@@ -37,7 +37,7 @@ id: stream-sql
 | --- | --- |
 | `stream_name` | 待创建流计算的名称。 |
 | `table_name` | 目标表名称。<br> **说明** <br> 目标表的模式必须与 `stream_query` 参数的 `select_list` 参数兼容。 |
-| `stream_option` | 流计算参数。用户可以使用 `ALTER STREAM <stream_name> SET OPTIONS` 语句修改流计算的参数。支持以下参数：<br >- `ENABLE`: 是否启用流计算。支持 `on` 和 `off` 两个取值。`on` 表示启用流计算。`off` 表示未启用流计算。默认为 `on`。 <br >- `MAX_DELAY`：聚合窗口最大持续时间，默认为 `24h`。支持的时间单位包括毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）、周（w）等。 <br >- `SYNC_TIME`：最大允许的乱序数据窗口，默认为 `1m`。<br >- `PROCESS_HISTORY`：是否处理历史数据和断点数据。支持 `on` 和 `off` 两个取值。`on` 表示处理历史数据和断点数据。`off` 表示不处理历史数据和断点数据。默认为 `off`。<br >- `MAX_RETRIES`：流计算发生错误后的重试次数，默认为 `5`。 <br >- `CHECKPOINT_INTERVAL`：流计算的检查点周期，默认为 `10s`。 <br >- `HEARTBEAT_INTERVAL`：流计算的心跳周期，默认为 `2s`。 <br >- `BUFFER_SIZE`：用于流计算聚合计算的缓冲区大小，默认为 `2Gb`。如为普通流计算查询，则不启用。<br > **说明** <br >- 目前，KWDB 只支持在线修改 `ENABLE` 参数。如需修改其它参数，用户需要先停止流计算，然后再修改相关参数。  |
+| `stream_option` | 流计算参数。用户可以使用 `ALTER STREAM <stream_name> SET OPTIONS` 语句修改流计算的参数。支持以下参数：<br >- `ENABLE`: 是否启用流计算。支持 `on` 和 `off` 两个取值。`on` 表示启用流计算。`off` 表示未启用流计算。默认为 `on`。 <br >- `MAX_DELAY`：聚合窗口最大持续时间，默认为 `24h`。支持的时间单位包括毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）、周（w）等。 <br >- `SYNC_TIME`：最大允许的乱序数据窗口，默认为 `1m`，`SYNC_TIME` 参数的取值必须小于 `MAX_DELAY` 参数的取值。支持设置为`0`，此时跳过排序，非`0`时必须大于参数`CHECKPOINT_INTERVAL`。<br >- `PROCESS_HISTORY`：是否处理历史数据和断点数据。支持 `on` 和 `off` 两个取值。`on` 表示处理历史数据和断点数据。`off` 表示不处理历史数据和断点数据。默认为 `off`。<br >- `MAX_RETRIES`：流计算发生错误后的重试次数，默认为 `5`。 <br >- `CHECKPOINT_INTERVAL`：流计算的检查点周期，默认为 `10s`。 <br >- `HEARTBEAT_INTERVAL`：流计算的心跳周期，默认为 `2s`。 <br >- `BUFFER_SIZE`：用于流计算聚合计算的缓冲区大小，默认为 `2Gb`。如为普通流计算查询，则不启用。 <br >- `LOW_LATENCY`：用于流计算即时计算功能，默认为`OFF`，当设置为`ON`时，流计算结果写入从按检查点周期写入，改为即时写入<br > **说明** <br >- 目前，KWDB 只支持在线修改 `ENABLE` 参数。如需修改其它参数，用户需要先停止流计算，然后再修改相关参数。  |
 | `value` | 流计算参数的取值。 |
 | `stream_query` | `SELECT` 普通查询语法的子集。<br> **说明** <br>- `select_list` 参数必须与目标表的模式兼容。<br>- `select_list` 参数中必须包含 `first(ts)` 和 `last(ts)`且作为最开始的两个输出列，用于记录窗口的开启和关闭时间。否则，历史数据、过期数据和断点数据的处理功能可能处于不可用状态。<br>- 支持窗口函数（会话窗口、状态窗口、时间窗口、事件窗口与计数窗口）和 `Timebucket` 函数。其中，分组窗口函数必须与 `GROUP BY` 子句搭配使用，当 `GROUP BY` 子句中同时出现窗口函数与标签列或数据列时，窗口函数必须置于最后。<br>- 支持使用 `AS` 子句重命名全部输出列，使其符合目标表的模式定义。<br>- 使用 `TIME_WINDOW` 函数创建流计算时，必须使用 `first_row` 和 `last_row` 函数获取聚合窗口的起止时间。<br>- 使用带滑动窗口的 `TIME_WINDOW` 函数创建流计算时，必须使用 `first` 和 `last` 函数获取聚合窗口的起止时间，然后将其记录到目标表中且作为最开始的两个输出列。|
 
@@ -47,6 +47,38 @@ id: stream-sql
 
 ```sql
 CREATE STREAM cpu_stream INTO cpu_avg AS SELECT first(ts_timestamp), last(ts_timestamp), count(*), avg(usage_user), avg(usage_system), hostname FROM benchmark.cpu GROUP BY hostname, TIME_WINDOW(ts_timestamp, '1m', '30s');
+```
+
+以下示例创建名为 `stock_ticks_stream` 的即时流计算任务，计算时序表 `stock_ticks`，使用 `TIME_WINDOW` 函数设置窗口持续时间为 `3m`，并按照设备分别统计，同时输出聚合窗口时间戳，流计算结果写入时序表 `three_min_stock_ticks` 。
+
+```sql
+create ts database souassmanag;
+use souassmanag;
+
+CREATE TABLE stock_ticks (
+    ts TIMESTAMPTZ NOT NULL,
+    PreClosePx FLOAT,
+    OpenPx FLOAT,
+    HighPx FLOAT,
+    LOwPx FLOAT,
+    LastPx FLOAT,
+    Volume INT,
+    Amount FLOAT,
+    BidPrice FLOAT,
+    BidOrderQty int,
+    OfferPrice FLOAT,
+    OfferQty int,
+    Market varchar (20)) TAGS (SecurityID int not null) PRIMARY TAGS (SecurityID) ;
+
+CREATE TABLE souassmanag.three_min_stock_ticks (
+  window_start TIMESTAMPTZ NOT NULL,
+  Window_end TIMESTAMPTZ NOT NULL,
+  three_min_Price_Change FLOAT
+) tags (
+       SecurityID int NOT NULL
+)  PRIMARY TAGS (SecurityID);
+
+CREATE STREAM stock_ticks_stream INTO  souassmanag.three_min_stock_ticks with options （LOW_LATENCY= 'on',SYNC_TIME='0'） AS SELECT first_row (ts) AS window_start, last_row (ts) AS window_end, (last (LastPx)/first (LastPx)) -1 AS three_min_Price_Change,SecurityID AS SecurityID FROM souassmanag.stock_ticks GROUP BY securityid, TIME_WINDOW(ts,'3m');
 ```
 
 ## 查看流计算
@@ -125,7 +157,7 @@ SHOW STREAM test_stream;
 | 参数 | 说明 |
 | --- | --- |
 | `stream_name` | 待修改流计算的名称。 |
-| `stream_option` | 流计算参数。支持以下参数：<br >- `ENABLE`: 是否启用流计算。支持 `on` 和 `off` 两个取值。`on` 表示启用流计算。`off` 表示未启用流计算。默认为 `on`。 <br >- `MAX_DELAY`：聚合窗口最大持续时间，默认为 `24h`。支持的时间单位包括毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）、周（w）等。 <br >- `SYNC_TIME`：最大允许的乱序数据窗口，默认为 `1m`。`SYNC_TIME` 参数的取值必须小于 `MAX_DELAY` 参数的取值。<br >- `PROCESS_HISTORY`：是否处理历史数据和断点数据。支持 `on` 和 `off` 两个取值。`on` 表示处理历史数据和断点数据。`off` 表示不处理历史数据和断点数据。默认为 `off`。<br >- `MAX_RETRIES`：流计算发生错误后的重试次数，默认为 `5`。 <br >- `CHECKPOINT_INTERVAL`：流计算的检查点周期，默认为 `10s`。`CHECKPOINT_INTERVAL` 参数的取值必须小于 `SYNC_TIME` 参数的取值。 <br >- `HEARTBEAT_INTERVAL`：流计算的心跳周期，默认为 `2s`。 <br >- `BUFFER_SIZE`：用于流计算聚合计算的缓冲区大小，默认为 `2Gb`。如为普通流计算查询，则不启用。  <br > **说明** <br >- 目前，KWDB 只支持在线修改 `enable` 参数。如需修改其它参数，用户需要先停止流计算，然后再修改相关参数。<br >- 当用户启动一个处于停止状态的流计算时，系统会检查是否存在断点数据（未处理数据）并使用流计算最低水位线标识断点数据的范围。如果存在断点数据，系统先采用同步方式优先获取并处理水位线之后的历史数据，然后再处理实时数据。如果有窗口函数，在收到第一个实时数据窗口后，系统采用异步方式处理断点处历史数据与实时数据之间的割裂窗口。 |
+| `stream_option` | 流计算参数。支持以下参数：<br >- `ENABLE`: 是否启用流计算。支持 `on` 和 `off` 两个取值。`on` 表示启用流计算。`off` 表示未启用流计算。默认为 `on`。 <br >- `MAX_DELAY`：聚合窗口最大持续时间，默认为 `24h`。支持的时间单位包括毫秒（ms）、秒（s）、分（m）、小时（h）、天（d）、周（w）等。 <br >- `SYNC_TIME`：最大允许的乱序数据窗口，默认为 `1m`。`SYNC_TIME` 参数的取值必须小于 `MAX_DELAY` 参数的取值。支持设置为`0`，此时跳过排序，非`0`时必须大于参数`CHECKPOINT_INTERVAL`。<br >- `PROCESS_HISTORY`：是否处理历史数据和断点数据。支持 `on` 和 `off` 两个取值。`on` 表示处理历史数据和断点数据。`off` 表示不处理历史数据和断点数据。默认为 `off`。<br >- `MAX_RETRIES`：流计算发生错误后的重试次数，默认为 `5`。 <br >- `CHECKPOINT_INTERVAL`：流计算的检查点周期，默认为 `10s`。`CHECKPOINT_INTERVAL` 参数的取值必须小于 `SYNC_TIME` 参数的取值。 <br >- `HEARTBEAT_INTERVAL`：流计算的心跳周期，默认为 `2s`。 <br >- `BUFFER_SIZE`：用于流计算聚合计算的缓冲区大小，默认为 `2Gb`。如为普通流计算查询，则不启用。 <br >- `LOW_LATENCY`：用于流计算即时计算功能，默认为`OFF`，当设置为`ON`时，流计算结果写入从按检查点周期写入，改为即时写入。<br > **说明** <br >- 目前，KWDB 只支持在线修改 `enable` 参数。如需修改其它参数，用户需要先停止流计算，然后再修改相关参数。<br >- 当用户启动一个处于停止状态的流计算时，系统会检查是否存在断点数据（未处理数据）并使用流计算最低水位线标识断点数据的范围。如果存在断点数据，系统先采用同步方式优先获取并处理水位线之后的历史数据，然后再处理实时数据。如果有窗口函数，在收到第一个实时数据窗口后，系统采用异步方式处理断点处历史数据与实时数据之间的割裂窗口。 |
 | `value` | 流计算参数的取值。 |
 
 ### 语法示例
