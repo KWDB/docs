@@ -32,7 +32,7 @@ KWDB 支持监控和记录包括管理员在内的所有用户操作，提供三
 | DATABASE   | - CREATE DATABASE <br >- ALTER DATABASE <br >- DROP DATABASE <br >- IMPORT <br >- EXPORT | - CREATE DATABASE <br >- ALTER DATABASE <br >- DROP DATABASE <br >- IMPORT <br >- EXPORT |
 | SCHEMA     | - CREATE SCHEMA <br >- DROP SCHEMA                           | -                                                            |
 | TABLE      | - CREATE TABLE <br >- ALTER TABLE <br >- DROP TABLE <br >- TRUNCATE TABLE <br >- IMPORT <br >- EXPORT | - CREATE TABLE <br >- ALTER TABLE <br >- DROP TABLE <br >- IMPORT <br >- EXPORT |
-| VIEW       | - CREATE VIEW <br >- ALTER VIEW <br >- DROP VIEW             | -                                                            |
+| VIEW       | - CREATE VIEW <br >- ALTER VIEW <br >- DROP VIEW             | - CREATE VIEW <br >- ALTER VIEW <br >- DROP VIEW                                                            |
 | INDEX      | - CREATE INDEX <br >- ALTER INDEX <br >- DROP INDEX                                 | - CREATE INDEX <br >- ALTER INDEX <br >- DROP INDEX                 |
 | SEQUENCE   | - CREATE SEQUENCE <br >- ALTER SEQUENCE <br >- DROP SEQUENCE | -                                                            |
 | PRIVILEGE  | - GRANT PRIVILEGE <br >- REVOKE PRIVILEGE                    | - GRANT PRIVILEGE <br >- REVOKE PRIVILEGE                    |
@@ -48,7 +48,7 @@ KWDB 支持监控和记录包括管理员在内的所有用户操作，提供三
 | 对象  | 关系数据库                       | 时序数据库                                                              |
 | ----- | -------------------------------- | ----------------------------------------------------------------------- |
 | TABLE | - INSERT <br >- SELECT <br >- UPDATE <br >- DELETE |- INSERT <br >- SELECT <br >- UPDATE <br >- DELETE <br >其中，UPDATE 和 DELETE 只支持报错审计。 |
-| VIEW  | SELECT                         | -                                                                       |
+| VIEW  | SELECT                         | SELECT                                                                       |
 
 开启审计功能后，系统会默认将审计结果保存在审计日志文件中。更多审计日志相关的信息，参见[日志管理](../../db-operation/log-mgmt.md)。
 
