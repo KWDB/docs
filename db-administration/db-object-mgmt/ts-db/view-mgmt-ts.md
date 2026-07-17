@@ -11,8 +11,7 @@ id: view-mgmt-ts
 
 ### 前提条件
 
-- 非三权分立模式下，用户是 `admin` 角色的成员或者拥有所属数据库的 CREATE 权限和引用表的 SELECT 权限。默认情况下，`root` 用户属于 `admin` 角色。
-- 三权分立模式下，用户是 `sysadmin` 角色的成员或者是拥有所属数据库 CREATE 权限和引用表 SELECT 权限的普通用户。默认情况下，`sysroot` 用户属于 `sysadmin` 角色。
+- 用户是 `admin` 角色的成员或者拥有所属数据库的 CREATE 权限和引用表的 SELECT 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -110,8 +109,7 @@ SELECT * FROM v_sensor_min_agg;
 
 ### 前提条件
 
-- 非三权分立模式下，用户是 `admin` 角色的成员或者拥有重命名前视图的 DROP 权限以及重命名后视图所属父数据库的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
-- 三权分立模式下，用户是 `sysadmin` 角色的成员或者是拥有重命名前视图的 DROP 权限以及重命名后视图所属父数据库 CREATE 权限的普通用户。默认情况下，`sysroot` 用户属于 `sysadmin` 角色。
+- 用户是 `admin` 角色的成员或者拥有重命名前视图的 DROP 权限以及重命名后视图所属父数据库的 CREATE 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
@@ -158,12 +156,8 @@ SELECT * FROM information_schema.tables WHERE table_type = 'VIEW';
 
 ### 前提条件
 
-- 非三权分立模式下，
-  - 删除无依赖关系的视图：用户是 `admin` 角色的成员或者拥有目标视图的 DROP 权限。默认情况下，`root` 用户属于 `admin` 角色。
-  - 删除存在依赖关系的视图：用户是 `admin` 角色的成员或者拥有目标视图的 DROP 权限及其关联对象的 DROP 权限。默认情况下，`root` 用户属于 `admin` 角色。
-- 三权分立模式下：
-  - 删除无依赖关系的视图：用户是 `sysadmin` 角色的成员或者是拥有目标视图 DROP 权限的普通用户。默认情况下，`sysroot` 用户属于 `sysadmin` 角色。
-  - 删除存在依赖关系的视图：用户是 `sysadmin` 角色的成员或者是拥有目标视图及其关联对象 DROP 权限的普通用户。默认情况下，`sysroot` 用户属于 `sysadmin` 角色。
+ - 删除无依赖关系的视图：用户是 `admin` 角色的成员或者拥有目标视图的 DROP 权限。默认情况下，`root` 用户属于 `admin` 角色。
+ - 删除存在依赖关系的视图：用户是 `admin` 角色的成员或者拥有目标视图的 DROP 权限及其关联对象的 DROP 权限。默认情况下，`root` 用户属于 `admin` 角色。
 
 ### 语法格式
 
