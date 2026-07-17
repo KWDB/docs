@@ -375,4 +375,3 @@ KWDB 支持通过 `SET CLUSTER SETTING` 语句修改集群设置，设置后立�
 | `ts.vacuum.concurrent.enable`                           | 设置数据重组是否开启并发，默认为true，开启后每个vgroup分配一个线程 | `true` | bool |
 | `s.pipe.sink_max_retries`                               | 最大数据推送失败次数。当最大数据推送失败次数超过设置值后，停止向外推送数据。 | 5 | int32 |
 | `ts.cdc.max_active_number` | 运行状态的 CDC 中监控表任务的最大数量。 | 10 | int |
-|
