@@ -15,6 +15,7 @@ This section describes how to manage databases and their objects, query data, ma
   - [Columns](./db-object-mgmt/ts-db/column-mgmt-ts.md)
   - [Tags](./db-object-mgmt/ts-db/label-mgmt-ts.md)
   - [Indexes](./db-object-mgmt/ts-db/index-mgmt-ts.md)  
+  - [Views](./db-object-mgmt/ts-db/view-mgmt-ts.md)
   - [Ranges](./db-object-mgmt/ts-db/range-mgmt-ts.md)
   - [Partitions](./db-object-mgmt/ts-db/partition-mgmt-ts.md)
   - [Zones](./db-object-mgmt/ts-db/zone-mgmt-ts.md)
