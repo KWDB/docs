@@ -39,6 +39,8 @@ KWDB provides specialized capabilities for time-series data analysis. It support
 
 For time-series-specific scenarios, KWDB offers dedicated query features such as LAST value retrieval, value filters, condition-based queries, interpolation functions, and value fill queries.
 
+## Real-Time Data Processing
+
 ### Stream Computing
 
 KWDB features built-in stream computing functionality. Users can define tasks using standard SQL, and when data is written to source tables, it is automatically processed and written to target tables based on the defined transformation rules and filter criteria.
@@ -47,6 +49,13 @@ Stream computing supports two key use cases:
 
 - Intelligent downsampling: Compresses high-frequency data in real-time to lower frequencies, then synchronizes to the cloud via publish-subscribe mechanisms, reducing storage and transmission costs.
 - Pre-computation acceleration: Performs real-time calculations on complex queries and stores results persistently, significantly improving query response times.
+
+### Data Push Pipeline
+
+KWDB delivers out-of-the-box real-time data push capabilities. It captures data changes and DDL operations on time-series databases and time-series tables in real time, and pushes them to Kafka topics in JSON format. The system supports flexible data filtering based on timestamps, device attributes and other conditions. Users can create multi-granularity data push pipelines, ranging from specified columns in a single table to batch push for multiple tables. This feature is widely applied in real-time data display, monitoring and alerting scenarios, enabling downstream services to acquire and consume data efficiently.
+
+### Data Publication
+KWDB supports multi-level and fine-grained data publication. It synchronizes real-time and historical data at the full-database, single-table and row-level conditional granularities. Two synchronization modes are provided: batch synchronization with a 2-second cycle and near-real-time synchronization. It supports conditional filtering and breakpoint resumable transmission, meeting diverse business requirements such as cloud-edge data collaboration and cross-cluster data synchronization.
 
 ## Cost-Effective Storage
 
