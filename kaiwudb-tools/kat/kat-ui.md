@@ -172,8 +172,8 @@ KGA UI页面支持Html、PDF两种格式的下载。
 
 KGA提供单个、多个、年月、数据库配置、全部等多层级的删除功能。
 
-![](../../static/kat/report-delte.png)
-![](../../static/kat/report-deleteMonth.png)
+![](../../static/kat/report-delete.png)
+![](../../static/kat/report-deletemonth.png)
 
 ## 设置页面
 
