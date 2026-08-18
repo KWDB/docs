@@ -7,6 +7,8 @@ id: timezone-mgmt
 
 You can use the `SET TIME ZONE` SQL statement to modify the time zone of the current session.
 
+You can use the `SET CLUSTER SETTING cluster.connection.timezone` SQL statement to configure the cluster's time zone
+
 ## Privileges
 
 No privileges required.
@@ -14,7 +16,11 @@ No privileges required.
 ## Syntax
 
 ```sql
-SET TIME ZONE [ <int> | '<location>'];
+SET TIME ZONE [ '<int>' | '<location>'];
+```
+
+```sql
+SET CLUSTER SETTING cluster.connection.timezone =  [ '<int>' | '<location>'| '<ISO 8601>'| '<''>or<default>']
 ```
 
 ## Parameters
@@ -23,6 +29,8 @@ SET TIME ZONE [ <int> | '<location>'];
 | --- | --- |
 | `int` | The time difference from UTC, ranging from `[-12, 14]` (UTC-12 to UTC+14).|
 | `location` | The name of the time zone, such as `Asia/Shanghai`.|
+| `ISO 8601` | The ISO 8601 format representation corresponding to the cluster's time zone, for example `+8:00`。|
+| `null or default` | The default time zone for clusters is UTC.|
 
 ## Examples
 
@@ -40,5 +48,21 @@ SET TIME ZONE [ <int> | '<location>'];
 
     ---
     8
+    (1 row)
+    ```
+ The following example sets the time zone of the current cluster to the default value.
+
+1. Set the time zone of the current cluster to the default value:
+
+    ```sql
+    SET CLUSTER SETTING cluster.connection.timezone = default;
+    ```
+2. Check whether the cluster time zone has been set successfully:
+
+    ```sql
+    SHOW CLUSTER SETTING cluster.connection.timezone;
+      cluster.connection.timezone
+    ------------------
+    UTC
     (1 row)
     ```

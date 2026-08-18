@@ -9,7 +9,7 @@ Java 数据库连接（Java Database Connectivity，JDBC）是 Java 应用程序
 
 KaiwuDB JDBC 驱动程序是 KWDB 官方提供的 Java 连接器，支持执行查询、插入、更新和删除等数据库操作。驱动程序在将 Java 数据类型发送到数据库之前，会将其转换为相应的 JDBC 类型。有关数据类型对比转换的详细信息，参见[支持的数据类型](#支持的数据类型)。
 
-KaiwuDB JDBC 基于 PgJDBC 扩展实现，符合 JDBC 4.0、JDBC 4.1 和 JDBC 4.2 规范。Java 开发人员可以使用 KaiwuDB JDBC 驱动程序向 KaiwuDB 的服务进程发送消息，访问任何形式的表格数据，操作流程如下：
+KaiwuDB JDBC 基于 PgJDBC 扩展实现，符合 JDBC 4.0、JDBC 4.1 和 JDBC 4.2 规范。支持PG扩展协议‘M’类消息支持，支持列式批量数据传输及Snappy/LZ4压缩功能。Java 开发人员可以使用 KaiwuDB JDBC 驱动程序向 KWDB 的服务进程发送消息，访问任何形式的表格数据，操作流程如下：
 
 1. 连接数据源并创建到数据库的连接。
 2. 创建查询或更新指令。
@@ -20,9 +20,10 @@ KaiwuDB JDBC 基于 PgJDBC 扩展实现，符合 JDBC 4.0、JDBC 4.1 和 JDBC 4.
 
 - [安装 openJDK](https://openjdk.org/install/)（1.8 及以上版本）。
 - [安装 Maven](https://maven.apache.org/install.html)（3.6 及以上版本）。
+- [安装 Gradle](https://docs.gradle.org/current/userguide/installation.html)。
 - 安装 KWDB 数据库、配置数据库认证方式、创建数据库。
 - 创建具有表级别及以上操作权限的用户。
-- 获取 KaiwuDB JDBC 驱动包。
+- 获取 KaiwuDB JDBC 驱动包（3.2.0版本）。
 
 ## 配置连接
 
@@ -32,14 +33,22 @@ KaiwuDB JDBC 基于 PgJDBC 扩展实现，符合 JDBC 4.0、JDBC 4.1 和 JDBC 4.
    <dependency>
      <groupId>com.kaiwudb</groupId>
      <artifactId>kaiwudb-jdbc</artifactId>
-     <version>3.1.0</version>
+     <version>3.2.0</version>
    </dependency>
    ```
 
 2. 如上述依赖无法正常加载使用，运行以下命令，将 KaiwuDB JDBC 驱动安装到本地 Maven 仓库中。
 
-   ```shell
-   mvn install:install-file "-Dfile=../kaiwudb-jdbc-3.1.0.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=3.1.0" "-Dpackaging=jar"
+    ```xml
+   mvn install:install-file "-Dfile=../kaiwudb-jdbc-3.2.0.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=3.2.0" "-Dpackaging=jar"
+   ```
+
+3. 启用PG扩展协议压缩功能，通过会话变量 `pg_extend_compress` 控制：
+
+   ```sql
+   SET pg_extend_compress = off --关闭扩展协议（默认，走标准PG协议）
+   SET pg_extend_compress = lz4_compress --启用LZ4压缩的扩展协议
+   SET pg_extend_compress = snappy_compress --启用Snappy压缩的扩展协议
    ```
 
 ## 连接数据库
@@ -261,6 +270,69 @@ while(resultSet.next()){
   temperature = resultSet.getFloat(2);
   humidity = resultSet.getFloat(3);
   System.out.printf("%s, %s, %s\n", ts, temperature, humidity);
+}
+```
+### 扩展协议验证
+
+::: warning 说明
+KWDB 支持通过SQL会话变量动态控制扩展协议开关，但需同时满足以下条件。
+- KWDB数据库服务端版本需支持`pg_extend_compress` 会话参数配置。
+- JDBC驱动版本不低于3.2.0。
+
+:::
+
+```java
+public void testPgExtendProtocol() {
+    Connection connection = null;
+    try {
+        Class.forName("com.kaiwudb.Driver");
+        String url = "jdbc :kaiwudb://127.0.0.1:26257/tsdb?
+user=test&password=Password@2024";
+        connection = DriverManager.getConnection(url);  
+        Statement stmt = connection.createStatement();
+        String querySql = "SELECT device, avg(value) as avg_value FROM tsdb.meters"
+        + "WHERE device = 'dev1' GROUP BY device LIMIT 50000";
+
+        // 场景1:默认关闭，走标准PG协议
+        System.out.println("=== Standard PG Protocol (off) ===");
+        try (ResultSet rs = stmt.executeQuery(querySql)) {
+            processResultSet(rs);
+        }
+ 
+       // 场景2:启用LZ4压缩扩展协议
+       System.out.println("=== Extended Protocol (LZ4) ===");
+       stmt.execute("SET pg_extend_compress = lz4_compress");
+       try (ResultSet rs = stmt.executeQuery(querySql)) {
+           processResultSet(rs);
+        }
+
+       // 场景3:切换Snappy压缩扩展协议
+       System.out.println("=== Extended Protocol (Snappy) ===");
+       stmt.execute("SET pg_extend_compress = snappy_compress");
+       try (ResultSet rs = stmt.executeQuery(querySql)) {
+           processResultSet(rs);
+        }
+
+        // 场景4:关闭扩展协议，回归标准PG协议
+        System.out.println("=== Back to Standard PG Protocol ===");
+        stmt.execute("SET pg_extend_compress = off");
+        try (ResultSet rs = stmt.executeQuery(querySql)) {
+            processResultSet(rs);
+        }
+    } catch (ClassNotFoundException | SQLException ex) {
+        System.err.println("Exception:" + ex.getMessage());
+    }
+}
+
+private void processResultSet(Resultset rs) throws SQLException{
+    ResultSetMetaData metaData = rs.getMetaData();
+    int columncount = metaData.getcolumncount();
+    int rowCount = 0;
+    while (rs.next()) {
+        rowCount++;
+        // 逐行处理结果
+    }
+    System.out.println("Processed " + rowCount + "rows," + columnCount +" columns");
 }
 ```
 

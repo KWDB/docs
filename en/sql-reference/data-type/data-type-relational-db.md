@@ -930,6 +930,94 @@ SHOW CREATE clobs;
              | )
 (1 row)
 ```
+### CITEXT
+
+#### Basic Information
+
+CITEXT（Case-Insensitive Text） is a character type that is not case-sensitive and does not limit character length. CITEXT values retain their original case when stored, but are not case-sensitive when compared. It is suitable for scenarios such as usernames and login names, where the original input needs to be retained but case is ignored during comparison.
+
+The CITEXT type does not support notation with length modifiers, such as  `CITEXT(n)`, which is illegal. It supports the array type `CITEXT[]`, and the comparison of array elements also follows the case-insensitive rule.
+
+::: warning Note
+
+**Behavior differences with PostgreSQL**
+
+KaiwuDB's CITEXT implements case-insensitive comparison based on the Unicode standard, while PostgreSQL's CITEXT relies on the database's locale settings (LC_CTYPE). Therefore, in certain special Unicode characters, the behaviors of the two are not completely consistent. The scenarios of discrepancy include:
+
+- One-to-many/many-to-one case-mapping characters: For example, the ligature `ﬂ`, in KaiwuDB, the result of `'ﬂ'::CITEXT = 'FL'::CITEXT` is `true`, while in PostgreSQL it is `false`.
+- Language-related uppercase and lowercase characters: For example, for the Greek letter 'Σ', in KaiwuDB, the result of `'Σ'::CITEXT = 'ς'::CITEXT` is `true`, while in PostgreSQL, it is `false`.
+- Combined characters and precomposed characters: They are considered equal in KaiwuDB, but not in PostgreSQL.
+
+**Differences in internal processing mechanisms of KaiwuDB**
+
+Equivalence comparison, grouping, and sorting are based on the Unicode standard using non-deterministic sorting rules (`en_us_u_ks_level2`); fuzzy matching and regular expression matching are based on the regular expression engine using deterministic sorting rules. Therefore, in some special Unicode character scenarios, the results of the two types of operations may be inconsistent. For example, the Turkish letter `İ` is not equal to `i` in an English environment, resulting in different results for `=` and `LIKE`:
+
+```sql
+SELECT 'İ'::CITEXT = 'i'::CITEXT, 'İ'::CITEXT LIKE 'i'::CITEXT;
+-- (=) outcome: false，(LIKE) outcome: true
+```
+
+**Precautions when migrating existing string columns**
+
+- To convert an existing column to CITEXT type, execute `ALTER TABLE ... ALTER COLUMN ... TYPE CITEXT`.
+- If you need to add a `UNIQUE` constraint or `PRIMARY KEY` to a CITEXT column, since the uniqueness judgment of CITEXT is not case-sensitive, you need to clean up the duplicate values with case differences (such as `Admin` and `admin`) in the column before adding the constraint, otherwise an error will be reported.
+
+:::
+
+CITEXT is processed in a case-insensitive manner in the following operations:
+
+- Comparison operators:`=`、`!=`、`<>`、`<`、`<=`、`>`、`>=`、`IN`、`BETWEEN AND`
+- Regular expression matching:`~`、`!~`、`~*`、`!~*`
+- Pattern matching: `LIKE`、`NOT LIKE`、`ILIKE`、`NOT ILIKE`、`SIMILAR TO`
+- String functions:`strpos`、`replace`、`split_part`、`translate`、`regexp_replace` , etc
+- Grouping and sorting:`GROUP BY`、`ORDER BY`、`MIN`、`MAX`
+- Constraints and indexes: primary key index, unique index, and regular index (the original string is stored in the index)
+- Materialized views: When referencing CITEXT columns in materialized view definitions and queries, the storage and query retain the original case, and comparison operations are not case-sensitive
+
+#### Type Conversion
+
+CITEXT supports bidirectional explicit conversions between CITEXT and STRING, TEXT, VARCHAR, and CHAR.
+
+In the following scenarios, string constants are implicitly converted to the CITEXT type:
+
+- When performing `INSERT` or `UPDATE` operations on CITEXT columns
+- In comparison operations, when one side is of type CITEXT and the other side is a string constant
+
+#### Examples
+
+The following example creates a table `t_user` with a CITEXT column, writes data into the table, and demonstrates case-insensitive queries.
+
+```sql
+-- 1. Create table t_user
+
+CREATE TABLE t_user (username CITEXT);
+CREATE TABLE
+
+-- 2. View the columns of the table
+SHOW COLUMNS FROM t_user;
+  column_name | data_type | is_nullable | column_default | generation_expression |  indices  | is_hidden | is_tag
+--------------+-----------+-------------+----------------+-----------------------+-----------+-----------+---------
+  username    | CITEXT    |    true     | NULL           |                       | {}        |   false   | false
+  rowid       | INT8      |    false    | unique_rowid() |                       | {primary} |   true    | false
+(2 rows)
+
+-- 3. Write data into the table
+INSERT INTO t_user VALUES ('TeSt');
+INSERT 1
+
+-- 4. Queries using different case forms can all match the same record
+SELECT * FROM t_user WHERE username = 'test';
+  username
+----------
+  TeSt
+(1 row)
+
+SELECT * FROM t_user WHERE username = 'TEST';
+  username
+----------
+  TeSt
+(1 row)
+```
 
 ## Date and Time Types
 

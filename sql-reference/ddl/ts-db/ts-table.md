@@ -57,7 +57,7 @@ column_def:
 | INT2 / INT4 / INT8 | `simple8b` / `disabled` | `simple8b` | `lz4` / `zstd` / `zlib` / `snappy` / `disabled` | `lz4` | `medium` |
 | TIMESTAMP / TIMESTAMPTZ | `simple8b` / `disabled` | `simple8b` | `lz4` / `zstd` / `zlib` / `snappy` / `disabled` | `lz4` | `medium` |
 | FLOAT / DOUBLE | `chimp` / `disabled` | `chimp` | `lz4` / `zstd` / `zlib` / `snappy` / `disabled` | `lz4` | `medium` |
-| BOOL | `bitpacking` / `disabled` | `bitpacking` | `lz4` / `zstd` / `zlib` / `snappy` / `disabled` | `lz4` | `medium` |
+| BOOL | `bit-packing` / `disabled` | `bit-packing` | `lz4` / `zstd` / `zlib` / `snappy` / `disabled` | `lz4` | `medium` |
 | 字符类型 | `disabled` | `disabled` | `lz4` / `zstd` / `zlib` / `snappy` / `disabled` | `lz4` | `medium` |
 
 ### 语法示例

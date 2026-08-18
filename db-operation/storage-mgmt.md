@@ -45,7 +45,7 @@ KWDB 支持在创建或修改时序表时，为每个数据列单独指定编码
 | INT2 / INT4 / INT8 | `simple8b` / `disabled` | `simple8b` |
 | TIMESTAMP / TIMESTAMPTZ | `simple8b` / `disabled` | `simple8b` |
 | FLOAT / DOUBLE | `chimp` / `disabled` | `chimp` |
-| BOOL | `bitpacking` / `disabled` | `bitpacking` |
+| BOOL | `bit-packing` / `disabled` | `bit-packing` |
 | 字符类型 | `disabled` | `disabled` |
 #### 压缩算法
 

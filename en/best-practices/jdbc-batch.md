@@ -5,9 +5,11 @@ id: jdbc-batch
 
 # Using KaiwuDB JDBC Extended Interface to Optimize Batch Data Writing
 
-KaiwuDB JDBC is the official Java connector for KWDB. Built as an extension of PgJDBC, it complies with JDBC 4.0, 4.1, and 4.2 specifications. Java developers can use the KaiwuDB JDBC driver to connect to KWDB service processes and perform create, read, update, and delete operations on data.
+KaiwuDB JDBC is the official Java connector for KWDB. Built as an extension of PgJDBC, it complies with JDBC 4.0, 4.1, and 4.2 specifications. It supports PG extension protocol 'M' type messages, columnar batch data transfer, and Snappy/LZ4 compression functions. Java developers can use the KaiwuDB JDBC driver to connect to KWDB service processes and perform create, read, update, and delete operations on data.
 
 In addition to traditional batch SQL execution interfaces that support manual SQL concatenation, KaiwuDB JDBC provides specialized batch interfaces: `addBatchInsert`, `executeBatchInsert`, and `clearBatchInsert`. These interfaces can merge multiple writes to the same time-series table into a single SQL statement, reducing CPU usage and improving write performance.
+
+Users can configure and enable extended protocols through session variables. For large batches of result sets (e.g., ≥10,000 rows), compression can be enabled to accelerate transmission via extended transmission links; for small batches of result sets (e.g., ≤10,000 rows), the native protocol is maintained, with no significant loss.
 
 When writing data with batch interfaces, KaiwuDB JDBC handles errors gracefully. If written values don't match column data types or if specified fields don't exist, the driver returns counts for both successfully written and failed records, and logs detailed error information. This document provides best practices for writing data using KaiwuDB JDBC batch interfaces.
 
@@ -27,8 +29,9 @@ For more information, see:
 
 - [OpenJDK 1.8 or higher]((https://openjdk.org/install/)) installed
 - [Maven 3.6 or higher](https://maven.apache.org/install.html) installed
-- KaiwuDB JDBC driver package obtained
-- KWDB 2.1.0 or above installed and running with:
+- [Gradle](https://docs.gradle.org/current/userguide/installation.html) installed
+- KaiwuDB JDBC driver package obtained (3.2.0)
+- KWDB 3.2.2 or above installed and running with:
   - Properly configured database authentication
   - A database created for your connection
   - A user with appropriate privileges on tables or higher
@@ -49,14 +52,22 @@ SET SESSION ts_ignore_batcherror=true;
    <dependency>
      <groupId>com.kaiwudb</groupId>
      <artifactId>kaiwudb-jdbc</artifactId>
-     <version>3.1.0</version>
+     <version>3.2.0</version>
    </dependency>
    ```
 
 2. If KaiwuDB JDBC cannot be loaded, install the driver to your local Maven repository using the following command:
 
    ```shell
-   mvn install:install-file "-Dfile=../kaiwudb-jdbc-3.1.0.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=3.1.0" "-Dpackaging=jar"
+   mvn install:install-file "-Dfile=../kaiwudb-jdbc-3.2.0.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=3.2.0" "-Dpackaging=jar"
+   ```
+
+3. Enable the PG extension protocol compression function, controlled by the session variable `pg_extend_compress` ：
+
+   ```sql
+   SET pg_extend_compress = off --Disable extension protocol (default, use standard PG protocol)
+   SET pg_extend_compress = lz4_compress --Enable the extension protocol with LZ4 compression
+   SET pg_extend_compress = snappy_compress --Enable the extension protocol with Snappy compression
    ```
 
 ## Configuration Example
