@@ -14,7 +14,7 @@ id: kat-install
 - 已[安装](https://docs.docker.com/compose/install/) Docker Compose，且处于运行状态。
 - 已安装 `curl`，调用 KaiwuDB SSO 接口、获取公网 IP 。
 - 已安装 `python3`，脚本内部用其解析 JSON 。
-- 前往[KaiwuDB软件下载中心](https://www.kaiwudb.com/download?tab=3）获取 KGA Server 、UI、VIS 镜像，`setup.sh`脚本以及 `docker-compose.yaml` 模板文件。
+- 前往[KaiwuDB软件下载中心](https://www.kaiwudb.com/download?tab=3)获取 KGA Server 、UI、VIS 镜像，`setup.sh`脚本以及 `docker-compose.yaml` 模板文件。
 
 ::: warning 说明
 - 安装用户为 `root` 用户。`root` 用户在进行部署时无需输入密码。
