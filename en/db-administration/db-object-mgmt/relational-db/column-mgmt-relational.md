@@ -30,7 +30,7 @@ ALTER TABLE [IF EXISTS] <table_name> ADD [COLUMN] [IF NOT EXISTS] <column_name> 
 | `type_name` | The data type of the new column. |
 | `col_qual_list` | A list of column qualifications. KWDB supports the following qualifications: <br >- `<col_qualification_elem>`: `NULL`, `NOT NULL`, `UNIQUE`, `PRIMARY KEY`, `CHECK`, `DEFAULT`, `REFERENCES`, `AS`.<br >- `CONSTRAINT <constraint_name> <col_qualification_elem>` <br >- `COLLATE <collation_name>` <br >- `FAMILY <family_name>`: If no column family is specified, the column is added to the first column family. <br >- `CREATE FAMILY [<family_name>]` <br > **Note** <br > KWDB does not support adding columns with a FOREIGN KEY constraint. For details about how to add a FOREIGN KEY constraint to a column, see [ADD CONSTRAINT](../../../db-administration/db-object-mgmt/relational-db/constraint-mgmt-relational.md#add-constraint). |
 
-### # Supported Modifiable Data Types
+### Supported Modifiable Data Types
 
 The table below lists the relational data types supported for modification in KaiwuDB, along with their default widths, convertible target data types, and conversion notes.
 
