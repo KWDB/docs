@@ -193,6 +193,30 @@ This table lists the original data types, default width, maximum width, and conv
 | NCHAR              | 1 character   | 254 characters   | CHAR, VARCHAR, NVARCHAR                              | When converting NCHAR-typed values to CHAR-typed or VARCHAR-typed values, the CHAR-typed or VARCHAR-typed data width should not be shorter than 4 times of the original data width.                                       |
 | NVARCHAR           | 63 characters | 16383 characters | CHAR, VARCHAR, NCHAR                                 | When converting NVARCHAR-typed values to CHAR-typed or VARCHAR-typed values, the CHAR-typed or VARCHAR-typed data width should not be shorter than 4 times of the original data width. It is unavailable for TAG columns. |
 
+### Supported Modifiable Data Types
+
+The table below lists the time-series data types supported for modification in KaiwuDB, including their default width, maximum width, convertible target data types, and conversion notes.
+
+::: warning Notes
+
+- Default width: The value used by the system when the user does not specify a width.
+- Columns whose data type modification is prohibited: The timestamp column and primary tag column (`Primary tags`) as the first column of a time-series table.
+:::
+
+| Original Type | Default Width | Maximum Width  | Target Type                                                         | Notes                              |
+| ----------- | --------------- | --------- | -------------------------------------------------------- | ------------------------------------ |
+| TIMESTAMPTZ | ms            |             | TIMESTAMP                                                | Precision must remain consistent; millisecond, microsecond and nanosecond are supported |
+| TIMESTAMP   | Same as above |             | TIMESTAMPTZ                                              | Same as above  |
+| INT2        | 2 bytes       |             | INT4,INT8,VARCHAR                                        | When converting to VARCHAR, the minimum width requirement is 6. |
+| INT4        | 4 bytes       |             | INT8,VARCHAR                                             | When converting to VARCHAR, the minimum width requirement is 11. |
+| INT8        | 8 bytes       |             | VARCHAR                                                  | When converting to VARCHAR, the minimum width requirement is 20. |
+| FLOAT4      | 4 bytes       |             | FLOAT8,VARCHAR                                           | When converting to VARCHAR, the minimum width requirement is 30. |
+| FLOAT8      | 8 bytes       |             | VARCHAR                                                  | When converting to VARCHAR, the minimum width requirement is 30. |
+| CHAR        | 1 byte        | 1023 bytes  | CHAR,NCHAR,NVARCHAR,VARCHAR                              | When converting to CHAR or VARCHAR, the width of the target type must not be smaller than that of the original type.<br > When converting to NCHAR or NVARCHAR, the width of the target type must not be smaller than 1/4 of the original width. |
+| NCHAR       | 1 character     | 255 character   | CHAR,NCHAR,NVARCHAR,VARCHAR                        | When converting to CHAR or VARCHAR, the width of the target type must not be smaller than 4 times the original width.<br > When converting to NCHAR or NVARCHAR, the width of the target type must not be smaller than that of the original type. |
+| VARCHAR     | 254 bytes   | 65534 bytes | CHAR,NCHAR,NVARCHAR,VARCHAR,INT2,INT4,INT8,FLOAT4,FLOAT8   | When converting to CHAR or VARCHAR, the width of the target type must not be smaller than that of the original type.<br > When converting to NCHAR or NVARCHAR, the width of the target type must not be smaller than 1/4 of the original width. |
+| NVARCHAR    | 63 character    | 16383 character | CHAR,NCHAR,NVARCHAR,VARCHAR                        | When converting to CHAR or VARCHAR, the width of the target type must not be smaller than 4 times the original width.<br> When converting to NCHAR or NVARCHAR, the width of the target type must not be smaller than that of the original type|
+
 ### Examples
 
 - Modify the data type of a column.
