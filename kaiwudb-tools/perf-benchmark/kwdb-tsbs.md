@@ -185,6 +185,23 @@ kwdb-tsbs 提供数据导入工具（`tsbs_load_data`），将由 `tsbs_generate
       --partition=false
     ```
 
+- PREPARE 扩展模式
+
+    ```shell
+    ./tsbs_load_kwdb \
+      --file=data.dat \
+      --user=root \
+      --pass=1234 \
+      --host=127.0.0.1 \
+      --port=26257 \
+      --insert-type=prepare-extend \
+      --preparesize=1000 \
+      --db-name=benchmark \
+      --case=cpu-only \
+      --workers=12 \
+      --partition=false
+    ```
+
 参数说明：
 
 | 参数                      | 描述                                                                                                        | 类型   | 可选值            | 默认值                                                  |
@@ -192,9 +209,9 @@ kwdb-tsbs 提供数据导入工具（`tsbs_load_data`），将由 `tsbs_generate
 | `file`                        | 数据生成文件的路径。                                                                                             | STRING | N/A                   | N/A                                                         |
 | `user`                        | 连接 KWDB 数据库的用户名。                                                                                       | STRING | N/A                   | `root`                                                      |
 | `pass`                        | 身份验证时使用的密码。                                                                                           | STRING | N/A                   | 默认为空。                                                  |
-| `host`                      | KWDB 数据库的 IP 地址。                                                                                          | STRING | N/A                   | N/A                                                         |
-| `port`                      | KWDB 数据库的连接端口。                                                                                          | INT    | N/A                   | `26257`                                                     |
-| `insert-type` | 数据写入模式。<br >- `insert`：直接插入数据，适用于 DevOps cpu-only 和 IoT 测试场景。 <br >- `prepare`：预编译数据，适用于 DevOps cpu-only 测试场景。 <br >- `prepareiot`：预编译数据，适用于 IoT 测试场景。| STRING | `insert`、`prepare`  或 `prepareiot` | `insert`                                                    |
+| `host`                        | KWDB 数据库的 IP 地址。                                                                                          | STRING | N/A                   | N/A                                                         |
+| `port`                        | KWDB 数据库的连接端口。                                                                                          | INT    | N/A                   | `26257`                                                     |
+| `insert-type`                 | 数据写入模式。<br >- `insert`：直接插入数据，适用于 DevOps cpu-only 和 IoT 测试场景。 <br >- `prepare`：预编译数据，适用于 DevOps cpu-only 测试场景。 <br >- `prepare-extend`：prepare 扩展协议，KaiwuDB 私有 pgwire，适用于DevOps cpu-only 测试场景。 <br>- `prepareiot`：预编译数据，适用于 IoT 测试场景。| STRING | `insert`、`prepare`、`prepare-extend` 或 `prepareiot` | `insert`   |
 | `batch-size` 或 `preparesize` | 每批次写入的数据量。<br > **说明** <br >- `batch-size` 参数只适用于 INSERT 模式。<br >- `preparesize` 参数只适用于 PREPARE 模式。 | INT    | 正整数                | `1000`                                                      |
 | `db-name`                     | 需要访问的 KWDB 数据库名称。                                                                                     | STRING | N/A                   | `benchmark`                                                 |
 | `case`                        | 测试场景类型。                                                                                                   | STRING | `cpu-only`、`iot`            | `cpu-only`                                                  |
