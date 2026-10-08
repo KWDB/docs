@@ -1,5 +1,5 @@
 ---
-title: KaiwuDB JDBC 协议
+title: KaiwuDB JDBC 扩展协议
 id: jdbc-batch
 ---
 
