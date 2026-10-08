@@ -20,9 +20,9 @@ KaiwuDB JDBC 基于 PgJDBC 扩展实现，符合 JDBC 4.0、JDBC 4.1 和 JDBC 4.
 
 - [安装 openJDK](https://openjdk.org/install/)（1.8 及以上版本）。
 - [安装 Maven](https://maven.apache.org/install.html)（3.6 及以上版本）。
-- 安装 KWDB 数据库、配置数据库认证方式、创建数据库。
+- 安装 KWDB 3.3.0 及以上版本数据库、配置数据库认证方式、创建数据库。
 - 创建具有表级别及以上操作权限的用户。
-- 获取 KaiwuDB JDBC 驱动包。
+- 获取 KaiwuDB JDBC 驱动包 （3.3.0 版本）。
 
 ## 配置连接
 
@@ -32,14 +32,14 @@ KaiwuDB JDBC 基于 PgJDBC 扩展实现，符合 JDBC 4.0、JDBC 4.1 和 JDBC 4.
    <dependency>
      <groupId>com.kaiwudb</groupId>
      <artifactId>kaiwudb-jdbc</artifactId>
-     <version>3.1.0</version>
+     <version>3.3.0</version>
    </dependency>
    ```
 
 2. 如上述依赖无法正常加载使用，运行以下命令，将 KaiwuDB JDBC 驱动安装到本地 Maven 仓库中。
 
    ```shell
-   mvn install:install-file "-Dfile=../kaiwudb-jdbc-3.1.0.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=3.1.0" "-Dpackaging=jar"
+   mvn install:install-file "-Dfile=../kaiwudb-jdbc-3.3.0.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=3.3.0" "-Dpackaging=jar"
    ```
 
 ## 连接数据库
@@ -287,9 +287,9 @@ while(resultSet.next()){
 | VARCHAR   | java.lang.String     | 是           | 是           |
 | NCHAR     | java.lang.String     | 是           | 是           |
 | NVARCHAR  | java.lang.String     | 是           | 是           |
-| BYTES     | byte[] ([B)          | 是           | 否          |
-| VARBYTES  | byte[] ([B)          | 是           | 是           |
-| BLOB      | byte[] ([B)          | 是           | 否           |
+| BYTES     | byte[] ([B])          | 是           | 否          |
+| VARBYTES  | byte[] ([B])          | 是           | 是           |
+| BLOB      | byte[] ([B])          | 是           | 否           |
 | CLOB      | java.lang.String     | 是           | 否           |
 | JSON      | com.kaiwudb.util.KWobject | 是           | 否           |
 | GEOMETRY  | java.lang.String     | 否           | 是           |
@@ -325,7 +325,7 @@ while(resultSet.next()){
 
 ### 批量写入接口
 
-KaiwuDB JDBC 的批量写入接口，可用于将同一张时序表的多次数据写入处理合并到一条 SQL 语句中，以降低 CPU 占用并显著提升写入性能。相关配置示例，参见[使用 KaiwuDB JDBC 扩展接口优化批量数据写入](../../best-practices/jdbc-batch.md)。
+KaiwuDB JDBC 支持批量写入接口和直插协议，降低 CPU 和内存占用进而提升写入性能。相关配置示例，参见[使用 KaiwuDB JDBC 扩展协议](../../best-practices/jdbc-batch.md)。
 
 ### 错误码
 
