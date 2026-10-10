@@ -30,7 +30,7 @@ kwbase debug range-report <RANGE ID>
 
 | 参数 | 说明 |
 | --- | --- |
-| `--url`      | KaiwuDB Console基础url，支持带hash route，如：http://{host}:{port}/#/reports/range/1，`host`：数据库服务所在服务器IP；`port`：KaiwuDB启动命令中http参数，默认`8080`。 |
+| `--url`      | KaiwuDB Console基础url，支持带hash route，如：http://{host}:{port}/#/reports/range/1，`host`：数据库服务所在服务器IP；`port`：KaiwuDB启动命令中http参数，默认`8080`。  <br >**说明**安全模式下建议使用`https`，非安全模式使用`http`||
 | `--user`     | 安全认证登录用户名，具有 `admin` 或者 `sysadmin` 权限。 |
 | `--password` | 安全认证登录密码。|
 | `--insecure` | 数据库采用非安全模式部署，生产环境慎用。 |
@@ -46,7 +46,7 @@ kwbase debug range-report 1 --url=https://100.150.0.12:8080 --user=testxyy --pas
 非安全模式：
 
 ```shell
-kwbase debug range-report 1 --url=https://100.150.0.12:8080 --insecure
+kwbase debug range-report 1 --url=http://100.150.0.12:8080 --insecure
 ```
 
 命令执行成功后，会在当前目录下生成reports-range-<id>.html文件，可直接选择浏览器打开；
@@ -68,7 +68,8 @@ kwbase debug range-report 1 --url=https://100.150.0.12:8080 --insecure
 ![](../static/db-operation/urlerror.png)
 
 :::说明
-`--url`参数格式为 `http://host:port`。
+- 安全模式下，`--url`参数格式为 `https://host:port`；
+- 非安全模式下，`--url`参数格式为 `http//host:port`；
 :::
 
 3、参数冲突
