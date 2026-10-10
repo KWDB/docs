@@ -64,16 +64,9 @@ id: quickstart-installer-cli
     请选择 [1-4]:
     ```
 
-5. 若第4步选择单副本、三副本集群或两副本集群，可以选择快速安装 or 高级自定义安装。
+5. 安装程序自动生成配置文件模板并打开编辑器。根据实际环境修改各参数，保存并退出后，安装程序将自动开始安装。
 
-    ```plain
-    1. 快速安装
-    2. 高级自定义安装
-
-    请选择安装方式:
-    ```
-
-    快速安装：提供统一配置文件模板，每台服务器上只能部署一个节点，且各个节点的安全模式、adminUI 端口、服务端口、数据传输端口以及数据目录等均保持一致。
+    配置文件示例：
 
     ```ini
     [global]
@@ -87,109 +80,16 @@ id: quickstart-installer-cli
     brpc_port=27257
     # 数据目录
     data_root=/var/lib/kaiwudb
+
     [node1]
-    host=172.17.0.3
-    # ssh 连接端口
-    port=22
-    # ssh 连接用户
-    user=admin
-    # ssh 连接密码
-    passwd=******
-    [node2]
-    host=172.17.0.4
-    # ssh 连接端口
-    port=22
-    # ssh 连接用户
-    user=admin
-    # ssh 连接密码
-    passwd=******
-    [node3]
-    host=172.17.0.5
-    # ssh 连接端口
-    port=22
-    # ssh 连接用户
-    user=admin
-    # ssh 连接密码
-    passwd=******
-    [node4]
-    host=172.17.0.6
-    # ssh 连接端口
-    port=22
-    # ssh 连接用户
-    user=admin
-    # ssh 连接密码
-    passwd=******
-    ```
-
-    高级自定义安装：进入安全模式选择菜单，选择安全模式后，逐节点进行信息配置，每个节点的 adminUI 端口、服务端口、数据传输端口以及数据目录均可单独设置。
-
-    ```plain
-    1. INSECURE
-    2. TLS
-    3. TLCP
-
-    请选择安全模式:
-    ```
-
-    选择安全模式后，进入节点配置菜单:
-    
-    ```plain
-    请选择需要编辑配置的节点:
-    1. 节点 1
-    2. 节点 2
-    3. 节点 3
-    4. 开始安装
-
-    请选择节点:
-    ```
-
-    输入节点后，进入节点信息编辑界面：
-
-    ```ini
-    [global]
-    # adminui 端口
-    rest_port=8080
-    # 数据库服务端口
-    kaiwudb_port=26257
-    # 数据传输端口
-    brpc_port=27257
-    # 数据目录
-    data_root=/var/lib/kaiwudb
-    [node]
     host=127.0.0.1
     # ssh 连接端口
     port=22
     # ssh 连接用户
     user=admin
     # ssh 连接密码
-    passwd=******
+    passwd=*******
     ```
-
-    如果选择安装两副本集群，节点信息编辑页面如下：
-
-    ```ini
-    [global]
-    # adminui 端口
-    rest_port=8080
-    # 数据库服务端口
-    kaiwudb_port=26257
-    # 数据传输端口
-    brpc_port=27257
-    # 数据目录
-    data_root=/var/lib/kaiwudb
-    # 是否为仲裁节点
-    arbiter=false
-    [node]
-    host=127.0.0.1
-    # ssh 连接端口
-    port=22
-    # ssh 连接用户
-    user=admin
-    # ssh 连接密码
-    passwd=******
-    ```
-
-    所有节点信息配置完成后，输入 `4` 开始安装。
 
      参数说明：
 
@@ -200,7 +100,6 @@ id: quickstart-installer-cli
     | `kaiwudb_port` | KaiwuDB 服务端口，默认为 `26257`。 |
     | `brpc_port`    | 时序引擎间的数据传输端口，用于节点间通信，默认为 `27257`。 |
     | `data_root`    | 数据目录，默认为 `/var/lib/kaiwudb`。 |
-    | `arbiter`      | 仲裁节点设置，默认 `false` |
     | `host`         | 节点 IP 地址，需确保各节点间网络可达。 |
     | `port`         | 远程节点的 SSH 服务端口。各节点的 SSH 服务端口必须相同。 |
     | `user`         | 远程节点的 SSH 登录用户。各节点的 SSH 登录用户必须相同。 |
@@ -211,12 +110,6 @@ id: quickstart-installer-cli
     ```plain
     是否为所有用户安装：(y/N)
     ```
-
-    如果使用快速安装且安装两副本集群，会进入选择仲裁节点页面，输入仲裁节点 ip，多个 ip 之间使用`,`或`；`或`空格`进行分隔： 
-
-   ```plain
-   请选择仲裁节点(172.17.0.5 172.17.0.3 172.17.0.4 172.17.0.6):172.17.0.3 172.17.0.4）:
-   ```
 
 7. 安装过程中终端会实时显示安装进度。出现错误时，可以通过查看安装目录 `log` 目录下的日志文件获取详细信息。
 
