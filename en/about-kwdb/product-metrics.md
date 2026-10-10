@@ -15,6 +15,7 @@ KWDB can be deployed on the following operating systems.
 | openEuler 22.03, 24.03 | x86_64 |
 | Ubuntu 20.04, 22.04, 24.04 | x86_64 / ARM64 |
 | UOS 1070e | x86_64 / ARM64 |
+| Windows 11| x86(64) |
 
 ::: warning Note
 Operating systems or versions not listed here **may** work with KWDB but are not officially supported.

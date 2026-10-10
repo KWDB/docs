@@ -21,14 +21,15 @@ KWDB has been fully and systematically verified on the following operating syste
 
 | Operating System | Version | Bare Metal - ARM64 | Bare Metal - x86_64 | Container - ARM64 | Container - x86_64 |
 |---------|------|:---:|:---:|:---:|:---:|
-| CentOS | 7 | | | | ✓ |
-| | 8 | | | | ✓ |
-| openEuler | 22.03 | | ✓ | | ✓ |
-| | 24.03 | | ✓ | | ✓ |
-| Ubuntu | 20.04 | ✓ | ✓ | ✓ | ✓ |
-| | 22.04 | ✓ | ✓ | ✓ | ✓ |
-| | 24.04 | ✓ | ✓ | ✓ | ✓ |
-| UOS | 1070e | ✓ | ✓ | ✓ | ✓ |
+| CentOS    | 7     |    |   |   | ✓ |
+|           | 8     |    |   |   | ✓ |
+| openEuler | 22.03 |    | ✓ |   | ✓ |
+|           | 24.03 |    | ✓ |   | ✓ |
+| Ubuntu    | 20.04 | ✓ | ✓ | ✓ | ✓ |
+|           | 22.04 | ✓ | ✓ | ✓ | ✓ |
+|           | 24.04 | ✓ | ✓ | ✓ | ✓ |
+| UOS       | 1070e | ✓ | ✓ | ✓ | ✓ |
+| Windows   | 11    |   | √  |   |    |
 
 :::warning Note
 
@@ -36,6 +37,7 @@ KWDB has been fully and systematically verified on the following operating syste
 - If SELinux is enabled on the system, the `service` command cannot be used to manage KWDB. It is recommended to disable SELinux before deployment.
 - To deploy on bare metal using other Linux distributions, run `ldd --version` to check the glibc version. Version >= 2.28 should work in theory but is not officially supported by KWDB.
 - For installation packages not available on the [download page](https://www.kaiwudb.com/download?tab=2), contact [KWDB Technical Support](https://www.kaiwudb.com/about/support).
+- Relationship operations are only supported in the Windows environment.
 
 :::
 
@@ -81,12 +83,11 @@ Choose the installation package, container image, or source code compilation ver
 
 The KWDB installer is packaged as a `.run` self-extracting executable that bundles all deployment resources and supports both command-line mode and terminal graphical interaction mode.
 
-The KWDB [download page](https://www.kaiwudb.com/download?tab=2) currently provides installers for the following systems and architectures. For other systems or architectures, contact [KWDB Technical Support](https://www.kaiwudb.com/about/support):
+KWDB currently provides installation packages for download on the [Download Page](https://www.kaiwudb.com/download?tab=2). If you encounter any issues during installation, please contact [KWDB Technical Support](https://www.kaiwudb.com/about/support).
 
-- Ubuntu V20.04 x86_64
-- Ubuntu V20.04 ARM64
-- Ubuntu V22.04 x86_64
-- Ubuntu V22.04 ARM64
+:::warning Note
+For Windows environments, only product binary files are available; no installation program is provided. For installation and deployment procedures, refer to step 2 and subsequent steps in [kwbase CLI Deployment](./deploy/deploy-cli.md).
+:::
 
 ### Container Images
 
