@@ -29,7 +29,7 @@ KWDB has been fully and systematically verified on the following operating syste
 |           | 22.04 | ✓ | ✓ | ✓ | ✓ |
 |           | 24.04 | ✓ | ✓ | ✓ | ✓ |
 | UOS       | 1070e | ✓ | ✓ | ✓ | ✓ |
-| Windows   | 11    |   | √  |   |    |
+| Windows   | 11    |   | ✓  |   |    |
 
 :::warning Note
 
