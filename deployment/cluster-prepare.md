@@ -93,7 +93,7 @@ KWDB 安装程序封装为 `.run` 自解压可执行包，内置所有部署所�
 
 :::warning 说明
 - Windows 环境仅提供产品二进制文件，不提供安装程序，安装部署可参考 [kwbase CLI 部署](./cluster-deployment/kwbase-cli-deployment.md) 中的第2及之后的操作步骤。
-- Windows 环境启动命令不支持 `--brpc-addr` 参数设置。
+- Windows 环境启动命令不支持 `--brpc-addr` 和 `--background` 参数设置。
 :::
 
 ### 容器镜像
