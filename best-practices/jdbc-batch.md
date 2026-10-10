@@ -11,6 +11,8 @@ KaiwuDB JDBC 是 KWDB 的官方 Java 语言连接器，基于 PgJDBC 扩展实�
 
 KaiwuDB JDBC 提供了传统的批量执行 SQL 接口，用户可以通过手动拼接 SQL 实现批量数据写入，同时提供了 `addBatchInsert`、`executeBatchInsert` 和 `clearBatchInsert` 接口，能够将同一张时序表的多次数据写入合并到一条 SQL 语句，降低 CPU 占用，提升写入性能。
 
+用户可通过会话变量配置启用扩展协议。大批量结果集（如≥1W行）可设置启用压缩走扩展传输链路实现传输提速；小批量结果集（如≤1W行）保持原生协议，无明显损耗。
+
  使用批量接口写入数据时，如果待写入的值与列的数据类型不符或者待写入的字段不存在，KaiwuDB JDBC 会返回成功写入条数、写入失败条数，并将具体错误信息记录到日志中。本文提供了使用 KaiwuDB JDBC 批量接口写入数据的最佳实践。
 
 有关 KaiwuDB JDBC 的数据库连接方式、基础使用、数据类型和异常处理，参见[使用 JDBC 连接 KWDB 数据库](../development/java/connect-jdbc.md)；更多错误码信息，参见 [KaiwuDB JDBC Driver 错误码](../db-operation/error-code/error-code-jdbc-driver.md)；更多故障排查信息，参见 [KaiwuDB JDBC 故障排查](../troubleshooting-guide/troubleshooting.md#kaiwudb-jdbc)。
@@ -19,6 +21,7 @@ KaiwuDB JDBC 提供了传统的批量执行 SQL 接口，用户可以通过手�
 
 - [安装 openJDK](https://openjdk.org/install/)（1.8 及以上版本）。
 - [安装 Maven](https://maven.apache.org/install.html)（3.6 及以上版本）。
+- [安装 Gradle](https://docs.gradle.org/current/userguide/installation.html)。
 - 安装 KWDB 3.3.0 或以上版本数据库、配置数据库认证方式、创建数据库。
 - 创建具有表级别及以上操作权限的用户。
 - 获取 KaiwuDB JDBC 驱动包（3.3.0）。
@@ -46,8 +49,9 @@ SET SESSION ts_ignore_batcherror=true;
 2. 如果 KaiwuDB JDBC 无法正常加载使用，执行以下命令，将驱动安装到本地 Maven 仓库中：
 
    ```shell
-   mvn install:install-file "-Dfile=../kaiwudb-jdbc-3.3.0.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=3.3.0" "-Dpackaging=jar"
-   ```
+    mvn install:install-file "-Dfile=../kaiwudb-jdbc-3.3.0.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=3.3.0" "-Dpackaging=jar"
+    ```
+    
 # 使用 KaiwuDB JDBC 扩展接口优化批量数据写入
 
 启用PG扩展协议压缩功能，通过会话变量 `pg_extend_compress` 控制：

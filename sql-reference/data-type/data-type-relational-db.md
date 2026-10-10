@@ -915,6 +915,94 @@ SHOW CREATE clobs;
              | )
 (1 row)
 ```
+### CITEXT
+
+#### 类型描述
+
+CITEXT（Case-Insensitive Text）是一种大小写不敏感，不限制字符长度的字符类型。CITEXT 值在存储时保留原始大小写，但在比较时不区分大小写，适用于用户名、登录名等需要保留原始输入、但比较时忽略大小写的场景。
+
+CITEXT 类型不支持带长度修饰符的写法，例如 `CITEXT(n)` 不合法。支持数组类型 `CITEXT[]`，数组元素在比较时同样遵循大小写不敏感规则。
+
+::: warning 说明
+
+**与 PostgreSQL 的行为差异**
+
+KaiwuDB 的 CITEXT 基于 Unicode 标准实现大小写不敏感比较，而 PostgreSQL 的 CITEXT 依赖数据库的本地化设置（LC_CTYPE），因此在某些特殊 Unicode 字符上，两者行为不完全一致。差异场景包括：
+
+- 一对多/多对一大小写映射字符：如连字 `ﬂ`，KaiwuDB 中 `'ﬂ'::CITEXT = 'FL'::CITEXT` 结果为 `true`，PostgreSQL 中为 `false`。
+- 语言相关大小写字符：如希腊字母 `Σ`，KaiwuDB 中 `'Σ'::CITEXT = 'ς'::CITEXT` 结果为 `true`，PostgreSQL 中为 `false`。
+- 组合字符与预组字符：KaiwuDB 中两者视为相等，PostgreSQL 中不相等。
+
+**KaiwuDB 内部的处理机制差异**
+
+等值比较、分组、排序基于 Unicode 标准使用非确定性排序规则（`en_us_u_ks_level2`）；模糊匹配和正则匹配基于正则引擎使用确定性排序规则。因此在某些特殊 Unicode 字符场景下，两类操作的结果可能不一致。例如，土耳其语字母 `İ` 在英语环境下与 `i` 不相等，导致 `=` 与 `LIKE` 结果不同：
+
+```sql
+SELECT 'İ'::CITEXT = 'i'::CITEXT, 'İ'::CITEXT LIKE 'i'::CITEXT;
+-- (=) 结果: false，(LIKE) 结果: true
+```
+
+**迁移现有字符串列时的注意事项**
+
+- 如需将现有列转换为 CITEXT 类型，执行 `ALTER TABLE ... ALTER COLUMN ... TYPE CITEXT`。
+- 如需为 CITEXT 列添加 `UNIQUE` 约束或 `PRIMARY KEY`，由于 CITEXT 的唯一性判断不区分大小写，添加约束前需先清理列中存在大小写差异的重复值（如 `Admin` 和 `admin`），否则会报错。
+
+:::
+
+CITEXT 在以下操作中均按大小写不敏感方式处理：
+
+- 比较运算符：`=`、`!=`、`<>`、`<`、`<=`、`>`、`>=`、`IN`、`BETWEEN AND`
+- 正则匹配：`~`、`!~`、`~*`、`!~*`
+- 模式匹配：`LIKE`、`NOT LIKE`、`ILIKE`、`NOT ILIKE`、`SIMILAR TO`
+- 字符串函数：`strpos`、`replace`、`split_part`、`translate`、`regexp_replace` 等
+- 分组、排序：`GROUP BY`、`ORDER BY`、`MIN`、`MAX`
+- 约束与索引：主键索引、唯一索引、普通索引（索引中存储原始字符串）
+- 物化视图：在物化视图定义和查询中引用 CITEXT 列时，存储和查询保留原始大小写，比较操作不区分大小写
+
+#### 类型转换
+
+CITEXT 支持与 STRING、TEXT、VARCHAR、CHAR 之间的双向显式转换。
+
+在以下场景中，字符串常量会被隐式转换为 CITEXT 类型：
+
+- 向 CITEXT 列执行 `INSERT` 或 `UPDATE` 操作时
+- 在比较运算中，一侧为 CITEXT 类型、另一侧为字符串常量时
+
+#### 示例
+
+以下示例创建一个具有 CITEXT 列的表 `t_user`，向表中写入数据，并演示大小写不敏感查询。
+
+```sql
+-- 1. 创建表 t_user
+
+CREATE TABLE t_user (username CITEXT);
+CREATE TABLE
+
+-- 2. 查看表的列
+SHOW COLUMNS FROM t_user;
+  column_name | data_type | is_nullable | column_default | generation_expression |  indices  | is_hidden | is_tag
+--------------+-----------+-------------+----------------+-----------------------+-----------+-----------+---------
+  username    | CITEXT    |    true     | NULL           |                       | {}        |   false   | false
+  rowid       | INT8      |    false    | unique_rowid() |                       | {primary} |   true    | false
+(2 rows)
+
+-- 3. 向表中写入数据
+INSERT INTO t_user VALUES ('TeSt');
+INSERT 1
+
+-- 4. 使用不同大小写形式查询，均可匹配到同一条记录
+SELECT * FROM t_user WHERE username = 'test';
+  username
+----------
+  TeSt
+(1 row)
+
+SELECT * FROM t_user WHERE username = 'TEST';
+  username
+----------
+  TeSt
+(1 row)
+```
 
 ## 日期和时间类型
 
