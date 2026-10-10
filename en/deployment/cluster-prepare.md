@@ -34,7 +34,7 @@ KWDB has been fully and systematically verified on the following operating syste
 |           | 22.04 | ✓ | ✓ | ✓ | ✓ |
 |           | 24.04 | ✓ | ✓ | ✓ | ✓ |
 | UOS       | 1070e | ✓ | ✓ | ✓ | ✓ |
-| Windows   | 11    |   | √  |   |    |
+| Windows   | 11    |   | ✓  |   |    |
 
 :::warning Note
 
@@ -93,7 +93,6 @@ KWDB currently provides installation packages for download on the [Download Page
 :::warning Note
 - For Windows environments, only product binary files are available; no installation program is provided. For installation and deployment procedures, refer to step 2 and subsequent steps in [kwbase CLI Deployment](./deploy/deploy-cli.md).
 - The startup command in the Windows environment does not support the --brpc-addr parameter setting.
-:::
 :::
 
 ### Container Images
