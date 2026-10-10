@@ -19,16 +19,17 @@ id: quickstart-prepare
 
 KWDB 产品特性在以下操作系统及对应的 CPU 架构组合上经过全面且系统化的验证：
 
-| 操作系统 | 版本 | 裸机-ARM64 | 裸机-x86_64 |  容器-ARM64 | 容器-x86_64 |
-|---------|------|:---:|:---:|:---:|:---:|
-| CentOS | 7 | | | | ✓ |
-| | 8 | | | | ✓ |
-| openEuler | 22.03 | | ✓ | | ✓ |
-| | 24.03 | | ✓ | | ✓ |
-| Ubuntu | 20.04 | ✓ | ✓ | ✓ | ✓ |
-| | 22.04 | ✓ | ✓ | ✓ | ✓ |
-| | 24.04 | ✓ | ✓ | ✓ | ✓ |
-| UOS | 1070e | ✓ | ✓ | ✓ | ✓ |
+| 操作系统   | 版本  | 裸机-ARM64 | 裸机-x86_64 |  容器-ARM64 | 容器-x86_64 |
+|-----------|-------|:--:|:-:|:-:|:---:|
+| CentOS    | 7     |    |   |   | ✓ |
+|           | 8     |    |   |   | ✓ |
+| openEuler | 22.03 |    | ✓ |   | ✓ |
+|           | 24.03 |    | ✓ |   | ✓ |
+| Ubuntu    | 20.04 | ✓ | ✓ | ✓ | ✓ |
+|           | 22.04 | ✓ | ✓ | ✓ | ✓ |
+|           | 24.04 | ✓ | ✓ | ✓ | ✓ |
+| UOS       | 1070e | ✓ | ✓ | ✓ | ✓ |
+| Windows   | 11    |   | √  |   |    |
 
 :::warning 说明
 
@@ -36,6 +37,7 @@ KWDB 产品特性在以下操作系统及对应的 CPU 架构组合上经过全�
 - 如果系统开启了 SELinux，将无法使用 `service` 命令管理 KWDB，部署前建议关闭 SELinux。
 - 如需在其他 Linux 发行版上裸机部署，可先通过 `ldd --version` 检查 glibc 版本，>= 2.28 理论上即可运行，但尚未得到 KWDB 官方支持。。
 - 如需获取[下载页面](https://www.kaiwudb.com/download?tab=2)未提供的对应版本安装包，请联系 [KWDB 技术支持](https://www.kaiwudb.com/about/support)。
+- Windows 环境仅支持关系操作。
 
 :::
 
@@ -82,12 +84,11 @@ KWDB 产品特性在以下操作系统及对应的 CPU 架构组合上经过全�
 
 KWDB 安装程序封装为 `.run` 自解压可执行包，内置所有部署所需资源，支持命令行模式和终端图形交互模式。
 
-目前 KWDB [下载页面](https://www.kaiwudb.com/download?tab=2)提供了以下系统与架构的安装程序，如需其它系统或架构的安装程序，请联系 [KWDB 技术支持](https://www.kaiwudb.com/about/support)：
+目前 KWDB [下载页面](https://www.kaiwudb.com/download?tab=2)支持下载安装程序，如安装过程中遇到问题，请联系 [KWDB 技术支持](https://www.kaiwudb.com/about/support)：
 
-- Ubuntu V20.04 x86_64
-- Ubuntu V20.04 ARM64
-- Ubuntu V22.04 x86_64
-- Ubuntu V22.04 ARM64
+:::warning 说明
+Windows 环境仅提供产品二进制文件，不提供安装程序，安装部署操作请参考 [kwbase CLI 部署](./deploy/deploy-cli.md) 中的第2及之后的操作步骤。
+:::
 
 ### 容器镜像
 
