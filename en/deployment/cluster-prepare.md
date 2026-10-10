@@ -92,7 +92,7 @@ KWDB currently provides installation packages for download on the [Download Page
 
 :::warning Note
 - For Windows environments, only product binary files are available; no installation program is provided. For installation and deployment procedures, refer to step 2 and subsequent steps in [kwbase CLI Deployment](./deploy/deploy-cli.md).
-- The startup command in the Windows environment does not support the --brpc-addr parameter setting.
+- The startup command in the Windows environment does not support the `--brpc-addr` and `--background` parameter setting.
 :::
 
 ### Container Images
