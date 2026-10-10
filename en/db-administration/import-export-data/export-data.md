@@ -7,7 +7,7 @@ id: export-data
 
 The `EXPORT` statement exports the following data:
 
-- **Table data**: Exports the metadata, privilege information, and user data for the specified time-series or relational tables.
+- **Table data**: Exports the metadata, privilege information, and user data for the specified time-series or relational tables, as well as sparse tables.
 - **Database data**: Exports the metadata, privilege information, and user data for the specified time-series or relational databases.
 - **User configuration**: Exports SQL statements or CSV files for creating non-system users.
 - **Cluster parameters**: Exports SQL statements or CSV files for cluster parameter settings.

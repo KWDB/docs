@@ -5,10 +5,12 @@ id: jdbc-batch
 
 # 使用 KaiwuDB JDBC 扩展接口优化批量数据写入
 
-KaiwuDB JDBC 是 KWDB 的官方 Java 语言连接器，基于 PgJDBC 扩展实现，符合 JDBC 4.0、JDBC 4.1 和 JDBC 4.2 规范。Java 开发人员可以使用 KaiwuDB JDBC 驱动程序连接 KWDB 的服务进程，进行数据增删改查操作。
+KaiwuDB JDBC 是 KEDB 的官方 Java 语言连接器，基于 PgJDBC 扩展实现，符合 JDBC 4.0、JDBC 4.1 和 JDBC 4.2 规范。支持PG扩展协议‘M’类消息支持，支持列式批量数据传输及Snappy/LZ4压缩功能。Java 开发人员可以使用 KaiwuDB JDBC 驱动程序连接 KWDB 的服务进程，进行数据增删改查操作。
 
 KaiwuDB JDBC 提供了传统的批量执行 SQL 接口，用户可以通过手动拼接 SQL 实现批量数据写入，同时提供了
  `addBatchInsert`、`executeBatchInsert` 和 `clearBatchInsert` 接口，能够将同一张时序表的多次数据写入合并到一条 SQL 语句，降低 CPU 占用，提升写入性能。
+
+用户可通过会话变量配置启用扩展协议。大批量结果集（如≥1W行）可设置启用压缩走扩展传输链路实现传输提速；小批量结果集（如≤1W行）保持原生协议，无明显损耗。
 
  使用批量接口写入数据时，如果待写入的值与列的数据类型不符或者待写入的字段不存在，KaiwuDB JDBC 会返回成功写入条数、写入失败条数，并将具体错误信息记录到日志中。本文提供了使用 KaiwuDB JDBC 批量接口写入数据的最佳实践。
 
@@ -24,9 +26,10 @@ KaiwuDB JDBC 提供了传统的批量执行 SQL 接口，用户可以通过手�
 
 - [安装 openJDK](https://openjdk.org/install/)（1.8 及以上版本）。
 - [安装 Maven](https://maven.apache.org/install.html)（3.6 及以上版本）。
-- 安装 KWDB 2.1.0 或以上版本数据库、配置数据库认证方式、创建数据库。
+- [安装 Gradle](https://docs.gradle.org/current/userguide/installation.html)。
+- 安装 KWDB 3.2.2 或以上版本数据库、配置数据库认证方式、创建数据库。
 - 创建具有表级别及以上操作权限的用户。
-- 获取 KaiwuDB JDBC 驱动包。
+- 获取 KaiwuDB JDBC 驱动包（3.2.0版本）。
 
 ## 配置数据库
 
@@ -44,14 +47,22 @@ SET SESSION ts_ignore_batcherror=true;
    <dependency>
      <groupId>com.kaiwudb</groupId>
      <artifactId>kaiwudb-jdbc</artifactId>
-     <version>3.1.0</version>
+     <version>3.2.0</version>
    </dependency>
    ```
 
 2. 如果 KaiwuDB JDBC 无法正常加载使用，执行以下命令，将驱动安装到本地 Maven 仓库中：
 
    ```shell
-   mvn install:install-file "-Dfile=../kaiwudb-jdbc-3.1.0.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=3.1.0" "-Dpackaging=jar"
+   mvn install:install-file "-Dfile=../kaiwudb-jdbc-3.2.0.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=3.2.0" "-Dpackaging=jar"
+   ```
+
+3. 启用PG扩展协议压缩功能，通过会话变量 `pg_extend_compress` 控制：
+
+   ```sql
+   SET pg_extend_compress = off --关闭扩展协议（默认，走标准PG协议）
+   SET pg_extend_compress = lz4_compress --启用LZ4压缩的扩展协议
+   SET pg_extend_compress = snappy_compress --启用Snappy压缩的扩展协议
    ```
 
 ## 配置示例
