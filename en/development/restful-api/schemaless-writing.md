@@ -44,6 +44,7 @@ Regardless of the protocol used, the processing flow follows these steps:
    - Missing columns and tags are added through `ALTER TABLE ... ADD COLUMN` and `ALTER TABLE ... ADD TAG` operations
    - Insufficient column lengths and tag lengths are extended via `ALTER TABLE ... ALTER COLUMN` and `ALTER TABLE ... ALTER TAG` operations
    - Data is inserted into the table
+   - When calling the API, a regular time series table is created by default, and creating a sparse time series table is not supported at this time. If you need to write data to a sparse time series table using schema-free writing, you need to create a sparse time series table first.
 
 ## Supported Protocols
 

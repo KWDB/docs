@@ -58,11 +58,13 @@ KWDB 3.3.0 introduces a number of new features and optimizations in time-series 
 
 - Provide binary files for the Windows 11 environment with relational operation support.
 
+
 ## Upgrade Notes
 
-- **Multi-replica clusters**: Supports offline upgrade from KWDB 3.0.0 and 3.1.0 to 3.2.0.
-- **Single-replica clusters**: Supports offline upgrade from KWDB 3.0.0 and 3.1.0 to 3.2.0.
-- **Standalone deployments**: Supports offline upgrade from KWDB 3.0.0 and 3.1.0 to 3.2.0.
-- **KWDB 2.x**: Supports upgrade to 3.2.0 via data export and import.
+- **Multi-replica clusters**：Supports offline upgrade from KWDB 3.0.0 ,3.1.0 and 3.2.0 to 3.3.0.
 
-For instructions, see [Database Upgrade](../db-operation/db-upgrade.md), [Data Export](../db-administration/import-export-data/export-data.md), and [Data Import](../db-administration/import-export-data/import-data.md).
+- **Single-replica clusters**：Supports offline upgrade from KWDB 3.0.0 ,3.1.0 and 3.2.0 to 3.3.0.
+
+- **Standalone deployments**：Supports offline upgrade from KWDB 3.0.0 ,3.1.0 and 3.2.0 to 3.3.0.
+
+- **KWDB 2.x **：Supports upgrade to 3.3.0 via data export and import.

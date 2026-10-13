@@ -12,6 +12,7 @@ id: log-mgmt
 - [存储管理](./storage-mgmt.md)
 - [日志管理](./log-mgmt.md)
 - [时区管理](./timezone-mgmt.md)
+- [Range报告管理](./rangereport-mgmt.md)
 - [集群扩缩容](./cluster-scale.md)
 - [高可用](./cluster-ha.md)
 - [容灾和备份](./backup-and-restore.md)
