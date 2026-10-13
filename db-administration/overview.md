@@ -16,6 +16,7 @@ id: overview
   - [列管理](./db-object-mgmt/ts-db/column-mgmt-ts.md)
   - [标签管理](./db-object-mgmt/ts-db/label-mgmt-ts.md)
   - [索引管理](./db-object-mgmt/ts-db/index-mgmt-ts.md)
+  - [视图管理](./db-object-mgmt/ts-db/view-mgmt-ts.md)
   - [数据分片管理](./db-object-mgmt/ts-db/range-mgmt-ts.md)
   - [分区管理](./db-object-mgmt/ts-db/partition-mgmt-ts.md)
   - [区域管理](./db-object-mgmt/ts-db/zone-mgmt-ts.md)
