@@ -28,7 +28,7 @@ This table lists all the statement-level audit operations supported by KWDB.
 | DATABASE   | - CREATE DATABASE <br >- ALTER DATABASE <br >- DROP DATABASE <br >- IMPORT <br >- EXPORT              | - CREATE DATABASE <br >- ALTER DATABASE <br >- DROP DATABASE <br >- IMPORT <br >- EXPORT |
 | SCHEMA     | - CREATE SCHEMA <br >- DROP SCHEMA                                                                    | -                                                                                        |
 | TABLE      | - CREATE TABLE <br >- ALTER TABLE <br >- DROP TABLE <br >- TRUNCATE TABLE <br >- IMPORT <br >- EXPORT | - CREATE TABLE <br >- ALTER TABLE <br >- DROP TABLE <br >- IMPORT <br >- EXPORT          |
-| VIEW       | - CREATE VIEW <br >- ALTER VIEW <br >- DROP VIEW                                                      | -                                                                                        |
+| VIEW       | - CREATE VIEW <br >- ALTER VIEW <br >- DROP VIEW                                                      | - CREATE VIEW <br >- ALTER VIEW <br >- DROP VIEW                                                                                       |
 | INDEX      | - CREATE INDEX <br >- ALTER INDEX <br >- DROP INDEX                                 | - CREATE INDEX <br >- ALTER INDEX <br >- DROP INDEX                 |
 | SEQUENCE   | - CREATE SEQUENCE <br >- ALTER SEQUENCE <br >- DROP SEQUENCE                                          | -                                                                                        |
 | PRIVILEGE  | - GRANT PRIVILEGE <br >- REVOKE PRIVILEGE                                                             | - GRANT PRIVILEGE <br >- REVOKE PRIVILEGE                                                |
@@ -45,7 +45,7 @@ This table lists all the object-level audit operations supported by KWDB.
 | Object | Relational Database                                | Time-series Database                                                                          |
 |--------|----------------------------------------------------|-----------------------------------------------------------------------------------------------|
 | TABLE  | - INSERT <br >- SELECT <br >- UPDATE <br >- DELETE | - INSERT <br >- SELECT <br >- UPDATE <br >- DELETE <br >Where, the `UPDATE` and `DELETE` statements only support error-reporting audit. |
-| VIEW   | SELECT                                             | -                                                                                             |
+| VIEW   | SELECT                                             | SELECT                                                                                            |
 
 After database audit is enabled, the system will save the audit results to the audit logs by default. For more information about audit logs, see [Log Management](../../db-operation/log-mgmt.md).
 

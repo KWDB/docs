@@ -1,57 +1,70 @@
 ---
-title: 3.2.0 Release Notes
-id: 3.2.0-release-notes
+title: 3.3.0 Release Notes
+id: 3.3.0-release-notes
 ---
 
-# KWDB 3.2.0 Release Notes
+# KWDB 3.3.0 Release Notes
 
 KWDB is a distributed, multi-model database designed for AIoT scenarios. It supports creating both time-series and relational databases within the same instance and enables unified multi-model data processing. With high-performance time-series capabilities, it supports connections for tens of millions of devices, real-time insertion of millions of records within seconds, and query responses in just a few seconds for hundreds of millions of records. Built for stability, security, high availability, and easy maintenance, KWDB is ideal for industrial IoT, digital energy, connected vehicles, and smart industries, providing a unified platform for data storage, management, and analysis.
 
-KWDB 3.2.0 builds on existing features by introducing several new capabilities in data management and querying and operations monitoring, along with important changes to installation, deployment, and development tools.
+KWDB 3.3.0 introduces a number of new features and optimizations in time-series data processing, ecosystem tools, installation and deployment while retaining its original capabilities.
 
 ## Version Details
 
 | Version | Release Date |
 |---------|------|
-| 3.2.0   | 2026.05.28 |
+| 3.3.0   | 2026.10.19 |
 
 ## New Features
 
-### Data Management and Querying
+### Database Object Management
 
-#### Data Ingestion and Deletion
+- Time-series view management support:
+    - Support creating, modifying, deleting and viewing views;
+    - Support referencing table data within the permission scope under both relational and time-series scenarios, and support cross-module queries;
 
-- The DELETE statement now supports filtering by partial primary tags: you can specify partial primary tags alone or in combination with a timestamp as filter conditions for deletion.
+### Data Management and Query
 
-#### Data Storage and Compression
+- Data publishing:
+    - Support flexible configuration of subscription objects, including time-series databases, time-series tables, and query statements with WHERE conditions;
+    - Published data supports deletion and update operations for time-series data;
+    - Published data objects include out-of-order inserted data, data imported via IMPORT statements, and data updated before task startup or during task suspension
 
-- **Custom compression**:
-  - Supports setting the encoding method, compression algorithm, and compression level per column when creating time-series tables.
-  - Supports modifying the encoding method, compression algorithm, and compression level of existing columns.
-  - Supports configuring a global default compression algorithm and level through cluster parameters.
+- Data push: Support real-time push of data in the database to Kafka topics;
+    - Historical data push control: Support configuring whether to push historical data through parameters
+    - Flexible push scope: Support data push for a single time-series database, a single time-series table or multiple time-series tables
+    - Comprehensive filtering support: Support filtering for all metrics and tag columns
+    - Instant push configuration: Support independent configuration of immediate push for each push task
+    - DDL operation push: Full support for DDL operation push, including:
+        - create table
+        - drop table
+        - alter table
 
-#### Query Enhancements
+### Operations and Maintenance Management
 
-- Time-series grouped window functions now support grouping and aggregation by any column or combination of columns in a table.
-- **Value fill queries**: Time-series data supports returning fill values when no data exists at a specified time point, using one of six strategies: exact, previous value, next value, nearest value, constant, or linear interpolation.
-- **Extended last/first aggregate functions**: The time-series and relational `last()`, `lastts()`, `last_row()`, `last_row_ts()`, `first()`, `firstts()`, `first_row()`, and `first_row_ts()` functions now support a two-argument form for explicitly specifying the sort timestamp column.
-
-#### Data Import and Export
-
-- **Export logic optimization**: Before exporting, the system checks whether the target folder is empty. If it is not empty, an error is returned to prevent overwriting existing data.
-- **New control parameters**: New `thread_concurrency` and `limit_memory` parameters for configuring the number of concurrent export threads and limiting the amount of data imported or exported.
+- Range report download: Provide the Kwbase debug range-report subcommand to pull diagnostic information for the specified rangeID and generate a static HTML report locally.
 
 ## Important Changes
 
-### Installation and Deployment
+### Ecosystem & Tools
 
-- **Installer redesign**: The installer is now packaged as a `.run` file and offers both a command-line interactive menu and a dialog interactive menu installation mode. Different startup options launch the corresponding installation workflow.
+- KaiwuDB Developer Center: Time series supports view management.
+- KaiwuDB JDBC: The JDBC driver supports the prepare extend write mode. New private 'j/k/l' messages are added to directly insert data by table objects to achieve high-speed data writing.
+- Advanced custom installation support for installation and deployment:
+    - Support setting different data service ports, adminUI ports and data directories for each node;
+    - Support installing multiple nodes on a single server.
+
+### Operating System and Environment
+
+- Provide binary files for the Windows 11 environment with relational operation support.
+
 
 ## Upgrade Notes
 
-- **Multi-replica clusters**: Supports offline upgrade from KWDB 3.0.0 and 3.1.0 to 3.2.0.
-- **Single-replica clusters**: Supports offline upgrade from KWDB 3.0.0 and 3.1.0 to 3.2.0.
-- **Standalone deployments**: Supports offline upgrade from KWDB 3.0.0 and 3.1.0 to 3.2.0.
-- **KWDB 2.x**: Supports upgrade to 3.2.0 via data export and import.
+- **Multi-replica clusters**：Supports offline upgrade from KWDB 3.0.0 ,3.1.0 and 3.2.0 to 3.3.0.
 
-For instructions, see [Database Upgrade](../db-operation/db-upgrade.md), [Data Export](../db-administration/import-export-data/export-data.md), and [Data Import](../db-administration/import-export-data/import-data.md).
+- **Single-replica clusters**：Supports offline upgrade from KWDB 3.0.0 ,3.1.0 and 3.2.0 to 3.3.0.
+
+- **Standalone deployments**：Supports offline upgrade from KWDB 3.0.0 ,3.1.0 and 3.2.0 to 3.3.0.
+
+- **KWDB 2.x **：Supports upgrade to 3.3.0 via data export and import.

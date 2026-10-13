@@ -158,7 +158,13 @@ During installation, the program performs real-time parameter validation. If a c
     systemctl enable kaiwudb
     ```
 
-12. Run `kw-sql` to log in to the database as the deployment user, or connect to and manage KWDB using any of the following methods:
+12. Equipped with the quick deployment script `quick-deploy.sh kaiwudb`, when the installed version is 3.2.0 or above, it automatically downloads the `.run`type installation package and executes quick deployment in standalone mode. 
+
+    :::warning Note:
+    The quick deployment script only supports installation packages of the **tar.gz** type.
+    :::
+
+13. Run `kw-sql` to log in to the database as the deployment user, or connect to and manage KWDB using any of the following methods:
     - [kwbase CLI](../access/access-cli.md)
     - [KaiwuDB JDBC](../access/access-jdbc.md)
     - [KaiwuDB Developer Center](../access/access-kdc.md)

@@ -21,7 +21,7 @@ KaiwuDB 提供企业版（KaiwuDB）与开源版（KWDB）两种版本。企业�
       <td rowspan="6">时序引擎</td>
       <td><a href="../db-administration/data-stream.md">流计算</a></td><td>✅</td><td>✅</td>
     </tr>
-    <tr><td>数据发布</td><td>✅</td><td>—</td></tr>
+    <tr><td><a href="../db-administration/data-pub.md">数据发布</td><td>✅</td><td>✅</td></tr>
     <tr><td>数据订阅</td><td>✅</td><td>—</td></tr>
     <tr><td><a href="../db-operation/storage-mgmt.md">数据压缩</a></td><td>✅</td><td>✅</td></tr>
     <tr><td>冷热分级存储</td><td>✅</td><td>—</td></tr>
@@ -29,11 +29,11 @@ KaiwuDB 提供企业版（KaiwuDB）与开源版（KWDB）两种版本。企业�
     <tr><td colspan="2">关系引擎</td><td>✅</td><td>✅</td></tr>
     <tr><td colspan="2">AI 预测分析引擎</td><td>✅</td><td>—</td></tr>
     <tr>
-      <td rowspan="6">灵活部署</td>
+      <td rowspan="7">灵活部署</td>
       <td colspan="2"><a href="../quickstart/overview.md">单机部署</a></td><td>✅</td><td>✅</td>
     </tr>
     <tr><td colspan="2"><a href="../quickstart/overview.md">容器部署</a></td><td>✅</td><td>✅</td></tr>
-    <tr><td rowspan="2"><a href="../deployment/overview.md">集群部署</a></td><td>单副本</td><td>✅</td><td>✅</td></tr>
+    <tr><td rowspan="3"><a href="../deployment/overview.md">集群部署</a></td><td>单副本</td><td>✅</td><td>✅</td></tr><tr><td>双副本</td><td>✅</td><td>—</td></tr>
     <tr><td>三副本及以上</td><td>✅</td><td>✅</td></tr>
     <tr><td rowspan="2">主备部署</td><td>单机主备</td><td>✅</td><td>—</td></tr>
     <tr><td>集群主备</td><td>✅</td><td>—</td></tr>
