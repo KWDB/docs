@@ -21,7 +21,7 @@ KaiwuDB 提供企业版（KaiwuDB）与开源版（KWDB）两种版本。企业�
       <td rowspan="6">时序引擎</td>
       <td><a href="../db-administration/data-stream.md">流计算</a></td><td>✅</td><td>✅</td>
     </tr>
-    <tr><td>数据发布</td><td>✅</td><td>—</td></tr>
+    <tr><td><a href="../db-administration/data-pub.md">数据发布</td><td>✅</td><td>✅</td></tr>
     <tr><td>数据订阅</td><td>✅</td><td>—</td></tr>
     <tr><td><a href="../db-operation/storage-mgmt.md">数据压缩</a></td><td>✅</td><td>✅</td></tr>
     <tr><td>冷热分级存储</td><td>✅</td><td>—</td></tr>
