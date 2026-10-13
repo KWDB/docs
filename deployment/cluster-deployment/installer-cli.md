@@ -78,9 +78,16 @@ id: installer-cli
 
 5. 输入待安装的节点数量，例如输入 `3` 表示安装三个节点。
 
-6. 安装程序自动生成配置文件模板并打开编辑器。根据实际环境修改各参数，保存并退出后，安装程序将自动开始安装。
+6. 若第4步选择单副本、三副本集群或两副本集群，可以选择快速安装 or 高级自定义安装。
 
-    配置文件示例（以三节点为例）：
+    ```plain
+    1. 快速安装
+    2. 高级自定义安装
+
+    请选择安装方式:
+    ```
+
+    快速安装：提供统一配置文件模板，每台服务器上只能部署一个节点，且各个节点的安全模式、adminUI 端口、服务端口、数据传输端口以及数据目录等均保持一致。
 
     ```ini
     [global]
@@ -95,7 +102,7 @@ id: installer-cli
     # 数据目录
     data_root=/var/lib/kaiwudb
     [node1]
-    host=192.168.122.237
+    host=172.17.0.3
     # ssh 连接端口
     port=22
     # ssh 连接用户
@@ -103,7 +110,7 @@ id: installer-cli
     # ssh 连接密码
     passwd=******
     [node2]
-    host=192.168.122.79
+    host=172.17.0.4
     # ssh 连接端口
     port=22
     # ssh 连接用户
@@ -111,7 +118,15 @@ id: installer-cli
     # ssh 连接密码
     passwd=******
     [node3]
-    host=192.168.122.169
+    host=172.17.0.5
+    # ssh 连接端口
+    port=22
+    # ssh 连接用户
+    user=admin
+    # ssh 连接密码
+    passwd=******
+    [node4]
+    host=172.17.0.6
     # ssh 连接端口
     port=22
     # ssh 连接用户
@@ -120,24 +135,101 @@ id: installer-cli
     passwd=******
     ```
 
-    参数说明：
+    高级自定义安装：进入安全模式选择菜单，选择安全模式后，逐节点进行信息配置，每个节点的 adminUI 端口、服务端口、数据传输端口以及数据目录均可单独设置。
+
+    ```plain
+    1. INSECURE
+    2. TLS
+    3. TLCP
+
+    请选择安全模式:
+    ```
+
+    选择安全模式后，进入节点配置菜单:
+    
+    ```plain
+    请选择需要编辑配置的节点:
+    1. 节点 1
+    2. 节点 2
+    3. 节点 3
+    4. 开始安装
+
+    请选择节点:
+    ```
+
+    输入节点后，进入节点信息编辑界面：
+
+    ```ini
+    [global]
+    # adminui 端口
+    rest_port=8080
+    # 数据库服务端口
+    kaiwudb_port=26257
+    # 数据传输端口
+    brpc_port=27257
+    # 数据目录
+    data_root=/var/lib/kaiwudb
+    [node]
+    host=127.0.0.1
+    # ssh 连接端口
+    port=22
+    # ssh 连接用户
+    user=admin
+    # ssh 连接密码
+    passwd=******
+    ```
+
+    如果选择安装两副本集群，节点信息编辑页面如下：
+
+    ```ini
+    [global]
+    # adminui 端口
+    rest_port=8080
+    # 数据库服务端口
+    kaiwudb_port=26257
+    # 数据传输端口
+    brpc_port=27257
+    # 数据目录
+    data_root=/var/lib/kaiwudb
+    # 是否为仲裁节点
+    arbiter=false
+    [node]
+    host=127.0.0.1
+    # ssh 连接端口
+    port=22
+    # ssh 连接用户
+    user=admin
+    # ssh 连接密码
+    passwd=******
+    ```
+
+    所有节点信息配置完成后，输入 `4` 开始安装。
+
+     参数说明：
 
     | 参数 | 说明 |
     |------|------|
-    | `secure_mode` | 安全模式，支持以下取值：<br>- `insecure`：非安全模式。<br>- `tls`：（默认）TLS 安全模式。开启安全模式后，KWDB 自动生成相应证书，存放于 `/etc/kaiwudb/certs` 目录。 |
-    | `rest_port` | KWDB Web 服务端口，默认为 `8080`。 |
-    | `kaiwudb_port` | KWDB 服务端口，默认为 `26257`。 |
-    | `brpc_port` | 时序引擎间的数据传输端口，用于节点间通信，默认为 `27257`。 |
-    | `data_root` | 数据目录，默认为 `/var/lib/kaiwudb`。 |
-    | `host` | 节点 IP 地址，需确保各节点间网络可达。 |
-    | `port` | 远程节点的 SSH 服务端口。各节点的 SSH 服务端口必须相同。 |
-    | `user` | 远程节点的 SSH 登录用户。各节点的 SSH 登录用户必须相同。 |
-    | `passwd` | 远程节点的 SSH 登录密码。各节点的 SSH 登录密码必须相同。 |
+    | `secure_mode`  | 安全模式，支持以下取值：<br>- `insecure`：非安全模式。<br>- `tls`：（默认）TLS 安全模式。<br>- `tlcp`：TLCP 安全模式。<br>开启安全模式后，KaiwuDB 自动生成相应证书，存放于 `/etc/kaiwudb/certs` 目录。 |
+    | `rest_port`    | KaiwuDB Web 服务端口，默认为 `8080`。 |
+    | `kaiwudb_port` | KaiwuDB 服务端口，默认为 `26257`。 |
+    | `brpc_port`    | 时序引擎间的数据传输端口，用于节点间通信，默认为 `27257`。 |
+    | `data_root`    | 数据目录，默认为 `/var/lib/kaiwudb`。 |
+    | `arbiter`      | 仲裁节点设置，默认 `false` |
+    | `host`         | 节点 IP 地址，需确保各节点间网络可达。 |
+    | `port`         | 远程节点的 SSH 服务端口。各节点的 SSH 服务端口必须相同。 |
+    | `user`         | 远程节点的 SSH 登录用户。各节点的 SSH 登录用户必须相同。 |
+    | `passwd`       | 远程节点的 SSH 登录密码。各节点的 SSH 登录密码必须相同。 |
 
-7. 选择是否为所有用户安装 KWDB：
+7. 选择是否为所有用户安装 KaiwuDB：
 
     ```plain
     是否为所有用户安装：(y/N)
+    ```
+
+    如果使用快速安装且安装两副本集群，会进入选择仲裁节点页面，输入仲裁节点 ip，多个 ip 之间使用`,`或`；`或`空格`进行分隔： 
+
+    ```plain
+    请选择仲裁节点(172.17.0.5 172.17.0.3 172.17.0.4 172.17.0.6):172.17.0.3 172.17.0.4:
     ```
 
 8. 安装过程中终端会实时显示安装进度。出现错误时，可以通过查看安装目录 `log` 目录下的日志文件获取详细信息。
@@ -195,7 +287,13 @@ id: installer-cli
     系统重启后，如果当前节点与其他节点时钟相差大于 500 ms，可能导致 KWDB 自启动失败。需先完成时钟同步，再手动启动 KWDB。
     :::
 
-13. 执行 `kw-sql` 使用数据库部署用户登录数据库或者通过以下任一方式连接和管理 KWDB:
+13. 具备快速部署脚本 `quick-deploy.sh kaiwudb` ，当安装版本在3.2.0及以上时，自动下载`.run`类型安装包并执行单机模式快速部署。 
+
+    :::warning 说明
+    快速部署脚本仅支持**tar.gz**类型安装包。
+    :::
+
+14. 执行 `kw-sql` 使用数据库部署用户登录数据库或者通过以下任一方式连接和管理 KWDB:
     - [kwbase CLI](../../quickstart/access/access-cli.md)
     - [KWDB 支持的连接器](../../development/overview.md)
     - [KaiwuDB 开发者中心](../../kaiwudb-tools/kaiwudb-developer-center/overview.md)

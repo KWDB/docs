@@ -148,7 +148,7 @@ The user must be a member of the `admin` role or have been granted the `CREATE` 
 This example changes the data type and width of the `color` tag to `VARCHAR(50)`.
 
 ```sql
-ALTER TABLE ts_table ALTER color TYPE VARCHAR(50);
+ALTER TABLE ts_table ALTER tag color TYPE VARCHAR(50);
 ```
 
 ## RENAME TAG
