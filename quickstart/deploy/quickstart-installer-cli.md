@@ -91,21 +91,21 @@ id: quickstart-installer-cli
     passwd=*******
     ```
 
-    参数说明：
+     参数说明：
 
     | 参数 | 说明 |
     |------|------|
-    | `secure_mode` | 安全模式，支持以下取值：<br>- `insecure`：非安全模式。<br>- `tls`：（默认）TLS 安全模式。开启安全模式后，KWDB 自动生成相应证书，存放于 `/etc/kaiwudb/certs` 目录。 |
-    | `rest_port` | KWDB Web 服务端口，默认为 `8080`。 |
-    | `kaiwudb_port` | KWDB 服务端口，默认为 `26257`。 |
-    | `brpc_port` | 时序引擎间的数据传输端口，单节点部署时系统会自动忽略该设置，默认为 `27257`。 |
-    | `data_root` | 数据目录，默认为 `/var/lib/kaiwudb`。 |
-    | `host` | 本地节点 IP 地址。 |
-    | `port` | SSH 连接端口。 |
-    | `user` | SSH 连接用户。 |
-    | `passwd` | SSH 连接密码。 |
+    | `secure_mode`  | 安全模式，支持以下取值：<br>- `insecure`：非安全模式。<br>- `tls`：（默认）TLS 安全模式。<br>- `tlcp`：TLCP 安全模式。<br>开启安全模式后，KaiwuDB 自动生成相应证书，存放于 `/etc/kaiwudb/certs` 目录。 |
+    | `rest_port`    | KaiwuDB Web 服务端口，默认为 `8080`。 |
+    | `kaiwudb_port` | KaiwuDB 服务端口，默认为 `26257`。 |
+    | `brpc_port`    | 时序引擎间的数据传输端口，用于节点间通信，默认为 `27257`。 |
+    | `data_root`    | 数据目录，默认为 `/var/lib/kaiwudb`。 |
+    | `host`         | 节点 IP 地址，需确保各节点间网络可达。 |
+    | `port`         | 远程节点的 SSH 服务端口。各节点的 SSH 服务端口必须相同。 |
+    | `user`         | 远程节点的 SSH 登录用户。各节点的 SSH 登录用户必须相同。 |
+    | `passwd`       | 远程节点的 SSH 登录密码。各节点的 SSH 登录密码必须相同。 |
 
-6. 选择是否为所有用户安装 KWDB：
+6. 选择是否为所有用户安装 KaiwuDB：
 
     ```plain
     是否为所有用户安装：(y/N)
