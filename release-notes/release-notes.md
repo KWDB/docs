@@ -1,7 +1,5 @@
----
 title: 3.3.0 发版说明
 id: 3.3.0-release-notes
----
 
 # KWDB 3.3.0 发版说明
 
@@ -69,4 +67,3 @@ KWDB 3.3.0版本在保持原有特性的基础上，在时序数据处理、生�
 
 - **KWDB 1.x、2.x 版本**：支持通过导入导出方式升级至 3.3.0
 
-相关信息见[数据库升级](../db-operation/db-upgrade.md)、[数据导出](../db-administration/import-export-data/export-data.md)和[数据导入](../db-administration/import-export-data/import-data.md)。

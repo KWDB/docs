@@ -191,11 +191,17 @@ Command-line mode does not support deploying multiple nodes on a single machine.
     systemctl enable kaiwudb
     ```
 
-    :::warning Note
+    :::warning Note:
     After a system restart, if the current node and other nodes differ by more than 500 ms in clock time, KWDB may fail to start automatically. Synchronize the clocks first, then start KWDB manually.
     :::
 
-13. Run `kw-sql` to log in to the database as the deployment user, or connect to and manage KWDB using any of the following methods:
+13. Equipped with the quick deployment script `quick-deploy.sh kaiwudb`, when the installed version is 3.2.0 or above, it automatically downloads the `.run`type installation package and executes quick deployment in standalone mode. 
+
+    :::warning Note:
+    The quick deployment script only supports installation packages of the **tar.gz** type.
+    :::
+
+14. Run `kw-sql` to log in to the database as the deployment user, or connect to and manage KWDB using any of the following methods:
     - [kwbase CLI](../../quickstart/access/access-cli.md)
     - [KaiwuDB-supported connectors](../../development/overview.md)
     - [KaiwuDB Developer Center](../../kaiwudb-tools/kaiwudb-developer-center/overview.md)
