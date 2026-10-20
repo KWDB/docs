@@ -170,28 +170,26 @@ ALTER TABLE <table_name> ALTER [COLUMN] <column_name> [SET DATA] TYPE <new_type>
 
 ### 支持修改的数据类型
 
-下表列出了 KWDB 支持修改的时序数据类型、默认宽度、最大宽度、可转换的数据类型和特殊要求。
+下表列出了 KaiwuDB 支持修改的时序数据类型、默认宽度、最大宽度、可转换的数据类型和转换说明。
 
 ::: warning 说明
-
-- 转换后的数据类型宽度必须大于原数据类型的宽度。例如，INT4 可以转成 INT8，但不能转成 INT2，CHAR(200) 可以转为 VARCHAR(254)，但不能转为 VARCHAR(100)。
-- CHAR、VARCHAR、NCHAR、NVARCHAR 字符类型支持同数据类型的宽度转换，但只能增加宽度不能降低宽度。例如，CHAR(100) 可以转为 CHAR(200)，不能转为 CHAR(50)。
-
+- 默认宽度：用户不指定宽度时，系统使用默认值。
+- 不允许修改类型的列：时序表第一列的时间戳列、主标签列（`Primary tags`）。
 :::
 
-| 原数据类型  | 默认宽度 | 最大宽度   | 支持转换的数据类型                                   | 说明                                                                                            |
-| ----------- | -------- | ---------- | ---------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| TIMESTAMP   | -        | -          | TIMESTAMPTZ、INT8、FLOAT4、FLOAT8                     | 标签不支持该类型。TIMESTAMP 转 INT8 时，输出结果固定为毫秒精度的数字，即 13 位数字。TIMESTAMP 转 FLOAT4 时，输出结果只能保证约前 7 位有效数字的精度。TIMESTAMP 转 FLOAT8 时，输出结果只能保证约前 15-17 位有效数字的精度。    |
-| TIMESTAMPTZ | -        | -          | TIMESTAMP、INT8、FLOAT4、FLOAT8                      | 标签不支持该类型。TIMESTAMPTZ 转 INT8 时，输出结果固定为毫秒精度的数字，即 13 位数字。TIMESTAMPTZ 转 FLOAT4 时，输出结果只能保证约前 7 位有效数字的精度。TIMESTAMPTZ 转 FLOAT8 时，输出结果只能保证约前 15-17 位有效数字的精度。 |
-| INT2        | 2 字节   | -          | INT4、INT8、VARCHAR                                  | INT2 转 VARCHAR 时，VARCHAR 的最小宽度为 6。                                                    |
-| INT4        | 4 字节   | -          | INT8、VARCHAR                                        | INT4 转 VARCHAR 时，VARCHAR 的最小宽度为 11。                                                   |
-| INT8        | 8 字节   | -          | VARCHAR                                              | INT8 转 VARCHAR 时，VARCHAR 的最小宽度为 20。                                                   |
-| FLOAT4      | 4 字节   | -          | FLOAT、VARCHAR                                       | REAL 转 VARCHAR 时，VARCHAR 的最小宽度为 30。                                                   |
-| FLOAT8      | 8 字节   | -          | VARCHAR                                              | FLOAT 转 VARCHAR 时，VARCHAR 的最小宽度为 30。                                                  |
-| CHAR        | 1 字节   | 1023       | NCHAR、VARCHAR、NVARCHAR                             | CHAR 转 NCHAR 或 NVARCHAR 时，NCHAR 或 NVARCHAR 的宽度不得小于原宽度的 ¼。                     |
-| VARCHAR     | 254 字节 | 65534 字节 | CHAR、NCHAR、NVARCHAR、INT2、INT4、INT8、REAL、FLOAT | VARCHAR 转 NCHAR 或 NVARCHAR 时，NCHAR 和 NVARCHAR 的宽度不得小于原宽度的 ¼。                  |
-| NCHAR       | 1 字符   | 254 字符   | CHAR、VARCHAR、NVARCHAR                              | NCHAR 转 CHAR 或 VARCHAR 时，CHAR 和 VARCHAR 的宽度不得小于原宽度的 4 倍。                      |
-| NVARCHAR    | 63 字符  | 16383 字符 | CHAR、VARCHAR、NCHAR                                 | NVARCHAR 转 CHAR 或 VARCHAR 时，CHAR 和 VARCHAR 的宽度不得小于原宽度的 4 倍。标签不支持该类型。 |
+| 原类型       | 默认宽度  | 最大宽度  |目标类型                                                         | 说明                                |
+| ----------- | --------- | -------- | --------------------------------------------------------------- | ------------------------------------ |
+| TIMESTAMPTZ | 毫秒      |          | TIMESTAMP                                                       | 精度必须保持一致，支持毫秒、微妙、纳秒 |
+| TIMESTAMP   | 同上      |          | TIMESTAMPTZ                                                     | 同上   |
+| INT2        | 2字节     |          | INT4、INT8、VARCHAR                                             | 转为VARCHAR时，要求最小宽度为6 |
+| INT4        | 4字节     |          | INT8、VARCHAR                                                   | 转为VARCHAR时，要求最小宽度为11 |
+| INT8        | 8字节     |          | VARCHAR                                                         | 转为VARCHAR时，要求最小宽度为20 |
+| FLOAT4      | 4字节     |          | FLOAT8、VARCHAR                                                 | 转为VARCHAR时，要求最小宽度为30 |
+| FLOAT8      | 8字节     |           | VARCHAR                                                        | 转为VARCHAR时，要求最小宽度为30 |
+| CHAR        | 1字节     | 1023字节  | CHAR、NCHAR、NVARCHAR、VARCHAR                                  | 转为CHAR、VARCHAR时，目标类型的宽度不得小于原类型宽度；<br > 转NCHAR、NVARCHAR时。目标类型的宽度不得小于原类型宽度的1/4 |
+| NCHAR       | 1字符     | 255字符   | CHAR、NCHAR、NVARCHAR、VARCHAR                                  | 转为CHAR、VARCHAR时，目标类型的宽度不得小于原类型宽度的4倍；<br > 转NCHAR、NVARCHAR时。目标类型的宽度不得小于原类型的宽度 |
+| VARCHAR     | 254字节   | 65534字节 | CHAR、NCHAR、NVARCHAR、VARCHAR，INT2、INT4、INT8、FLOAT4、FLOAT8 | 转为CHAR、VARCHAR时，目标类型的宽度不得小于原类型宽度；<br > 转NCHAR、NVARCHAR时。目标类型的宽度不得小于原类型宽度的1/4 |
+| NVARCHAR    | 63字符    | 16383字符 | CHAR、NCHAR、NVARCHAR、VARCHAR                                  | 转为CHAR、VARCHAR时，目标类型的宽度不得小于原类型宽度的4倍；<br > 转NCHAR、NVARCHAR时。目标类型的宽度不得小于原类型的宽度|
 
 ### 语法示例
 

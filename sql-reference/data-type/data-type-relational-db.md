@@ -16,6 +16,50 @@ KWDB 关系数据支持以下数据类型：
 - INET 类型
 - UUID 类型
 
+## 类型转换
+
+KaiwuDB 关系数据类型转换支持的范围如下：
+
+| 原类型       | 默认宽度  |目标类型                                                                                  | 说明                                |
+| ----------- | --------- | --------------------------------------------------------------------------------------- | ------------------------------------ |
+| INT2          | 2字节           | INT4、INT8                                                                       | 只能向更宽的整数型转换 |
+| INT4          | 4字节           | INT8                                                                             | 同上|
+| INT8          | 8字节           | INT8                                                                             | - |
+| FLOAT4        | 4字节           | FLOAT8                                                                           | FLOAT4和FLOAT8和双向转换 |
+| FLOAT8        | 8字节           | FLOAT8                                                                           | 同上 |
+| DECIMAL       | precision/scale | DECIMAL                                                                          | 目标类型的 precision/scale 均不能小于原类型。<br > 未指定精度的DECIMAL也只能转换为DECIMAL。 |
+| BOOL          | 1字节           | -                                                                                | - |
+| BIT           | 1 bit           | BIT、VARBIT、VARBIT（n）                                                         | 智能增加宽度 |
+| VARBIT        | 无限制          | VARBIT                                                                           | 同上 |
+| CHAR          | 1字节           | CHAR、NCHAR、NVARCHAR、VARCHAR、STRING、TEXT、CITEXT、BYTES、VARBYTES、BLOB、CLOB | 指定具体宽度时，目标类型的宽度不得小于原类型。未指定宽度的类型只能转换为无宽度限制的类型。<br > 字符类型可以转换为字节类型，字节类型不得转换为字符类型。 |
+| NCHAR         | 1字符           | CHAR、NCHAR、NVARCHAR、VARCHAR、STRING、TEXT、CITEXT、BYTES、VARBYTES、BLOB、CLOB | 同上 |
+| VARCHAR       | 无限制          | CHAR、NCHAR、NVARCHAR、VARCHAR、STRING、TEXT、CITEXT、BYTES、VARBYTES、BLOB、CLOB | 同上 |
+| NVARCHAR      | 无限制          | CHAR、NCHAR、NVARCHAR、VARCHAR、STRING、TEXT、CITEXT、BYTES、VARBYTES、BLOB、CLOB | 同上 |
+| STRING（TEXT）| 无限制          | CHAR、NCHAR、NVARCHAR、VARCHAR、STRING、TEXT、CITEXT、BYTES、VARBYTES、BLOB、CLOB  | 同上 |
+| CITEXT        | 无限制          | NVARCHAR、VARCHAR、STRING、TEXT、CITEXT、CLOB                                     | CITEXT无法限制宽度，只能转换为不限制宽度类型 |
+| BYTES         | 无限制          | BYTES、VARBYTES、BLOB                                                            | 不能转换为字符类型 |
+| VARBYTES      | 无限制          | BYTES、VARBYTES、BLOB                                                            | 同上 |
+| BLOB          | 无限制          | BYTES、VARBYTES、BLOB                                                            | 同上 |
+| CLOB          | 无限制          | STRING、NVARCHAR、VARCHAR、CHAR、NCHAR、CITEXT                                    | 只能转换为不限制宽度类型，不能转换为VARCHAR(n) |
+| TIMESTAMP     | -              | TIMESTAMP 、TIMESTAMPTZ                                                           | 目标类型精度不得小于原类型，未指定精度时默认为0  |
+| TIMESTAMP     | -              | TIMESTAMP 、TIMESTAMPTZ                                                           | 同上   |
+| TIME          | -              | TIME                                                                              | 只能增加精度 |
+| TIMETZ        | -              | TIMETZ                                                                            | 同上   |
+| DATE          | -              | DATE                                                                              | 仅支持同类型（无操作）  |
+| UUID          | -              | TIMETZ                                                                            | 同上   |
+| JSONB         | -              | TIMETZ                                                                            | 同上   |
+| INET          | -              | TIMETZ                                                                            | 同上   |
+| 数组类型       | -              | TIMETZ                                                                            | 仅支持同类型（无操作）。<br > 数据元素类型不能修改 |
+
+::: warning 说明
+- 宽度只能增大，不能减小，字符类型（CHAR、NCHAR、NVARCHAR、VARCHAR），目标类型的宽度不得小于原类型。
+- 字符类型可以转换为字节类型，字节类型不得转换为字符类型。
+- 时间精度只能增加，不能减小。
+- 有依赖对象的列不能修改类型，如果某列被视图等对象依赖，需要先删除依赖关系才能修改类型，否则报错。
+- 标签列（label列）不能修改类型。
+- 同类型转换，视为无操作。
+:::
+
 ## 数值类型
 
 KWDB 关系数据库支持的数值类型包括整数类型、浮点类型、定点类型和 SERIAL 类型。
@@ -45,22 +89,6 @@ KWDB 支持有符号的整数数据类型。
 - 虽然不同的整数类型对允许值的范围有不同的约束，但是所有整数采用相同的存储方式。数值越小，占据的存储空间越小，例如，存储值为 `42` 的整数类型占用较少的存储空间，而存储值为 `2147483647` 的整数类型占用较大的存储空间。
 
 :::
-
-#### 类型转换
-
-整数类型的数据可以转换为以下任何一种数据类型。
-
-| 类型 | 描述 |
-| --- | --- |
-| BIT | 将十进制数值转换为二进制数值，并根据转换后的 BIT 类型的长度进行截断或补齐。补齐方式为在数据前面补零。|
-| BOOL | 非零的值转换为 `true`，零转换为 `false`。 |
-| FLOAT | - |
-| DECIMAL | - |
-| STRING | 根据转换后的 STRING 类型的长度进行截断。 |
-| DATE | 转换为自 1970 年以来的天数。 |
-| TIMESTAMP | 按照毫秒数进行转换。|
-| TIMESTAMPTZ | 按照毫秒数进行转换。 |
-| INTERVAL | 按照秒数进行转换。 |
 
 #### 示例
 
@@ -116,19 +144,6 @@ FLOAT 列存储最多 8 个字节的值。但由于元数据的影响，实际�
 - `FLOAT '+Inf'`
 - `'-Inf'::FLOAT`
 - `CAST('NaN' AS FLOAT)`
-
-#### 类型转换
-
-浮点类型的数据可以转换为以下任何一种数据类型。
-
-| 类型 | 描述 |
-| --- | --- |
-| BOOL | 非零的值转换为 `true`，零转换为 `false`。 |
-| INT | 超出转换类型的范围时，系统报错。|
-| FLOAT | 转换为 FLOAT4 类型时，会损失精度。|
-| DECIMAL | 根据转换后的 DECIMAL 类型的长度进行截断。 |
-| STRING | 根据转换后的 STRING 类型的长度进行截断。 |
-| INTERVAL | - |
 
 #### 示例
 
@@ -197,19 +212,6 @@ DECIMAL 列支持使用 `DECIMAL(precision, scale)` 对数值进行限制。其�
 - 如果 precision 和 scale 相等，写入的值必须四舍五入为小于 1 的值。
 
 :::
-
-#### 类型转换
-
-定点类型的数据可以转换为以下任何一种数据类型。
-
-| 类型 | 描述 |
-| --- | --- |
-| BOOL | 非零的值转换为 `true`，零转换为 `false`。 |
-| INT | 超出转换类型的范围时，系统报错。|
-| FLOAT | 转换为 FLOAT4 类型时，会损失精度。|
-| DECIMAL | 根据转换后的 STRING 类型的长度进行截断。 |
-| STRING | 根据转换后的 STRING 类型的长度进行截断。 |
-| INTERVAL | - |
 
 #### 示例
 
@@ -311,17 +313,6 @@ SELECT * FROM serial;
 - `CAST(0 AS BOOL) (false)`
 - `CAST(119 AS BOOL) (true)`
 
-### 类型转换
-
-布尔类型的数据可以转换为以下任何一种数据类型。
-
-| 类型 | 描述 |
-| --- | --- |
-| INT | `true` 转换为 1，`false` 转换为 0。|
-| FLOAT | `true` 转换为 1，`false` 转换为 0。|
-| DECIMAL | `true` 转换为 1，`false` 转换为 0。 |
-| STRING | - |
-
 ### 示例
 
 以下示例创建一个具有布尔类型列的表 `bools` 并向表中写入数据。
@@ -371,16 +362,6 @@ BIT 数据类型用于存储固定长度的二进制位数组。位数组常量�
 | BIT(N)                              | N bit                                   |
 
 对于 BIT 和 BIT(N) 数据类型。数值的宽度大小必须完全匹配，否则系统会报错。BIT 值的有效大小比其逻辑位数大一个有界常数。数据库内部以 64 位增量存储位数组，并使用额外的整数值来编码长度。虽然 BIT 值的总存储大小可以任意大，但建议将其保持在 1 MB 以下以确保性能。如果超过该阈值，写入放大和其他因素可能导致性能显著下降。
-
-#### 类型转换
-
-BIT 类型的数据可以转换为以下任何一种数据类型。
-
-| 类型 | 描述 |
-| --- | --- |
-| VARBIT | 根据数据长度进行截断或补齐。补齐方式为末尾补零。 |
-| INT | 二进制数值转换成十进制数值。根据 INT 类型的位数取 BIT 类型对应位数的值。|
-| STRING | 根据转换后的 STRING 类型的长度进行截断。 |
 
 #### 示例
 
@@ -482,15 +463,6 @@ BYTES 数据类型存储指定长度的二进制字符串。向关系表中写�
 除上述语法以外，BYTES 类型还支持使用字符串文字，包括在上下文中使用的语法：`...`、`e'...'` 和 `x'...'`
 
 虽然 BYTES 值的总存储大小可变，但建议将其保持在 1 MB 以下以确保性能。如果超过该阈值，写入放大和其他因素可能导致性能显著下降。
-
-#### 类型转换
-
-BYTES 类型的数据可以转换为以下任何一种数据类型。
-
-| 类型 | 描述 |
-| --- | --- |
-| STRING | 根据转换后的 STRING 类型的长度进行截断。 |
-| UUID | - |
 
 #### 示例
 
@@ -1030,32 +1002,6 @@ KWDB 关系数据库支持 TIMESTAMP 和 TIMESTAMPTZ 时间类型。
 
 KWDB 支持在查询中对列类型为时间戳、时间戳常量以及结果类型为时间戳的函数和表达式进行时间加减运算，运算结果支持使用大于号（`>`）、小于号（`<`）、等号（`=`）、大于等于号（`>=`）、小于等于号（`<=`）进行比较。有关详细信息，参见[简单查询](../dml/relational-db/relational-select.md)。
 
-#### 类型转换
-
-TIMESTAMP 类型的数据可以转换为以下任何一种数据类型。
-
-| 类型 | 描述 |
-| --- | --- |
-| INT | 超出转换类型的范围时，系统报错。 |
-| FLOAT | 结果转换为毫秒数。 |
-| DECIMAL | 结果转换为秒数。 |
-| STRING | - |
-| DATE | 获取日期部分的取值。 |
-| TIME | 获取时间部分的取值。 |
-| TIMESTAMPTZ | - |
-
-TIMESTAMPTZ 类型的数据可以转换为以下任何一种数据类型。
-
-| 类型 | 描述 |
-| --- | --- |
-| INT | 超出转换类型的范围时，系统报错。 |
-| FLOAT | 结果转换为毫秒数。 |
-| DECIMAL | 结果转换为秒数。 |
-| STRING | - |
-| DATE | 获取日期部分的取值。 |
-| TIME | 获取时间部分的取值。 |
-| TIMESTAMP | - |
-
 #### 示例
 
 以下示例创建一个名为 `timestamps` 的表，包括 TIMESTAMP 和 TIMESTAMPTZ 时间戳类型的列，并向表中写入数据。
@@ -1095,18 +1041,6 @@ c1|c2                 |c3
 #### 类型描述
 
 DATE 类型用于存储年、月、日信息。DATE 类型的常量值可以使用解释文本、DATE 类型注释、或者强制转换为 DATE 类型的字符串文本来表示。KWDB 也支持使用未解释的字符串文字输入 DATE 数值。DATE 的字符串格式为 `YYYY-MM-DD`，例如：`DATE '2016-12-23'`。DATE 类型的存储最多占用 16 个字节。但是，由于元数据的影响，实际存储大小可能会更大。
-
-#### 类型转换
-
-DATE 类型的数据可以转换为以下任何一种数据类型。
-
-| 类型 | 描述 |
-| --- | --- |
-| INT | 超出转换类型的范围时，系统报错。 |
-| FLOAT | - |
-| DECIMAL | - |
-| STRING | - |
-| TIMESTAMPTZ/TIMESTAMPTZ | - |
 
 #### 示例
 
@@ -1165,15 +1099,6 @@ TIME 类型用于存储没有时区的时间信息。
 
 TIME 类型的常量值可以使用解释文本、带有 TIME 类型注释的字符串文本或强制转换为 TIME 类型的字符串文本来表示。KWDB 也支持使用未解释的字符串文字输入 TIME 数值。TIME 类型的字符串格式为 `HH:MM:SS.SSSSSS`，例如：`TIME '05:40:00.000001'`。TIME 类型的小数部分可选，四舍五入到微秒级别（即小数点后的六位数）。TIME 类型支持的最大宽度为 8 个字节。但是，由于元数据的影响，实际存储大小可能会更大。
 
-#### 类型转换
-
-TIME 类型的数据可以转换为以下任何一种数据类型。
-
-| 类型 | 描述 |
-| --- | --- |
-| STRING | - |
-| INTERVAL | - |
-
 #### 示例
 
 以下示例创建一个名为 `time` 的表，并向表中写入数据。
@@ -1229,18 +1154,6 @@ INTERVAL 常量可以使用以下格式表示：
 - ISO 8601 格式：`INTERVAL 'P1Y2M3DT4H5M6S'`
 
 INTERVAL 列支持的最大宽度为 24 个字节。但是，由于元数据的影响，实际存储大小可能会更大。在 KWDB 数据库内部，INTERVAL 数据类型以月、天和微秒的形式进行存储。因此，从字符串解析或从浮点数或十进制数转换得到的数据将舍入到最接近的微秒。对 INTERVAL 进行的任何算术运算（加、减、乘、除）也将舍入到最接近的微秒。
-
-#### 类型转换
-
-INTERVAL 类型的数据可以转换为以下任何一种数据类型。
-
-| 类型 | 描述 |
-| --- | --- |
-| INT | 超出转换类型的范围时，系统报错。 |
-| FLOAT | 结果转换为秒数。 |
-| DECIMAL | 结果转换为秒数。 |
-| STRING | - |
-| TIME | 只计算一天内的时间部分。 |
 
 #### 示例
 
@@ -1302,10 +1215,6 @@ JSONB 类型具有六种值类型：
 - Number：任意精度的数值，包括整数和小数，而不仅限于 INT64 范围内的整数。
 - Array：有序的 JSONB 值序列。
 - Object：从字符串到 JSONB 值的映射。例如，`'{"type": "account creation", "username": "harvestboy93"}'` 或 `'{"first_name": "Ernie", "status": "Looking for treats", "location": "Brooklyn"}'`。如果输入的字符串中包含重复键，JSONB 会保留最后一个出现的键值对，忽略之前的重复键值对。
-
-### 类型转换
-
-JSONB 类型的数据可以转换为 STRING 数据类型。
 
 ### 示例
 
@@ -1552,16 +1461,6 @@ UUID 值支持使用以下格式表示：
 - 用作 URN（Uniform Resource Name，统一资源名称），格式为 `"urn:uuid:"` + RFC 4122 标准指定的格式。例如：`urn:uuid:63616665-6630-3064-6465-616462656564`。
 
 UUID 值的宽度为 128 位。但是，由于元数据的影响，实际存储大小可能会更大。
-
-### 类型转换
-
-UUID 类型的数据可以转换为以下任何一种数据类型。
-
-| 类型 | 描述 |
-| --- | --- |
-| DECIMAL | - |
-| STRING | 根据转换后的 STRING 类型的长度进行截断。 |
-| BYTES | - |
 
 ### 示例
 
