@@ -215,13 +215,6 @@ ALTER TABLE [IF EXISTS] <table_name> ALTER [COLUMN] <column_name>
   - `DROP STORED`：将计算出的列转换为常规列。
 - `SET DATA TYPE`：修改列的数据类型，`SET DATA` 是可选关键字，是否使用不影响修列的数据类型。
 
-    ::: warning 说明
-
-    - 对于字符类型和字节类型的数据，如果原数据类型未限制宽度，转换后的数据类型只能修改为无限长（即不指定数据类型长度）。
-    - 修改列的数据类型时，字符类型的数据可以转换为字节类型。但是，字节类型的数据无法转换为字符类型。有关 KWDB 支持修改的数据类型、默认宽度、最大宽度、可转换的数据类型等详细信息，参见[关系数据类型](../../../sql-reference/data-type/data-type-relational-db.md)。
-
-    :::
-
 ### 参数说明
 
 | 参数 | 说明 |
@@ -233,6 +226,50 @@ ALTER TABLE [IF EXISTS] <table_name> ALTER [COLUMN] <column_name>
 | `a_expr` | 待使用的默认值。|
 | `type_name`  | 待修改列的数据类型。 |
 | `collation_name`  | 排序规则的名称。 |
+
+### 支持修改的数据类型
+
+下表列出了 KaiwuDB 支持修改的关系数据类型、默认宽度、可转换的数据类型和转换说明。
+
+    ::: warning 说明
+    - 宽度只能增大，不能减小，字符类型（CHAR、NCHAR、NVARCHAR、VARCHAR），目标类型的宽度不得小于原类型。
+    - 字符类型可以转换为字节类型，字节类型不得转换为字符类型。
+    - 时间精度只能增加，不能减小。
+    - 有依赖对象的列不能修改类型，如果某列被视图等对象依赖，需要先删除依赖关系才能修改类型，否则报错。
+    - 标签列（label列）不能修改类型。
+    - 同类型转换，视为无操作。
+    :::
+
+| 原类型       | 默认宽度  |目标类型                                                                                  | 说明                                |
+| ----------- | --------- | --------------------------------------------------------------------------------------- | ------------------------------------ |
+| INT2          | 2字节           | INT4、INT8                                                                       | 只能向更宽的整数型转换 |
+| INT4          | 4字节           | INT8                                                                             | 同上|
+| INT8          | 8字节           | INT8                                                                             | - |
+| FLOAT4        | 4字节           | FLOAT8                                                                           | FLOAT4和FLOAT8和双向转换 |
+| FLOAT8        | 8字节           | FLOAT8                                                                           | 同上 |
+| DECIMAL       | precision/scale | DECIMAL                                                                          | 目标类型的 precision/scale 均不能小于原类型。<br > 未指定精度的DECIMAL也只能转换为DECIMAL。 |
+| BOOL          | 1字节           | -                                                                                | - |
+| BIT           | 1 bit           | BIT、VARBIT、VARBIT（n）                                                         | 智能增加宽度 |
+| VARBIT        | 无限制          | VARBIT                                                                           | 同上 |
+| CHAR          | 1字节           | CHAR、NCHAR、NVARCHAR、VARCHAR、STRING、TEXT、CITEXT、BYTES、VARBYTES、BLOB、CLOB | 指定具体宽度时，目标类型的宽度不得小于原类型。未指定宽度的类型只能转换为无宽度限制的类型。<br > 字符类型可以转换为字节类型，字节类型不得转换为字符类型。 |
+| NCHAR         | 1字符           | CHAR、NCHAR、NVARCHAR、VARCHAR、STRING、TEXT、CITEXT、BYTES、VARBYTES、BLOB、CLOB | 同上 |
+| VARCHAR       | 无限制          | CHAR、NCHAR、NVARCHAR、VARCHAR、STRING、TEXT、CITEXT、BYTES、VARBYTES、BLOB、CLOB | 同上 |
+| NVARCHAR      | 无限制          | CHAR、NCHAR、NVARCHAR、VARCHAR、STRING、TEXT、CITEXT、BYTES、VARBYTES、BLOB、CLOB | 同上 |
+| STRING（TEXT）| 无限制          | CHAR、NCHAR、NVARCHAR、VARCHAR、STRING、TEXT、CITEXT、BYTES、VARBYTES、BLOB、CLOB  | 同上 |
+| CITEXT        | 无限制          | NVARCHAR、VARCHAR、STRING、TEXT、CITEXT、CLOB                                     | CITEXT无法限制宽度，只能转换为不限制宽度类型 |
+| BYTES         | 无限制          | BYTES、VARBYTES、BLOB                                                            | 不能转换为字符类型 |
+| VARBYTES      | 无限制          | BYTES、VARBYTES、BLOB                                                            | 同上 |
+| BLOB          | 无限制          | BYTES、VARBYTES、BLOB                                                            | 同上 |
+| CLOB          | 无限制          | STRING、NVARCHAR、VARCHAR、CHAR、NCHAR、CITEXT                                    | 只能转换为不限制宽度类型，不能转换为VARCHAR(n) |
+| TIMESTAMP     | -              | TIMESTAMP 、TIMESTAMPTZ                                                           | 目标类型精度不得小于原类型，未指定精度时默认为0  |
+| TIMESTAMP     | -              | TIMESTAMP 、TIMESTAMPTZ                                                           | 同上   |
+| TIME          | -              | TIME                                                                              | 只能增加精度 |
+| TIMETZ        | -              | TIMETZ                                                                            | 同上   |
+| DATE          | -              | DATE                                                                              | 仅支持同类型（无操作）  |
+| UUID          | -              | TIMETZ                                                                            | 同上   |
+| JSONB         | -              | TIMETZ                                                                            | 同上   |
+| INET          | -              | TIMETZ                                                                            | 同上   |
+| 数组类型       | -              | TIMETZ                                                                            | 仅支持同类型（无操作）。<br > 数据元素类型不能修改 |
 
 ### 语法示例
 

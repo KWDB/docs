@@ -12,6 +12,29 @@ KWDB 时序数据支持以下数据类型：
 - 布尔类型
 - 字符类型
 
+## 类型转换
+
+KaiwuDB 时序数据类型转换支持的范围如下：
+
+| 原类型       | 默认宽度  | 最大宽度  |目标类型                                                         | 说明                                |
+| ----------- | --------- | -------- | --------------------------------------------------------------- | ------------------------------------ |
+| TIMESTAMPTZ | 毫秒      |          | TIMESTAMP                                                       | 精度必须保持一致，支持毫秒、微妙、纳秒 |
+| TIMESTAMP   | 同上      |          | TIMESTAMPTZ                                                     | 同上   |
+| INT2        | 2字节     |          | INT4、INT8、VARCHAR                                             | 转为VARCHAR时，要求最小宽度为6 |
+| INT4        | 4字节     |          | INT8、VARCHAR                                                   | 转为VARCHAR时，要求最小宽度为11 |
+| INT8        | 8字节     |          | VARCHAR                                                         | 转为VARCHAR时，要求最小宽度为20 |
+| FLOAT4      | 4字节     |          | FLOAT8、VARCHAR                                                 | 转为VARCHAR时，要求最小宽度为30 |
+| FLOAT8      | 8字节     |           | VARCHAR                                                        | 转为VARCHAR时，要求最小宽度为30 |
+| CHAR        | 1字节     | 1023字节  | CHAR、NCHAR、NVARCHAR、VARCHAR                                  | 转为CHAR、VARCHAR时，目标类型的宽度不得小于原类型宽度；<br > 转NCHAR、NVARCHAR时。目标类型的宽度不得小于原类型宽度的1/4 |
+| NCHAR       | 1字符     | 255字符   | CHAR、NCHAR、NVARCHAR、VARCHAR                                  | 转为CHAR、VARCHAR时，目标类型的宽度不得小于原类型宽度的4倍；<br > 转NCHAR、NVARCHAR时。目标类型的宽度不得小于原类型的宽度 |
+| VARCHAR     | 254字节   | 65534字节 | CHAR、NCHAR、NVARCHAR、VARCHAR，INT2、INT4、INT8、FLOAT4、FLOAT8 | 转为CHAR、VARCHAR时，目标类型的宽度不得小于原类型宽度；<br > 转NCHAR、NVARCHAR时。目标类型的宽度不得小于原类型宽度的1/4 |
+| NVARCHAR    | 63字符    | 16383字符 | CHAR、NCHAR、NVARCHAR、VARCHAR                                  | 转为CHAR、VARCHAR时，目标类型的宽度不得小于原类型宽度的4倍；<br > 转NCHAR、NVARCHAR时。目标类型的宽度不得小于原类型的宽度|
+
+::: warning 说明
+- 默认宽度：用户不指定宽度时，系统使用默认值。
+- 不允许修改类型的列：时序表第一列的时间戳列、主标签列（`Primary tags`）。
+:::
+
 ## 时间类型
 
 KWDB 时序数据库支持 TIMESTAMP 和 TIMESTAMPTZ 时间类型。
@@ -43,26 +66,6 @@ KWDB 时序数据库 timestamp、timestamptz 时间类型支持设置时间戳�
 - INT 形式的时间戳：根据该列时间精度判断是否超出该精度所支持的时间范围，然后再写入
 
 KWDB 支持在查询中对列类型为时间戳、时间戳常量以及结果类型为时间戳的函数和表达式按最高精度进行加减运算并返回运算结果。运算结果支持使用大于号（`>`）、小于号（`<`）、等号（`=`）、大于等于号（`>=`）、小于等于号（`<=`）进行比较。有关详细信息，参见[简单查询](../dml/ts-db/ts-select.md).
-
-### 类型转换
-
-TIMESTAMP 类型的数据可以转换为以下任何一种数据类型。
-
-| 类型 | 描述 |
-| --- | --- |
-| INT | 超出转换类型的范围时，系统报错。 |
-| FLOAT | 结果转换为毫秒数。 |
-| STRING | - |
-| TIMESTAMPTZ | - |
-
-TIMESTAMPTZ 类型的数据可以转换为以下任何一种数据类型。
-
-| 类型 | 描述 |
-| --- | --- |
-| INT | 超出转换类型的范围时，系统报错。 |
-| FLOAT | 结果转换为毫秒数。 |
-| STRING | - |
-| TIMESTAMP | - |
 
 ### 示例
 
@@ -123,24 +126,6 @@ KWDB 支持有符号的整数数据类型。
 | INT4 | - INT <br>- INTEGER                      | 4 字节                                  | -2147483648 ~ +2147483647                   |
 | INT8 | - INT64 <br>- BIGINT                     | 8 字节                                  | -9223372036854775808 ~ +9223372036854775807 |
 
-::: warning 说明
-
-整数类型支持将数值作为文本输入，例如 `42`、`-1234`、`0xCAFE`。
-
-:::
-
-#### 类型转换
-
-整数类型的数据可以转换为以下任何一种数据类型。
-
-| 类型 | 描述 |
-| --- | --- |
-| BOOL | 非零的值转换为 `true`，零转换为 `false`。 |
-| FLOAT | - |
-| STRING | 根据转换后的 STRING 类型的长度进行截断。 |
-| TIMESTAMP | 按照毫秒数进行转换。|
-| TIMESTAMPTZ | 按照毫秒数进行转换。 |
-
 #### 示例
 
 以下示例创建一个名为 `ints` 的表，包括具有整数类型的列。
@@ -185,16 +170,6 @@ KWDB 支持 FLOAT8 和 FLOAT4 不确定精度的浮点数据类型，最大精�
 FLOAT 列存储最多 8 个字节的值。但由于元数据的影响，实际存储大小可能会更大。
 
 FLOAT 列支持在查询时通过 `CAST(column as DECIMAL(precision, scale))` 限制显示的精度。其中，`precision` 为小数点左侧和右侧位数之和的最大值，`scale` 为小数点右侧的精确位数。`precision` 不能小于 `scale`。使用 `DECIMAL(precision)` 等效于 `DECIMAL(precision, 0)`。
-
-#### 类型转换
-
-浮点类型的数据可以转换为以下任何一种数据类型。
-
-| 类型 | 描述 |
-| --- | --- |
-| BOOL | 非零的值转换为 `true`，零转换为 `false`。 |
-| FLOAT | 转换为 FLOAT4 类型时，会损失精度。|
-| STRING | 根据转换后的 STRING 类型的长度进行截断。 |
 
 #### 示例
 
@@ -256,16 +231,6 @@ c1      |c2
 
 - `CAST(0 AS BOOL) (false)`
 - `CAST(119 AS BOOL) (true)`
-
-### 类型转换
-
-布尔类型的数据可以转换为以下任何一种数据类型。
-
-| 类型 | 描述 |
-| --- | --- |
-| INT | `true` 转换为 1，`false` 转换为 0。|
-| FLOAT | `true` 转换为 1，`false` 转换为 0。|
-| STRING | - |
 
 ### 示例
 
