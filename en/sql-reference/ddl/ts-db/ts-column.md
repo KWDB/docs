@@ -162,31 +162,29 @@ The user must be a member of the `admin` role or have been granted the `CREATE` 
 | `compress_algo` | Optional. Sets the compression algorithm for the column. Supported values are `lz4`, `zstd`, `zlib`, and `snappy`, case-insensitively. Set to `disabled` to disable compression. If not specified, `lz4` is used by default. |
 | `level` | Optional. Sets the compression level for the compression algorithm. The value is case-insensitive and must immediately follow `COMPRESS`. Supported values are `low` (`l`), `medium` (`m`), and `high` (`h`); the default is `medium`. If `compress_algo` is set to `disabled`, specifying this parameter causes an error. |
 
-### Data Type Conversion Rules
+### Supported Modifiable Data Types
 
-This table lists the original data types, default width, maximum width, and converted data types for time-series data.
+The table below lists the time-series data types supported for modification in KaiwuDB, including their default width, maximum width, convertible target data types, and conversion notes.
 
-::: warning Note
+::: warning Notes
 
-- The converted data width must be greater than the original data width. For example, INT4 can be converted to INT8 but not to INT2. CHAR(200) can be converted to VARCHAR (254) but not to VARCHAR (100).
-- CHAR-typed, VARCHAR-typed, NCHAR-typed, and NVARCHAR-typed values can be converted to values of the same data types. But the width cannot be shorter. For example, CHAR(100) can be converted to VARCHAR (200) but not to VARCHAR (50).
-
+- Default width: The value used by the system when the user does not specify a width.
+- Columns whose data type modification is prohibited: The timestamp column and primary tag column (`Primary tags`) as the first column of a time-series table.
 :::
 
-| Original Data Type | Default Width | Max Width        | Converted Data Type                                  | Description                                                                                                                                                                                                               |
-|--------------------|---------------|------------------|------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| TIMESTAMP   | -        | -          | TIMESTAMPTZ, INT8, FLOAT4, FLOAT8                     | It is unavailable for TAG columns. <br>- When converting TIMESTAMP-typed values to INT8-typed values, the INT8-typed value is fixed with the microseconds precision level that has 13 digits. <br>- When converting TIMESTAMP-typed values to FLOAT4-typed values, the FLOAT4-typed value is fixed with a precision level that has about 7 valid digits. <br>- When converting TIMESTAMP-typed values to FLOAT8-typed values, the FLOAT8-typed value is fixed with a precision level that has about 15-17 valid digits.     |
-| TIMESTAMPTZ | -        | -          | TIMESTAMP, INT8, FLOAT4, FLOAT8                                              | It is unavailable for TAG columns. <br>- When converting TIMESTAMPTZ-typed values to INT8-typed values, the INT8-typed value is fixed with the microseconds precision level that has 13 digits. <br>- When converting TIMESTAMPTZ-typed values to FLOAT4-typed values, the FLOAT4-typed value is fixed with a precision level that has about 7 valid digits. <br>- When converting TIMESTAMPTZ-typed values to FLOAT8-typed values, the FLOAT8-typed value is fixed with a precision level that has about 15-17 valid digits.                                                                              |
-| INT2               | 2 bytes       | -                | INT4, INT8, VARCHAR                                  | When converting INT2-typed values to VARCHAR-typed values, the minimum VARCHAR-typed data width is 6.                                                                                                                      |
-| INT4               | 4 bytes       | -                | INT8, VARCHAR                                        | When converting INT4-typed values to VARCHAR-typed values, the minimum VARCHAR-typed data width is 11.                                                                                                                     |
-| INT8               | 8 bytes       | -                | VARCHAR                                              | When converting INT8-typed values to VARCHAR-typed values, the minimum VARCHAR-typed data width is 20.                                                                                                                     |
-| FLOAT4             | 4 bytes       | -                | FLOAT, VARCHAR                                       | When converting FLOAT4-typed values to VARCHAR-typed values, the minimum VARCHAR-typed data width is 30.                                                                                                                     |
-| FLOAT8             | 8 bytes       | -                | VARCHAR                                              | When converting FLOAT8-typed values to VARCHAR-typed values, the minimum VARCHAR-typed data width is 30.                                                                                                                    |
-| CHAR               | 1 byte        | 1023             | NCHAR, VARCHAR, NVARCHAR                             | When converting CHAR-typed values to NCHAR-typed or NVARCHAR-typed values, the NCHAR-typed or NVARCHAR-typed data width should not be shorter than a quarter of the original data width.                                  |
-| VARCHAR            | 254 bytes     | 65534 bytes      | CHAR, NCHAR, NVARCHAR, INT2, INT4, INT8, REAL, FLOAT | When converting VARCHAR-typed values to NCHAR-typed or NVARCHAR-typed values, the NCHAR-typed or NVARCHAR-typed data width should not be shorter than a quarter of the original data width.                               |
-| NCHAR              | 1 character   | 254 characters   | CHAR, VARCHAR, NVARCHAR                              | When converting NCHAR-typed values to CHAR-typed or VARCHAR-typed values, the CHAR-typed or VARCHAR-typed data width should not be shorter than 4 times of the original data width.                                       |
-| NVARCHAR           | 63 characters | 16383 characters | CHAR, VARCHAR, NCHAR                                 | When converting NVARCHAR-typed values to CHAR-typed or VARCHAR-typed values, the CHAR-typed or VARCHAR-typed data width should not be shorter than 4 times of the original data width. It is unavailable for TAG columns. |
-
+| Original Type | Default Width | Maximum Width  | Target Type                                                         | Notes                              |
+| ----------- | --------------- | --------- | -------------------------------------------------------- | ------------------------------------ |
+| TIMESTAMPTZ | ms            |             | TIMESTAMP                                                | Precision must remain consistent; millisecond, microsecond and nanosecond are supported |
+| TIMESTAMP   | Same as above |             | TIMESTAMPTZ                                              | Same as above  |
+| INT2        | 2 bytes       |             | INT4,INT8,VARCHAR                                        | When converting to VARCHAR, the minimum width requirement is 6. |
+| INT4        | 4 bytes       |             | INT8,VARCHAR                                             | When converting to VARCHAR, the minimum width requirement is 11. |
+| INT8        | 8 bytes       |             | VARCHAR                                                  | When converting to VARCHAR, the minimum width requirement is 20. |
+| FLOAT4      | 4 bytes       |             | FLOAT8,VARCHAR                                           | When converting to VARCHAR, the minimum width requirement is 30. |
+| FLOAT8      | 8 bytes       |             | VARCHAR                                                  | When converting to VARCHAR, the minimum width requirement is 30. |
+| CHAR        | 1 byte        | 1023 bytes  | CHAR,NCHAR,NVARCHAR,VARCHAR                              | When converting to CHAR or VARCHAR, the width of the target type must not be smaller than that of the original type.<br > When converting to NCHAR or NVARCHAR, the width of the target type must not be smaller than 1/4 of the original width. |
+| NCHAR       | 1 character     | 255 character   | CHAR,NCHAR,NVARCHAR,VARCHAR                        | When converting to CHAR or VARCHAR, the width of the target type must not be smaller than 4 times the original width.<br > When converting to NCHAR or NVARCHAR, the width of the target type must not be smaller than that of the original type. |
+| VARCHAR     | 254 bytes   | 65534 bytes | CHAR,NCHAR,NVARCHAR,VARCHAR,INT2,INT4,INT8,FLOAT4,FLOAT8   | When converting to CHAR or VARCHAR, the width of the target type must not be smaller than that of the original type.<br > When converting to NCHAR or NVARCHAR, the width of the target type must not be smaller than 1/4 of the original width. |
+| NVARCHAR    | 63 character    | 16383 character | CHAR,NCHAR,NVARCHAR,VARCHAR                        | When converting to CHAR or VARCHAR, the width of the target type must not be smaller than 4 times the original width.<br> When converting to NCHAR or NVARCHAR, the width of the target type must not be smaller than that of the original type|
 
 ### Examples
 
