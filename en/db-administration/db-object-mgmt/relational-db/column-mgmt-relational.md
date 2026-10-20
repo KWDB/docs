@@ -30,6 +30,51 @@ ALTER TABLE [IF EXISTS] <table_name> ADD [COLUMN] [IF NOT EXISTS] <column_name> 
 | `type_name` | The data type of the new column. |
 | `col_qual_list` | A list of column qualifications. KWDB supports the following qualifications: <br >- `<col_qualification_elem>`: `NULL`, `NOT NULL`, `UNIQUE`, `PRIMARY KEY`, `CHECK`, `DEFAULT`, `REFERENCES`, `AS`.<br >- `CONSTRAINT <constraint_name> <col_qualification_elem>` <br >- `COLLATE <collation_name>` <br >- `FAMILY <family_name>`: If no column family is specified, the column is added to the first column family. <br >- `CREATE FAMILY [<family_name>]` <br > **Note** <br > KWDB does not support adding columns with a FOREIGN KEY constraint. For details about how to add a FOREIGN KEY constraint to a column, see [ADD CONSTRAINT](../../../db-administration/db-object-mgmt/relational-db/constraint-mgmt-relational.md#add-constraint). |
 
+### Supported Modifiable Data Types
+
+The table below lists the relational data types supported for modification in KaiwuDB, along with their default widths, convertible target data types, and conversion notes.
+
+::: warning Notes
+
+- Width can only be increased, not decreased. For character types (CHAR, NCHAR, NVARCHAR, VARCHAR), the width of the target type must not be smaller than that of the original type.
+- Character types can be converted to byte types, while byte types cannot be converted to character types.
+- Time precision can only be increased, not decreased.
+- Columns with dependent objects cannot have their data type modified. If a column is referenced by objects such as views, the dependencies must be removed before type modification; otherwise, an error will be thrown.
+- Label columns cannot have their data type modified.
+- Conversion between identical types is treated as a no-op.
+:::
+
+| Original Type  | Default Width | Target Type                                                                        | Notes                               |
+| -----------   | --------- | -----------------------------------------------------------------------------------------| ------------------------------------ |
+| INT2          | 2 bytes           | INT4,INT8                                                                        | Can only convert to wider integer types |
+| INT4          | 4 bytes           | INT8                                                                             | Same as above|
+| INT8          | 8 bytes           | INT8                                                                             | - |
+| FLOAT4        | 4 bytes           | FLOAT8                                                                           | Bidirectional conversion between FLOAT4 and FLOAT8. |
+| FLOAT8        | 8 bytes           | FLOAT8                                                                           | Same as above |
+| DECIMAL       | precision/scale   | DECIMAL                                                                          | Both the precision and scale of the target type must not be smaller than those of the original type.DECIMAL without specified precision can only be converted to DECIMAL. |
+| BOOL          | 1 bytes           | -                                                                                | - |
+| BIT           | 1 bit             | BIT,VARBI,VARBIT(n)                                                              | Width can only be increased |
+| VARBIT        | Unlimited         | VARBIT                                                                           | Same as above |
+| CHAR          | 1 byte           | CHAR,NCHAR,NVARCHAR,VARCHAR,STRING,TEXT,ITEXT,BYTES,VARBYTES,BLOB,CLOB            | When a specific width is specified, the target type width must not be smaller than the original type. Types without specified width can only be converted to types with unlimited width.<br > Character types can be converted to byte types, while byte types cannot be converted to character types. |
+| NCHAR         | 1 character        | CHAR,NCHAR,NVARCHAR,VARCHAR,STRING,TEXT,CITEXT,BYTES,VARBYTES,BLOB,CLOB         | Same as above |
+| VARCHAR       | Unlimited          | CHAR,NCHAR,NVARCHAR,VARCHAR,STRING,TEXT,CITEXT,BYTES,VARBYTES,BLOB,CLOB         | Same as above |
+| NVARCHAR      | Unlimited          | CHAR,NCHAR,NVARCHAR,VARCHAR,STRING,TEXT,CITEXT,BYTES,VARBYTES,BLOB,CLOB         | Same as above |
+| STRING(TEXT)  | Unlimited          | CHAR,NCHAR,NVARCHAR,VARCHAR,STRING,TEXT,CITEXT,BYTES,VARBYTES,BLOB,CLOB         | Same as above |
+| CITEXT        | Unlimited          | NVARCHAR,VARCHAR,STRING,TEXT,CITEXT,CLOB                                        | CITEXT does not support width limitation and can only convert to types with unlimited width |
+| BYTES         | Unlimited          | BYTES,VARBYTES,BLOB                                                             | Cannot convert to character types |
+| VARBYTES      | Unlimited          | BYTES,VARBYTES,BLOB                                                             | Same as above |
+| BLOB          | Unlimited          | BYTES,VARBYTES,BLOB                                                             | Same as above |
+| CLOB          | Unlimited          | STRING,NVARCHAR,VARCHAR,CHAR,NCHAR,CITEXT                                       | Can only convert to unlimited-width types; conversion to VARCHAR(n) is not supported |
+| TIMESTAMP     | -              | TIMESTAMP ,TIMESTAMPTZ                                                              | The precision of the target type must not be smaller than the original type; precision defaults to 0 if unspecified |
+| TIMESTAMP     | -              | TIMESTAMP ,TIMESTAMPTZ                                                              | Same as above   |
+| TIME          | -              | TIME                                                                                | Precision can only be increased |
+| TIMETZ        | -              | TIMETZ                                                                              | Same as above   |
+| DATE          | -              | DATE                                                                                | Only same-type conversion supported (no-op)  |
+| UUID          | -              | TIMETZ                                                                              | Same as above   |
+| JSONB         | -              | TIMETZ                                                                              | Same as above   |
+| INET          | -              | TIMETZ                                                                              | Same as above   |
+| ARRARY        | -              | TIMETZ                                                                              | Only same-type conversion supported (no-op).<br > The data element type cannot be modified |
+
 ### Examples
 
 - Add a single column.

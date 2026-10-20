@@ -12,6 +12,30 @@ KWDB time-series databases support the following data types:
 - BOOL types
 - String types
 
+### Supported Modifiable Data Types
+
+The table below lists the time-series data types supported for modification in KaiwuDB, including their default width, maximum width, convertible target data types, and conversion notes.
+
+::: warning Notes
+
+- Default width: The value used by the system when the user does not specify a width.
+- Columns whose data type modification is prohibited: The timestamp column and primary tag column (`Primary tags`) as the first column of a time-series table.
+:::
+
+| Original Type | Default Width | Maximum Width  | Target Type                                                         | Notes                              |
+| ----------- | --------------- | --------- | -------------------------------------------------------- | ------------------------------------ |
+| TIMESTAMPTZ | ms            |             | TIMESTAMP                                                | Precision must remain consistent; millisecond, microsecond and nanosecond are supported |
+| TIMESTAMP   | Same as above |             | TIMESTAMPTZ                                              | Same as above  |
+| INT2        | 2 bytes       |             | INT4,INT8,VARCHAR                                        | When converting to VARCHAR, the minimum width requirement is 6. |
+| INT4        | 4 bytes       |             | INT8,VARCHAR                                             | When converting to VARCHAR, the minimum width requirement is 11. |
+| INT8        | 8 bytes       |             | VARCHAR                                                  | When converting to VARCHAR, the minimum width requirement is 20. |
+| FLOAT4      | 4 bytes       |             | FLOAT8,VARCHAR                                           | When converting to VARCHAR, the minimum width requirement is 30. |
+| FLOAT8      | 8 bytes       |             | VARCHAR                                                  | When converting to VARCHAR, the minimum width requirement is 30. |
+| CHAR        | 1 byte        | 1023 bytes  | CHAR,NCHAR,NVARCHAR,VARCHAR                              | When converting to CHAR or VARCHAR, the width of the target type must not be smaller than that of the original type.<br > When converting to NCHAR or NVARCHAR, the width of the target type must not be smaller than 1/4 of the original width. |
+| NCHAR       | 1 character     | 255 character   | CHAR,NCHAR,NVARCHAR,VARCHAR                        | When converting to CHAR or VARCHAR, the width of the target type must not be smaller than 4 times the original width.<br > When converting to NCHAR or NVARCHAR, the width of the target type must not be smaller than that of the original type. |
+| VARCHAR     | 254 bytes   | 65534 bytes | CHAR,NCHAR,NVARCHAR,VARCHAR,INT2,INT4,INT8,FLOAT4,FLOAT8   | When converting to CHAR or VARCHAR, the width of the target type must not be smaller than that of the original type.<br > When converting to NCHAR or NVARCHAR, the width of the target type must not be smaller than 1/4 of the original width. |
+| NVARCHAR    | 63 character    | 16383 character | CHAR,NCHAR,NVARCHAR,VARCHAR                        | When converting to CHAR or VARCHAR, the width of the target type must not be smaller than 4 times the original width.<br> When converting to NCHAR or NVARCHAR, the width of the target type must not be smaller than that of the original type|
+
 ## Time Types
 
 KWDB time-series databases support TIMESTAMP and TIMESTAMPTZ time types.
@@ -45,46 +69,6 @@ Currently, KWDB supports inserting a timestamp using any of the following ways:
 - INT-typed timestamp: when inserting an INT-typed timestamp, KWDB checks whether the value exceeds the time range supported by the precision level and then inserts the value into the column.
 
 KWDB supports addition and subtraction operations of time in queries for timestamp-typed columns or timestamp constants, and for functions and expressions whose result is timestamp. KWDB supports comparing the operation results using the greater than sign (`>`), the less than sign (`<`), the equals sign (`=`), the greater than or equal to sign (`>=`), and the less than or equal to sign (`<=`). For details, see [Simple Query](../dml/ts-db/ts-select.md).
-
-### Data Type Conversions and Casts
-
-TIMESTAMP-typed values can be cast to any of the following data types.
-
-| Type | Description |
-| --- | --- |
-| INT | The system returns an error if the value is NaN or +/- Inf. |
-| FLOAT | Convert to milliseconds since Jan. 1, 1970. |
-| STRING | - |
-| TIMESTAMPTZ | - |
-
-TIMESTAMPTZ-typed values can be cast to any of the following data types.
-
-| Type | Description |
-| --- | --- |
-| INT | The system returns an error if the value is NaN or +/- Inf. |
-| FLOAT | Convert to milliseconds since Jan. 1, 1970. |
-| STRING | - |
-| TIMESTAMP | - |
-
-### Data Type Conversions and Casts
-
-TIMESTAMP-typed values can be cast to any of the following data types.
-
-| Type | Description |
-| --- | --- |
-| INT | The system returns an error if the value is NaN or +/- Inf. |
-| FLOAT | Convert to milliseconds since Jan. 1, 1970. |
-| STRING | - |
-| TIMESTAMPTZ | - |
-
-TIMESTAMPTZ-typed values can be cast to any of the following data types.
-
-| Type | Description |
-| --- | --- |
-| INT | The system returns an error if the value is NaN or +/- Inf. |
-| FLOAT | Convert to milliseconds since Jan. 1, 1970. |
-| STRING | - |
-| TIMESTAMP | - |
 
 ### Examples
 
@@ -149,18 +133,6 @@ KWDB supports various signed integer data types.
 A constant value of an integer type can be entered as a numeric literal. For example, `42`, `-1234` or `0xCAFE`.
 :::
 
-#### Data Type Conversions and Casts
-
-INTEGER-typed values can be cast to any of the following data types.
-
-| Type | Description |
-| --- | --- |
-| BOOL | `0` converts to `false`. All other values convert to `true`. |
-| FLOAT | - |
-| STRING | Convert the INTEGER-typed value to the corresponding STRING-typed value and truncate it based on the converted STRING type. |
-| TIMESTAMP | Convert to milliseconds since Jan. 1, 1970.|
-| TIMESTAMPTZ | Convert to milliseconds since Jan. 1, 1970.|
-
 #### Examples
 
 This example creates a table with INTEGER-typed columns.
@@ -205,16 +177,6 @@ Floating-point types are handled internally using the standard double-precision 
 A FLOAT-typed column supports values up to 8 bytes in width, but the total storage size is likely to be larger due to KWDB metadata.
 
 To limit a FLOAT-typed column, use `CAST(column as DECIMAL(precision, scale))`, where `precision` is the maximum count of digits both to the left and right of the decimal point and `scale` is the exact count of digits to the right of the decimal point. The `precision` must not be smaller than the `scale`. Using `DECIMAL(precision)` is equivalent to `DECIMAL(precision, 0)`.
-
-#### Data Type Conversions and Casts
-
-Floating-point-typed values can be cast to any of the following data types.
-
-| Type | Description |
-| --- | --- |
-| BOOL | `0` converts to `false`. All other values convert to `true`. |
-| FLOAT | Lose precision when converting the floating-point-typed value to the corresponding FLOAT4-typed value.|
-| STRING | Convert the floating-point-typed value to the corresponding STRING-typed value and truncate it based on the converted STRING type. |
 
 #### Examples
 
@@ -276,16 +238,6 @@ A boolean value can be obtained by coercing a numeric value. Zero is coerced to 
 
 - `CAST(0 AS BOOL) (false)`
 - `CAST(119 AS BOOL) (true)`
-
-### Data Type Conversions and Casts
-
-BOOL-typed values can be cast to any of the following data types.
-
-| Type | Description |
-| --- | --- |
-| INT | Convert `true` to `1`, `false` to `0`.|
-| FLOAT | Convert `true` to `1`, `false` to `0`.|
-| STRING | - |
 
 ### Examples
 
