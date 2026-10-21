@@ -49,7 +49,7 @@ kwbase debug range-report 1 --url=https://100.150.0.12:8080 --user=testxyy --pas
 kwbase debug range-report 1 --url=http://100.150.0.12:8080 --insecure
 ```
 
-命令执行成功后，会在当前目录下生成reports-range-<id>.html文件，可直接选择浏览器打开；
+命令执行成功后，会在当前目录下生成 `reports-range-<id>.html` 文件，可直接选择浏览器打开；
 
 ![](../static/db-operation/rangereport01.png)
 
