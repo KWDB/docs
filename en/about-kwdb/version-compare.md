@@ -21,7 +21,7 @@ KaiwuDB is available in two editions: the Enterprise Edition (KaiwuDB) and the O
       <td rowspan="6">Time-Series Engine</td>
       <td><a href="../db-administration/data-stream.md">Stream Computing</a></td><td>✅</td><td>✅</td>
     </tr>
-    <tr><td><a href="../db-administration/data-pub.md">Data Publication</td><td>✅</td><td>✅</td></tr>
+    <tr><td><a href="../db-administration/data-pub.md">Data Publication</a></td><td>✅</td><td>✅</td></tr>
     <tr><td>Data Subscription</td><td>✅</td><td>—</td></tr>
     <tr><td><a href="../db-operation/storage-mgmt.md">Data Compression</a></td><td>✅</td><td>✅</td></tr>
     <tr><td>Tiered Hot/Cold Storage</td><td>✅</td><td>—</td></tr>
