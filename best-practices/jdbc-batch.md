@@ -3,7 +3,9 @@ title: KaiwuDB JDBC 扩展协议
 id: jdbc-batch
 ---
 
-# KaiwuDB JDBC 简介
+# KaiwuDB JDBC 最佳实践
+
+## KaiwuDB JDBC 简介
 
 KaiwuDB JDBC 是 KWDB 的官方 Java 语言连接器，基于 PgJDBC 扩展实现，符合 JDBC 4.0、JDBC 4.1 和 JDBC 4.2 规范。Java 开发人员可以使用 KaiwuDB JDBC 驱动程序连接 KWDB 的服务进程，进行数据增删改查操作
 - 支持PG扩展协议‘M’类消息支持，支持列式批量数据传输及Snappy/LZ4压缩功能（3.2.2 及以上版本）。
@@ -17,7 +19,7 @@ KaiwuDB JDBC 提供了传统的批量执行 SQL 接口，用户可以通过手�
 
 有关 KaiwuDB JDBC 的数据库连接方式、基础使用、数据类型和异常处理，参见[使用 JDBC 连接 KWDB 数据库](../development/java/connect-jdbc.md)；更多错误码信息，参见 [KaiwuDB JDBC Driver 错误码](../db-operation/error-code/error-code-jdbc-driver.md)；更多故障排查信息，参见 [KaiwuDB JDBC 故障排查](../troubleshooting-guide/troubleshooting.md#kaiwudb-jdbc)。
 
-## 前提条件
+### 前提条件
 
 - [安装 openJDK](https://openjdk.org/install/)（1.8 及以上版本）。
 - [安装 Maven](https://maven.apache.org/install.html)（3.6 及以上版本）。
@@ -26,7 +28,7 @@ KaiwuDB JDBC 提供了传统的批量执行 SQL 接口，用户可以通过手�
 - 创建具有表级别及以上操作权限的用户。
 - 获取 KaiwuDB JDBC 驱动包（3.3.0）。
 
-## 配置数据库
+### 配置数据库
 
 默认情况下，数据库开启时序写入短接功能。开启后，系统直接将数据写入存储，减少中间处理环节。此外，用户可以设置允许写入时跳过错误数据，正常写入其他数据，从而提高写入性能。
 
@@ -34,7 +36,7 @@ KaiwuDB JDBC 提供了传统的批量执行 SQL 接口，用户可以通过手�
 SET SESSION ts_ignore_batcherror=true;
 ```
 
-## 配置连接
+### 配置连接
 
 1. 在 `pom.xml` 中添加依赖，将 KaiwuDB JDBC 引入 Java 项目：
 
@@ -52,7 +54,7 @@ SET SESSION ts_ignore_batcherror=true;
     mvn install:install-file "-Dfile=../kaiwudb-jdbc-3.3.0.jar" "-DgroupId=com.kaiwudb" "-DartifactId=kaiwudb-jdbc" "-Dversion=3.3.0" "-Dpackaging=jar"
     ```
     
-# 使用 KaiwuDB JDBC 扩展接口优化批量数据写入
+## 使用 KaiwuDB JDBC 扩展接口优化批量数据写入
 
 启用PG扩展协议压缩功能，通过会话变量 `pg_extend_compress` 控制：
 
@@ -146,7 +148,7 @@ SET SESSION ts_ignore_batcherror=true;
    }
    ```
 
-# Prepare-extend 扩展写入模式
+## Prepare-extend 扩展写入模式
 
 prepare-extend 写入模式是 KaiwuDB 自定义的时序表批量直插协议，使用该模式需要满足以下条件：
 - KaiwuDB数据库服务端版本需支持 `prepare_extend` 写入模式，KaiwuDB 版本不低于 3.3.0。
@@ -154,7 +156,7 @@ prepare-extend 写入模式是 KaiwuDB 自定义的时序表批量直插协议�
 - 会话开启 `tsinsert_direct`，否则 ‘j’ 消息被服务端拒绝（错误码 08P01 ）。
 - prepare-extend 写入模式仅支持时序表。支持单表名、库表.表名、库名.public.表名。
 
-## 接口明细
+### 接口明细
 
 | 接口 | 说明 |
 | ----- | ---- |
@@ -167,7 +169,7 @@ prepare-extend 写入模式是 KaiwuDB 自定义的时序表批量直插协议�
 | getTsRowCount()	                                                               | 返回当前已缓冲未发送的行数 |
 | executeBatch                                                                   | 整批行一次提交完成写入，返回单元素数组，元素值 = 服务端实际写入的总行数；数组求和即实际写入行数；executeBatch() 在总行数超 int 范围时提示改用 executeLargeBatch() |
 
-## 批量直插示例
+### 批量直插示例
 
 ```java
 public void testPrepareExtend() {
