@@ -136,7 +136,7 @@ id: kat-install
       - `postgres.environment`：PostgreSQL 数据库的环境变量。
         - `POSTGRES_USER`：PostgreSQL 用户名，默认为 `katadmin`。
         - `POSTGRES_PASSWORD`：PostgreSQL 用户密码，默认为 `kat_2026`。生产环境建议修改为强密码。
-        - `POSTGRES_DB`：KAT 元数据库名称，默认为 `katdb`。
+        - `POSTGRES_DB`：KAGA元数据库名称，默认为 `katdb`。
       - `postgres.ports`：PostgreSQL 服务的端口映射配置。
       - `postgres.volumes`：PostgreSQL 数据目录的映射路径。
       - `postgres.healthcheck`：PostgreSQL 服务的健康检查配置。`kat-server` 在 PostgreSQL 健康检查通过后启动。
