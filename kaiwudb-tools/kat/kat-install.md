@@ -139,15 +139,15 @@ id: kat-install
         - `POSTGRES_DB`：KGA 元数据库名称，默认为 `katdb`。
       - `postgres.ports`：PostgreSQL 服务的端口映射配置。
       - `postgres.volumes`：PostgreSQL 数据目录的映射路径。
-      - `postgres.healthcheck`：PostgreSQL 服务的健康检查配置。`kat-server` 在 PostgreSQL 健康检查通过后启动。
+      - `postgres.healthcheck`：PostgreSQL 服务的健康检查配置。`kga-server` 在 PostgreSQL 健康检查通过后启动。
       - `kga-server.image`：KWDB Agent Server 的镜像名称。
       - `kga-server.container_name`：自定义 KWDB Agent Server 的容器名称。
-      - `kat-server.restart`：KWDB Agent Server 的重启方式。
-      - `kat-server.depends_on`：配置 `kat-server` 在 `postgres` 服务健康检查通过后启动。
-      - `kat-server.environment`：KWDB Agent Server 支持的环境变量。用户可根据实际环境按需修改以下环境变量。
+      - `kga-server.restart`：KWDB Agent Server 的重启方式。
+      - `kga-server.depends_on`：配置 `kga-server` 在 `postgres` 服务健康检查通过后启动。
+      - `kga-server.environment`：KWDB Agent Server 支持的环境变量。用户可根据实际环境按需修改以下环境变量。
         - `LOG_LEVEL`：日志级别，支持设置为 `ERROR`、`WARNING`、`INFO`、或 `DEBUG` 选项，默认为 `WARNING` 。
         - `POSTGRES_HOST`：使用 network_mode: host。
-        - `DATABASE_URL`：KAT 元数据库的连接信息，格式为 `用户名:密码@主机:端口/数据库名`。该参数取值需要与 `postgres.environment` 中 `POSTGRES_USER`、`POSTGRES_PASSWORD`、`POSTGRES_DB` 的取值保持一致。
+        - `DATABASE_URL`：KGA 元数据库的连接信息，格式为 `用户名:密码@主机:端口/数据库名`。该参数取值需要与 `postgres.environment` 中 `POSTGRES_USER`、`POSTGRES_PASSWORD`、`POSTGRES_DB` 的取值保持一致。
         - `KWDB_CMD_MCP_SERVER_SSE_READ_TIMEOUT`: KWDB CMD Server连接超时时间，默认300。
         - `LANGCHAIN_TRACING`：配置是否开启 LangChain 链路追踪。支持设置为 `true` 或 `false`。
         - `LANGSMITH_PROJECT`：待追踪的项目名称。
@@ -165,20 +165,20 @@ id: kat-install
         - `OAUTH_CLIENT_SECRET`: SSO 返回的客户端密钥，由 setup.sh 自动写入。
         - `TRUSTED_HOSTS`：可信主机列表，多个主机用英文逗号分隔。生产环境建议配置为实际域名，例如 `your-domain.com,www.your-domain.com`。如果服务器没有域名，填写 IP 地址和 localhost，例如 `localhost,127.0.0.1,<主机IP>`。
         - `FRONTEND_ORIGIN`：前端页面的访问地址。生产环境建议配置为实际域名，例如 `http://your-domain.com:3000`。如果服务器没有域名，填写实际 IP 地址，例如 `http://<主机IP>:3000`。
-      - `kat-server.network_mode`: 配置 KWDB Agent Server 的网络访问模式。支持设置为 `host`，表示 KWDB Agent Server 容器直接使用宿主机的网络配置，而无需创建独立的虚拟网络环境。
-      - `kat-server.volumes`：数据库的映射目录和报告存放目录。
-      - `kat-ui.image`：KWDB Agent UI 的镜像名称。
-      cc
-      - `kat-ui.restart`：KWDB Agent UI 的重启方式。
-      - `kat-ui.network_mode`: 配置 KWDB Agent UI 的网络访问模式。该参数取值需要与 `kat-server.network_mode` 参数的取值保持一致。
-      - `kat-ui.environment`：KWDB Agent UI 支持的环境变量。用户可根据实际环境按需修改以下环境变量。
+      - `kga-server.network_mode`: 配置 KWDB Agent Server 的网络访问模式。支持设置为 `host`，表示 KWDB Agent Server 容器直接使用宿主机的网络配置，而无需创建独立的虚拟网络环境。
+      - `kga-server.volumes`：数据库的映射目录和报告存放目录。
+      - `kga-ui.image`：KWDB Agent UI 的镜像名称。
+      - `kga-container_name`：KWDB Agent UI 的容器名称。
+      - `kga-ui.restart`：KWDB Agent UI 的重启方式。
+      - `kga-ui.network_mode`: 配置 KWDB Agent UI 的网络访问模式。该参数取值需要与 `kga-server.network_mode` 参数的取值保持一致。
+      - `kga-ui.environment`：KWDB Agent UI 支持的环境变量。用户可根据实际环境按需修改以下环境变量。
         - `COPILOT_URL`：KWDB Agent Server Copilot 服务的地址。
         - `BACKEND_URL`：KWDB Agent Server API 服务的地址。
         - `KAIWUDB_CLIENT_ID`：与 `OAUTH_CLIENT_ID` 相同。
-      - `kat-vis.image`：KWDB Agent VIS 的镜像名称。
-      - `kat-vis.container_name`：自定义 KWDB Agent VIS 的容器名称。
-      - `kat-vis.restart`：KWDB Agent VIS 的重启方式。
-      - `kat-vis.ports`：可选参数，KWDB Agent VIS 服务的端口映射配置，默认为 `8004`。
+      - `kga-vis.image`：KWDB Agent VIS 的镜像名称。
+      - `kga-vis.container_name`：自定义 KWDB Agent VIS 的容器名称。
+      - `kga-vis.restart`：KWDB Agent VIS 的重启方式。
+      - `kga-vis.ports`：可选参数，KWDB Agent VIS 服务的端口映射配置，默认为 `8004`。
   
 ### 首次完整部署
 
