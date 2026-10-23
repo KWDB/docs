@@ -132,7 +132,7 @@ id: kat-install
     参数说明
 
       - `postgres.image`：PostgreSQL 的镜像名字。
-      - `kat-ui.container_name`：自定义 ：PostgreSQL 的容器名称。
+      - `postgres.container_name`：自定义 ：PostgreSQL 的容器名称。
       - `postgres.environment`：PostgreSQL 数据库的环境变量。
         - `POSTGRES_USER`：PostgreSQL 用户名，默认为 `katadmin`。
         - `POSTGRES_PASSWORD`：PostgreSQL 用户密码，默认为 `kat_2026`。生产环境建议修改为强密码。
