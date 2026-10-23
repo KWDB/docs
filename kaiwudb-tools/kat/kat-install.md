@@ -5,7 +5,7 @@ id: kat-install
 
 # 安装部署
 
-用户可以在 Windows、MacOS、Linux 平台部署 KAT。本文档介绍如何使用 `setup.sh` 脚本整体部署 KGA。
+用户可以在 Windows、MacOS、Linux 平台部署 KGA。本文档介绍如何使用 `setup.sh` 脚本整体部署 KGA。
 
 ## 部署 KGA
 
