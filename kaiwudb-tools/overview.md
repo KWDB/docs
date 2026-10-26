@@ -28,7 +28,7 @@ KaiwuDB 守护智能体（英文名 KaiwuDB Guardian Agent，简称 KGA）是基
 
 ## KWDB MCP Server
 
-KWDB MCP Server 是面向应用开发场景的 MCP 协议连接器，供兼容 MCP 协议的 LLM Agent（如 Cline）通过 HTTP SSE 或 StdIO 协议连接 KWDB，直接执行数据读写、DDL 操作和只读查询。与 KAT 的区别在于，KWDB MCP Server 是标准化的数据库接口层，开发者可将其集成到自己的 AI 应用中；KAT 则是面向最终用户的智能体交互工具。有关详细信息，参见 [KWDB MCP Server](../development/kwdb-mcp-server/connect-kwdb-mcp-server.md)。
+KWDB MCP Server 是面向应用开发场景的 MCP 协议连接器，供兼容 MCP 协议的 LLM Agent（如 Cline）通过 HTTP SSE 或 StdIO 协议连接 KWDB，直接执行数据读写、DDL 操作和只读查询。与 KGA 的区别在于，KWDB MCP Server 是标准化的数据库接口层，开发者可将其集成到自己的 AI 应用中；KGA 则是面向最终用户的智能体交互工具。有关详细信息，参见 [KWDB MCP Server](../development/kwdb-mcp-server/connect-kwdb-mcp-server.md)。
 
 ## kwbase CLI 工具
 
