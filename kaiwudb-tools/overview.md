@@ -13,6 +13,7 @@ KWDB 提供一套完整的配套工具，覆盖数据库可视化管理、AI 智
 |------|------|
 | [KaiwuDB 开发者中心](#kaiwudb-开发者中心) | 图形化数据库管理平台，提供连接管理、对象管理、数据编辑、SQL 编辑等可视化操作能力 |
 | [KaiwuDB 守护智能体](#kaiwudb-守护智能体) | 基于 MCP 协议的数据库智能体工具，支持通过自然语言完成数据库运维、数据分析等任务 |
+| [KaiwuDB 数据分析平台](#kaiwudb-数据分析平台) | 基于 LLM 大语言模型的数据分析平台，围绕**数据接入 → 数据语义化 → 可视化分析 → AI 智能解读与告警 → 自动化任务与报告输出**，形成完整时序数据分析闭环 |
 | [KWDB MCP Server](#kwdb-mcp-server) | 面向应用开发的 MCP 协议连接器，供 LLM Agent 直接连接 KWDB 执行数据读写和 DDL 操作 |
 | [kwbase CLI 工具](#kwbase-cli-工具) | 命令行管理工具，支持节点启动、集群初始化、证书管理、SQL 操作及节点运维等操作 |
 | [TSBS MCP Server](#性能测试工具) | 基于 MCP 协议的时序数据库基准测试服务端 |
@@ -25,6 +26,10 @@ KaiwuDB 开发者中心（英文名 KaiwuDB Developer Center，简称 KDC）是�
 ## KaiwuDB 守护智能体
 
 KaiwuDB 守护智能体（英文名 KaiwuDB Guardian Agent，简称 KGA）是基于 MCP（Model Context Protocol，模型上下文协议）协议构建的数据库智能体工具。KGA 将自然语言处理能力与 KWDB 深度融合，用户通过对话即可完成数据库安装部署、数据读写、分析查询等操作，兼容 Cline 等主流 MCP 客户端。有关详细信息，参见 [KaiwuDB 守护智能体](./kat/kat-overview.md)。
+
+## kaiwudb-数据分析平台
+
+KaiwuDB 分析平台（英文名称 KaiwuDB Insight Platform，简称 KIP）是依托 KaiwuDB 时序数据库打造的一站式时序智能分析平台，面向工业物联网、车联网、新能源、电力、装备制造等典型时序业务场景，提供覆盖数据接入、元数据治理、数据语义建模、可视化分析、AI 智能洞察、任务自动化、报告分发的全链路能力。业务管理人员、运维工程师、数据分析师无需深度掌握 SQL 与数据库底层技术，通过可视化配置与自然语言对话交互，即可快速完成时序数据探查、指标解读、异常识别与趋势预判，高效挖掘时序数据价值，支撑业务数字化、数据驱动决策。
 
 ## KWDB MCP Server
 
