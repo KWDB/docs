@@ -41,6 +41,7 @@ KaiwuDB 提供企业版（KaiwuDB）与开源版（KWDB）两种版本。企业�
       <td rowspan="6">运维管理</td>
       <td colspan="2"><a href="../kaiwudb-tools/kat/kat-overview.md">KGA 智能化运维工具</a></td><td>✅</td><td>—</td>
     </tr>
+     <tr><td colspan="2"><a href="../kaiwudb-tools/kip/kip-overview.md">KIP 数据分析平台</a></td><td>✅</td><td>—</td></tr>
     <tr><td colspan="2">备份还原</td><td>✅</td><td>—</td></tr>
     <tr>
       <td colspan="2"><a href="../db-monitor/deploy-monitoring.md">监控工具</a></td>
