@@ -77,6 +77,7 @@ id: deploy-windows-cli
      # 新开命令行，设置环境变量
 
      set PATH=<msys64>\mingw64\bin;<kwdb_dir>\kaiwudb
+     set ZONEINFO=<go_dir>\go1.21.13.windows-amd64\go\lib\time\zoneinfo.zip
      
      # 启动第一个节点
      kwbase start --insecure  --listen-addr=0.0.0.0:26257  --advertise-addr=0.0.0.0:26257 --http-addr=0.0.0.0:8080  --store=<data_dir1>  --join=<host1>:26257
@@ -84,6 +85,7 @@ id: deploy-windows-cli
      # 新开命令行，设置环境变量
 
      set PATH=<msys64>\mingw64\bin;<kwdb_dir>\kaiwudb
+     set ZONEINFO=<go_dir>\go1.21.13.windows-amd64\go\lib\time\zoneinfo.zip
 
      # 启动第二个节点
      kwbase start --insecure  --listen-addr=0.0.0.0:26257  --advertise-addr=0.0.0.0:26258 --http-addr=0.0.0.0:8080  --store=<data_dir2>  --join=<host1>:26257
@@ -91,6 +93,7 @@ id: deploy-windows-cli
      # 新开命令行，设置环境变量
 
      set PATH=<msys64>\mingw64\bin;<kwdb_dir>\kaiwudb
+     set ZONEINFO=<go_dir>\go1.21.13.windows-amd64\go\lib\time\zoneinfo.zip
 
      # 启动第三个节点
      kwbase start --insecure  --listen-addr=0.0.0.0:26257  --advertise-addr=0.0.0.0:26259 --http-addr=0.0.0.0:8080  --store=<data_dir3>  --join=<host1>:26257
