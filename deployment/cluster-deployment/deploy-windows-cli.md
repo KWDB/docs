@@ -110,7 +110,7 @@ id: deploy-windows-cli
         ```
     :::
 
-4. 查看集群状态并登录。
+7. 查看集群状态并登录。
 
     在脚本执行窗口操作：
     
@@ -133,4 +133,4 @@ id: deploy-windows-cli
      ./kwbase node status --certs-dir=<certs_dir> --host=0.0.0.0:26257
      ```
 
-6. 部署完成后，[KWDB 支持的连接器](../../development/overview.md)或 [KaiwuDB 开发者中心](../../kaiwudb-tools/kaiwudb-developer-center/overview.md)连接并管理 KWDB。
+8. 部署完成后，[KWDB 支持的连接器](../../development/overview.md)或 [KaiwuDB 开发者中心](../../kaiwudb-tools/kaiwudb-developer-center/overview.md)连接并管理 KWDB。
