@@ -87,7 +87,7 @@ KWDB 安装程序封装为 `.run` 自解压可执行包，内置所有部署所�
 目前 KWDB [下载页面](https://www.kaiwudb.com/download?tab=2)支持下载安装程序，如安装过程中遇到问题，请联系 [KWDB 技术支持](https://www.kaiwudb.com/about/support)：
 
 :::warning 说明
-Windows 环境仅提供产品二进制文件，不提供安装程序，安装部署操作请参考 [kwbase CLI 部署](./deploy/deploy-cli.md) 中的第2及之后的操作步骤。
+Windows 环境仅提供产品二进制文件，不提供安装程序，安装部署操作请参考 [kwbase windows CLI 部署](./deploy/deploy-windows.md) 中的第2及之后的操作步骤。
 :::
 
 ### 容器镜像
