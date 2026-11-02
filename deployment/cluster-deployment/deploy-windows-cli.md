@@ -17,7 +17,11 @@ id: deploy-windows-cli
 
 （2）双击，执行完毕后会在当前目录创建msys2目录<msys64>并把所有二进制解压到该目录下
 
-（3）进入msys2目录下，执行名称为 `mingw64.exe` 的二进制程序, 进入msys2命令行，当出现 `Initial setup complete. MSYS2 is now ready to use.`后，输入命令`pacman -S --noconfirm mingw-w64-x86_64-libwinpthread  mingw-w64-x86_64-gcc-libs mingw-w64-x86_64-dlfcn mingw-w64-x86_64-zlib` 完成依赖安装。
+（3）进入msys2目录下，执行名称为 `mingw64.exe` 的二进制程序, 进入msys2命令行，当出现 `Initial setup complete. MSYS2 is now ready to use.`后，输入命令
+
+     ```bash
+     pacman -S --noconfirm mingw-w64-x86_64-libwinpthread  mingw-w64-x86_64-gcc-libs mingw-w64-x86_64-dlfcn mingw-w64-x86_64-zlib
+     ``` 
 
 ### GO 环境准备
 
@@ -87,7 +91,7 @@ id: deploy-windows-cli
      # 新开命令行，设置环境变量
 
      set PATH=<msys64>\mingw64\bin;<kwdb_dir>\kaiwudb
-     
+
      # 启动第三个节点
      kwbase start --insecure  --listen-addr=0.0.0.0:26257  --advertise-addr=0.0.0.0:26259 --http-addr=0.0.0.0:8080  --store=<data_dir3>  --join=<host1>:26257
      ```
