@@ -86,7 +86,7 @@ The KWDB installer is packaged as a `.run` self-extracting executable that bundl
 KWDB currently provides installation packages for download on the [Download Page](https://www.kaiwudb.com/download?tab=2). If you encounter any issues during installation, please contact [KWDB Technical Support](https://www.kaiwudb.com/about/support).
 
 :::warning Note
-For Windows environments, only product binary files are available; no installation program is provided. For installation and deployment procedures, refer to step 2 and subsequent steps in [kwbase CLI Deployment](./deploy/deploy-cli.md).
+For Windows environments, only product binary files are available; no installation program is provided. For installation and deployment procedures,Please refer to the steps in [kwbase windows CLI Deployment](./deploy/deploy-windows.md) for installation and deployment operations. 
 :::
 
 ### Container Images
