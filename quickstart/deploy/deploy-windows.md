@@ -41,7 +41,7 @@ id: quickstart-windows-cli
     ```bash
     set PATH=<msys64>\mingw64\bin;<kwdb_dir>\kaiwudb
 
-    set ZONEINFO=<go_dir>\go1.21.13.windows-amd64\go\lib\time\zoneinfo.zip
+    set GOROOT=<go_dir>\go
      ```
 
 5. （可选）如需采用安全模式，执行以下步骤创建证书：

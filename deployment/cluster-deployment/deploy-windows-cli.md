@@ -43,7 +43,7 @@ id: deploy-windows-cli
      ```bash
      set PATH=<msys64>\mingw64\bin;<kwdb_dir>\kaiwudb
 
-     set ZONEINFO=<go_dir>\go1.21.13.windows-amd64\go\lib\time\zoneinfo.zip
+     set GOROOT=<go_dir>\go
      ```
 
 5. （可选）如需采用安全模式，执行以下步骤创建证书：
@@ -77,7 +77,7 @@ id: deploy-windows-cli
      # 新开命令行，设置环境变量
 
      set PATH=<msys64>\mingw64\bin;<kwdb_dir>\kaiwudb
-     set ZONEINFO=<go_dir>\go1.21.13.windows-amd64\go\lib\time\zoneinfo.zip
+     set GOROOT=<go_dir>\go
      
      # 启动第一个节点
      kwbase start --insecure  --listen-addr=0.0.0.0:26257  --advertise-addr=0.0.0.0:26257 --http-addr=0.0.0.0:8080  --store=<data_dir1>  --join=<host1>:26257
@@ -85,18 +85,18 @@ id: deploy-windows-cli
      # 新开命令行，设置环境变量
 
      set PATH=<msys64>\mingw64\bin;<kwdb_dir>\kaiwudb
-     set ZONEINFO=<go_dir>\go1.21.13.windows-amd64\go\lib\time\zoneinfo.zip
+     set GOROOT=<go_dir>\go
 
      # 启动第二个节点
-     kwbase start --insecure  --listen-addr=0.0.0.0:26257  --advertise-addr=0.0.0.0:26258 --http-addr=0.0.0.0:8080  --store=<data_dir2>  --join=<host1>:26257
+     kwbase start --insecure  --listen-addr=0.0.0.0:26258  --advertise-addr=0.0.0.0:26258 --http-addr=0.0.0.0:8081  --store=<data_dir2>  --join=<host1>:26257
 
      # 新开命令行，设置环境变量
 
      set PATH=<msys64>\mingw64\bin;<kwdb_dir>\kaiwudb
-     set ZONEINFO=<go_dir>\go1.21.13.windows-amd64\go\lib\time\zoneinfo.zip
+     set GOROOT=<go_dir>\go
 
      # 启动第三个节点
-     kwbase start --insecure  --listen-addr=0.0.0.0:26257  --advertise-addr=0.0.0.0:26259 --http-addr=0.0.0.0:8080  --store=<data_dir3>  --join=<host1>:26257
+     kwbase start --insecure  --listen-addr=0.0.0.0:26259  --advertise-addr=0.0.0.0:26259 --http-addr=0.0.0.0:8082  --store=<data_dir3>  --join=<host1>:26257
      ```
     ::: Tips
      windows环境不支持 `----background`
