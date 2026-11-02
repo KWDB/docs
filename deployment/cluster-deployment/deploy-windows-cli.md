@@ -73,7 +73,7 @@ id: deploy-windows-cli
 
     以多副本集群、非安全模式为例：打开 CMD 命令行窗口，或者双击执行 cluster-start.bat脚本
 
-     cluster-start.bat脚本参考如下：
+     cluster-start.bat 脚本参考如下：
      ```bash
      :: ===================== 根据需要修改路径配置 =====================
      set "msys64_dir=D:\msys64"
@@ -89,13 +89,13 @@ id: deploy-windows-cli
      set PATH=%msys64_dir%\mingw64\bin;%kwdb_dir%\kaiwudb
      set GOROOT=%go_dir%\go
 
-     # 启动节点1
+     :: 启动节点 1
      start kwbase start --insecure --listen-addr=0.0.0.0:26257 --advertise-addr=0.0.0.0:26257 --http-addr=0.0.0.0:8080 --store=%data_dir1% --join=0.0.0.0:26257
 
-     :: 启动节点2
+     :: 启动节点 2
      start kwbase start --insecure --listen-addr=0.0.0.0:26258 --advertise-addr=0.0.0.0:26258 --http-addr=0.0.0.0:8081 --store=%data_dir2% --join=0.0.0.0:26257
 
-     :: 启动节点3
+     :: 启动节点 3
      start kwbase start --insecure --listen-addr=0.0.0.0:26259 --advertise-addr=0.0.0.0:26259 --http-addr=0.0.0.0:8082 --store=%data_dir3% --join=0.0.0.0:26257
 
      :: 初始化
@@ -103,7 +103,7 @@ id: deploy-windows-cli
      ```
      
     ::: Tips
-     - windows环境不支持 `----background`
+     - windows环境不支持 `--background`
      - 安全模式的集群初始化：
         ```bash
         kwbase init --certs-dir=<certs_dir> --host=0.0.0.0:26257

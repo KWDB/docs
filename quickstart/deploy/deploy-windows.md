@@ -76,7 +76,7 @@ id: quickstart-windows-cli
      ```
 
      ::: Tips
-     windows环境不支持 `----background`
+     windows环境不支持 `--background`
      :::
 
 7. 数据库状态查看
