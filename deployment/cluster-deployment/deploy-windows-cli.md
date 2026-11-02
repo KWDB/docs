@@ -69,60 +69,52 @@ id: deploy-windows-cli
 
     :::
 
-6. 启动集群节点。
+6. 启动集群并完成集群初始化。
 
-    以多副本集群、非安全模式为例：
+    以多副本集群、非安全模式为例：打开 CMD 命令行窗口，或者双击执行 cluster-start.bat脚本
 
+     cluster-start.bat脚本如下：
      ```bash
-     # 新开命令行，设置环境变量
+     :: ===================== 根据需要修改路径配置 =====================
+     set "msys64_dir=D:\msys64"
+     set "kwdb_dir=D:\KaiwuDB\windows\KaiwuDB-Windows"
+     set "go_dir=D:\KaiwuDB\windows\go1.21.13.windows-amd64"
+     set "msys64_dir=D:\KaiwuDB\windows\msys64"
 
-     set PATH=<msys64>\mingw64\bin;<kwdb_dir>\kaiwudb
-     set GOROOT=<go_dir>\go
-     
-     # 启动第一个节点
-     kwbase start --insecure  --listen-addr=0.0.0.0:26257  --advertise-addr=0.0.0.0:26257 --http-addr=0.0.0.0:8080  --store=<data_dir1>  --join=<host1>:26257
+     set "data_dir1=D:\KaiwuDB\windows\cluster-data\data1"
+     set "data_dir2=D:\KaiwuDB\windows\cluster-data\data2"
+     set "data_dir3=D:\KaiwuDB\windows\cluster-data\data3"
 
-     # 新开命令行，设置环境变量
+     :: =====================数据库启动并初始化=========================
+     set PATH=%msys64_dir%\mingw64\bin;%kwdb_dir%\kaiwudb
+     set GOROOT=%go_dir%\go
 
-     set PATH=<msys64>\mingw64\bin;<kwdb_dir>\kaiwudb
-     set GOROOT=<go_dir>\go
+     # 启动节点1
+     start kwbase start --insecure --listen-addr=0.0.0.0:26257 --advertise-addr=0.0.0.0:26257 --http-addr=0.0.0.0:8080 --store=%data_dir1% --join=0.0.0.0:26257
 
-     # 启动第二个节点
-     kwbase start --insecure  --listen-addr=0.0.0.0:26258  --advertise-addr=0.0.0.0:26258 --http-addr=0.0.0.0:8081  --store=<data_dir2>  --join=<host1>:26257
+     :: 启动节点2
+     start kwbase start --insecure --listen-addr=0.0.0.0:26258 --advertise-addr=0.0.0.0:26258 --http-addr=0.0.0.0:8081 --store=%data_dir2% --join=0.0.0.0:26257
 
-     # 新开命令行，设置环境变量
+     :: 启动节点3
+     start kwbase start --insecure --listen-addr=0.0.0.0:26259 --advertise-addr=0.0.0.0:26259 --http-addr=0.0.0.0:8082 --store=%data_dir3% --join=0.0.0.0:26257
 
-     set PATH=<msys64>\mingw64\bin;<kwdb_dir>\kaiwudb
-     set GOROOT=<go_dir>\go
-
-     # 启动第三个节点
-     kwbase start --insecure  --listen-addr=0.0.0.0:26259  --advertise-addr=0.0.0.0:26259 --http-addr=0.0.0.0:8082  --store=<data_dir3>  --join=<host1>:26257
+     :: 初始化
+     start  kwbase init --insecure --host=0.0.0.0:26257 
      ```
+     
     ::: Tips
-     windows环境不支持 `----background`
+     - windows环境不支持 `----background`
+     - 安全模式的集群初始化：
+        ```bash
+        kwbase init --certs-dir=<certs_dir> --host=0.0.0.0:26257
+        ```
     :::
 
-4. 初始化集群。
+4. 查看集群状态并登录。
 
-    打开新的命令行，设置环境变量
-
-     ```bash
-     set PATH=<msys64>\mingw64\bin;<kwdb_dir>\kaiwudb
-     ```
-
-    初始化集群
-
-    ```bash
-     - 非安全模式：
-     kwbase init --insecure --host=0.0.0.0:26257
-
-     - 安全模式：
-     ./kwbase init --certs-dir=<certs_dir> --host=0.0.0.0:26257
-    ```
-
-5. 查看集群状态并登录。
-
-    状态查看：
+    在脚本执行窗口操作：
+    
+    - 状态查看：
 
      ```bash
      - 非安全模式：
@@ -131,7 +123,7 @@ id: deploy-windows-cli
      - 安全模式：
      ./kwbase node status --certs-dir=<certs_dir> --host=0.0.0.0:26257
      ```
-    登录数据库：
+    - 登录数据库：
 
      ```bash
      - 非安全模式：
