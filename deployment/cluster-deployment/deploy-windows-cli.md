@@ -73,7 +73,7 @@ id: deploy-windows-cli
 
     以多副本集群、非安全模式为例：打开 CMD 命令行窗口，或者双击执行 cluster-start.bat脚本
 
-     cluster-start.bat脚本如下：
+     cluster-start.bat脚本参考如下：
      ```bash
      :: ===================== 根据需要修改路径配置 =====================
      set "msys64_dir=D:\msys64"
