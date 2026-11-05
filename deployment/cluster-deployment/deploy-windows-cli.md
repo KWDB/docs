@@ -19,9 +19,9 @@ id: deploy-windows-cli
 
 （3）进入msys2目录下，执行名称为 `mingw64.exe` 的二进制程序, 进入msys2命令行，当出现 `Initial setup complete. MSYS2 is now ready to use.`后，输入命令
 
-     ```bash
-     pacman -S --noconfirm mingw-w64-x86_64-libwinpthread  mingw-w64-x86_64-gcc-libs mingw-w64-x86_64-dlfcn mingw-w64-x86_64-zlib
-     ``` 
+```bash
+pacman -S --noconfirm mingw-w64-x86_64-libwinpthread  mingw-w64-x86_64-gcc-libs mingw-w64-x86_64-dlfcn mingw-w64-x86_64-zlib
+``` 
 
 ### GO 环境准备
 
@@ -40,11 +40,11 @@ id: deploy-windows-cli
 
 4. 打开命令行，设置环境变量
 
-     ```bash
-     set PATH=<msys64>\mingw64\bin;<kwdb_dir>\kaiwudb
+    ```bash
+    set PATH=<msys64>\mingw64\bin;<kwdb_dir>\kaiwudb
 
-     set GOROOT=<go_dir>\go
-     ```
+    set GOROOT=<go_dir>\go
+    ```
 
 5. （可选）如需采用安全模式，执行以下步骤创建证书：
 
@@ -74,6 +74,7 @@ id: deploy-windows-cli
     以多副本集群、非安全模式为例：打开 CMD 命令行窗口，或者双击执行 cluster-start.bat脚本
 
      cluster-start.bat 脚本参考如下：
+
      ```bash
      :: ===================== 根据需要修改路径配置 =====================
      set "msys64_dir=D:\msys64"
@@ -105,9 +106,9 @@ id: deploy-windows-cli
     ::: Tips
      - windows环境不支持 `--background`
      - 安全模式的集群初始化：
-        ```bash
-        kwbase init --certs-dir=<certs_dir> --host=0.0.0.0:26257
-        ```
+    ```bash
+    kwbase init --certs-dir=<certs_dir> --host=0.0.0.0:26257
+    ```
     :::
 
 7. 查看集群状态并登录。
