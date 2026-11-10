@@ -126,18 +126,14 @@ KWDB MySQL 协议支持以下核心命令：
 KWDB 的 DDL 语法与 MySQL 存在差异，例如时序表使用 `CREATE TABLE ... TAGS (...)` 语法。MySQL 客户端连接 KWDB 时，SQL 语句需遵循 KWDB 的语法，而非 MySQL 原生语法。
 :::
 
-### 驱动兼容性测试
+## 支持的客户端和驱动
 
-以下客户端和驱动已通过验证：
+以下客户端和驱动可连接 KWDB 的 MySQL 协议端口：
 
-| 客户端/驱动 | 版本 | 测试结果 |
-| --- | --- | --- |
-| mysql CLI | 8.0.46 | 通过 |
-| libmysqlclient | - | 通过 |
-| go-sql-driver/mysql | - | 通过 |
-| MySQL Connector/J | 8.4.0 | 通过 |
-
-Connector/J 测试覆盖 `caching_sha2_password + RSA 公钥交换`、`mysql_native_password`、`TLS 加密` 三种认证配置。
+- mysql CLI 8.0.46
+- libmysqlclient
+- go-sql-driver/mysql
+- MySQL Connector/J 8.4.0
 
 ## 已知限制与差异
 
@@ -174,16 +170,3 @@ MySQL 协议支持引入以下灰度保护机制，确保现有部署不受影�
 - **独立端口**：MySQL 协议使用独立的 TCP 监听端口，与 PostgreSQL 协议端口完全分离，互不干扰。
 - **不修改 SQL 语法**：MySQL 方言兼容层在协议层内部完成，未改动 KWDB 的 SQL 语法定义（`sql.y`），PostgreSQL 客户端不会意外接受 MySQL 语法。
 - **用户凭据向后兼容**：`system.users` 表新增的 MySQL 认证列对现有 PostgreSQL 链路完全透明，既有集群通过 `sqlmigrations` 自动补列。
-
-## 自测情况
-
-| 测试项 | 结果 |
-| --- | --- |
-| `make kwbase-test`（lint + 全部 Go 单元测试） | 221 包 ok / 0 FAIL |
-| `qa/run_test_local_v2.sh TEST_v2_integration_basic_v2.sh` | 单机 375 / 375 通过；5 节点 / 5cr 集群各 1108 / 1110 通过（2 个偶发用例单独重跑通过） |
-| `qa/run_mysql_protocol_test.sh` | 单机 60 / 0；5c、5cr 各 65 / 0 |
-| `qa/run_mysql_protocol_test.sh jdbc` | 单机 21 / 0；5c、5cr 各 28 / 0 |
-| MySQL 协议执行 PG 的 basic_v3（225 个文件） | 与 PG 输出一致率 97.5%（单机）/ 97.3%（5c/5cr） |
-| MySQL 协议执行 PG 的 logictest（207 个文件） | 与 PG 输出一致率约 94% |
-
-低一致率部分（约 2.5% ~ 6%）经逐一条目核验，原因为 MySQL 与 PostgreSQL 固有的格式差别（如布尔值文本格式、TIMETZ 格式）或测试工具限制，不影响数据正确性。

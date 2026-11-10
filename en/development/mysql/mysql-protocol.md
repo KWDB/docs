@@ -126,18 +126,14 @@ Clients connecting through the MySQL protocol can perform the following operatio
 KWDB's DDL syntax differs from MySQL's native syntax. For example, time-series tables use `CREATE TABLE ... TAGS (...)` syntax. When connecting to KWDB with MySQL clients, SQL statements must follow KWDB's syntax, not MySQL's native syntax.
 :::
 
-### Driver Compatibility Testing
+## Supported Clients and Drivers
 
-The following clients and drivers have been validated:
+The following clients and drivers can connect to KWDB through the MySQL protocol:
 
-| Client/Driver | Version | Test Result |
-| --- | --- | --- |
-| mysql CLI | 8.0.46 | Passed |
-| libmysqlclient | - | Passed |
-| go-sql-driver/mysql | - | Passed |
-| MySQL Connector/J | 8.4.0 | Passed |
-
-Connector/J testing covers `caching_sha2_password + RSA public key exchange`, `mysql_native_password`, and `TLS encryption` authentication configurations.
+- mysql CLI 8.0.46
+- libmysqlclient
+- go-sql-driver/mysql
+- MySQL Connector/J 8.4.0
 
 ## Known Limitations and Differences
 
@@ -174,16 +170,3 @@ The MySQL protocol support incorporates the following safeguards to ensure exist
 - **Independent port**: The MySQL protocol uses a separate TCP listen port, completely isolated from the PostgreSQL protocol port.
 - **No SQL grammar modification**: MySQL dialect compatibility is handled inside the protocol layer, without changing KWDB's SQL grammar definition (`sql.y`). PostgreSQL clients will not accidentally accept MySQL syntax.
 - **Backward-compatible credentials**: The new MySQL authentication columns in the `system.users` table are completely transparent to existing PostgreSQL connections. Existing clusters automatically receive these columns via `sqlmigrations`.
-
-## Self-Test Results
-
-| Test Item | Result |
-| --- | --- |
-| `make kwbase-test` (lint + all Go unit tests) | 221 packages ok / 0 FAIL |
-| `qa/run_test_local_v2.sh TEST_v2_integration_basic_v2.sh` | Single-node 375 / 375 passed; 5-node / 5cr cluster 1108 / 1110 passed (2 flaky cases passed in isolation) |
-| `qa/run_mysql_protocol_test.sh` | Single-node 60 / 0; 5c and 5cr each 65 / 0 |
-| `qa/run_mysql_protocol_test.sh jdbc` | Single-node 21 / 0; 5c and 5cr each 28 / 0 |
-| MySQL protocol runs PG's basic_v3 (225 files) | 97.5% consistent with PG output (single-node) / 97.3% (5c/5cr) |
-| MySQL protocol runs PG's logictest (207 files) | Approximately 94% consistent with PG output |
-
-The lower-consistency portions (approximately 2.5% ~ 6%) have been verified case by case. The differences are attributable to inherent format differences between MySQL and PostgreSQL (such as boolean text format, TIMETZ format) or test tool limitations, and do not affect data correctness.
