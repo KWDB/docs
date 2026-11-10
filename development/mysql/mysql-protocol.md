@@ -21,9 +21,28 @@ MySQL 协议支持默认关闭，需显式配置监听地址后才会启用。�
 
 在启动 KWDB 服务进程时，通过 `--mysql-addr` 参数指定 MySQL 协议的监听地址和端口。
 
-```shell
-kwbase start --mysql-addr=0.0.0.0:3306
-```
+- 非安全模式：
+
+    ```bash
+    ./kwbase start-single-node --insecure \
+        --listen-addr=0.0.0.0:26257 \
+        --http-addr=0.0.0.0:8080 \
+        --store=/var/lib/kaiwudb \
+        --mysql-addr=0.0.0.0:3306
+    ```
+
+- 安全模式：
+
+    ```bash
+    ./kwbase start-single-node \
+        --certs-dir=<certs_dir> \
+        --listen-addr=0.0.0.0:26257 \
+        --http-addr=0.0.0.0:8080 \
+        --store=/var/lib/kaiwudb \
+        --mysql-addr=0.0.0.0:3306
+    ```
+
+集群部署时，在 `kwbase start` 或 `kwbase start-single-replica` 命令后追加 `--mysql-addr=<host>:<port>` 参数即可。有关启动命令的更多信息，参见 [kwbase start-single-node](../../quickstart/deploy/deploy-cli.md) 和 [kwbase start](../../kaiwudb-tools/kwbase-cli-tool.md#kwbase-start)。
 
 ::: warning 说明
 `--mysql-addr` 仅接受独立的监听地址，不能与 PostgreSQL 协议共用端口。PostgreSQL 协议默认监听端口为 26257，MySQL 协议建议使用 3306 或其他未被占用的端口。
