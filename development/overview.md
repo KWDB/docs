@@ -35,3 +35,5 @@ id: overview
   - [Rust](./rust/connect-rust.md)
 - MCP
   - [KWDB MCP Server](./kwdb-mcp-server/connect-kwdb-mcp-server.md)
+- MySQL 原生协议
+  - [MySQL 原生协议支持](./mysql/mysql-protocol.md)

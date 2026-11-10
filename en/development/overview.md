@@ -35,3 +35,5 @@ This section describes the application connectors supported by KWDB, their confi
   - [Rust](./rust/connect-rust.md)
 - **MCP**  
   - [KWDB MCP Server](./kwdb-mcp-server/connect-kwdb-mcp-server.md)
+- **MySQL Native Protocol**
+  - [MySQL Native Protocol Support](./mysql/mysql-protocol.md)
