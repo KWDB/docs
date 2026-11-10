@@ -149,12 +149,59 @@ KWDB 的 DDL 语法与 MySQL 存在差异，例如时序表使用 `CREATE TABLE 
 
 ## 支持的客户端和驱动
 
-以下客户端和驱动可连接 KWDB 的 MySQL 协议端口：
+以下客户端和驱动可连接 KWDB 的 MySQL 协议端口。连接时指定 `--mysql-addr` 对应的 IP 和端口即可，用户名和密码使用 KWDB 系统中已创建的账号。
 
-- mysql CLI 8.0.46
-- libmysqlclient
-- go-sql-driver/mysql
-- MySQL Connector/J 8.4.0
+### mysql CLI
+
+```bash
+mysql -h 127.0.0.1 -P 3306 -u <username> -p<password> defaultdb
+```
+
+### MySQL Connector/J 8.4.0
+
+```java
+String url = "jdbc:mysql://127.0.0.1:3306/defaultdb?useSSL=false";
+Connection conn = DriverManager.getConnection(url, "<username>", "<password>");
+```
+
+### go-sql-driver/mysql
+
+```go
+import (
+    "database/sql"
+    _ "github.com/go-sql-driver/mysql"
+)
+
+func main() {
+    db, err := sql.Open("mysql", "<username>:<password>@tcp(127.0.0.1:3306)/defaultdb")
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer db.Close()
+}
+```
+
+### libmysqlclient
+
+C 代码示例（使用 MySQL Connector/C）：
+
+```c
+#include <mysql/mysql.h>
+
+int main() {
+    MYSQL *conn = mysql_init(NULL);
+    if (!mysql_real_connect(conn, "127.0.0.1", "<username>", "<password>", "defaultdb", 3306, NULL, 0)) {
+        fprintf(stderr, "%s\n", mysql_error(conn));
+        return 1;
+    }
+    mysql_close(conn);
+    return 0;
+}
+```
+
+::: warning 说明
+MySQL Connector/J 默认使用 `caching_sha2_password` 认证插件。如果 KWDB 用户的认证方式为 `mysql_native_password`，可在 JDBC URL 中追加 `defaultAuthenticationPlugin=mysql_native_password`。连接时启用 TLS 则追加 `useSSL=true&requireSSL=true`，并通过 `trustCertificateKeyStoreUrl` 等参数指定 CA 证书。
+:::
 
 ## 已知限制与差异
 

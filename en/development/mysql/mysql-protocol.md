@@ -149,12 +149,59 @@ KWDB's DDL syntax differs from MySQL's native syntax. For example, time-series t
 
 ## Supported Clients and Drivers
 
-The following clients and drivers can connect to KWDB through the MySQL protocol:
+The following clients and drivers can connect to KWDB through the MySQL protocol. Specify the IP and port corresponding to `--mysql-addr` when connecting, and use the username and password of an existing KWDB account.
 
-- mysql CLI 8.0.46
-- libmysqlclient
-- go-sql-driver/mysql
-- MySQL Connector/J 8.4.0
+### mysql CLI
+
+```bash
+mysql -h 127.0.0.1 -P 3306 -u <username> -p<password> defaultdb
+```
+
+### MySQL Connector/J 8.4.0
+
+```java
+String url = "jdbc:mysql://127.0.0.1:3306/defaultdb?useSSL=false";
+Connection conn = DriverManager.getConnection(url, "<username>", "<password>");
+```
+
+### go-sql-driver/mysql
+
+```go
+import (
+    "database/sql"
+    _ "github.com/go-sql-driver/mysql"
+)
+
+func main() {
+    db, err := sql.Open("mysql", "<username>:<password>@tcp(127.0.0.1:3306)/defaultdb")
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer db.Close()
+}
+```
+
+### libmysqlclient
+
+C code example (using MySQL Connector/C):
+
+```c
+#include <mysql/mysql.h>
+
+int main() {
+    MYSQL *conn = mysql_init(NULL);
+    if (!mysql_real_connect(conn, "127.0.0.1", "<username>", "<password>", "defaultdb", 3306, NULL, 0)) {
+        fprintf(stderr, "%s\n", mysql_error(conn));
+        return 1;
+    }
+    mysql_close(conn);
+    return 0;
+}
+```
+
+::: warning Note
+MySQL Connector/J uses `caching_sha2_password` by default. If the KWDB user's authentication method is `mysql_native_password`, append `defaultAuthenticationPlugin=mysql_native_password` to the JDBC URL. To enable TLS, append `useSSL=true&requireSSL=true` and specify the CA certificate via parameters such as `trustCertificateKeyStoreUrl`.
+:::
 
 ## Known Limitations and Differences
 
