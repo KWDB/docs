@@ -54,13 +54,13 @@ pacman -S --noconfirm mingw-w64-x86_64-libwinpthread  mingw-w64-x86_64-gcc-libs 
 
      ```bash
      # 创建数据库证书颁发机构及密钥
-     ./kwbase cert create-ca --certs-dir=<certs_dir> --ca-key=<certs_dir>\ca.key
+     kwbase cert create-ca --certs-dir=<certs_dir> --ca-key=<certs_dir>\ca.key
     
      # 创建安装数据库用户的客户端证书及密钥
-     ./kwbase cert create-client <username> --certs-dir=<certs_dir> --ca-key=<certs_dir>\ca.key
+     kwbase cert create-client <username> --certs-dir=<certs_dir> --ca-key=<certs_dir>\ca.key
     
      # 创建节点服务器证书及密钥
-     ./kwbase cert create-node 127.0.0.1 localhost 0.0.0.0 --certs-dir=<certs_dir> --ca-key=<certs_dir>\ca.key
+     kwbase cert create-node 127.0.0.1 localhost 0.0.0.0 --certs-dir=<certs_dir> --ca-key=<certs_dir>\ca.key
      ```
 
     ::: warning 提示
@@ -122,7 +122,7 @@ pacman -S --noconfirm mingw-w64-x86_64-libwinpthread  mingw-w64-x86_64-gcc-libs 
      kwbase node status --insecure --host=0.0.0.0:26257
 
      - 安全模式：
-     ./kwbase node status --certs-dir=<certs_dir> --host=0.0.0.0:26257
+     kwbase node status --certs-dir=<certs_dir> --host=0.0.0.0:26257
      ```
     - 登录数据库：
 
@@ -131,7 +131,7 @@ pacman -S --noconfirm mingw-w64-x86_64-libwinpthread  mingw-w64-x86_64-gcc-libs 
      kwbase sql --insecure --host=0.0.0.0:26257
 
      - 安全模式：
-     ./kwbase sql --certs-dir=<certs_dir> --host=0.0.0.0:26257
+     kwbase sql --certs-dir=<certs_dir> --host=0.0.0.0:26257
      ```
 
 8. 部署完成后，[KWDB 支持的连接器](../../development/overview.md)或 [KaiwuDB 开发者中心](../../kaiwudb-tools/kaiwudb-developer-center/overview.md)连接并管理 KWDB。
