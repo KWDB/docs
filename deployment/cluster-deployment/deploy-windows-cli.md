@@ -32,7 +32,7 @@ pacman -S --noconfirm mingw-w64-x86_64-libwinpthread  mingw-w64-x86_64-gcc-libs 
 
 ## 安装
 
-1. 获取 KWDB windows 安装包(https://www.kaiwudb.com/download?tab=2)
+1. [获取 KWDB windows 安装包](https://www.kaiwudb.com/download?tab=2)
 
 2. 放在目标路径下，解压目录为`<kwdb_dir>`
 
