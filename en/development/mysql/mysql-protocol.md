@@ -19,7 +19,9 @@ MySQL protocol support is disabled by default. You must explicitly configure a l
 
 ## Enabling MySQL Protocol
 
-Add the `--mysql-addr` parameter when starting the KWDB server process to specify the listen address and port for the MySQL protocol.
+MySQL protocol is disabled by default. Enable it by **appending** the optional `--mysql-addr` parameter to the KWDB startup command. The base startup command follows the official documentation; see [kwbase start-single-node](../../quickstart/deploy/deploy-cli.md) and [kwbase start](../../kaiwudb-tools/kwbase-cli-tool.md#kwbase-start).
+
+To enable the MySQL protocol, append `--mysql-addr=0.0.0.0:3306` at the end of the startup command. For example, a single-node deployment:
 
 - Insecure mode:
 
@@ -42,7 +44,7 @@ Add the `--mysql-addr` parameter when starting the KWDB server process to specif
         --mysql-addr=0.0.0.0:3306
     ```
 
-For cluster deployment, append the `--mysql-addr=<host>:<port>` parameter to the `kwbase start` or `kwbase start-single-replica` command. For more information about startup commands, see [kwbase start-single-node](../../quickstart/deploy/deploy-cli.md) and [kwbase start](../../kaiwudb-tools/kwbase-cli-tool.md#kwbase-start).
+For cluster deployment, append the same parameter at the end of the `kwbase start` or `kwbase start-single-replica` command.
 
 ::: warning Note
 `--mysql-addr` accepts only an independent listen address and cannot share a port with the PostgreSQL protocol. The default PostgreSQL protocol listen port is 26257. We recommend using port 3306 or another unused port for the MySQL protocol.
