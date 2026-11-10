@@ -13,7 +13,7 @@ id: quickstart-windows-cli
 
 Download reference link: https://mirror.umd.edu/msys2/distrib/x86_64/msys2-base-x86_64-20260322.sfx.exe
 
-(2) Double-click it. After execution completes, an msys2 directory <msys64> will be created in the current directory, and all binaries will be extracted into this directory.
+(2) Double-click it. After execution completes, an msys2 directory `<msys64>` will be created in the current directory, and all binaries will be extracted into this directory.
 
 (3) Go into the msys2 directory and run the binary program named `mingw64.exe` to enter the MSYS2 command line. Once you see `Initial setup complete. MSYS2 is now ready to use.`, enter the command 
 
@@ -25,15 +25,15 @@ Download reference link: https://mirror.umd.edu/msys2/distrib/x86_64/msys2-base-
 
 （1）Download the GO zip package. Download reference:https://golang.google.cn/dl/
 
-（2）Place it in the specified directory, and the decompression directory is <go_dir>
+（2）Place it in the specified directory, and the decompression directory is `<go_dir>`
 
 ## KWDB Installation
 
-1. Obtain the KWDB Windows installation package [Download][下载](https://www.kaiwudb.com/download?tab=2)
+1. [Obtain the KWDB Windows installation package](https://www.kaiwudb.com/download?tab=2)
 
-2. Place it in the target path, and the decompression directory is <kwdb_dir>
+2. Place it in the target path, and the decompression directory is `<kwdb_dir>`
 
-3. Create the data directory <data_dir>
+3. Create the data directory `<data_dir>`
 
 4. Open the command line and set environment variables
 
@@ -45,7 +45,7 @@ Download reference link: https://mirror.umd.edu/msys2/distrib/x86_64/msys2-base-
 
 5. （ (Optional) For secure mode, create certificates and keys by following these steps:
 
-    （1）Create a directory to store the certificates and keys<certs_dir>
+    （1）Create a directory to store the certificates and keys`<certs_dir>`
 
     （2）Generate certificates and keys:
 
