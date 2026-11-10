@@ -5,11 +5,11 @@ id: mysql-protocol
 
 # KWDB MySQL 原生协议支持
 
-自 KWDB V3.3.0 起，KWDB 在独立端口上提供 MySQL 客户端线协议支持，使 MySQL 生态的驱动、应用与工具无需更换驱动即可直接连接 KWDB，执行 SQL 并读取关系表与时序表数据。
+自 KWDB V3.3.0 起，KWDB 在独立端口上提供 MySQL 协议支持，使 MySQL 生态的驱动、应用与工具无需更换驱动即可直接连接 KWDB，执行 SQL 并读取关系表与时序表数据。
 
 ## 概述
 
-KWDB 此前仅提供 PostgreSQL 线协议，MySQL 生态的应用、驱动（如 Connector/J、mysql-connector-python、go-sql-driver/mysql）及客户端工具（如 DBeaver、mysql CLI）无法直接连接，用户需改用 PG 驱动并改造应用侧代码。
+KWDB 此前仅提供 PostgreSQL 协议，MySQL 生态的应用、驱动（如 Connector/J、mysql-connector-python、go-sql-driver/mysql）及客户端工具（如 DBeaver、mysql CLI）无法直接连接，用户需改用 PG 驱动并改造应用侧代码。
 
 MySQL 协议与 PostgreSQL 协议在连接建立时的行为存在本质差异（MySQL 由服务端先发包，PostgreSQL 由客户端先发包），且无法通过首字节分流复用同一端口。因此，MySQL 协议服务必须监听独立端口，与现有的 PostgreSQL 端口互不干扰。
 
