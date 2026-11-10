@@ -28,15 +28,15 @@ pacman -S --noconfirm mingw-w64-x86_64-libwinpthread  mingw-w64-x86_64-gcc-libs 
 （1）下载 GO zip 包
 下载地址可参考：https://golang.google.cn/dl/
 
-（2）放在指定目录下，解压目录为<go_dir>
+（2）放在指定目录下，解压目录为`<go_dir>`
 
 ## 安装
 
-1. 获取 KWDB windows 安装包[下载](https://www.kaiwudb.com/download?tab=2)
+1. 获取 KWDB windows 安装包(https://www.kaiwudb.com/download?tab=2)
 
-2. 放在目标路径下，解压目录为<kwdb_dir>
+2. 放在目标路径下，解压目录为`<kwdb_dir>`
 
-3. 创建数据目录<data_dir1>、<data_dir2>、<data_dir3>
+3. 创建数据目录`<data_dir1>、<data_dir2>、<data_dir3>`
 
 4. 打开命令行，设置环境变量
 
@@ -48,7 +48,7 @@ pacman -S --noconfirm mingw-w64-x86_64-libwinpthread  mingw-w64-x86_64-gcc-libs 
 
 5. （可选）如需采用安全模式，执行以下步骤创建证书：
 
-    （1）创建证书存放目录<certs_dir>
+    （1）创建证书存放目录`<certs_dir>`
 
     （2）生成证书和密钥：
 
