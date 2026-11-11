@@ -13,7 +13,7 @@ id: deploy-windows-cli
 
 （1）依赖包下载，下载后放在指定目录下
 
-下载地址可参考：https://mirror.umd.edu/msys2/distrib/x86_64/msys2-base-x86_64-20260322.sfx.exe
+下载地址可参考：https://mirror.umd.edu/msys2/distrib/x86_64/msys2-base-x86_64-20250830.sfx.exe
 
 （2）双击，执行完毕后会在当前目录创建 msys2 目录 `<msys64>` 并把所有二进制解压到该目录下
 
