@@ -11,7 +11,7 @@ id: quickstart-windows-cli
 
 (1)Download the dependency package and place it in the specified directory after downloading.
 
-Download reference link: https://mirror.umd.edu/msys2/distrib/x86_64/msys2-base-x86_64-20260322.sfx.exe
+Download reference link: https://mirror.umd.edu/msys2/distrib/x86_64/msys2-base-x86_64-20250830.sfx.exe
 
 (2) Double-click it. After execution completes, an msys2 directory `<msys64>` will be created in the current directory, and all binaries will be extracted into this directory.
 
