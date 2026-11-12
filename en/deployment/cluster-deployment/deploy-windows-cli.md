@@ -13,7 +13,7 @@ This section describes how to deploy a KWDB cluster on a single machine, includi
 
 (1)Download the dependency package and place it in the specified directory after downloading.
 
-Download reference link: https://mirror.umd.edu/msys2/distrib/x86_64/msys2-base-x86_64-20260322.sfx.exe
+Download reference link: https://mirror.umd.edu/msys2/distrib/x86_64/msys2-base-x86_64-20250830.sfx.exe
 
 (2) Double-click it. After execution completes, an msys2 directory `<msys64>` will be created in the current directory, and all binaries will be extracted into this directory.
 
@@ -31,11 +31,15 @@ Download reference link: https://mirror.umd.edu/msys2/distrib/x86_64/msys2-base-
 
 ## 安装
 
-1. Obtain the KWDB Windows installation package [Download][下载](https://www.kaiwudb.com/download?tab=2)
+1. [Obtain the KWDB Windows installation package ](https://www.kaiwudb.com/download?tab=2)
 
 2. Place it in the target path, and the decompression directory is `<kwdb_dir>`
 
+<<<<<<< HEAD
 3. Create the data directory `<data_dir1>、<data_dir2>、<data_dir3>`
+=======
+3. Create the data directory`<data_dir1>、<data_dir2>、<data_dir3>`
+>>>>>>> upstream/master
 
 4. Open the command line and set environment variables
 
@@ -47,7 +51,11 @@ Download reference link: https://mirror.umd.edu/msys2/distrib/x86_64/msys2-base-
 
 5. （ (Optional) For secure mode, create certificates and keys by following these steps:
 
+<<<<<<< HEAD
     （1）Create a directory to store the certificates and keys `<certs_dir>`
+=======
+    （1）Create a directory to store the certificates and keys`<certs_dir>`
+>>>>>>> upstream/master
 
     （2）Generate certificates and keys:
 

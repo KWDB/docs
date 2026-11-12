@@ -11,7 +11,7 @@ id: quickstart-windows-cli
 
 (1)Download the dependency package and place it in the specified directory after downloading.
 
-Download reference link: https://mirror.umd.edu/msys2/distrib/x86_64/msys2-base-x86_64-20260322.sfx.exe
+Download reference link: https://mirror.umd.edu/msys2/distrib/x86_64/msys2-base-x86_64-20250830.sfx.exe
 
 (2) Double-click it. After execution completes, an msys2 directory `<msys64>` will be created in the current directory, and all binaries will be extracted into this directory.
 
@@ -29,7 +29,7 @@ Download reference link: https://mirror.umd.edu/msys2/distrib/x86_64/msys2-base-
 
 ## KWDB Installation
 
-1. Obtain the KWDB Windows installation package [Download][下载](https://www.kaiwudb.com/download?tab=2)
+1. [Obtain the KWDB Windows installation package ](https://www.kaiwudb.com/download?tab=2)
 
 2. Place it in the target path, and the decompression directory is `<kwdb_dir>`
 

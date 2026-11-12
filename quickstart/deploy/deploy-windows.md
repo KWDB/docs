@@ -11,11 +11,11 @@ id: quickstart-windows-cli
 
 （1）依赖包下载，下载后放在指定目录下
 
-下载地址可参考：https://mirror.umd.edu/msys2/distrib/x86_64/msys2-base-x86_64-20260322.sfx.exe
+下载地址可参考：https://mirror.umd.edu/msys2/distrib/x86_64/msys2-base-x86_64-20250830.sfx.exe
 
 （2）双击，执行完毕后会在当前目录创建 msys2 目录 `<msys64>` 并把所有二进制解压到该目录下
 
-（3）进入 msys2 目录下，执行名称为 `mingw64.exe` 的二进制程序, 进入msys2命令行，当出现 `Initial setup complete. MSYS2 is now ready to use.` 后，输入命令
+（3）进入 msys2 目录下，执行名称为 `mingw64.exe` 的二进制程序, 进入 msys2 命令行，当出现 `Initial setup complete. MSYS2 is now ready to use.` 后，输入命令
 
      ```bash
      pacman -S --noconfirm mingw-w64-x86_64-libwinpthread  mingw-w64-x86_64-gcc-libs mingw-w64-x86_64-dlfcn mingw-w64-x86_64-zlib
@@ -30,7 +30,7 @@ id: quickstart-windows-cli
 
 ## KWDB 安装
 
-1. 获取 KWDB windows 安装包[下载](https://www.kaiwudb.com/download?tab=2)
+1. [获取 KWDB windows 安装包](https://www.kaiwudb.com/download?tab=2)
 
 2. 放在目标路径下，解压目录为 `<kwdb_dir>`
 

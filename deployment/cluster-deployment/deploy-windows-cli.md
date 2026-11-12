@@ -13,7 +13,7 @@ id: deploy-windows-cli
 
 （1）依赖包下载，下载后放在指定目录下
 
-下载地址可参考：https://mirror.umd.edu/msys2/distrib/x86_64/msys2-base-x86_64-20260322.sfx.exe
+下载地址可参考：https://mirror.umd.edu/msys2/distrib/x86_64/msys2-base-x86_64-20250830.sfx.exe
 
 （2）双击，执行完毕后会在当前目录创建 msys2 目录 `<msys64>` 并把所有二进制解压到该目录下
 
@@ -54,13 +54,13 @@ pacman -S --noconfirm mingw-w64-x86_64-libwinpthread  mingw-w64-x86_64-gcc-libs 
 
      ```bash
      # 创建数据库证书颁发机构及密钥
-     ./kwbase cert create-ca --certs-dir=<certs_dir> --ca-key=<certs_dir>\ca.key
+     kwbase cert create-ca --certs-dir=<certs_dir> --ca-key=<certs_dir>\ca.key
     
      # 创建安装数据库用户的客户端证书及密钥
-     ./kwbase cert create-client <username> --certs-dir=<certs_dir> --ca-key=<certs_dir>\ca.key
+     kwbase cert create-client <username> --certs-dir=<certs_dir> --ca-key=<certs_dir>\ca.key
     
      # 创建节点服务器证书及密钥
-     ./kwbase cert create-node 127.0.0.1 localhost 0.0.0.0 --certs-dir=<certs_dir> --ca-key=<certs_dir>\ca.key
+     kwbase cert create-node 127.0.0.1 localhost 0.0.0.0 --certs-dir=<certs_dir> --ca-key=<certs_dir>\ca.key
      ```
 
     ::: warning 提示
@@ -122,7 +122,7 @@ pacman -S --noconfirm mingw-w64-x86_64-libwinpthread  mingw-w64-x86_64-gcc-libs 
      kwbase node status --insecure --host=0.0.0.0:26257
 
      - 安全模式：
-     ./kwbase node status --certs-dir=<certs_dir> --host=0.0.0.0:26257
+     kwbase node status --certs-dir=<certs_dir> --host=0.0.0.0:26257
      ```
     - 登录数据库：
 
@@ -131,7 +131,11 @@ pacman -S --noconfirm mingw-w64-x86_64-libwinpthread  mingw-w64-x86_64-gcc-libs 
      kwbase sql --insecure --host=0.0.0.0:26257
 
      - 安全模式：
+<<<<<<< HEAD
      ./kwbase sql --certs-dir=<certs_dir> --host=0.0.0.0:26257
+=======
+     kwbase sql --certs-dir=<certs_dir> --host=0.0.0.0:26257
+>>>>>>> upstream/master
      ```
 
 8. 部署完成后，[KWDB 支持的连接器](../../development/overview.md)或 [KaiwuDB 开发者中心](../../kaiwudb-tools/kaiwudb-developer-center/overview.md)连接并管理 KWDB。
