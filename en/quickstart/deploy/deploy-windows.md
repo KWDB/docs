@@ -15,7 +15,7 @@ Download reference link: https://mirror.umd.edu/msys2/distrib/x86_64/msys2-base-
 
 (2) Double-click it. After execution completes, an msys2 directory `<msys64>` will be created in the current directory, and all binaries will be extracted into this directory.
 
-(3) Go into the msys2 directory and run the binary program named `mingw64.exe` to enter the MSYS2 command line. Once you see `Initial setup complete. MSYS2 is now ready to use.`, enter the command 
+(3) Go into the msys2 directory and run the binary program named `mingw64.exe` to enter the MSYS2 command line. Once you see `Initial setup complete. MSYS2 is now ready to use.`,enter the command 
 
      ```bash
      pacman -S --noconfirm mingw-w64-x86_64-libwinpthread  mingw-w64-x86_64-gcc-libs mingw-w64-x86_64-dlfcn mingw-w64-x86_64-zlib
@@ -45,7 +45,7 @@ Download reference link: https://mirror.umd.edu/msys2/distrib/x86_64/msys2-base-
 
 5. （ (Optional) For secure mode, create certificates and keys by following these steps:
 
-    （1）Create a directory to store the certificates and keys`<certs_dir>`
+    （1）Create a directory to store the certificates and keys `<certs_dir>`
 
     （2）Generate certificates and keys:
 
