@@ -131,11 +131,7 @@ pacman -S --noconfirm mingw-w64-x86_64-libwinpthread  mingw-w64-x86_64-gcc-libs 
      kwbase sql --insecure --host=0.0.0.0:26257
 
      - 安全模式：
-<<<<<<< HEAD
-     ./kwbase sql --certs-dir=<certs_dir> --host=0.0.0.0:26257
-=======
      kwbase sql --certs-dir=<certs_dir> --host=0.0.0.0:26257
->>>>>>> upstream/master
      ```
 
 8. 部署完成后，[KWDB 支持的连接器](../../development/overview.md)或 [KaiwuDB 开发者中心](../../kaiwudb-tools/kaiwudb-developer-center/overview.md)连接并管理 KWDB。

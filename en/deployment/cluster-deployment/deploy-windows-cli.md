@@ -35,11 +35,7 @@ Download reference link: https://mirror.umd.edu/msys2/distrib/x86_64/msys2-base-
 
 2. Place it in the target path, and the decompression directory is `<kwdb_dir>`
 
-<<<<<<< HEAD
 3. Create the data directory `<data_dir1>、<data_dir2>、<data_dir3>`
-=======
-3. Create the data directory`<data_dir1>、<data_dir2>、<data_dir3>`
->>>>>>> upstream/master
 
 4. Open the command line and set environment variables
 
@@ -51,11 +47,7 @@ Download reference link: https://mirror.umd.edu/msys2/distrib/x86_64/msys2-base-
 
 5. （ (Optional) For secure mode, create certificates and keys by following these steps:
 
-<<<<<<< HEAD
     （1）Create a directory to store the certificates and keys `<certs_dir>`
-=======
-    （1）Create a directory to store the certificates and keys`<certs_dir>`
->>>>>>> upstream/master
 
     （2）Generate certificates and keys:
 
